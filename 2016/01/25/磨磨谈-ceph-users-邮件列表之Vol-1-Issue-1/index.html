@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>磨磨谈 ceph-users 邮件列表之Vol-1-Issue-1(完结) | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="关于归档方式本来开始准备采用邮件列表的vol和issue的方式，但是因为issue里面是以天为单位，而里面的问题可能是重复的，这个不好进行规整了，那么在我这里，准备以Thread的方式，每个Issue里面包含5个问题，每10个issue为一个vol，进行规整，以2016年开始为起点，前后去收集，会记录问题提问者和发起问题的时间
+前言：一个技术的邮件列表其实是个大宝藏，看你怎么去挖掘它了，里面有太多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="磨磨谈 ceph-users 邮件列表之Vol-1-Issue-1(完结)">
+<meta property="og:url" content="http://www.zphj1987.com/2016/01/25/磨磨谈-ceph-users-邮件列表之Vol-1-Issue-1/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="关于归档方式本来开始准备采用邮件列表的vol和issue的方式，但是因为issue里面是以天为单位，而里面的问题可能是重复的，这个不好进行规整了，那么在我这里，准备以Thread的方式，每个Issue里面包含5个问题，每10个issue为一个vol，进行规整，以2016年开始为起点，前后去收集，会记录问题提问者和发起问题的时间
+前言：一个技术的邮件列表其实是个大宝藏，看你怎么去挖掘它了，里面有太多">
+<meta property="og:image" content="http://mypic.cn-bj.ufileos.com/payforzp.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="磨磨谈 ceph-users 邮件列表之Vol-1-Issue-1(完结)">
+<meta name="twitter:description" content="关于归档方式本来开始准备采用邮件列表的vol和issue的方式，但是因为issue里面是以天为单位，而里面的问题可能是重复的，这个不好进行规整了，那么在我这里，准备以Thread的方式，每个Issue里面包含5个问题，每10个issue为一个vol，进行规整，以2016年开始为起点，前后去收集，会记录问题提问者和发起问题的时间
+前言：一个技术的邮件列表其实是个大宝藏，看你怎么去挖掘它了，里面有太多">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-磨磨谈-ceph-users-邮件列表之Vol-1-Issue-1" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/25/磨磨谈-ceph-users-邮件列表之Vol-1-Issue-1/" class="article-date">
+  	<time datetime="2016-01-24T16:06:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      磨磨谈 ceph-users 邮件列表之Vol-1-Issue-1(完结)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/momotan/">momotan</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>关于归档方式本来开始准备采用邮件列表的vol和issue的方式，但是因为issue里面是以天为单位，而里面的问题可能是重复的，这个不好进行规整了，那么在我这里，准备以Thread的方式，每个Issue里面包含5个问题，每10个issue为一个vol，进行规整，以2016年开始为起点，前后去收集，会记录问题提问者和发起问题的时间</p>
+<h2 id="前言：">前言：</h2><p>一个技术的邮件列表其实是个大宝藏，看你怎么去挖掘它了，里面有太多的灵光一现，太多的大牛的引导，而我等也只能在某些出现问题的时候，去搜索的时候，才发现这些问题是很多人遇到过的，最近看到一个技术人说的一句话深有同感,意思是说，很多时候我们花精力重复解决问题</p>
+<ul>
+<li>一流的公司在从整体上去解决一批的问题</li>
+<li>二流的公司在一次又一次解决相同的问题</li>
+</ul>
+<p>与其等待别人去整理，还不如自己去做这个事情，没有压力，没有人催促，最后自己还能有所收获，何乐而不为，这个系列我会去将邮件列表的里面的内容进行整理，提出我个人的处理办法或者方式，或者总结一下里面别人的经验，这个系列将以现在的时间线往前和往后的方式进行整理，这个会是一个很长的过程，希望尽量的获取更多的东西，文档格式尽量保持一致</p>
+<a id="more"></a>
+<h3 id="一、今天的_Topics:">一、今天的 Topics:</h3><ul>
+<li>journal encryption with dmcrypt （Date: Fri, 22 Jan 2016 20:35:46 +0000）</li>
+<li>CephFS</li>
+<li>ceph fuse closing stale session while still operable</li>
+<li>inkscope version 1.3.1  </li>
+<li>Ceph monitors 100% full filesystem, refusing start</li>
+</ul>
+<hr>
+<h3 id="二、涉及问题：">二、涉及问题：</h3><ul>
+<li>osd分区加密</li>
+<li>文件系统加密挂载问题</li>
+<li>ceph-fuse写入僵住的问题</li>
+<li>inkscope发布了新版本</li>
+<li>monitor的文件系统磁盘满了无法启动的问题</li>
+</ul>
+<h3 id="三、问题解析">三、问题解析</h3><h4 id="问题一：">问题一：</h4><p>journal encryption with dmcrypt （Reno Rainz）</p>
+<h5 id="问题原文：">问题原文：</h5><p>I’m trying to setup a cluster with encryption on osd data and journal.<br>To do  that I use ceph-deploy with this 2 options —dmcrypt<br>—dmcrypt-key-dir on /dev/sdc disk.<br>……</p>
+<h5 id="分析：">分析：</h5><p>问题的提出者试图在部署osd的时候使用 encryption 对 osd 进行加密,在用 ceph-deploy 的时候，部署的时候出现了失败</p>
+<h5 id="总结：">总结：</h5><p>这个地方是因为 ceph-deploy 在进行 activate 操作的时候，把这个加密分区当做了 crypto_LUKS 分区格式进行了 mount 操作，这个肯定是不能成功的，因为这个加密盘是需要进行映射操作的，这里缺少了这个操作，不清楚是需要加其他的参数还是怎样，这个地方可以通过其他方式进行处理</p>
+<p>在进行 ceph-deploy osd prepare 操作的时候，可以查看看到有一行这个，这个中间的 f6244401-c848-42d1-9096-9a3ee5a136e9 即为 osd 的 fsid<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Running <span class="built_in">command</span>: /usr/sbin/cryptsetup --batch-mode --key-file /root/keydir/f6244401-c848-<span class="number">42</span>d1-<span class="number">9096</span>-<span class="number">9</span>a3ee5a136e9.luks.key luksFormat /dev/sdd1</span><br></pre></td></tr></table></figure></p>
+<p>等待osd prepare 操作做完了以后，就进行下面的操作</p>
+<p>1、进行磁盘的映射<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cryptsetup --key-file /root/keydir/f6244401-c848-<span class="number">42</span>d1-<span class="number">9096</span>-<span class="number">9</span>a3ee5a136e9.luks.key luksOpen /dev/sdd1 f6244401-c848-<span class="number">42</span>d1-<span class="number">9096</span>-<span class="number">9</span>a3ee5a136e9</span><br></pre></td></tr></table></figure></p>
+<p>2、进行osd的激活<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph-deploy osd activate /dev/mapper/f6244401-c848-<span class="number">42</span>d1-<span class="number">9096</span>-<span class="number">9</span>a3ee5a136e9</span><br></pre></td></tr></table></figure></p>
+<p>这样就可以了</p>
+<p>另外：<br>取消映射的操作是<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cryptsetup remove f6244401-c848-<span class="number">42</span>d1-<span class="number">9096</span>-<span class="number">9</span>a3ee5a136e9</span><br></pre></td></tr></table></figure></p>
+<h4 id="问题二：">问题二：</h4><p>ceph fuse closing stale session while still   operable （Oliver Dzombic）</p>
+<h5 id="问题原文：-1">问题原文：</h5><p>Hi,<br>i am testing on centos 6 x64 minimal install.<br>i am mounting successfully:<br>ceph-fuse -m 10.0.0.1:6789,10.0.0.2:6789,10.0.0.3:6789,10.0.0.4:6789<br>/ceph-storage/<br>……</p>
+<h5 id="分析：-1">分析：</h5><p>问题的提出者在使用ceph-fuse去挂载集群的时候，写入一个大文件的时候出现无法写入的问题，在mds的日志当中可以看到<br>closing stale session client.21176728 10.0.0.91:0/1635 after 301.302291 的日志信息</p>
+<p>从日志检查过程看<br>ceph -s 出现了  62 requests are blocked &gt; 32 sec<br>问题提出者在认证的时候，出现了语法错误 ceph auth list showed 可以检查，后经修改，还是问题一样</p>
+<p>查看客户端的请求：<br>ceph daemon /var/run/ceph/ceph-client.admin.asok objecter_requests<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"ops"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"tid"</span>: <span class="number">12</span>,</span><br><span class="line">            <span class="string">"pg"</span>: <span class="string">"6.7230bd94"</span>,</span><br><span class="line">            <span class="string">"osd"</span>: <span class="number">1</span>,</span><br><span class="line">            <span class="string">"object_id"</span>: <span class="string">"10000000017.00000004"</span>,</span><br><span class="line">            <span class="string">"object_locator"</span>: <span class="string">"@6"</span>,</span><br><span class="line">            <span class="string">"target_object_id"</span>: <span class="string">"10000000017.00000004"</span>,</span><br><span class="line">            <span class="string">"target_object_locator"</span>: <span class="string">"@6"</span>,</span><br><span class="line">            <span class="string">"paused"</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="string">"used_replica"</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="string">"precalc_pgid"</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="string">"last_sent"</span>: <span class="string">"2016-01-22 23:11:28.788800"</span>,</span><br><span class="line">            <span class="string">"attempts"</span>: <span class="number">95</span>,</span><br><span class="line">            <span class="string">"snapid"</span>: <span class="string">"head"</span>,</span><br><span class="line">            <span class="string">"snap_context"</span>: <span class="string">"1=[]"</span>,</span><br><span class="line">            <span class="string">"mtime"</span>: <span class="string">"2016-01-21 23:41:18.001327"</span>,</span><br><span class="line">            <span class="string">"osd_ops"</span>: [</span><br><span class="line">                <span class="string">"write 0~4194304 [5@0]"</span></span><br><span class="line">            ]</span><br></pre></td></tr></table></figure></p>
+<p>其中<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="string">"attempts"</span>: <span class="number">95</span>,</span><br></pre></td></tr></table></figure></p>
+<p>这个可以说明请求了95次还没有回应，从这个分析，应该是问题提出者的环境中的某个osd出现了问题，阻塞了请求</p>
+<h5 id="总结：-1">总结：</h5><p>在无法写入的时候，可以查看下客户端的sock去查看哪个请求被阻塞了，然后去排查对应的osd即可</p>
+<h4 id="问题三：">问题三：</h4><p>CephFS（James Gallagher）</p>
+<h5 id="问题原文">问题原文</h5><p>Hi,<br>I’m looking to implement the CephFS on my Firefly release (v0.80) with an XFS native file system, but so far I’m having some difficulties. After following the ceph/qsg and creating a storage cluster, I have the following topology<br>……</p>
+<h5 id="分析：-2">分析：</h5><p>问题提出者在配置了 auth 后，在客户端进行cephfs 挂载的时候，报了文件系统的错误，这个原因是问题提出者没有弄清楚 auth 的格式，而用了主机名去替代了用户名称</p>
+<p>这个地方是在server端去创建用户<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph auth get-or-create client.zp mon <span class="string">'allow *'</span> mds <span class="string">'allow *'</span> osd <span class="string">'allow *'</span></span><br></pre></td></tr></table></figure></p>
+<p>找到认证的key<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph auth list</span><br></pre></td></tr></table></figure></p>
+<p>然后在客户端挂载的格式为<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mount -t ceph <span class="number">192.168</span>.<span class="number">8.106</span>:<span class="number">6789</span>:/ /mnt -o name=zp,secret=&#123;secretkey&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样就完成了认证模式下的挂载</p>
+<h5 id="总结:">总结:</h5><p>在ceph的一些操作中，需要弄清楚里面的操作的格式问题，不然会出现一些很奇怪的问题</p>
+<h4 id="问题四：">问题四：</h4><p>inkscope version 1.3.1 </p>
+<h5 id="问题原文-1">问题原文</h5><p>Hi,<br> We are  glad to announce the  version 1.3.1 of inkscope.<br> you have a  description of this version at <a href="http://inkscope.blogspot.fr/" target="_blank" rel="external">http://inkscope.blogspot.fr/</a>,<br> the github projet: <a href="https://github.com/inkscope/inkscope-packaging" target="_blank" rel="external">https://github.com/inkscope/inkscope-packaging</a><br>  This version has been tested with Firefly, Hammer et Infernalis.<br>……</p>
+<h5 id="分析：-3">分析：</h5><p>这个是inkscope的作者在发布了新版本后发送到了ceph的邮件列表，增加了一些新的功能，这个地方将单独用一篇文章介绍这个地方的安装<br>链接如下：</p>
+<h5 id="总结">总结</h5><p>邮件列表不光是提问题的地方，还有一些优秀的资源的发布的作者也可以发布上去</p>
+<h4 id="问题五：">问题五：</h4><p>Ceph monitors 100% full filesystem, refusing start</p>
+<h5 id="问题原文-2">问题原文</h5><p>I have an issue with a (not in production!) Ceph cluster which I’m<br>trying to resolve.</p>
+<h5 id="分析：-4">分析：</h5><p>这是作者在使用多个mon的时候，数据出现了磁盘满的情况，然后重启mon进行压缩的时候，发现这个到了mon的最小空间阀值无法启动，然后就无法压缩，这个问题，还是因为对硬件的不重视，对软件的要求不清楚造成的</p>
+<h5 id="解决办法：">解决办法：</h5><p>mon的磁盘空间加大，这个在PB级别的集群中更需要重视这个问题，特别是在集群频繁的读写，或者pg变化比较多，osd变化比较多的情况下，这个数据量将是很大的，因为里面是用了leveldb的数据库，并且多个mon之间是需要同步的数据的，然后各自再做compact的操作，所以建议如下：<br>1、mon的数据分区需要是ssd的，加快数据的读写速度<br>2、mon的数据分区要100G以上，建议是150G，mon数据大概在80G左右后不会再大量的增长<br>3、在mon的参数中加入启动压缩的参数 mon_compact_on_start = false 和 mon_compact_on_bootstrap = false<br>4、尽量不要做在线的compact，这个是一个锁死的过程，此时mon会停止响应，可以采取重启的方式<br>5、mon的分区中dd 一个4G 左右的大文件，防止真的出现写满的情况下，再去重启进程的时候，好有空间可以释放<br>如果能按上面的几个操作去配置集群，关于mon的磁盘满的问题基本可以避免或者解决</p>
+<h5 id="总结：-2">总结：</h5><p>关键的地方不要省配置，准备的越多，出问题的概率越小</p>
+<hr>
+<p>文档最后更新时间：<br>2016年01月28日 </p>
+<p>欢迎打赏 and tell me</p>
+<div style="text-align:center" markdown="1"><br><img src="http://mypic.cn-bj.ufileos.com/payforzp.png" alt="pay"><br></div>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/27/ubuntu安装软件自动交互/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ubuntu安装软件自动交互
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/20/关于ceph的rbd属性设置研究/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于ceph的rbd属性设置研究</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '磨磨谈 ceph-users 邮件列表之Vol-1-Issue-1(完结)',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

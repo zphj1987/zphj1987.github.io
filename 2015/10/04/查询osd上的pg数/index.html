@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>查询osd上的pg数 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文中的命令的第一版来源于国外的一个博客，后面的版本为我自己修改的版本
+查询的命令如下：ceph pg dump | awk &apos; /^pg_stat/ &amp;#123; col=1; while($col!=&quot;up&quot;) &amp;#123;col++&amp;#125;; col++ &amp;#125; /^[0-9a-f]+\.[0-9a-f]+/ &amp;#123; match($0,/^[0-9a-f]+/); pool=">
+<meta property="og:type" content="article">
+<meta property="og:title" content="查询osd上的pg数">
+<meta property="og:url" content="http://www.zphj1987.com/2015/10/04/查询osd上的pg数/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="本文中的命令的第一版来源于国外的一个博客，后面的版本为我自己修改的版本
+查询的命令如下：ceph pg dump | awk &apos; /^pg_stat/ &amp;#123; col=1; while($col!=&quot;up&quot;) &amp;#123;col++&amp;#125;; col++ &amp;#125; /^[0-9a-f]+\.[0-9a-f]+/ &amp;#123; match($0,/^[0-9a-f]+/); pool=">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="查询osd上的pg数">
+<meta name="twitter:description" content="本文中的命令的第一版来源于国外的一个博客，后面的版本为我自己修改的版本
+查询的命令如下：ceph pg dump | awk &apos; /^pg_stat/ &amp;#123; col=1; while($col!=&quot;up&quot;) &amp;#123;col++&amp;#125;; col++ &amp;#125; /^[0-9a-f]+\.[0-9a-f]+/ &amp;#123; match($0,/^[0-9a-f]+/); pool=">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-查询osd上的pg数" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/04/查询osd上的pg数/" class="article-date">
+  	<time datetime="2015-10-03T16:02:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-10-04</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      查询osd上的pg数
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文中的命令的第一版来源于国外的一个博客，后面的版本为我自己修改的版本</p>
+<p>查询的命令如下：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph pg dump | awk <span class="string">'</span><br><span class="line"> /^pg_stat/ &#123; col=1; while($col!="up") &#123;col++&#125;; col++ &#125;</span><br><span class="line"> /^[0-9a-f]+\.[0-9a-f]+/ &#123; match($0,/^[0-9a-f]+/); pool=substr($0, RSTART, RLENGTH); poollist[pool]=0;</span><br><span class="line"> up=$col; i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)&gt;0) &#123; osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) &#125;</span><br><span class="line"> for(i in osds) &#123;array[osds[i],pool]++; osdlist[osds[i]];&#125;</span><br><span class="line">&#125;</span><br><span class="line">END &#123;</span><br><span class="line"> printf("\n");</span><br><span class="line"> printf("pool :\t"); for (i in poollist) printf("%s\t",i); printf("| SUM \n");</span><br><span class="line"> for (i in poollist) printf("--------"); printf("----------------\n");</span><br><span class="line"> for (i in osdlist) &#123; printf("osd.%i\t", i); sum=0;</span><br><span class="line"> for (j in poollist) &#123; printf("%i\t", array[i,j]); sum+=array[i,j]; poollist[j]+=array[i,j] &#125;; printf("| %i\n",sum) &#125;</span><br><span class="line"> for (i in poollist) printf("--------"); printf("----------------\n");</span><br><span class="line"> printf("SUM :\t"); for (i in poollist) printf("%s\t",poollist[i]); printf("|\n");</span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>默认的输出如下：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">pool :	<span class="number">0</span>	<span class="number">1</span>	<span class="number">2</span>	| SUM </span><br><span class="line">----------------------------------------</span><br><span class="line">osd.<span class="number">4</span>	<span class="number">54</span>	<span class="number">133</span>	<span class="number">79</span>	| <span class="number">266</span></span><br><span class="line">osd.<span class="number">5</span>	<span class="number">57</span>	<span class="number">104</span>	<span class="number">88</span>	| <span class="number">249</span></span><br><span class="line">osd.<span class="number">6</span>	<span class="number">61</span>	<span class="number">132</span>	<span class="number">86</span>	| <span class="number">279</span></span><br><span class="line">osd.<span class="number">7</span>	<span class="number">54</span>	<span class="number">114</span>	<span class="number">85</span>	| <span class="number">253</span></span><br><span class="line">osd.<span class="number">8</span>	<span class="number">63</span>	<span class="number">123</span>	<span class="number">85</span>	| <span class="number">271</span></span><br><span class="line">osd.<span class="number">0</span>	<span class="number">62</span>	<span class="number">120</span>	<span class="number">87</span>	| <span class="number">269</span></span><br><span class="line">osd.<span class="number">1</span>	<span class="number">52</span>	<span class="number">126</span>	<span class="number">81</span>	| <span class="number">259</span></span><br><span class="line">osd.<span class="number">2</span>	<span class="number">52</span>	<span class="number">103</span>	<span class="number">88</span>	| <span class="number">243</span></span><br><span class="line">osd.<span class="number">3</span>	<span class="number">57</span>	<span class="number">125</span>	<span class="number">89</span>	| <span class="number">271</span></span><br><span class="line">----------------------------------------</span><br><span class="line">SUM :	<span class="number">512</span>	<span class="number">1080</span>	<span class="number">768</span>	|</span><br></pre></td></tr></table></figure></p>
+<p>这个有个问题就是osd是乱序的，并且对于一个存储池来说不清楚哪个osd的pg是最多的</p>
+<h3 id="重构第一版：">重构第一版：</h3><p>跟上面的相比按顺序来排列</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">ceph pg dump | awk <span class="string">'</span><br><span class="line"> /^pg_stat/ &#123; col=1; while($col!="up") &#123;col++&#125;; col++ &#125;</span><br><span class="line"> /^[0-9a-f]+\.[0-9a-f]+/ &#123; match($0,/^[0-9a-f]+/); pool=substr($0, RSTART, RLENGTH); poollist[pool]=0;</span><br><span class="line"> up=$col; i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)&gt;0) &#123; osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) &#125;</span><br><span class="line"> for(i in osds) &#123;array[osds[i],pool]++; osdlist[osds[i]];&#125;</span><br><span class="line">&#125;</span><br><span class="line">END &#123;</span><br><span class="line"> printf("\n");</span><br><span class="line"> slen=asorti(poollist,newpoollist);</span><br><span class="line"> printf("pool :\t");for (i=1;i&lt;=slen;i++) &#123;printf("%s\t", newpoollist[i])&#125;; printf("| SUM \n");</span><br><span class="line"> for (i in poollist) printf("--------"); printf("----------------\n");</span><br><span class="line"> slen1=asorti(osdlist,newosdlist)</span><br><span class="line"> delete poollist;</span><br><span class="line"> for (i=1;i&lt;=slen1;i++) &#123; printf("osd.%i\t", newosdlist[i]); sum=0; </span><br><span class="line"> for (j=1;j&lt;=slen;j++)  &#123; printf("%i\t", array[newosdlist[i],newpoollist[j]]); sum+=array[newosdlist[i],newpoollist[j]]; poollist[j]+=array[newosdlist[i],newpoollist[j]] &#125;; printf("| %i\n",sum)</span><br><span class="line">&#125; </span><br><span class="line">for (i in poollist) printf("--------"); printf("----------------\n");</span><br><span class="line"> printf("SUM :\t"); for (i=1;i&lt;=slen;i++) printf("%s\t",poollist[i]); printf("|\n");</span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为下面的，可以看到现在是按顺序来的，存储池是顺序的，osd编号也是顺序的</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">pool :	<span class="number">0</span>	<span class="number">1</span>	<span class="number">2</span>	| SUM </span><br><span class="line">----------------------------------------</span><br><span class="line">osd.<span class="number">0</span>	<span class="number">62</span>	<span class="number">120</span>	<span class="number">87</span>	| <span class="number">269</span></span><br><span class="line">osd.<span class="number">1</span>	<span class="number">52</span>	<span class="number">126</span>	<span class="number">81</span>	| <span class="number">259</span></span><br><span class="line">osd.<span class="number">2</span>	<span class="number">52</span>	<span class="number">103</span>	<span class="number">88</span>	| <span class="number">243</span></span><br><span class="line">osd.<span class="number">3</span>	<span class="number">57</span>	<span class="number">125</span>	<span class="number">89</span>	| <span class="number">271</span></span><br><span class="line">osd.<span class="number">4</span>	<span class="number">54</span>	<span class="number">133</span>	<span class="number">79</span>	| <span class="number">266</span></span><br><span class="line">osd.<span class="number">5</span>	<span class="number">57</span>	<span class="number">104</span>	<span class="number">88</span>	| <span class="number">249</span></span><br><span class="line">osd.<span class="number">6</span>	<span class="number">61</span>	<span class="number">132</span>	<span class="number">86</span>	| <span class="number">279</span></span><br><span class="line">osd.<span class="number">7</span>	<span class="number">54</span>	<span class="number">114</span>	<span class="number">85</span>	| <span class="number">253</span></span><br><span class="line">osd.<span class="number">8</span>	<span class="number">63</span>	<span class="number">123</span>	<span class="number">85</span>	| <span class="number">271</span></span><br><span class="line">----------------------------------------</span><br><span class="line">SUM :	<span class="number">512</span>	<span class="number">1080</span>	<span class="number">768</span>	|</span><br></pre></td></tr></table></figure>
+<h3 id="重构第二版：">重构第二版：</h3><p>包含osd pool的排序，包含osd的排序，输出平均pg数目，输出最大的osd编号，输出超过平均值的百分比</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph pg dump | awk <span class="string">'</span><br><span class="line"> /^pg_stat/ &#123; col=1; while($col!="up") &#123;col++&#125;; col++ &#125;</span><br><span class="line"> /^[0-9a-f]+\.[0-9a-f]+/ &#123; match($0,/^[0-9a-f]+/); pool=substr($0, RSTART, RLENGTH); poollist[pool]=0;</span><br><span class="line"> up=$col; i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)&gt;0) &#123; osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) &#125;</span><br><span class="line"> for(i in osds) &#123;array[osds[i],pool]++; osdlist[osds[i]];&#125;</span><br><span class="line">&#125;</span><br><span class="line">END &#123;</span><br><span class="line"> printf("\n");</span><br><span class="line"> slen=asorti(poollist,newpoollist);</span><br><span class="line"> printf("pool :\t");for (i=1;i&lt;=slen;i++) &#123;printf("%s\t", newpoollist[i])&#125;; printf("| SUM \n");</span><br><span class="line"> for (i in poollist) printf("--------"); printf("----------------\n");</span><br><span class="line"> slen1=asorti(osdlist,newosdlist)</span><br><span class="line"> delete poollist;</span><br><span class="line"> for (i=1;i&lt;=slen1;i++) &#123; printf("osd.%i\t", newosdlist[i]); sum=0; </span><br><span class="line"> for (j=1;j&lt;=slen;j++)  &#123; printf("%i\t", array[newosdlist[i],newpoollist[j]]); sum+=array[newosdlist[i],newpoollist[j]]; poollist[j]+=array[newosdlist[i],newpoollist[j]];if(array[newosdlist[i],newpoollist[j]] != 0)&#123;poolhasid[j]+=1 &#125;;if(array[newosdlist[i],newpoollist[j]]&gt;maxpoolosd[j])&#123;maxpoolosd[j]=array[newosdlist[i],newpoollist[j]];maxosdid[j]=newosdlist[i]&#125;&#125;; printf("| %i\n",sum)&#125; </span><br><span class="line">for (i in poollist) printf("--------"); printf("----------------\n");</span><br><span class="line"> printf("SUM :\t"); for (i=1;i&lt;=slen;i++) printf("%s\t",poollist[i]); printf("|\n");</span><br><span class="line"> printf("AVE :\t"); for (i=1;i&lt;=slen;i++) printf("%d\t",poollist[i]/poolhasid[i]); printf("|\n");</span><br><span class="line"> printf("max :\t"); for (i=1;i&lt;=slen;i++) printf("%s\t",maxpoolosd[i]); printf("|\n");</span><br><span class="line"> printf("osdid :\t"); for (i=1;i&lt;=slen;i++) printf("osd.%s\t",maxosdid[i]); printf("|\n");</span><br><span class="line"> printf("per:\t"); for (i=1;i&lt;=slen;i++) printf("%.1f%\t",100*(maxpoolosd[i]-poollist[i]/poolhasid[i])/(poollist[i]/poolhasid[i])); printf("|\n");</span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure>
+<p>输出如下：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pool :	<span class="number">0</span>	<span class="number">1</span>	<span class="number">2</span>	| SUM </span><br><span class="line">----------------------------------------</span><br><span class="line">osd.<span class="number">0</span>	<span class="number">62</span>	<span class="number">120</span>	<span class="number">87</span>	| <span class="number">269</span></span><br><span class="line">osd.<span class="number">1</span>	<span class="number">52</span>	<span class="number">126</span>	<span class="number">81</span>	| <span class="number">259</span></span><br><span class="line">osd.<span class="number">2</span>	<span class="number">52</span>	<span class="number">103</span>	<span class="number">88</span>	| <span class="number">243</span></span><br><span class="line">osd.<span class="number">3</span>	<span class="number">57</span>	<span class="number">125</span>	<span class="number">89</span>	| <span class="number">271</span></span><br><span class="line">osd.<span class="number">4</span>	<span class="number">54</span>	<span class="number">133</span>	<span class="number">79</span>	| <span class="number">266</span></span><br><span class="line">osd.<span class="number">5</span>	<span class="number">57</span>	<span class="number">104</span>	<span class="number">88</span>	| <span class="number">249</span></span><br><span class="line">osd.<span class="number">6</span>	<span class="number">61</span>	<span class="number">132</span>	<span class="number">86</span>	| <span class="number">279</span></span><br><span class="line">osd.<span class="number">7</span>	<span class="number">54</span>	<span class="number">114</span>	<span class="number">85</span>	| <span class="number">253</span></span><br><span class="line">osd.<span class="number">8</span>	<span class="number">63</span>	<span class="number">123</span>	<span class="number">85</span>	| <span class="number">271</span></span><br><span class="line">----------------------------------------</span><br><span class="line">SUM :	<span class="number">512</span>	<span class="number">1080</span>	<span class="number">768</span>	|</span><br><span class="line">AVE :	<span class="number">56</span>	<span class="number">120</span>	<span class="number">85</span>	|</span><br><span class="line">max :	<span class="number">63</span>	<span class="number">133</span>	<span class="number">89</span>	|</span><br><span class="line">osdid :	osd.<span class="number">8</span>	osd.<span class="number">4</span>	osd.<span class="number">3</span>	|</span><br><span class="line">per:	<span class="number">10.7</span>%	<span class="number">10.8</span>%	<span class="number">4.3</span>%	|</span><br></pre></td></tr></table></figure></p>
+<h3 id="重构第三版：">重构第三版：</h3><p>包含osd pool的排序，包含osd的排序，输出平均pg数目，输出最大的osd编号，输出最大超过平均值的百分比，输出最少pg的osd编号，输出最小低于平均值的百分比</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph pg dump | awk <span class="string">'</span><br><span class="line"> /^pg_stat/ &#123; col=1; while($col!="up") &#123;col++&#125;; col++ &#125;</span><br><span class="line"> /^[0-9a-f]+\.[0-9a-f]+/ &#123; match($0,/^[0-9a-f]+/); pool=substr($0, RSTART, RLENGTH); poollist[pool]=0;</span><br><span class="line"> up=$col; i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)&gt;0) &#123; osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) &#125;</span><br><span class="line"> for(i in osds) &#123;array[osds[i],pool]++; osdlist[osds[i]];&#125;</span><br><span class="line">&#125;</span><br><span class="line">END &#123;</span><br><span class="line"> printf("\n");</span><br><span class="line"> slen=asorti(poollist,newpoollist);</span><br><span class="line"> printf("pool :\t");for (i=1;i&lt;=slen;i++) &#123;printf("%s\t", newpoollist[i])&#125;; printf("| SUM \n");</span><br><span class="line"> for (i in poollist) printf("--------"); printf("----------------\n");</span><br><span class="line"> slen1=asorti(osdlist,newosdlist)</span><br><span class="line"> delete poollist;</span><br><span class="line"> for (j=1;j&lt;=slen;j++) &#123;maxpoolosd[j]=0&#125;;</span><br><span class="line"> for (j=1;j&lt;=slen;j++) &#123;for (i=1;i&lt;=slen1;i++)&#123;if (array[newosdlist[i],newpoollist[j]] &gt;0  )&#123;minpoolosd[j]=array[newosdlist[i],newpoollist[j]] ;break &#125; &#125;&#125;;	</span><br><span class="line"> for (i=1;i&lt;=slen1;i++) &#123; printf("osd.%i\t", newosdlist[i]); sum=0; </span><br><span class="line"> for (j=1;j&lt;=slen;j++)  &#123; printf("%i\t", array[newosdlist[i],newpoollist[j]]); sum+=array[newosdlist[i],newpoollist[j]]; poollist[j]+=array[newosdlist[i],newpoollist[j]];if(array[newosdlist[i],newpoollist[j]] != 0)&#123;poolhasid[j]+=1 &#125;;if(array[newosdlist[i],newpoollist[j]]&gt;maxpoolosd[j])&#123;maxpoolosd[j]=array[newosdlist[i],newpoollist[j]];maxosdid[j]=newosdlist[i]&#125;;if(array[newosdlist[i],newpoollist[j]] != 0)&#123;if(array[newosdlist[i],newpoollist[j]]&lt;=minpoolosd[j])&#123;minpoolosd[j]=array[newosdlist[i],newpoollist[j]];minosdid[j]=newosdlist[i]&#125;&#125;&#125;; printf("| %i\n",sum)&#125; for (i in poollist) printf("--------"); printf("----------------\n");</span><br><span class="line"> slen2=asorti(poollist,newpoollist);</span><br><span class="line"> printf("SUM :\t"); for (i=1;i&lt;=slen;i++) printf("%s\t",poollist[i]); printf("|\n");</span><br><span class="line"> printf("Osd :\t"); for (i=1;i&lt;=slen;i++) printf("%s\t",poolhasid[i]); printf("|\n");</span><br><span class="line"> printf("AVE :\t"); for (i=1;i&lt;=slen;i++) printf("%.2f\t",poollist[i]/poolhasid[i]); printf("|\n");</span><br><span class="line"> printf("Max :\t"); for (i=1;i&lt;=slen;i++) printf("%s\t",maxpoolosd[i]); printf("|\n");</span><br><span class="line"> printf("Osdid :\t"); for (i=1;i&lt;=slen;i++) printf("osd.%s\t",maxosdid[i]); printf("|\n");</span><br><span class="line"> printf("per:\t"); for (i=1;i&lt;=slen;i++) printf("%.1f%\t",100*(maxpoolosd[i]-poollist[i]/poolhasid[i])/(poollist[i]/poolhasid[i])); printf("|\n");</span><br><span class="line"> for (i=1;i&lt;=slen2;i++) printf("--------");printf("----------------\n");</span><br><span class="line"> printf("min :\t"); for (i=1;i&lt;=slen;i++) printf("%s\t",minpoolosd[i]); printf("|\n");</span><br><span class="line"> printf("osdid :\t"); for (i=1;i&lt;=slen;i++) printf("osd.%s\t",minosdid[i]); printf("|\n");</span><br><span class="line"> printf("per:\t"); for (i=1;i&lt;=slen;i++) printf("%.1f%\t",100*(minpoolosd[i]-poollist[i]/poolhasid[i])/(poollist[i]/poolhasid[i])); printf("|\n");</span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure>
+<p>输出如下：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dumped all <span class="keyword">in</span> format plain</span><br><span class="line"></span><br><span class="line">pool :	<span class="number">0</span>	<span class="number">1</span>	<span class="number">2</span>	| SUM </span><br><span class="line">----------------------------------------</span><br><span class="line">osd.<span class="number">0</span>	<span class="number">206</span>	<span class="number">206</span>	<span class="number">53</span>	| <span class="number">465</span></span><br><span class="line">osd.<span class="number">1</span>	<span class="number">22</span>	<span class="number">19</span>	<span class="number">5</span>	| <span class="number">46</span></span><br><span class="line">osd.<span class="number">2</span>	<span class="number">202</span>	<span class="number">196</span>	<span class="number">49</span>	| <span class="number">447</span></span><br><span class="line">osd.<span class="number">3</span>	<span class="number">19</span>	<span class="number">25</span>	<span class="number">6</span>	| <span class="number">50</span></span><br><span class="line">osd.<span class="number">4</span>	<span class="number">29</span>	<span class="number">35</span>	<span class="number">9</span>	| <span class="number">73</span></span><br><span class="line">osd.<span class="number">5</span>	<span class="number">34</span>	<span class="number">31</span>	<span class="number">6</span>	| <span class="number">71</span></span><br><span class="line">----------------------------------------</span><br><span class="line">SUM :	<span class="number">512</span>	<span class="number">512</span>	<span class="number">128</span>	|</span><br><span class="line">AVE :	<span class="number">85</span>	<span class="number">85</span>	<span class="number">21</span>	|</span><br><span class="line">max :	<span class="number">206</span>	<span class="number">206</span>	<span class="number">53</span>	|</span><br><span class="line">osdid :	osd.<span class="number">0</span>	osd.<span class="number">0</span>	osd.<span class="number">0</span>	|</span><br><span class="line">per:	<span class="number">141.4</span>%	<span class="number">141.4</span>%	<span class="number">148.4</span>%	|</span><br><span class="line">---------------------------------------</span><br><span class="line">min :	<span class="number">19</span>	<span class="number">19</span>	<span class="number">5</span>	|</span><br><span class="line">osdid :	osd.<span class="number">3</span>	osd.<span class="number">1</span>	osd.<span class="number">1</span>	|</span><br><span class="line">per:	-<span class="number">77.7</span>%	-<span class="number">77.7</span>%	-<span class="number">76.6</span>%	|</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>上面的处理使用的是awk处理，开始的时候看不懂什么意思，然后就去看了这本书 <code>The AWK Programming Language</code> ,网上说这个是awk的圣经，这本书在京东卖1000RMB+,可见这本书的价值，下载地址为： <a href="http://pan.baidu.com/s/1gdwbF71" target="_blank" rel="external">http://pan.baidu.com/s/1gdwbF71</a>，关于原始脚本的意思在这里做一个简单的语法的解释，以及作者脚本的逻辑。</p>
+<hr>
+<h3 id="语法的解释">语法的解释</h3><blockquote>
+<p>/^pg_stat/ { col=1; while($col!=”up”) {col++}; col++ }</p>
+</blockquote>
+<p>这个是匹配pg dump 的输出结果里面pg_stat那个字段，开始计数为1，不是up值就将col的值加1，这个匹配到的就是我们经常看到的[1,10]这个值最后的col++是将col值+1,因为字段里面有up,up_primary,我们需要的是up_primary</p>
+<blockquote>
+<p>/^[0-9a-f]+.[0-9a-f]+/ { match($0,/^[0-9a-f]+/); pool=substr($0, RSTART, RLENGTH); poollist[pool]=0;</p>
+</blockquote>
+<p>这个是匹配前面的 1.17a pg号 ，使用自带的match函数 做字符串的过滤统计匹配.号前面的存储池ID， 并得到 RSTART, RLENGTH 值，这个是取到前面的存储池ID，使用substr 函数，就可以得到pool的值了，poollist[pool]=0，是将数组的值置为0</p>
+<blockquote>
+<p>up=$col; i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)&gt;0) { osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) }</p>
+</blockquote>
+<p>先将变量置0，然后将osd编号一个个输入到osds[i]的数组当中去</p>
+<blockquote>
+<p>for(i in osds) {array[osds[i],pool]++; osdlist[osds[i]];}</p>
+</blockquote>
+<p>将osds数组中的值输入到数组当中去，并且记录成osdlist，和数组array[osd[i],pool]</p>
+<blockquote>
+<p>printf(“\n”);<br> printf(“pool :\t”); for (i in poollist) printf(“%s\t”,i); printf(“| SUM \n”);</p>
+</blockquote>
+<p>打印osd pool的编号</p>
+<blockquote>
+<p>for (i in poollist) printf(“————“); printf(“————————\n”);</p>
+</blockquote>
+<p>根据osd pool的长度打印——</p>
+<blockquote>
+<p>for (i in osdlist) { printf(“osd.%i\t”, i); sum=0;</p>
+</blockquote>
+<p>打印osd的编号</p>
+<blockquote>
+<p>for (j in poollist) { printf(“%i\t”, array[i,j]); sum+=array[i,j]; poollist[j]+=array[i,j] }; printf(“| %i\n”,sum) }<br>打印对应的osd的pg数目，并做求和的统计</p>
+<p>for (i in poollist) printf(“————“); printf(“————————\n”);<br> printf(“SUM :\t”); for (i in poollist) printf(“%s\t”,poollist[i]); printf(“|\n”);</p>
+</blockquote>
+<p>打印新的poollist里面的求和的值</p>
+<p>修改版本里面用到的函数</p>
+<blockquote>
+<p>slen1=asorti(osdlist,newosdlist)</p>
+</blockquote>
+<p>这个是将数组里面的下标进行排序，这里是对osd和poollist的编号进行排序 slen1是拿到数组的长度，使用for进行遍历输出</p>
+<hr>
+<h3 id="脚本的逻辑">脚本的逻辑</h3><ul>
+<li>匹配到pg的id和pg对应的osd，</li>
+<li>使用数组的方式，将统计到的osd id存储起来，</li>
+<li>然后打印数组</li>
+</ul>
+<hr>
+<p>其他资源：<br>pg设置的计算器：<br><a href="http://ceph.com/pgcalc/" target="_blank" rel="external">http://ceph.com/pgcalc/</a><br>pg的查询和设置：<br><a href="http://ceph.com/docs/master/rados/operations/placement-groups/" target="_blank" rel="external">http://ceph.com/docs/master/rados/operations/placement-groups/</a></p>
+<hr>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2015-10-04</td>
+</tr>
+<tr>
+<td style="text-align:center">修改</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-08-24</td>
+</tr>
+<tr>
+<td style="text-align:center">修改有0的统计BUG</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-09-08</td>
+</tr>
+</tbody>
+</table>
+<p>引用博客地址如下：</p>
+<p><a href="http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd/" target="_blank" rel="external">http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd/</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/10/12/inkscope管理平台试用/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          inkscope管理平台试用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/09/28/rbd的数据在哪里/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">rbd的数据在哪里</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '查询osd上的pg数',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

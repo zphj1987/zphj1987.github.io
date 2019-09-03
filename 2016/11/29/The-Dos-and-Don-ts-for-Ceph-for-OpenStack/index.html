@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>The Dos and Don&#39;ts for Ceph for OpenStack | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Ceph和OpenStack是一个非常有用和非常受欢迎的组合。 不过，部署Ceph / OpenStack经常会有一些容易避免的缺点 - 我们将帮助你解决它们">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Dos and Don'ts for Ceph for OpenStack">
+<meta property="og:url" content="http://www.zphj1987.com/2016/11/29/The-Dos-and-Don-ts-for-Ceph-for-OpenStack/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="Ceph和OpenStack是一个非常有用和非常受欢迎的组合。 不过，部署Ceph / OpenStack经常会有一些容易避免的缺点 - 我们将帮助你解决它们">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/dos-and-dons.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The Dos and Don'ts for Ceph for OpenStack">
+<meta name="twitter:description" content="Ceph和OpenStack是一个非常有用和非常受欢迎的组合。 不过，部署Ceph / OpenStack经常会有一些容易避免的缺点 - 我们将帮助你解决它们">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-The-Dos-and-Don-ts-for-Ceph-for-OpenStack" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/29/The-Dos-and-Don-ts-for-Ceph-for-OpenStack/" class="article-date">
+  	<time datetime="2016-11-29T15:59:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-11-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      The Dos and Don&#39;ts for Ceph for OpenStack
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/dos-and-dons.png" alt=""><br></center>
+
+<p>Ceph和OpenStack是一个非常有用和非常受欢迎的组合。 不过，部署Ceph / OpenStack经常会有一些容易避免的缺点 - 我们将帮助你解决它们</p>
+<a id="more"></a>
+<h2 id="使用_show_image_direct_url_and_the_Glance_v2_API">使用 show_image_direct_url and the Glance v2 API</h2><p>使用ceph的RBD（RADOS Block Device）,你可以创建克隆,你可以将克隆理解为可写的快照（快照通常是只读的）。克隆只会为相对于父快照变化的部分创建对象，这意味着：</p>
+<ol>
+<li>可以节省空间。这是显而易见的，但是这并不能很有说服力，毕竟存储是分布式系统当中最便宜的部分</li>
+<li>克隆中没有修改的部分还是由原始卷提供。这很重要，因为很容易命中相同的RADOS 对象，相同的osd，不论是用的哪个克隆。而且这意味着，这些对象是从OSD的页面缓存进行响应，换句话说，是RAM提供。RAM比任何存储访问方式速度都快，所以从内存当中提供大量的读取是很好的。正因为这样，从克隆的卷提供数据读取，要比相同数据全拷贝的情况下速度要快一些</li>
+</ol>
+<p>Cinder（当从image创建一个卷）和Nova(从ceph提供临时磁盘)都能够使用ceph的后端的RBD image的克隆，并且是自动的，但这个只有在glance-api.conf中设置了show_image_direct_url=true 才会使用，并且配置使用 Glance v2 API进行连接Glance。<a href="http://docs.ceph.com/docs/jewel/rbd/rbd-openstack/#any-openstack-version" target="_blank" rel="external">参考官网</a></p>
+<h2 id="设置_libvirt/images_type_=_rbd_on_Nova_compute_nodes">设置 libvirt/images_type = rbd on Nova compute nodes</h2><p>在NOVA中（使用libvirt的KVM计算驱动），有几个存储临时镜像的配置，不从Cinder卷启动的情况。你可以设置 nova‑compute.conf 的[libvirt]当中的images_type：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[libvirt]</span><br><span class="line">images_<span class="built_in">type</span> = &lt;<span class="built_in">type</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>默认的类型是磁盘，这意味着你启动一个新的vm的时候，将会发生下面的事：<br>nova-compute在你的虚拟机管理节点上链接到Glance API,查找所需要的image，下载这个image到你的计算节点，默认在/var/lib/nova/instances/_base路径下</li>
+<li>然后会创建一个qcow2文件，使用下载的这个image做它的backing file</li>
+</ul>
+<p>这个过程在计算节点上会占用大量的空间，并且会一旦这个镜像没有提前在计算节点上下载好，就会需要等很久才能启动虚拟机，这也使得这样的vm不可能实时的迁移到另外一台主机而不产生宕机时间</p>
+<p>将images_types设置为rbd后意味着disk是存储在rbd的后端的，是原始镜像的克隆，并且是立即创建的，没有延时启动，没有浪费空间，可以获得所有克隆的好处，<a href="http://docs.ceph.com/docs/jewel/rbd/rbd-openstack/#id2" target="_blank" rel="external">参考文档</a></p>
+<h2 id="在Nova计算节点上启用RBD缓存">在Nova计算节点上启用RBD缓存</h2><p>librbd是支持Qemu / KVM RBD存储驱动程序的ceph的库，可以使用虚拟化主机的RAM进行磁盘的缓存。你应该使用这个。</p>
+<p>是的，它是一个可以安全使用的缓存。 一方面，virtio-blk与Qemu RBD 驱动程序的组合将正确地实现磁盘刷新。 也就是说，当虚拟机中的应用程序显示“我现在想在磁盘上存储此数据”时，virtio-blk，Qemu和Ceph将一起工作，只有在写入完成时才会报告</p>
+<ul>
+<li>写入主OSD</li>
+<li>复制到可用的副本OSD</li>
+<li>只是写入所有的osd journal才会acknowledged</li>
+</ul>
+<p>此外，Ceph RBD具有一个智能保护：即使它被配置为write-back缓存，它也将拒绝这样做（这意味着它将 write-through模式操作），直到它接收到用户的第一次flush请求。 因此，如果你运行一个永远不会这样做的虚拟机，因为它被错误配置或者它的客户操作系统很老的，那么RBD将固执地拒绝缓存任何写入。 相应的RBD选项称为 rbd cache writethrough until flush，它默认为true，你不应该禁用它。</p>
+<p>你可以通过修改nova-compute 配置文件的下面选项开启writeback caching<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[libvirt]</span><br><span class="line">images_<span class="built_in">type</span> = rbd</span><br><span class="line">...</span><br><span class="line">disk_cachemodes=<span class="string">"network=writeback"</span></span><br></pre></td></tr></table></figure></p>
+<p>你应该这样去做</p>
+<h2 id="为images,_volumes,_and_ephemeral_disks使用单独的池">为images, volumes, and ephemeral disks使用单独的池</h2><p>现在你已经在Glance开启了enabled show_image_direct_url=true，配置Cinder and nova-compute与Glance交互 的时候使用 v2 API, 配置 nova-compute使用 libvirt/images_type=rbd，所有的VMs和volumes都使用rbd克隆，克隆可以跨存储进行，意味着你可以创建RBD image(已经快照)在一个存储池，然后它的克隆在另外一个存储池<br>你应该这样做，有几个原因：</p>
+<ul>
+<li><p>单独的池意味着您可以分别控制对这些池的访问。 这只是一个标准的缓解危险方法：如果您的nova-compute节点被攻破，并且攻击者可以损坏或删除临时磁盘，那么这是坏的 - 但如果他们也可能损坏您的Glance图像那将会更糟。</p>
+</li>
+<li><p>单独池也意味着您可以有不同的池设置，例如size或pg_num的设置。</p>
+</li>
+<li><p>最重要的是，单独的池可以使用单独的crush_ruleset设置。 下面我们会做介绍</p>
+</li>
+</ul>
+<p>通常有三个不同的池：一个用于Glance图像（通常命名为glance或图像），一个用于Cinder卷（cinder或卷），一个用于VM（nova-compute或vms）。</p>
+<h2 id="不需要使用SSD作为你的Ceph_OSD_journal">不需要使用SSD作为你的Ceph OSD journal</h2><p>在这篇文章的建议中，这一个可能是最令人感觉到奇怪和不认可的。 当然，传统的情况下都会认为，你应该总是把你的OSD journal在更快的设备上，并且你应该以1：4到1：6的比例部署ssd和普通磁盘，对吧？</p>
+<p>让我们来看看。 假设你是按1：6的配比方法，你的SATA转盘能够以100 MB/s的速度写。 6个OSD，每个OSD使用企业SSD分区上的分区作为。进一步假设SSD能够以500MB/s写入。  </p>
+<p>恭喜你，在那种情况下，你刚刚使你的SSD成为瓶颈。虽然你的OSDs聚合带宽支持600 MB / s，你的SSD限制你大约83％的性能。</p>
+<p>在这种情况下，你实际上可以用1：4的比例，但使你的聚合带宽只快了一点点，SSD的没有很大的优势</p>
+<p>现在，当然，考虑另一种选择：如果你把你的journal放在OSD相同的设备上，那么你只能有效地使用一半的驱动器的标称带宽，平均来说，因为你写两次到同一设备。 所以这意味着没有SSD，你的有效单个osd带宽只有大约50 MB/s，所以你从6个驱动器中得到的总带宽更像是300 MB/s，对此，500MB/ s仍然是一个实质性的改进。</p>
+<p>所以你需要将自己的配比匹配到上面的计算当中，并对价格和性能进行自己的评估。 只是不要认为SSD journal将是万灵药，也许使用ssd算是一个好主意，关键在于比较</p>
+<h2 id="使用all-flash_OSDs">使用all-flash OSDs</h2><p>有一件事要注意，你的SSD journal不会提高读。 那么，怎样利用SSD的提高读取呢？</p>
+<p>使用ssd做OSD。 也就是说，不是OSD journal，而是具有文件存储和journal的OSD。 这样的ssd的OSD不仅仅是写入速度快，而且读取也会快。</p>
+<h2 id="将_all-flash_OSDs_放入独立的CRUSH_root">将 all-flash OSDs 放入独立的CRUSH root</h2><p>假设你不是在全闪存硬件上运行，而是运行一个经济高效的混合集群，其中一些OSD是普通的，而其他是SSD（或NVMe设备或其他），你显然需要单独处理这些OSD。 最简单和容易的方法就是，除了正常配置的默认根之外再创建一个单独的CRUSH根。</p>
+<p>例如，您可以按如下所示设置CRUSH层次结构：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ID WEIGHT  TYPE NAME         UP/DOWN REWEIGHT PRIMARY-AFFINITY</span><br><span class="line">- </span><br><span class="line">-<span class="number">1</span> <span class="number">4.85994</span> root default</span><br><span class="line">-<span class="number">2</span> <span class="number">1.61998</span>     host elk</span><br><span class="line"> <span class="number">0</span> <span class="number">0.53999</span>         osd.<span class="number">0</span>          up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"> <span class="number">1</span> <span class="number">0.53999</span>         osd.<span class="number">1</span>          up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"> <span class="number">2</span> <span class="number">0.53999</span>         osd.<span class="number">2</span>          up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line">-<span class="number">3</span> <span class="number">1.61998</span>     host moose</span><br><span class="line"> <span class="number">3</span> <span class="number">0.53999</span>         osd.<span class="number">3</span>          up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"> <span class="number">4</span> <span class="number">0.53999</span>         osd.<span class="number">4</span>          up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"> <span class="number">5</span> <span class="number">0.53999</span>         osd.<span class="number">5</span>          up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line">-<span class="number">4</span> <span class="number">1.61998</span>     host reindeer</span><br><span class="line"> <span class="number">6</span> <span class="number">0.53999</span>         osd.<span class="number">6</span>          up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"> <span class="number">7</span> <span class="number">0.53999</span>         osd.<span class="number">7</span>          up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"> <span class="number">8</span> <span class="number">0.53999</span>         osd.<span class="number">8</span>          up  <span class="number">1.00000</span>          <span class="number">1.00000</span></span><br><span class="line">-<span class="number">5</span> <span class="number">4.85994</span> root highperf</span><br><span class="line">-<span class="number">6</span> <span class="number">1.61998</span>     host elk-ssd</span><br><span class="line"> <span class="number">9</span> <span class="number">0.53999</span>         osd.<span class="number">9</span>          up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"><span class="number">10</span> <span class="number">0.53999</span>         osd.<span class="number">10</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"><span class="number">11</span> <span class="number">0.53999</span>         osd.<span class="number">11</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line">-<span class="number">7</span> <span class="number">1.61998</span>     host moose-ssd</span><br><span class="line"><span class="number">12</span> <span class="number">0.53999</span>         osd.<span class="number">12</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"><span class="number">13</span> <span class="number">0.53999</span>         osd.<span class="number">13</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"><span class="number">14</span> <span class="number">0.53999</span>         osd.<span class="number">14</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line">-<span class="number">8</span> <span class="number">1.61998</span>     host reindeer-ssd</span><br><span class="line"><span class="number">15</span> <span class="number">0.53999</span>         osd.<span class="number">15</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"><span class="number">16</span> <span class="number">0.53999</span>         osd.<span class="number">16</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"><span class="number">17</span> <span class="number">0.53999</span>         osd.<span class="number">17</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span></span><br></pre></td></tr></table></figure></p>
+<p>在上面的示例中，OSDs 0-8分配到默认根，而OSDs 9-17（我们的SSD）属于根highperf。 我们现在可以创建两个单独的CRUSH rule：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rule replicated_ruleset &#123;</span><br><span class="line">    ruleset <span class="number">0</span></span><br><span class="line">    <span class="built_in">type</span> replicated</span><br><span class="line">    min_size <span class="number">1</span></span><br><span class="line">    max_size <span class="number">10</span></span><br><span class="line">    step take default</span><br><span class="line">    step chooseleaf firstn <span class="number">0</span> <span class="built_in">type</span> host</span><br><span class="line">    step emit</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">rule highperf_ruleset &#123;</span><br><span class="line">    ruleset <span class="number">1</span></span><br><span class="line">    <span class="built_in">type</span> replicated</span><br><span class="line">    min_size <span class="number">1</span></span><br><span class="line">    max_size <span class="number">10</span></span><br><span class="line">    step take highperf</span><br><span class="line">    step chooseleaf firstn <span class="number">0</span> <span class="built_in">type</span> host</span><br><span class="line">    step emit</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>默认crush rule 是replicated_ruleset，从默认根选择OSD，而step take highperf在highperf_ruleset当中意味着它只会选择在highperf根的OSD。</p>
+<h2 id="为存储池池指定all-flash_rule">为存储池池指定all-flash rule</h2><p>将单个池分配给新的CRUSH crule（并因此分配给不同的OSD集），使用一个命令：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph osd pool <span class="built_in">set</span> &lt;name&gt; crush_ruleset &lt;number&gt;</span><br></pre></td></tr></table></figure></p>
+<p>…其中<name>是池的名称，<number>是您的CRUSH RULE的ID。 你可以在线执行此操作，而客户端正在访问其数据 - 当然会有很多remapped和backfill，因此您的整体性能会受到一些影响。</number></name></p>
+<p>现在，假设你的环境普通存储比SSD存储更多。 因此，您将需要为all-flash OSD选择单独的池。 这里有一些池可以先迁移到 all-flash。 您可以将以下列表解释为优先级列表：在向群集添加更多SSD容量时，可以逐个将池移动到全闪存存储。</p>
+<ul>
+<li>Nova ephemeral RBD池（vms，nova-compute）</li>
+<li>radosgw bucket indexes .rgw.buckets.index and friends） - 如果你使用radosgw替换你OpenStack Swift</li>
+<li>Cinder volume pools (cinder, volumes)</li>
+<li>radosgw data pools (.rgw.buckets and friends)  - 如果您需要在Swift存储上进行低延迟读取和写入</li>
+<li>Glance image pools (glance, images)</li>
+<li>Cinder backup pools (cinder-backup)  - 通常是这是最后一个转换为 all-flash 的池。</li>
+</ul>
+<h2 id="配置一些具有低延迟本地存储的非Ceph计算主机">配置一些具有低延迟本地存储的非Ceph计算主机</h2><p>现在，毫无疑问，有一些应用场景，Ceph不会产生你所需要的延迟。 也许任何基于网络的存储都无法满足。 这只是存储和网络技术最近发展的直接结果。</p>
+<p>就在几年前，对块设备的单扇区非缓存写入的平均延迟大约为毫秒或1000微秒（μs）。 相比之下，在承载512字节（1扇区）有效载荷的TCP分组上引起的延迟大约为50μs，这使得100μs的往返行程。 总而言之，从网络写入设备（而不是本地写入）所产生的额外延迟约为10％。</p>
+<p>在过渡期间，对于相同价格的器件的单扇区写入本身约为100μs，顶级的，一些价格还是合理的设备下降到约40μs。 相比之下，网络延迟并没有改变那么多 - 从千兆以太网到10 GbE下降约20％。</p>
+<p>因此，即使通过网络访问单个未复制的SSD设备，现在的延迟将为40 + 80 = 120μs，而本地仅为40μs。 这不是10％的开销了，这是一个惊人的三倍</p>
+<p>使用Ceph，这变得更糟。 Ceph多次写入数据，首先到主OSD，然后（并行）写入所有副本。 因此，与40μs的单扇区写操作相比，我们现在至少有两次写操作的延迟，再加上两次网络往返，即40×2 + 80×2 =240μs，是本地写延迟的6倍 </p>
+<p>好消息是，大多数应用程序不关心这种延迟开销，因为它们延迟不是关键的。 坏消息是，有些非常在意。</p>
+<p>所以，你应该放弃Ceph因为这样吗？ 不。 但是请考虑添加一些未使用libvirt / images_type = rbd配置的计算节点，而是使用本地磁盘映像。 将这些主机进行主机聚合，并将它们映射到指定的flavor。 建议您的用户，他们选择这种flavor来跑低延迟的应用程序。</p>
+<h2 id="引用">引用</h2><p><a href="https://www.hastexo.com/resources/hints-and-kinks/dos-donts-ceph-openstack/index.html" target="_blank" rel="external">本篇英文原文</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/12/07/基于发行版本内核打造自己的内核/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          基于发行版本内核打造自己的内核
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/11/29/Cephday武汉20161119分享回顾/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Cephday武汉20161119分享回顾</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'The Dos and Don&#39;ts for Ceph for OpenStack',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Docker与Ceph的分与合 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、前言docker是一个管理工具，在操作系统之上提供了一个新的独立轻环境，好处是本地提供了一个基础镜像，然后基于镜像再运行环境，也可以把环境重新打包为镜像，管理起来类似于git，感觉非常的方便，并且能够做到一处提交，处处可以取到相同的环境，大大的减少了因为环境偏差造成的系统不稳定
+目前有不少生成环境已经把ceph和docker结合在一起运行了，这个有的是确实能够理解docker的好处，也能够有技">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker与Ceph的分与合">
+<meta property="og:url" content="http://www.zphj1987.com/2016/10/19/Docker与Ceph的分与合/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="一、前言docker是一个管理工具，在操作系统之上提供了一个新的独立轻环境，好处是本地提供了一个基础镜像，然后基于镜像再运行环境，也可以把环境重新打包为镜像，管理起来类似于git，感觉非常的方便，并且能够做到一处提交，处处可以取到相同的环境，大大的减少了因为环境偏差造成的系统不稳定
+目前有不少生成环境已经把ceph和docker结合在一起运行了，这个有的是确实能够理解docker的好处，也能够有技">
+<meta property="og:image" content="http://calamaribook.cn-bj.ufileos.com/ceph/cephdocker.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker与Ceph的分与合">
+<meta name="twitter:description" content="一、前言docker是一个管理工具，在操作系统之上提供了一个新的独立轻环境，好处是本地提供了一个基础镜像，然后基于镜像再运行环境，也可以把环境重新打包为镜像，管理起来类似于git，感觉非常的方便，并且能够做到一处提交，处处可以取到相同的环境，大大的减少了因为环境偏差造成的系统不稳定
+目前有不少生成环境已经把ceph和docker结合在一起运行了，这个有的是确实能够理解docker的好处，也能够有技">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Docker与Ceph的分与合" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/19/Docker与Ceph的分与合/" class="article-date">
+  	<time datetime="2016-10-19T15:46:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-10-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Docker与Ceph的分与合
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><center><br><img src="http://calamaribook.cn-bj.ufileos.com/ceph/cephdocker.png" alt="dockerceph"><br></center></p>
+<h2 id="一、前言">一、前言</h2><p>docker是一个管理工具，在操作系统之上提供了一个新的独立轻环境，好处是本地提供了一个基础镜像，然后基于镜像再运行环境，也可以把环境重新打包为镜像，管理起来类似于git，感觉非常的方便，并且能够做到一处提交，处处可以取到相同的环境，大大的减少了因为环境偏差造成的系统不稳定</p>
+<p>目前有不少生成环境已经把ceph和docker结合在一起运行了，这个有的是确实能够理解docker的好处，也能够有技术力量去进行维护，这个地方相当于两套系统了，并且关于技术的传递也增加了难度，特别是一套系统是docker+ceph的环境，并且又出现相关人员离职的情况，新来的人如果不是技术很熟，之前的技术文档没有记录很全的话，再去运维这一套系统还是比较有难度的</p>
+<p>本篇目的是记录一下docker与ceph的结合的方式，关于ceph和docker的分与合，只有做到能剥离的系统，才不会因为技术原因受限<br><a id="more"></a></p>
+<h2 id="二、实践">二、实践</h2><h3 id="2-1、配置docker的基础环境">2.1、配置docker的基础环境</h3><p>拉取基础镜像<br>这个是拉取的灵雀云的docker仓库的centos<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull index.alauda.cn/library/centos</span><br></pre></td></tr></table></figure></p>
+<p>启动docker进程,并且设置自启动<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl start docker</span><br><span class="line">systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure></p>
+<p>查询当前机器上面的镜像<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker images</span></span><br><span class="line">REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">index.alauda.cn/library/centos   latest              <span class="number">904</span>d6c400333        <span class="number">4</span> months ago        <span class="number">196.7</span> MB</span><br></pre></td></tr></table></figure></p>
+<p>我们先对我们的镜像做一些基本的设置<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -itd --name=cephbase --net=host --pid=host index.alauda.cn/library/centos /bin/bash</span><br><span class="line">[root@lab8106 ~]<span class="comment"># docker attach cephbase</span></span><br><span class="line"></span><br><span class="line">[root@lab8106 /]<span class="comment"># df -h</span></span><br><span class="line">Filesystem                                                                                     Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/docker-<span class="number">8</span>:<span class="number">2</span>-<span class="number">83216</span>-dd340d1f6a68b6849b9500c4e6f9b7fb1901c3c0cb1ce0d7336f5104a1ef4a10   <span class="number">10</span>G  <span class="number">240</span>M  <span class="number">9.8</span>G   <span class="number">3</span>% /</span><br><span class="line">tmpfs                                                                                           <span class="number">24</span>G     <span class="number">0</span>   <span class="number">24</span>G   <span class="number">0</span>% /dev</span><br><span class="line">tmpfs                                                                                           <span class="number">24</span>G     <span class="number">0</span>   <span class="number">24</span>G   <span class="number">0</span>% /sys/fs/cgroup</span><br><span class="line">/dev/sda2                                                                                       <span class="number">50</span>G   <span class="number">31</span>G   <span class="number">20</span>G  <span class="number">62</span>% /etc/hosts</span><br><span class="line">shm</span><br></pre></td></tr></table></figure></p>
+<p>可以看到我们已经进入了容器内部了，下面需要做的事情，就是将ceph运行需要的一些软件装上去<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 /]<span class="comment"># yum makecache</span></span><br><span class="line">[root@lab8106 /]<span class="comment"># yum install wget --nogpgcheck</span></span><br><span class="line">[root@lab8106 /]<span class="comment"># rm -rf /etc/yum.repos.d/*.repo</span></span><br><span class="line">[root@lab8106 /]<span class="comment"># wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span></span><br><span class="line">[root@lab8106 /]<span class="comment"># wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo</span></span><br><span class="line">[root@lab8106 /]<span class="comment"># sed -i '/aliyuncs/d' /etc/yum.repos.d/CentOS-Base.repo</span></span><br><span class="line">[root@lab8106 /]<span class="comment"># sed -i '/aliyuncs/d' /etc/yum.repos.d/epel.repo</span></span><br><span class="line">[root@lab8106 /]<span class="comment"># sed -i 's/$releasever/7.2.1511/g' /etc/yum.repos.d/CentOS-Base.repo</span></span><br><span class="line">[root@lab8106 /]<span class="comment"># vi /etc/yum.repos.d/ceph.repo</span></span><br><span class="line">[root@lab8106 /]<span class="comment"># yum makecache</span></span><br><span class="line">[root@lab8106 /]<span class="comment"># yum install ceph ceph-deploy</span></span><br></pre></td></tr></table></figure></p>
+<p>检查软件版本装对了没<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 /]<span class="comment"># ceph -v</span></span><br><span class="line">ceph version <span class="number">10.2</span>.<span class="number">3</span> (ecc23778eb545d8dd55e2e4735b53cc93f92e65b)</span><br><span class="line">[root@lab8106 /]<span class="comment"># ceph-deploy --version</span></span><br><span class="line"><span class="number">1.5</span>.<span class="number">36</span></span><br></pre></td></tr></table></figure></p>
+<p>可以退出了<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure></p>
+<p>查看之前的容器的ID<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker ps -l</span></span><br><span class="line">CONTAINER ID        IMAGE                            COMMAND             CREATED             STATUS                      PORTS               NAMES</span><br><span class="line"><span class="number">48420</span>c9955b5        index.alauda.cn/library/centos   <span class="string">"/bin/bash"</span>         About an hour ago   Exited (<span class="number">0</span>) <span class="number">14</span> seconds ago                       cephbase</span><br></pre></td></tr></table></figure></p>
+<p>将容器保存为一个新的镜像，cephbase<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker commit 48420c9955b5 cephbase</span></span><br><span class="line">sha256:ffe236ee2bb61d2809bf1f4c03596f83b9c0e8a6<span class="built_in">fc</span>2eb9013a81abb25be833e9</span><br></pre></td></tr></table></figure></p>
+<p>查看当前的镜像<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker images</span></span><br><span class="line">REPOSITORY                       TAG                 IMAGE ID            CREATED              SIZE</span><br><span class="line">cephbase                         latest              ffe236ee2bb6        About a minute ago   <span class="number">1.39</span> GB</span><br></pre></td></tr></table></figure></p>
+<p>基础镜像就完成，包括了ceph运行需要的软件</p>
+<p>我们来创建mon的容器<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run --privileged  -itd  --name=monnode --net=host  -v  /var/<span class="built_in">log</span>/ceph:/var/<span class="built_in">log</span>/ceph -v /var/run/ceph:/var/run/ceph -v /var/lib/ceph/:/var/lib/ceph/  -v /etc/ceph:/etc/ceph  -v /sys/fs/cgroup:/sys/fs/cgroup  ceph  /sbin/init</span><br></pre></td></tr></table></figure></p>
+<p>进入到容器当中去<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker exec -it monnode /bin/bash</span></span><br></pre></td></tr></table></figure></p>
+<p>在容器当中执行<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 deploy]<span class="comment"># ceph-deploy mon create lab8106</span></span><br></pre></td></tr></table></figure></p>
+<p>我们来创建osd的容器<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run --privileged  -itd  --name=osd0 --net=host  -v  /var/<span class="built_in">log</span>/ceph:/var/<span class="built_in">log</span>/ceph -v /var/run/ceph:/var/run/ceph -v /var/lib/ceph/:/var/lib/ceph/  -v /etc/ceph:/etc/ceph -v /var/lib/ceph/osd/ceph-<span class="number">0</span>:/var/lib/ceph/osd/ceph-<span class="number">0</span> -v /sys/fs/cgroup:/sys/fs/cgroup  ceph  /sbin/init</span><br></pre></td></tr></table></figure></p>
+<p>我们将网络映射到主机上，也就是容器和主机公用网络和主机名，然后把本地的一个数据盘的目录映射进去用于osd的部署，这里都是使用-v进行映射</p>
+<p>这个地方因为是centos7，所以systemctl内部是无法使用的，而ceph是需要这个来控制服务的，所以需要提权，并且把入口改为/sbin/init</p>
+<h2 id="三、回顾流程">三、回顾流程</h2><ul>
+<li>下载centos基础镜像 </li>
+<li>修改镜像的内容并提交为新的镜像</li>
+<li>基于新的镜像启动容器（采用host映射，目录映射，所有数据都是留在物理机）</li>
+<li>进入容器进行ceph的部署 </li>
+<li>进入容器启动相关进程</li>
+</ul>
+<p>这样ceph是运行到了docker中，即使把docker容器销毁掉，因为基于主机名和网络的配置跟宿主机是一致的，所以直接在宿主机上也是能马上启动起来的</p>
+<h2 id="四、为何用容器">四、为何用容器</h2><p>基于容器的技术是最近几年开始火起来的，目前的云计算还处于火热期，openstack还是显得比较重型的，很多时候我们只需要的是一个能够运行我们web服务的环境，然后容器技术就应运而生了，直接启动一个容器，就能实现，这个对于宿主机来说方便的只是启动一个进程那么简单</p>
+<p>对于庞大复杂的服务来说，如何做到环境一致也是一直很难做到的，一排物理机，因为各种各样的原因，升级，重装系统，很难保证整套系统基础环境的一致性，而基于docker的环境就能很方便的实现这个，相当于把整个运行环境打了一个包，所有的宿主机能够很方便的统一到相同的环境，即使重装了宿主机，也能方便的用一两条命令将环境部署到统一，比如上面所说的ceph，升级了基础镜像内的软件包，然后将所有的运行进程进行一次重启，就相当于运行了一个新的环境</p>
+<p>容器还能够做的事情就是能够很便捷的把一个复杂环境运行起来，特别对于web类的服务，一台机器上可以跑一排的对外服务，即使出了问题，也能很快的再运行起来，这个对于传统的环境来说就是很难实现的，这里讲一下calamari，这个监控系统不是很复杂，但是因为依赖的软件的问题，造成很多人无法正常运行起来，这个后面我会出一个集成好calamari的docker环境，实现一键运行</p>
+<p>在低版本的os上能够运行高版本的服务，比如在centos6上运行centos7的docker环境</p>
+<h2 id="五、总结">五、总结</h2><p>本篇的文章的标题为docker与ceph的分与合，一套系统除了自身需要稳定性以外，系统自身最好不要受制于其他系统，需要在设计初期就能保证，各个模块都能轻松的剥离，否则很容易受制于另外一套系统，所以基于上面的方案来说，docker和ceph既是合在一起的，也是分开的,本篇只是讲了一个框架，实际部署ceph的过程当中还是有一些小问题需要具体处理的，不是很难，权限问题，目录问题</p>
+<h2 id="六、变更记录">六、变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-10-19</td>
+</tr>
+</tbody>
+</table>
+<h2 id="附录：">附录：</h2><p>docker的常用操作<br>查询镜像<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker images</span></span><br></pre></td></tr></table></figure></p>
+<p>查询容器<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker ps</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># docker ps -l</span></span><br></pre></td></tr></table></figure></p>
+<p>删除容器<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker rm 64f617dfada5</span></span><br></pre></td></tr></table></figure></p>
+<p>删除镜像<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker rmi node</span></span><br></pre></td></tr></table></figure></p>
+<p>进入容器内部<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker exec -it monnode /bin/bash</span></span><br></pre></td></tr></table></figure></p>
+<p>让容器执行命令<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># docker exec monnode uptime</span></span><br></pre></td></tr></table></figure></p>
+<p>退出容器,不停止容器<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ctrl+p然后ctrl+q</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/10/28/zabbix自动发现的python方式数据生成/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          zabbix自动发现的python方式数据生成
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/10/19/Ceph中PG和PGP的区别/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Ceph中PG和PGP的区别</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'Docker与Ceph的分与合',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

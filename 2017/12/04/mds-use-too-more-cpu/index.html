@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>mds的cpu占用问题分析以及解决办法 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言mds是ceph里面处理文件接口的组件，一旦使用文件系统，不可避免的会出现一种场景就是目录很多，目录里面的文件很多，而mds是一个单进程的组件，现在虽然有了muti mds，但稳定的使用的大部分场景还是单acitve mds的
+这就会出现一种情况，一旦一个目录里面有很多文件的时候，去查询这个目录里的文件就会在当前目录做一次遍历，这个需要一个比较长的时间，如果能比较好的缓存文件信息，也能避免一些">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mds的cpu占用问题分析以及解决办法">
+<meta property="og:url" content="http://www.zphj1987.com/2017/12/04/mds-use-too-more-cpu/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言mds是ceph里面处理文件接口的组件，一旦使用文件系统，不可避免的会出现一种场景就是目录很多，目录里面的文件很多，而mds是一个单进程的组件，现在虽然有了muti mds，但稳定的使用的大部分场景还是单acitve mds的
+这就会出现一种情况，一旦一个目录里面有很多文件的时候，去查询这个目录里的文件就会在当前目录做一次遍历，这个需要一个比较长的时间，如果能比较好的缓存文件信息，也能避免一些">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/ganesha.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/3no4iobedvhwujvtr8jfmrf7/aa.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/ual9inmekpeth163muql8dyn/bbb.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/pnqr3lpjuydb8dj182cw6ffa/cccc.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/2zkcsg31i5r0972clmsnwu9p/nfs10000.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/jsd4ropqf7s80olmib2bm16t/nfs20000.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/im9wby3cyze0fsvnvoifgita/nfs200002.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/rflb49cxesc1g6uv0cuyfyse/nfs40000.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/nhx161bnwwt3ggiaommufvfx/nfs400003.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/mw0j9nj322p0slwymyicffvc/ganesha.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mds的cpu占用问题分析以及解决办法">
+<meta name="twitter:description" content="前言mds是ceph里面处理文件接口的组件，一旦使用文件系统，不可避免的会出现一种场景就是目录很多，目录里面的文件很多，而mds是一个单进程的组件，现在虽然有了muti mds，但稳定的使用的大部分场景还是单acitve mds的
+这就会出现一种情况，一旦一个目录里面有很多文件的时候，去查询这个目录里的文件就会在当前目录做一次遍历，这个需要一个比较长的时间，如果能比较好的缓存文件信息，也能避免一些">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-mds-use-too-more-cpu" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/04/mds-use-too-more-cpu/" class="article-date">
+  	<time datetime="2017-12-04T14:47:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-04</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      mds的cpu占用问题分析以及解决办法
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/ganesha.png" alt="ganesha"><br></center>
+
+<h2 id="前言">前言</h2><p>mds是ceph里面处理文件接口的组件，一旦使用文件系统，不可避免的会出现一种场景就是目录很多，目录里面的文件很多，而mds是一个单进程的组件，现在虽然有了muti mds，但稳定的使用的大部分场景还是单acitve mds的</p>
+<p>这就会出现一种情况，一旦一个目录里面有很多文件的时候，去查询这个目录里的文件就会在当前目录做一次遍历，这个需要一个比较长的时间，如果能比较好的缓存文件信息，也能避免一些过载情况，本篇讲述的是内核客户端正常，而export nfs后mds的负载长时间过高的情况<br><a id="more"></a></p>
+<h2 id="问题复现">问题复现</h2><h3 id="准备测试数据,准备好监控环境">准备测试数据,准备好监控环境</h3><p>监控mds cpu占用<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pidstat -u  <span class="number">1</span> -p <span class="number">27076</span> &gt; /tmp/mds.cpu.log</span><br><span class="line">UserParameter=mds.cpu,cat /tmp/mds.cpu.log|tail -n <span class="number">1</span>|grep -v Average| awk <span class="string">'&#123;print $8&#125;'</span></span><br></pre></td></tr></table></figure></p>
+<p>整个测试避免屏幕的打印影响时间统计,把输出需要重定向<br>测试一：<br>内核客户端写入10000文件查看时间以及cpu占用<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsserver kc10000]<span class="comment"># time seq 10000|xargs -i dd if=/dev/zero of=a&#123;&#125; bs=1K count=1  2&gt;/dev/null</span></span><br><span class="line">real	<span class="number">0</span>m30.<span class="number">121</span>s</span><br><span class="line">user	<span class="number">0</span>m1.<span class="number">901</span>s</span><br><span class="line">sys	<span class="number">0</span>m10.<span class="number">420</span>s</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://static.zybuluo.com/zphj1987/3no4iobedvhwujvtr8jfmrf7/aa.png" alt="aa.png-32.5kB"></p>
+<p>测试二：<br>内核客户端写入20000文件查看时间以及cpu占用<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsserver kc20000]<span class="comment"># time seq 20000|xargs -i dd if=/dev/zero of=a&#123;&#125; bs=1K count=1  2&gt;/dev/null</span></span><br><span class="line">real	<span class="number">1</span>m38.<span class="number">233</span>s</span><br><span class="line">user	<span class="number">0</span>m3.<span class="number">761</span>s</span><br><span class="line">sys	<span class="number">0</span>m21.<span class="number">510</span>s</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://static.zybuluo.com/zphj1987/ual9inmekpeth163muql8dyn/bbb.png" alt="bbb.png-39kB"><br>测试三：<br>内核客户端写入40000文件查看时间以及cpu占用<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsserver kc40000]<span class="comment">#  time seq 40000|xargs -i dd if=/dev/zero of=a&#123;&#125; bs=1K count=1  2&gt;/dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">2</span>m55.<span class="number">261</span>s</span><br><span class="line">user	<span class="number">0</span>m7.<span class="number">699</span>s</span><br><span class="line">sys	<span class="number">0</span>m42.<span class="number">410</span>s</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://static.zybuluo.com/zphj1987/pnqr3lpjuydb8dj182cw6ffa/cccc.png" alt="cccc.png-57.3kB"></p>
+<p>测试4：<br>内核客户端列目录10000文件，第一次写完有缓存情况<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsserver kc10000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m0.<span class="number">228</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">063</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">048</span>s</span><br></pre></td></tr></table></figure></p>
+<p>内核客户端列目录20000文件，第一次写完有缓存情况<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsserver kc20000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m0.<span class="number">737</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">141</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">092</span>s</span><br></pre></td></tr></table></figure></p>
+<p>内核客户端列目录40000文件，第一次写完有缓存情况<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsserver kc40000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m1.<span class="number">658</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">286</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">196</span>s</span><br></pre></td></tr></table></figure></p>
+<p>都是比较快的返回，CPU可以忽略不计</p>
+<p>现在重启mds后再次列目录<br>客户端如果不umount,直接重启mds的话,还是会缓存在<br>新版本这个地方好像已经改了（重启了mds 显示inode还在，但是随着时间的增长inode会减少，说明还是有周期，会释放，这个还不知道哪个地方控制，用什么参数控制，这个不是本篇着重关注的地方，后续再看下,jewel版本已经比hammer版本的元数据时间快了很多了）<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsserver kc10000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m0.<span class="number">380</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">065</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">041</span>s</span><br><span class="line">[root@nfsserver kc10000]<span class="comment"># cd ../kc20000/</span></span><br><span class="line">[root@nfsserver kc20000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m0.<span class="number">868</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">154</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">074</span>s</span><br><span class="line">[root@nfsserver kc20000]<span class="comment"># cd ../kc40000/</span></span><br><span class="line">[root@nfsserver kc40000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m1.<span class="number">947</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">300</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">166</span>s</span><br></pre></td></tr></table></figure></p>
+<p>测试都是看到很快的返回，以上都是正常的，下面开始将这个目录exportnfs出去，看下是个什么情况</p>
+<h3 id="负载问题复现">负载问题复现</h3><p>从nfs客户端第一次列10000个小文件的目录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsclient kc10000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m4.<span class="number">038</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">095</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">069</span>s</span><br></pre></td></tr></table></figure>
+<p><img src="http://static.zybuluo.com/zphj1987/2zkcsg31i5r0972clmsnwu9p/nfs10000.png" alt="nfs10000.png-36.7kB"></p>
+<p>从nfs客户端第一次列20000个小文件的目录<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsclient kc20000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m17.<span class="number">446</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">175</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">141</span>s</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://static.zybuluo.com/zphj1987/jsd4ropqf7s80olmib2bm16t/nfs20000.png" alt="nfs20000.png-43.2kB"><br>从nfs客户端第二次列20000个小文件目录<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsclient kc20000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m21.<span class="number">215</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">182</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">151</span>s</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://static.zybuluo.com/zphj1987/im9wby3cyze0fsvnvoifgita/nfs200002.png" alt="nfs200002.png-56.7kB"></p>
+<p>从nfs客户端第三次列20000个小文件目录<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsclient kc20000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m16.<span class="number">222</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">189</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">143</span>s</span><br></pre></td></tr></table></figure></p>
+<p>可以看到在20000量级的时候列目录维持在20000左右，CPU维持一个高位</p>
+<p>从nfs客户端列40000个小文件的目录<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsclient kc40000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">7</span>m15.<span class="number">663</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">319</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">581</span>s</span><br><span class="line">[root@nfsclient kc40000]<span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://static.zybuluo.com/zphj1987/rflb49cxesc1g6uv0cuyfyse/nfs40000.png" alt="nfs40000.png-77.2kB"><br>第一次列完，马上第二次列看下情况<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsclient kc40000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">1</span>m12.<span class="number">816</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">163</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">142</span>s</span><br></pre></td></tr></table></figure></p>
+<p>可以看到第二次列的时间已经缩短了，再来第三次<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsclient kc40000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">1</span>m33.<span class="number">549</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">162</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">183</span>s</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://static.zybuluo.com/zphj1987/nhx161bnwwt3ggiaommufvfx/nfs400003.png" alt="nfs400003.png-61.3kB"><br>可以看到在后面列的时候时间确实缩短了，但是还是维持一个非常高CPU的占用，以及比较长的一个时间，这个很容易造成过载</p>
+<p>这个地方目前看应该是内核客户端与内核NFS的结合的问题</p>
+<h2 id="解决办法:用ganesha的ceph用户态接口替代kernel_nfs">解决办法:用ganesha的ceph用户态接口替代kernel nfs</h2><p>我们看下另外一种方案用户态的NFS+ceph同样的环境下测试结果：</p>
+<p>从nfs客户端第一次列40000个小文件的目录<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsclient kc40000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m3.<span class="number">289</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">335</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">386</span>s</span><br></pre></td></tr></table></figure></p>
+<p>从nfs客户端第二次列40000个小文件的目录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsclient kc40000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m1.<span class="number">686</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">351</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">389</span>s</span><br></pre></td></tr></table></figure>
+<p>从nfs客户端第三次列40000个小文件的目录<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@nfsclient kc40000]<span class="comment"># time ll 2&gt;&amp;1 &gt; /dev/null</span></span><br><span class="line"></span><br><span class="line">real	<span class="number">0</span>m1.<span class="number">675</span>s</span><br><span class="line">user	<span class="number">0</span>m0.<span class="number">320</span>s</span><br><span class="line">sys	<span class="number">0</span>m0.<span class="number">391</span>s</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://static.zybuluo.com/zphj1987/mw0j9nj322p0slwymyicffvc/ganesha.png" alt="ganesha.png-51.5kB"><br>基本mds无多余的负载，非常快的返回</p>
+<p>可以从上面的测试看到差别是非常的大的，这个地方应该是内核模块与内核之间的问题，而采用用户态的以后解决了列目录慢以及卡顿的问题</p>
+<h2 id="如何配置ganesha支持ceph的nfs接口">如何配置ganesha支持ceph的nfs接口</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b V2.<span class="number">3</span>-stable https://github.com/nfs-ganesha/nfs-ganesha.git</span><br><span class="line"><span class="built_in">cd</span> nfs-ganesha/</span><br><span class="line">git submodule update --init --recursive</span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="built_in">cd</span> nfs-ganesha/</span><br><span class="line">ll src/FSAL/FSAL_CEPH/</span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line">mkdir mybuild</span><br><span class="line"><span class="built_in">cd</span> mybuild/</span><br><span class="line">cmake -DUSE_FSAL_CEPH=ON ../nfs-ganesha/src/</span><br><span class="line">ll FSAL/FSAL_CEPH/</span><br><span class="line">make</span><br><span class="line">make -j <span class="number">12</span></span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>vim /etc/ganesha/ganesha.conf<br>修改配置文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">EXPORT</span><br><span class="line">&#123;</span><br><span class="line">    Export_ID=<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    Path = <span class="string">"/"</span>;</span><br><span class="line"></span><br><span class="line">    Pseudo = <span class="string">"/"</span>;</span><br><span class="line"></span><br><span class="line">    Access_Type = RW;</span><br><span class="line"></span><br><span class="line">    NFS_Protocols = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line">    Transport_Protocols = TCP;</span><br><span class="line"></span><br><span class="line">    FSAL &#123;</span><br><span class="line">        Name = CEPH;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>停止掉原生的nfs<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl stop nfs</span><br></pre></td></tr></table></figure></p>
+<p>启用ganesha nfs<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl start  nfs-ganesha.service</span><br></pre></td></tr></table></figure></p>
+<p>然后在客户端进行nfs的挂载即可</p>
+<h2 id="总结">总结</h2><p>ganesha在需要用到cephfs又正好是要用到nfs接口的时候，可以考虑这个方案，至少在缓存文件，降低负载上面能够比kernel client有更好的效果，这个可以根据测试情况用数据来做比较</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2017-12-04</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/01/02/ceph-primary-object-damage-recover/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Ceph对象主本损坏的修复方法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/11/30/recovery-from-grub-damage/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CentOS GRUB损坏修复方法</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'mds的cpu占用问题分析以及解决办法',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

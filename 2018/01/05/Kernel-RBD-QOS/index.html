@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Kernel RBD的QOS配置方案 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入
+cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kernel RBD的QOS配置方案">
+<meta property="og:url" content="http://www.zphj1987.com/2018/01/05/Kernel-RBD-QOS/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入
+cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/io.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kernel RBD的QOS配置方案">
+<meta name="twitter:description" content="前言关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入
+cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Kernel-RBD-QOS" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/05/Kernel-RBD-QOS/" class="article-date">
+  	<time datetime="2018-01-05T07:23:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-05</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kernel RBD的QOS配置方案
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/io.png" alt="io"><br></center>
+
+<h2 id="前言">前言</h2><p>关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入</p>
+<p>cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以通过ceph内部来实现qos，但是有现成的解决方案的时候，可以减少很多开发周期，以及测试的成本</p>
+<p>本篇将介绍的是kernel rbd的qos方案<br><a id="more"></a></p>
+<h2 id="时间过长">时间过长</h2><p>首先介绍下几个测试qos相关的命令，用来比较设置前后的效果<br>验证写入IOPS命令<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fio -filename=/dev/rbd0 -direct=<span class="number">1</span> -iodepth <span class="number">1</span> -thread -rw=write -ioengine=libaio -bs=<span class="number">4</span>K -size=<span class="number">1</span>G -numjobs=<span class="number">1</span> -runtime=<span class="number">60</span> -group_reporting -name=mytest</span><br></pre></td></tr></table></figure></p>
+<p>验证写入带宽的命令<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fio -filename=/dev/rbd0 -direct=<span class="number">1</span> -iodepth <span class="number">1</span> -thread -rw=write -ioengine=libaio -bs=<span class="number">4</span>M -size=<span class="number">1</span>G -numjobs=<span class="number">1</span> -runtime=<span class="number">60</span> -group_reporting -name=mytest</span><br></pre></td></tr></table></figure></p>
+<p>验证读取IOPS命令<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fio -filename=/dev/rbd0 -direct=<span class="number">1</span> -iodepth <span class="number">1</span> -thread -rw=<span class="built_in">read</span> -ioengine=libaio -bs=<span class="number">4</span>K -size=<span class="number">1</span>G -numjobs=<span class="number">1</span> -runtime=<span class="number">60</span> -group_reporting -name=mytest</span><br></pre></td></tr></table></figure></p>
+<p>验证读取带宽命令<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fio -filename=/dev/rbd0 -direct=<span class="number">1</span> -iodepth <span class="number">1</span> -thread -rw=<span class="built_in">read</span> -ioengine=libaio -bs=<span class="number">4</span>M -size=<span class="number">1</span>G -numjobs=<span class="number">1</span> -runtime=<span class="number">60</span> -group_reporting -name=mytest</span><br></pre></td></tr></table></figure></p>
+<p>上面为什么会设置不同的块大小，这个是因为测试的存储是会受到带宽和iops的共同制约的，当测试小io的时候，这个时候的峰值是受到iops的限制的，测试大io的时候，受到的是带宽限制，所以在做测试的时候，需要测试iops是否被限制住的时候就使用小的bs=4K，需要测试大的带宽的限制的时候就采用bs=4M来测试</p>
+<p>测试的时候都是，开始不用做qos来进行测试得到一个当前不配置qos的性能数值，然后根据需要进行qos设置后通过上面的fio去测试是否能限制住</p>
+<p>启用cgroup的blkio模块<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir -p  /cgroup/blkio/</span><br><span class="line">mount -t cgroup -o blkio blkio /cgroup/blkio/</span><br></pre></td></tr></table></figure></p>
+<p>获取rbd磁盘的major/minor numbers<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab211 ~]<span class="comment"># lsblk </span></span><br><span class="line">NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT</span><br><span class="line">rbd0   <span class="number">252</span>:<span class="number">0</span>    <span class="number">0</span>  <span class="number">19.5</span>G  <span class="number">0</span> disk </span><br><span class="line">sda      <span class="number">8</span>:<span class="number">0</span>    <span class="number">1</span> <span class="number">238.4</span>G  <span class="number">0</span> disk </span><br><span class="line">├─sda4   <span class="number">8</span>:<span class="number">4</span>    <span class="number">1</span>     <span class="number">1</span>K  <span class="number">0</span> part </span><br><span class="line">├─sda2   <span class="number">8</span>:<span class="number">2</span>    <span class="number">1</span>  <span class="number">99.9</span>G  <span class="number">0</span> part </span><br><span class="line">├─sda5   <span class="number">8</span>:<span class="number">5</span>    <span class="number">1</span>     <span class="number">8</span>G  <span class="number">0</span> part [SWAP]</span><br><span class="line">├─sda3   <span class="number">8</span>:<span class="number">3</span>    <span class="number">1</span>     <span class="number">1</span>G  <span class="number">0</span> part /boot</span><br><span class="line">├─sda1   <span class="number">8</span>:<span class="number">1</span>    <span class="number">1</span>   <span class="number">100</span>M  <span class="number">0</span> part </span><br><span class="line">└─sda6   <span class="number">8</span>:<span class="number">6</span>    <span class="number">1</span> <span class="number">129.4</span>G  <span class="number">0</span> part /</span><br></pre></td></tr></table></figure></p>
+<p>通过lsblk命令可以获取到磁盘对应的major number和minor number,这里可以看到rbd0对应的编号为252:0</p>
+<p>设置rbd0的iops的qos为10<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"252:0 10"</span> &gt; /cgroup/blkio/blkio.throttle.write_iops_device</span><br></pre></td></tr></table></figure></p>
+<p>如果想清理这个规则,把后面的数值设置为0就清理了，后面几个配置也是相同的方法<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"252:0 0"</span> &gt; /cgroup/blkio/blkio.throttle.write_iops_device</span><br></pre></td></tr></table></figure></p>
+<p>限制写入的带宽为10MB/s<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"252:0 10485760"</span> &gt; /cgroup/blkio/blkio.throttle.write_bps_device</span><br></pre></td></tr></table></figure></p>
+<p>限制读取的qos为10<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"252:0 10"</span> &gt; /cgroup/blkio/blkio.throttle.read_iops_device</span><br></pre></td></tr></table></figure></p>
+<p>限制读取的带宽为10MB/s<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"252:0 10485760"</span> &gt; /cgroup/blkio/blkio.throttle.read_bps_device</span><br></pre></td></tr></table></figure></p>
+<p>以上简单的设置就完成了kernel rbd的qos设置了，我测试了下，确实是生效了的</p>
+<h2 id="总结">总结</h2><p>这个知识点很久前就看到了，一直没总结，现在记录下，个人观点是能快速，有效，稳定的实现功能是最好的，所以使用这个在kernel rbd方式下可以不用再进行qos的开发了</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2018-01-05</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/01/06/CTDB-use-rados-object-as-lock-file/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          CTDB使用rados object作为lock file
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/01/02/ceph-primary-object-damage-recover/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Ceph对象主本损坏的修复方法</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'Kernel RBD的QOS配置方案',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

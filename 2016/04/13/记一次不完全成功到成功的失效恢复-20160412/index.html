@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>记一次不完全成功到成功的失效恢复(20160412) | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="更新：在经历了好几天后，失效的环境最终变成了可用状态，只能说有的时候不放弃还真是有点用的
+
+在不久前处理了一个故障恢复以后，又碰上一个群友的集群出现了严重故障，本篇将记录这个中间大致处理的过程，一些细节在以后会补充
+首先看到给出的截图显示的是大量的pg处于异常的状态，从经验上判断，环境要么处于down机的边缘，或者是刚经历了一次大量的重启，这个时候集群可以说是前端的访问肯定全断的，这个故障的时候资">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次不完全成功到成功的失效恢复(20160412)">
+<meta property="og:url" content="http://www.zphj1987.com/2016/04/13/记一次不完全成功到成功的失效恢复-20160412/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="更新：在经历了好几天后，失效的环境最终变成了可用状态，只能说有的时候不放弃还真是有点用的
+
+在不久前处理了一个故障恢复以后，又碰上一个群友的集群出现了严重故障，本篇将记录这个中间大致处理的过程，一些细节在以后会补充
+首先看到给出的截图显示的是大量的pg处于异常的状态，从经验上判断，环境要么处于down机的边缘，或者是刚经历了一次大量的重启，这个时候集群可以说是前端的访问肯定全断的，这个故障的时候资">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/fi2557g55ucsdpyblopyfudl/newpay.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一次不完全成功到成功的失效恢复(20160412)">
+<meta name="twitter:description" content="更新：在经历了好几天后，失效的环境最终变成了可用状态，只能说有的时候不放弃还真是有点用的
+
+在不久前处理了一个故障恢复以后，又碰上一个群友的集群出现了严重故障，本篇将记录这个中间大致处理的过程，一些细节在以后会补充
+首先看到给出的截图显示的是大量的pg处于异常的状态，从经验上判断，环境要么处于down机的边缘，或者是刚经历了一次大量的重启，这个时候集群可以说是前端的访问肯定全断的，这个故障的时候资">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-记一次不完全成功到成功的失效恢复-20160412" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/13/记一次不完全成功到成功的失效恢复-20160412/" class="article-date">
+  	<time datetime="2016-04-12T16:04:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-04-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      记一次不完全成功到成功的失效恢复(20160412)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="更新：">更新：</h3><p>在经历了好几天后，失效的环境最终变成了可用状态，只能说有的时候不放弃还真是有点用的</p>
+<hr>
+<p>在不久前处理了一个故障恢复以后，又碰上一个群友的集群出现了严重故障，本篇将记录这个中间大致处理的过程，一些细节在以后会补充</p>
+<p>首先看到给出的截图显示的是大量的pg处于异常的状态，从经验上判断，环境要么处于down机的边缘，或者是刚经历了一次大量的重启，这个时候集群可以说是前端的访问肯定全断的，这个故障的时候资源一般会比较紧张，所以在启动的过程中也要注意不要触发更大面积的down机，对于集群来说是会有连带效应的</p>
+<p>在启动了部分osd后，集群还是有大量的pg出现的是down+peering的状态，而发现down的osd实际全部在一台服务器上的，这个从ceph的架构来说是不应该出现这个状态的，这个可能是在down机过程中，频繁的pg的状态变化造成了pg的状态停留在之前的down的状态上，而pg出现锁死的状况，这个在之前的那位群友的环境中出现过一次，那个是多机有osd出现异常的情况，这次是单机出现的情况</p>
+<a id="more"></a>
+<p>尝试加大日志级别，从几个osd里面看日志出现两类的异常，从后面的处理的情况来看，实际这个是触发了两个bug，第一个问题出现是部分的数据丢失，这个在进行处理以后，再次启动的时候，几个osd出现了同样的错误，在询问了我们的研发大牛后，基本能判断这个是一个0.94.x的bug，并且在邮件列表里面已经解决</p>
+<p>然后尝试对其中的一台进行升级，这次升级直接升级到了10.1.1，然后启动osd，确实可以启动了，具体的怎么触发这个bug，就不是太清楚里面的过程，这个环境是经历了一个比较复杂的状态变化</p>
+<p>启动了部分osd后，发现还是osd无法启动，一检查，发现居然是这个机器的5个磁盘都有文件系统的错误，之前的部分数据丢失，也可能是文件系统错误引起的，很有可能是异常后造成了大面积的异常，这个地方只是推断，因为没有看到监控中间的过程，在修复了文件系统以后，osd都能起来了，只是又碰上另外的一个问题，<br>incomplete状态，就是事情没做完，在检查了里面的数据，发现数据没问题</p>
+<p>尝试做修复，使用cephobjecttool导出数据再导入另外的pg，状态还是无法变化，然后根据之前另外一个国外的处理经验，将pg导入到非pg映射的osd，然后让其自动backfiill，发现还是无法生效，pg仍然停留在imcomplete状态</p>
+<p>在询问了对方里面的数据情况后得知只有一个镜像比较重要，果断尝试后端的修复，大概思路就是将img镜像所对应的数据全部拷贝到一个目录，然后进行拼接的操作，这个在我之前的测试环境测试过没问题，这次在这个环境上进行了操作，因为环境的对象大小经过了修改，所以脚本也要对应修改，最后合成看了一个raw文件，在经过验证后，能够启动，数据基本是算是恢复了</p>
+<p>然后做了pg repair osd repair deep-scrub等操作都是无法改变状态</p>
+<p>环境还停留在不可用的状态，尝试做最后的修复，将pg数据进行备份后，强制创建pg，这个在我自己的测试环境下是可行的方案，但是这个环境在停留在creating状态比较久后，还是会进入imcomplete状态，尝试几次还是不行，开始怀疑是这两个osd问题，然后将osd out以后，在重新分布的osd上进行了创建pg操作，还是creating后进入imcomplete状态，到此，基本判断环境无法恢复了，数据算是保住了</p>
+<p>这个是国内一个比较牛的cepher也碰到的情况 <a href="http://m.oschina.net/blog/360274" target="_blank" rel="external">osd盘崩溃的总结</a>，他这个环境也是最终无法救回来<br>这是他查询到的国外的一个人写的情况：</p>
+<blockquote>
+<p>查了一圈无果。一个有同样遭遇的人的一段话：<br>I already tried “ceph pg repair 4.77”, stop/start OSDs, “ceph osd lost”, “ceph pg force_create_pg 4.77”.<br>Most scary thing is “force_create_pg” does not work. At least it should be a way to wipe out a incomplete PG without destroying a whole pool.</p>
+</blockquote>
+<p>这个地方出故障的环境做一个总结：</p>
+<ul>
+<li>环境做了比较极端的优化，这里就不说了，ceph的journal这一层就是防止down机出现数据不一致做replay的，做了极端的环境优化需要做多次整机down机测试，这个down机是无法完全避免的，所以要考虑</li>
+<li>磁盘出现了多个同时的损坏，这个没有办法，文件系统的损坏有可能是主机系统出现比较特殊的异常造成磁盘数据异常，这个单机多磁盘损坏的可能是有的，最怕就是部分损坏</li>
+<li>ceph有部分bug是在比较极端的情况下出现的，并不是没有，所以不能想着完全避免bug，多想想真出问题了，怎样把损失降低到最小，我的底线是数据回来</li>
+<li>ceph集群的副本只能保证系统内的高可用，系统级别的高可用，只能是双系统，能搭两套一定两套，哪怕非实时定期备份也好</li>
+<li>随着ceph使用者越多，出现问题的情况会越来越多的，特别是在使用的越久，概率就越大，磁盘也是有寿命的，集群呢？还是早做防范措施</li>
+</ul>
+<hr>
+<h3 id="后续：">后续：</h3><p>事情本以为就这么完结了，因为已经达到了最低的标准，数据的恢复，但实际上对于我自己来说，还是觉得有点遗憾的，毕竟环境是处于一个无法使用的状态，并且，环境中实际也只有部分数据的损坏，但是因为pg的状态不对，那些虚拟机实际是无法写入的，变相的这个环境就是一个僵住的状态了，虽然想了好几天，但是并没有更好的办法，有一个办法是将整个的数据导出再导入，这个时间周期会很长，如果里面数据很多都是重要的，这个是不得不走的一步了，正好这个环境重要数据只有一个，也就没去尝试了</p>
+<p>我有一个翻译的计划的，已经停滞了很久，但是说实话，我之前的想法是一章章的细细的研究，细细的翻译，然后写出自己的想法，但是迫于时间原因，以及最近事情比较多，暂时处于停滞状态，这个后期会跟进的，目前已经购买的书友，以及支持的朋友，我尽量的是对你提出的问题或者困惑给出我个人的见解，总之一个事情的处理方式有多种，我从来都是告诉你我会怎么做，然后告诉你，你可以根据你的想法来，正是因为想到自己最近没时间翻译，自己干脆把这本书过一遍，果然还是多读书好，根据书里面的一个提示，我就去尝试做另外一个操作</p>
+<p>在有想法以后，联系了群友，正好环境还在，没有做推倒重来的操作，这个也感谢ceph群友的信任和支持，在隔了几天再次登录环境以后，根据提示，我将这个pg的数据进行了删除，这次的删除不是之前的暴力的直接rm，而是使用ceph内部的工具进行的删除，主副本停止osd后同时做的操作，我怀疑是不是还有哪里的元数据被锁住了，在删除以后再次起来，再次创建pg的时候，环境还是处于一个异常的状态，因为书中描述了是我之前没见过的操作，当时想想是不是有其他的不清楚的操作方式，在一番查询以后，真的有我没用过的操作，然后直接尝试，果然整个集群正常了，然后把之前的pg数据进行导入操作，然后用rados直接get那个异常的pg里面的对象，果然能读取了，然后用rados ls也能够列出所有的对象了，环境终于能够正常了，环境是强制的改变状态变成可正常，数据也能够读写了，我个人的建议如果真是有很多重要数据，还是把数据倒出来再导入进去，集群正常情况下的导出导入操作逻辑和时间比后台的导出逻辑要简单非常多</p>
+<p>好了，到了这里终于将一个环境变成了正常的状态了，对于我自己来说，对ceph的控制又提高了一点，之前认为数据盘在，我就能把数据恢复，倒出来，但是原集群的恢复，没有太多的保证，现在基本上只要盘符不被格式化掉，环境我也能有很大的概率去恢复正常，总之保底恢复方式的越多，越有信心去恢复它</p>
+<p>这次的经历让我再一次感觉，不要放弃，不要放弃，有的时候真的会有转机，同时感谢群友能够提供环境给我，也欢迎有更多的朋友在出现问题的时候可以找我探讨一下</p>
+<blockquote>
+<p>by 运维-武汉-磨渣<br>2016年04月12日夜<br>更新于2016年04月17日夜</p>
+</blockquote>
+<h3 id="打赏通道">打赏通道</h3><center><br><img src="http://static.zybuluo.com/zphj1987/fi2557g55ucsdpyblopyfudl/newpay.png" alt="打赏" title="打赏"><br></center>
+
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/19/inkscope完整安装配置/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          inkscope完整安装配置
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/11/记一次ceph的故障修复-20160408/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">记一次ceph的故障修复(20160408)</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '记一次不完全成功到成功的失效恢复(20160412)',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

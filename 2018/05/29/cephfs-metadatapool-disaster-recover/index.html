@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>cephfs元数据池故障的恢复 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言cephfs 在L版本已经比较稳定了，这个稳定的意义个人觉得是在其故障恢复方面的成熟，一个文件系统可恢复是其稳定必须具备的属性，本篇就是根据官网的文档来实践下这个恢复的过程
+实践过程部署一个ceph  Luminous集群[root@lab102 ~]# ceph -vceph version 12.2.5 (cad919881333ac92274171586c827e01f554a70a)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cephfs元数据池故障的恢复">
+<meta property="og:url" content="http://www.zphj1987.com/2018/05/29/cephfs-metadatapool-disaster-recover/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言cephfs 在L版本已经比较稳定了，这个稳定的意义个人觉得是在其故障恢复方面的成熟，一个文件系统可恢复是其稳定必须具备的属性，本篇就是根据官网的文档来实践下这个恢复的过程
+实践过程部署一个ceph  Luminous集群[root@lab102 ~]# ceph -vceph version 12.2.5 (cad919881333ac92274171586c827e01f554a70a)">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cephfs元数据池故障的恢复">
+<meta name="twitter:description" content="前言cephfs 在L版本已经比较稳定了，这个稳定的意义个人觉得是在其故障恢复方面的成熟，一个文件系统可恢复是其稳定必须具备的属性，本篇就是根据官网的文档来实践下这个恢复的过程
+实践过程部署一个ceph  Luminous集群[root@lab102 ~]# ceph -vceph version 12.2.5 (cad919881333ac92274171586c827e01f554a70a)">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-cephfs-metadatapool-disaster-recover" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/05/29/cephfs-metadatapool-disaster-recover/" class="article-date">
+  	<time datetime="2018-05-29T15:37:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      cephfs元数据池故障的恢复
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言">前言</h2><p>cephfs 在L版本已经比较稳定了，这个稳定的意义个人觉得是在其故障恢复方面的成熟，一个文件系统可恢复是其稳定必须具备的属性，本篇就是根据官网的文档来实践下这个恢复的过程</p>
+<h2 id="实践过程">实践过程</h2><h3 id="部署一个ceph_Luminous集群">部署一个ceph  Luminous集群</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># ceph -v</span></span><br><span class="line">ceph version <span class="number">12.2</span>.<span class="number">5</span> (cad919881333ac92274171586c827e01f554a70a) luminous (stable)</span><br></pre></td></tr></table></figure>
+<p>创建filestore<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph-deploy osd create  lab102  --filestore  --data /dev/sdb1  --journal /dev/sdb2</span><br></pre></td></tr></table></figure></p>
+<p>这里想用filestore进行测试就按上面的方法去创建osd即可</p>
+<a id="more"></a>
+<p>传入测试数据</p>
+<ul>
+<li>doc </li>
+<li>pic</li>
+<li>vidio<br>这里提供下载链接</li>
+</ul>
+<blockquote>
+<p>链接：<a href="https://pan.baidu.com/s/19tlFi4butA2WjnPAdNEMwg" target="_blank" rel="external">https://pan.baidu.com/s/19tlFi4butA2WjnPAdNEMwg</a> 密码：ugjo</p>
+</blockquote>
+<p>这个是网上下载的模板的数据，方便进行真实的文件的模拟，dd产生的是空文件，有的时候会影响到测试</p>
+<p>需要更多的测试文档推荐可以从下面网站下载</p>
+<p>视频下载：</p>
+<blockquote>
+<p><a href="https://videos.pexels.com/popular-videos" target="_blank" rel="external">https://videos.pexels.com/popular-videos</a></p>
+</blockquote>
+<p>图片下载：</p>
+<blockquote>
+<p><a href="https://www.pexels.com/" target="_blank" rel="external">https://www.pexels.com/</a></p>
+</blockquote>
+<p>文档下载：</p>
+<blockquote>
+<p><a href="http://office.mmais.com.cn/Template/Home.shtml" target="_blank" rel="external">http://office.mmais.com.cn/Template/Home.shtml</a></p>
+</blockquote>
+<h3 id="元数据模拟故障">元数据模拟故障</h3><p>跟元数据相关的故障无非就是mds无法启动，或者元数据pg损坏了，这里我们模拟的比较极端的情况，把metadata的元数据对象全部清空掉，这个基本能覆盖到最严重的故障了，数据的损坏不在元数据损坏的范畴</p>
+<p>清空元数据存储池<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> object <span class="keyword">in</span> `rados -p metadata ls`;<span class="keyword">do</span> rados -p metadata rm <span class="variable">$object</span>;<span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
+<p>重启下mds进程，应该mds是无法恢复正常的<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cluster:</span><br><span class="line">    id:     <span class="number">9</span>ec7768a-<span class="number">5</span>e7c-<span class="number">4</span>f8e-<span class="number">8</span>a85-<span class="number">89895</span>e338cca</span><br><span class="line">    health: HEALTH_ERR</span><br><span class="line">            <span class="number">1</span> filesystem is degraded</span><br><span class="line">            <span class="number">1</span> mds daemon damaged</span><br><span class="line">            too few PGs per OSD (<span class="number">16</span> &lt; min <span class="number">30</span>)</span><br><span class="line"> </span><br><span class="line">  services:</span><br><span class="line">    mon: <span class="number">1</span> daemons, quorum lab102</span><br><span class="line">    mgr: lab102(active)</span><br><span class="line">    mds: ceph-<span class="number">0</span>/<span class="number">1</span>/<span class="number">1</span> up , <span class="number">1</span> up:standby, <span class="number">1</span> damaged</span><br><span class="line">    osd: <span class="number">1</span> osds: <span class="number">1</span> up, <span class="number">1</span> <span class="keyword">in</span></span><br></pre></td></tr></table></figure></p>
+<p>准备开始我们的修复过程</p>
+<h3 id="元数据故障恢复">元数据故障恢复</h3><p>设置允许多文件系统<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph fs flag <span class="built_in">set</span> <span class="built_in">enable</span>_multiple <span class="literal">true</span> --yes-i-really-mean-it</span><br></pre></td></tr></table></figure></p>
+<p>创建一个新的元数据池，这里是为了不去动原来的metadata的数据，以免损坏原来的元数据<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph osd pool create recovery <span class="number">8</span></span><br></pre></td></tr></table></figure></p>
+<p>将老的存储池data和新的元数据池recovery关联起来并且创建一个新的recovery-fs<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># ceph fs new recovery-fs recovery data --allow-dangerous-metadata-overlay</span></span><br><span class="line">new fs with metadata pool <span class="number">3</span> and data pool <span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p>做下新的文件系统的初始化相关工作<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment">#cephfs-data-scan init --force-init --filesystem recovery-fs --alternate-pool recovery</span></span><br></pre></td></tr></table></figure></p>
+<p>reset下新的fs<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment">#ceph fs reset recovery-fs --yes-i-really-mean-it</span></span><br><span class="line">[root@lab102 ~]<span class="comment">#cephfs-table-tool recovery-fs:all reset session</span></span><br><span class="line">[root@lab102 ~]<span class="comment">#cephfs-table-tool recovery-fs:all reset snap</span></span><br><span class="line">[root@lab102 ~]<span class="comment">#cephfs-table-tool recovery-fs:all reset inode</span></span><br></pre></td></tr></table></figure></p>
+<p>做相关的恢复<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># cephfs-data-scan scan_extents --force-pool --alternate-pool recovery --filesystem ceph  data</span></span><br><span class="line">[root@lab102 ~]<span class="comment"># cephfs-data-scan scan_inodes --alternate-pool recovery --filesystem ceph --force-corrupt --force-init data</span></span><br><span class="line">[root@lab102 ~]<span class="comment"># cephfs-data-scan scan_links --filesystem recovery-fs</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># systemctl start ceph-mds@lab102</span></span><br><span class="line">等待mds active 以后再继续下面操作</span><br><span class="line">[root@lab102 ~]<span class="comment"># ceph daemon mds.lab102 scrub_path / recursive repair</span></span><br></pre></td></tr></table></figure>
+<p>设置成默认的fs<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># ceph fs set-default recovery-fs</span></span><br></pre></td></tr></table></figure></p>
+<p>挂载检查数据<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment">#  mount -t ceph 192.168.19.102:/ /mnt</span></span><br><span class="line">[root@lab102 ~]<span class="comment"># ll /mnt</span></span><br><span class="line">total <span class="number">0</span></span><br><span class="line">drwxr-xr-x <span class="number">1</span> root root <span class="number">1</span> Jan  <span class="number">1</span>  <span class="number">1970</span> lost+found</span><br><span class="line">[root@lab102 ~]<span class="comment"># ll /mnt/lost+found/</span></span><br><span class="line">total <span class="number">226986</span></span><br><span class="line">-r-x------ <span class="number">1</span> root root   <span class="number">569306</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">10000000001</span></span><br><span class="line">-r-x------ <span class="number">1</span> root root <span class="number">16240627</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">10000000002</span></span><br><span class="line">-r-x------ <span class="number">1</span> root root  <span class="number">1356367</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">10000000003</span></span><br><span class="line">-r-x------ <span class="number">1</span> root root   <span class="number">137729</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">10000000004</span></span><br><span class="line">-r-x------ <span class="number">1</span> root root   <span class="number">155163</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">10000000005</span></span><br><span class="line">-r-x------ <span class="number">1</span> root root   <span class="number">118909</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">10000000006</span></span><br><span class="line">-r-x------ <span class="number">1</span> root root  <span class="number">1587656</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">10000000007</span></span><br><span class="line">-r-x------ <span class="number">1</span> root root   <span class="number">252705</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">10000000008</span></span><br><span class="line">-r-x------ <span class="number">1</span> root root  <span class="number">1825192</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">10000000009</span></span><br><span class="line">-r-x------ <span class="number">1</span> root root   <span class="number">156990</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">1000000000</span>a</span><br><span class="line">-r-x------ <span class="number">1</span> root root  <span class="number">3493435</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">1000000000</span>b</span><br><span class="line">-r-x------ <span class="number">1</span> root root   <span class="number">342390</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">1000000000</span>c</span><br><span class="line">-r-x------ <span class="number">1</span> root root  <span class="number">1172247</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">1000000000</span>d</span><br><span class="line">-r-x------ <span class="number">1</span> root root  <span class="number">2516169</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">1000000000</span>e</span><br><span class="line">-r-x------ <span class="number">1</span> root root  <span class="number">3218770</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">1000000000</span>f</span><br><span class="line">-r-x------ <span class="number">1</span> root root   <span class="number">592729</span> May <span class="number">25</span> <span class="number">16</span>:<span class="number">16</span> <span class="number">10000000010</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到在lost+found里面就有数据了<br><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">[root<span class="annotation">@lab</span>102 ~]# file <span class="regexp">/mnt/</span>lost+found/<span class="number">10000000010</span> </span><br><span class="line"><span class="regexp">/mnt/</span>lost+found/<span class="number">10000000010</span>: Microsoft PowerPoint <span class="number">2007</span>+</span><br><span class="line">[root<span class="annotation">@lab</span>102 ~]# file <span class="regexp">/mnt/</span>lost+found/<span class="number">10000000011</span></span><br><span class="line"><span class="regexp">/mnt/</span>lost+found/<span class="number">10000000011</span>: Microsoft Word <span class="number">2007</span>+</span><br><span class="line">[root<span class="annotation">@lab</span>102 ~]# file <span class="regexp">/mnt/</span>lost+found/<span class="number">10000000012</span></span><br><span class="line"><span class="regexp">/mnt/</span>lost+found/<span class="number">10000000012</span>: Microsoft Word <span class="number">2007</span>+</span><br><span class="line">[root<span class="annotation">@lab</span>102 ~]# file <span class="regexp">/mnt/</span>lost+found/<span class="number">10000000013</span></span><br><span class="line"><span class="regexp">/mnt/</span>lost+found/<span class="number">10000000013</span>: Microsoft PowerPoint <span class="number">2007</span>+</span><br></pre></td></tr></table></figure></p>
+<p>这个生成的文件名称就是实际文件存储的数据的prifix，也就是通过原始inode进行的运算得到的</p>
+<p>如果提前备份好了原始的元数据信息<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># ceph daemon mds.lab102 dump cache &gt; /tmp/mdscache</span></span><br></pre></td></tr></table></figure></p>
+<p>那么可以比较轻松的找到丢失的文件</p>
+<h2 id="总结">总结</h2><p>在我另外一篇文章当中已经写过了，通过文件的inode可以把文件跟后台的对象结合起来，在以前我的恢复的思路是，把后台的对象全部抓出来，然后自己手动去对对象进行拼接，实际是数据存在的情况下，反向把文件重新link到一个路径，这个是官方提供的的恢复方法，mds最大的担心就是mds自身的元数据的损坏可能引起整个文件系统的崩溃，而现在，基本上只要data的数据还在的话，就不用担心数据丢掉，即使文件路径信息没有了，但是文件还在</p>
+<p>通过备份mds cache可以把文件名称，路径，大小和inode关联起来，而恢复的数据是对象前缀，也就是备份好了mds cache 就可以把整个文件信息串联起来了</p>
+<p>虽然cephfs的故障不是常发生，但是万一呢</p>
+<p>后续准备带来一篇关于cephfs从挂载点误删除数据后的数据恢复的方案，这个目前已经进行了少量文件的恢复试验了，等后续进行大量文件删除的恢复后，再进行分享</p>
+<h2 id="参考文档">参考文档</h2><p><a href="http://docs.ceph.com/docs/luminous/cephfs/disaster-recovery/" target="_blank" rel="external">disaster-recovery</a></p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2018-05-29</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/06/12/ceph-erasure-default-min-size/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ceph erasure默认的min_size分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/12/cosbench-how-to-use/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">cosbench使用方法</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'cephfs元数据池故障的恢复',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

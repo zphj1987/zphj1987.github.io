@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>rados put striper功能的调试 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言之前对于striper这个地方的功能并没研究太多，只是知道这个里面可以以条带方式并行的去写对象，从而加大并发性来提高性能，而默认的条带数目为1，也就是以对象大小去写，并没有条带，所以不是很好感觉到差别，今天就尝试下用rados命令来看下这个条带是怎么回事">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rados put striper功能的调试">
+<meta property="og:url" content="http://www.zphj1987.com/2017/04/26/rados-put-strip-debug/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言之前对于striper这个地方的功能并没研究太多，只是知道这个里面可以以条带方式并行的去写对象，从而加大并发性来提高性能，而默认的条带数目为1，也就是以对象大小去写，并没有条带，所以不是很好感觉到差别，今天就尝试下用rados命令来看下这个条带是怎么回事">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/strip.jpg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rados put striper功能的调试">
+<meta name="twitter:description" content="前言之前对于striper这个地方的功能并没研究太多，只是知道这个里面可以以条带方式并行的去写对象，从而加大并发性来提高性能，而默认的条带数目为1，也就是以对象大小去写，并没有条带，所以不是很好感觉到差别，今天就尝试下用rados命令来看下这个条带是怎么回事">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-rados-put-strip-debug" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/04/26/rados-put-strip-debug/" class="article-date">
+  	<time datetime="2017-04-26T08:00:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      rados put striper功能的调试
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/strip.jpg" alt="strip"><br></center>
+
+<h2 id="前言">前言</h2><p>之前对于striper这个地方的功能并没研究太多，只是知道这个里面可以以条带方式并行的去写对象，从而加大并发性来提高性能，而默认的条带数目为1，也就是以对象大小去写，并没有条带，所以不是很好感觉到差别，今天就尝试下用rados命令来看下这个条带是怎么回事<br><a id="more"></a></p>
+<h2 id="实践过程">实践过程</h2><p>最开始我的集群是用rpm包进行安装的，这个可以做一些常规的测试，如果需要改动一些代码的话，就比较麻烦了，本文后面会讲述怎么改动一点点代码，然后进行测试</p>
+<p>我们一般来说用rados put操作就是一个完整的文件，并不会进行拆分，我们尝试下看下<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># dd if=/dev/zero of=16M bs=4M count=4</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># rados  -p rbd put 16M 16M</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># rados  -p rbd stat 16M</span></span><br><span class="line">rbd/<span class="number">16</span>M mtime <span class="number">2017</span>-<span class="number">04</span>-<span class="number">26</span> <span class="number">15</span>:<span class="number">08</span>:<span class="number">14.000000</span>, size <span class="number">16777216</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到我们put 16M的文件，在后台就是一个16M的对象</p>
+<p>这个rados命令还有个参数是striper<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># rados  --help|grep stri</span></span><br><span class="line">   --striper</span><br><span class="line">        Use radostriper interface rather than pure rados</span><br></pre></td></tr></table></figure></p>
+<p>我们来用这个命令试一下<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># dd if=/dev/zero of=strip16M bs=4M count=4</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># rados  -p rbd put strip16M strip16M --striper</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># rados  -p rbd ls |grep strip</span></span><br><span class="line">strip16M.<span class="number">0000000000000002</span></span><br><span class="line">strip16M.<span class="number">0000000000000003</span></span><br><span class="line">strip16M.<span class="number">0000000000000000</span></span><br><span class="line">strip16M.<span class="number">0000000000000001</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># rados  -p rbd  --striper ls |grep strip</span></span><br><span class="line">strip16M</span><br><span class="line">[root@lab8106 ~]<span class="comment">#  rados  -p rbd stat strip16M.0000000000000002</span></span><br><span class="line">rbd/strip16M.<span class="number">0000000000000002</span> mtime <span class="number">2017</span>-<span class="number">04</span>-<span class="number">26</span> <span class="number">15</span>:<span class="number">11</span>:<span class="number">06.000000</span>, size <span class="number">4194304</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到这个16M的文件是被拆分成了4M一个的对象，存储到了后台的,我们开启下日志后看下有没有什么详细的信息，因为在rados参数当中确实没有找到可配置的选项<br>在/etc/ceph/ceph.conf当中添加<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">debug_rados=<span class="number">20</span></span><br><span class="line">debug_striper=<span class="number">20</span></span><br></pre></td></tr></table></figure></p>
+<p>再次测试<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># dd if=/dev/zero of=strip116M bs=4M count=4</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># rados  -p rbd put strip116M strip116M --striper</span></span><br><span class="line">···</span><br><span class="line">sc is one, reset su to os</span><br><span class="line">su <span class="number">4194304</span> sc <span class="number">1</span> os <span class="number">4194304</span> stripes_per_object <span class="number">1</span></span><br><span class="line">···</span><br></pre></td></tr></table></figure></p>
+<p>这个地方解释下意思</p>
+<blockquote>
+<p>strip count is 1,重置strip unit为object size ，也就是4M<br>strip unit 4194304 ，strip count 1，object size 4194304,每个对象的条带为1</p>
+</blockquote>
+<p>这个代码里面写了<br><a href="https://github.com/ceph/ceph/blob/master/src/tools/rados/rados.cc" target="_blank" rel="external">https://github.com/ceph/ceph/blob/master/src/tools/rados/rados.cc</a><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">--striper</span><br><span class="line">       Use radostriper interface rather than pure rados</span><br></pre></td></tr></table></figure></p>
+<p>也就是这个rados在加了参数之后是调用了radostriper interface这个接口的，所以猜测这个条带的相关参数应该是在接口里面写死了的<br><a href="https://github.com/ceph/ceph/blob/master/src/libradosstriper/RadosStriperImpl.cc" target="_blank" rel="external">https://github.com/ceph/ceph/blob/master/src/libradosstriper/RadosStriperImpl.cc</a><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/// default object layout</span><br><span class="line">struct ceph_file_layout default_file_layout = &#123;</span><br><span class="line"> fl_stripe_unit: init_le32(<span class="number">1</span>&lt;&lt;<span class="number">22</span>),</span><br><span class="line"> fl_stripe_count: init_le32(<span class="number">1</span>),</span><br><span class="line"> fl_object_size: init_le32(<span class="number">1</span>&lt;&lt;<span class="number">22</span>),</span><br><span class="line"> fl_cas_<span class="built_in">hash</span>: init_le32(<span class="number">0</span>),</span><br><span class="line"> fl_object_stripe_unit: init_le32(<span class="number">0</span>),</span><br><span class="line"> fl_unused: init_le32(-<span class="number">1</span>),</span><br><span class="line"> fl_pg_pool : init_le32(-<span class="number">1</span>),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>下面开始看下调试模式下改下这几个数值</p>
+<h3 id="下载代码">下载代码</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/ceph/ceph.git</span><br><span class="line">git checkout -b myceph2 v10.<span class="number">2.3</span></span><br><span class="line">git submodule update --init --recursive</span><br></pre></td></tr></table></figure>
+<p>切换到10.2.3版本,用的make模式，没用cmake<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ceph</span><br><span class="line">./install-deps.sh</span><br><span class="line">./autogen.sh</span><br><span class="line">./configure</span><br><span class="line">make -j <span class="number">12</span></span><br></pre></td></tr></table></figure></p>
+<p>启动开发模式服务<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> src</span><br><span class="line">./vstart.sh --mon_num <span class="number">1</span> --osd_num <span class="number">3</span> --mds_num <span class="number">1</span>  --short -n <span class="operator">-d</span></span><br></pre></td></tr></table></figure></p>
+<p>这样，dev cluster就起来了。修改部分源码重新make之后，需要关闭cluster，重启让代码生效，当然最好的是，你修改哪个模块，就重启那个模块就行，这里使用重启集群<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./stop.sh all</span><br><span class="line">./vstart.sh --mon_num <span class="number">1</span> --osd_num <span class="number">3</span> --mds_num <span class="number">1</span> --short  <span class="operator">-d</span></span><br></pre></td></tr></table></figure></p>
+<p>查看状态<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 src]<span class="comment"># ./ceph -s -c ./ceph.conf</span></span><br></pre></td></tr></table></figure></p>
+<p>我们修改下代码<br>vim libradosstriper/RadosStriperImpl.cc<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/// default object layout</span><br><span class="line">struct ceph_file_layout default_file_layout = &#123;</span><br><span class="line"> fl_stripe_unit: init_le32(<span class="number">1</span>&lt;&lt;<span class="number">21</span>),</span><br><span class="line"> fl_stripe_count: init_le32(<span class="number">2</span>),</span><br><span class="line"> fl_object_size: init_le32(<span class="number">1</span>&lt;&lt;<span class="number">22</span>),</span><br><span class="line"> fl_cas_<span class="built_in">hash</span>: init_le32(<span class="number">0</span>),</span><br><span class="line"> fl_object_stripe_unit: init_le32(<span class="number">0</span>),</span><br><span class="line"> fl_unused: init_le32(-<span class="number">1</span>),</span><br><span class="line"> fl_pg_pool : init_le32(-<span class="number">1</span>),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>修改的是stripe_unit为2M，stripe_count为2，object_size为4M，也就是条带为2<br>修改完了后重新make<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./stop.sh all</span><br><span class="line">./vstart.sh --mon_num <span class="number">1</span> --osd_num <span class="number">3</span> --mds_num <span class="number">1</span> --short  <span class="operator">-d</span></span><br></pre></td></tr></table></figure></p>
+<p>初始化集群，修改下配置文件增加调试信息<br>vim ./ceph.conf<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">debug_rados=<span class="number">20</span></span><br><span class="line">debug_striper=<span class="number">20</span></span><br></pre></td></tr></table></figure></p>
+<p>创建文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># dd if=/dev/zero of=debugstrip16M bs=4M count=4</span></span><br><span class="line">[root@lab8106 src]<span class="comment"># ./rados -c ./ceph.conf --striper  -p rbd  put  debugstrip16M debugstrip16M</span></span><br><span class="line">[root@lab8106 src]<span class="comment">#./rados -c ./ceph.conf  -p rbd  stat debugstrip16M.0000000000000001</span></span><br><span class="line">rbd/debugstrip16M.<span class="number">0000000000000001</span> mtime <span class="number">2017</span>-<span class="number">04</span>-<span class="number">26</span> <span class="number">15</span>:<span class="number">38</span>:<span class="number">41.483464</span> </span><br><span class="line"><span class="number">2017</span>-<span class="number">04</span>-<span class="number">26</span> <span class="number">15</span>:<span class="number">37</span>:<span class="number">27.000000</span>, size <span class="number">4194304</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到对象还是4M<br>我们截取下日志分析<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">su <span class="number">2097152</span> sc <span class="number">2</span> os <span class="number">4194304</span> stripes_per_object <span class="number">2</span></span><br><span class="line">off <span class="number">0</span> blockno <span class="number">0</span> stripeno <span class="number">0</span> stripepos <span class="number">0</span> objectsetno <span class="number">0</span> objectno <span class="number">0</span> block_start <span class="number">0</span></span><br><span class="line">added new extent(debugstrip16M.<span class="number">0000000000000000</span> (<span class="number">0</span>) </span><br><span class="line">off <span class="number">2097152</span> blockno <span class="number">1</span> stripeno <span class="number">0</span> stripepos <span class="number">1</span> objectsetno <span class="number">0</span> objectno <span class="number">1</span> block_start <span class="number">0</span> </span><br><span class="line">added new extent(debugstrip16M.<span class="number">0000000000000001</span> (<span class="number">1</span>) </span><br><span class="line">off <span class="number">4194304</span> blockno <span class="number">2</span> stripeno <span class="number">1</span> stripepos <span class="number">0</span> objectsetno <span class="number">0</span> objectno <span class="number">0</span> block_start <span class="number">2097152</span></span><br><span class="line">added new extent(debugstrip16M.<span class="number">0000000000000000</span> (<span class="number">0</span>)   </span><br><span class="line">off <span class="number">6291456</span> blockno <span class="number">3</span> stripeno <span class="number">1</span> stripepos <span class="number">1</span> objectsetno <span class="number">0</span> objectno <span class="number">1</span> block_start <span class="number">2097152</span></span><br><span class="line">added new extent(debugstrip16M.<span class="number">0000000000000001</span> (<span class="number">1</span>)</span><br><span class="line">off <span class="number">8388608</span> blockno <span class="number">4</span> stripeno <span class="number">2</span> stripepos <span class="number">0</span> objectsetno <span class="number">1</span> objectno <span class="number">2</span> block_start <span class="number">0</span></span><br><span class="line">added new extent(debugstrip16M.<span class="number">0000000000000002</span> (<span class="number">2</span>) </span><br><span class="line">off <span class="number">10485760</span> blockno <span class="number">5</span> stripeno <span class="number">2</span> stripepos <span class="number">1</span> objectsetno <span class="number">1</span> objectno <span class="number">3</span> block_start <span class="number">0</span></span><br><span class="line">added new extent(debugstrip16M.<span class="number">0000000000000003</span> (<span class="number">3</span>) </span><br><span class="line">off <span class="number">12582912</span> blockno <span class="number">6</span> stripeno <span class="number">3</span> stripepos <span class="number">0</span> objectsetno <span class="number">1</span> objectno <span class="number">2</span> block_start <span class="number">2097152</span> </span><br><span class="line">added new extent(debugstrip16M.<span class="number">0000000000000002</span> (<span class="number">2</span>)</span><br><span class="line">off <span class="number">14680064</span> blockno <span class="number">7</span> stripeno <span class="number">3</span> stripepos <span class="number">1</span> objectsetno <span class="number">1</span> objectno <span class="number">3</span> block_start <span class="number">2097152</span> </span><br><span class="line">added new extent(debugstrip16M.<span class="number">0000000000000003</span> (<span class="number">3</span>)</span><br></pre></td></tr></table></figure></p>
+<p>从上面可以看到先在debugstrip16M.0000000000000000写了2M，在debugstrip16M.0000000000000001写了2M，<br>然后在debugstrip16M.0000000000000000追加写了2M，并且是从block_start 2097152开始的，每个对象是写了两次的并且每次写的就是条带的大小的2M，跟修改上面的条带大小和对象大小是一致的，并且可以很清楚的看到写对象的过程</p>
+<h2 id="总结">总结</h2><p>本篇尝试了用rados来测试strip功能，并且顺带讲了下怎么在开发模式下修改代码并测试，如果自己写客户端的话，利用librados的时候，可以考虑使用libradosstriper条带来增加一定的性能</p>
+<h2 id="参考文档">参考文档</h2><p><a href="http://ivanjobs.github.io/2016/05/11/prepare-ceph-dev-env/" target="_blank" rel="external">准备Ceph开发环境</a></p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2017-04-26</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/27/mds-journal-cc-2929-FAILED-assert/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          mds/journal.cc: 2929: FAILED assert解决
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/20/where-is-cephfs-data-store/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Cephfs的文件存到哪里了</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'rados put striper功能的调试',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

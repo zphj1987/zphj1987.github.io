@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>linux系统克隆系统盘 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文将介绍两种方式的系统盘的完整的备份，两种方式各有优缺点，需要根据实际情况来进行选择
+
+使用dd的完整镜像克隆的方式
+使用tar去备份数据，安装grub的方式
+
+dd方式优点：简单，一条命令 dd if=/dev/sda of=/dev/sdb 就可以进行完整的系统备份了
+缺点：时间非常长，备份一个系统盘，无论数据多少，系统盘全部会读取一遍，时间比较久备份目的盘需要大于原盘分区无法调整，根原分区">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux系统克隆系统盘">
+<meta property="og:url" content="http://www.zphj1987.com/2015/05/12/linux系统克隆系统盘/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="本文将介绍两种方式的系统盘的完整的备份，两种方式各有优缺点，需要根据实际情况来进行选择
+
+使用dd的完整镜像克隆的方式
+使用tar去备份数据，安装grub的方式
+
+dd方式优点：简单，一条命令 dd if=/dev/sda of=/dev/sdb 就可以进行完整的系统备份了
+缺点：时间非常长，备份一个系统盘，无论数据多少，系统盘全部会读取一遍，时间比较久备份目的盘需要大于原盘分区无法调整，根原分区">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux系统克隆系统盘">
+<meta name="twitter:description" content="本文将介绍两种方式的系统盘的完整的备份，两种方式各有优缺点，需要根据实际情况来进行选择
+
+使用dd的完整镜像克隆的方式
+使用tar去备份数据，安装grub的方式
+
+dd方式优点：简单，一条命令 dd if=/dev/sda of=/dev/sdb 就可以进行完整的系统备份了
+缺点：时间非常长，备份一个系统盘，无论数据多少，系统盘全部会读取一遍，时间比较久备份目的盘需要大于原盘分区无法调整，根原分区">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-linux系统克隆系统盘" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/05/12/linux系统克隆系统盘/" class="article-date">
+  	<time datetime="2015-05-12T06:24:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-05-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      linux系统克隆系统盘
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/操作系统/">操作系统</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文将介绍两种方式的系统盘的完整的备份，两种方式各有优缺点，需要根据实际情况来进行选择</p>
+<ul>
+<li>使用dd的完整镜像克隆的方式</li>
+<li>使用tar去备份数据，安装grub的方式</li>
+</ul>
+<h4 id="dd方式">dd方式</h4><p>优点：<br>简单，一条命令 dd if=/dev/sda of=/dev/sdb 就可以进行完整的系统备份了</p>
+<p>缺点：<br>时间非常长，备份一个系统盘，无论数据多少，系统盘全部会读取一遍，时间比较久<br>备份目的盘需要大于原盘<br>分区无法调整，根原分区一模一样</p>
+<h4 id="tar方式">tar方式</h4><p>优点：<br>时间短，只需要备份实际磁盘上的数据即可<br>自定义，可以修改分区的大小，可以控制备份的类容，可以定期备份<br>对目的盘大小无限制，比较灵活</p>
+<p>缺点：<br>人为修改东西比较多，需要手动去修改一些信息<br>当然在掌握了一定的linux基础的情况下建议是使用tar方式的，，下面将介绍tar方式的处理方式：</p>
+<a id="more"></a>
+<h3 id="给准备用来备份的磁盘进行分区和格式化">给准备用来备份的磁盘进行分区和格式化</h3><p>首先使用 df -h 来检查当前的挂载的系统分区：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">Filesystem      Size  Used Avail Use% Mounted on&#10;/dev/sdb5       285G  4.1G  266G   2% /&#10;tmpfs           2.0G  4.0K  2.0G   1% /dev/shm&#10;/dev/sdb1       239M   81M  141M  37% /boot&#10;/dev/sdb2       6.7G   17M  6.3G   1% /var/log</span><br></pre></td></tr></table></figure></p>
+<p>查看磁盘的大小：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@zhongbo ~]# fdisk -l&#9;&#10;Disk /dev/sdb: 320.1 GB, 320072933376 bytes</span><br></pre></td></tr></table></figure></p>
+<p>本例子中备用磁盘为sda,大小为240G：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@zhongbo ~]# fdisk -l /dev/sda &#10;Disk /dev/sda: 240.1 GB, 240057409536 bytes</span><br></pre></td></tr></table></figure></p>
+<p>查看系统盘详细的分区信息<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@zhongbo ~]# parted -l&#10;Model: ATA WDC WD3200AAJS-2 (scsi)&#10;Disk /dev/sdb: 320GB&#10;Sector size (logical/physical): 512B/512B&#10;Partition Table: msdos&#10;&#10;Number  Start   End     Size    Type      File system     Flags&#10; 1      1049kB  263MB   262MB   primary   ext4            boot&#10; 2      263MB   7603MB  7340MB  primary   ext4&#10; 3      7603MB  9751MB  2147MB  primary   linux-swap(v1)&#10; 4      9751MB  320GB   310GB   extended&#10; 5      9752MB  320GB   310GB   logical   ext4</span><br></pre></td></tr></table></figure></p>
+<p>可以看到分区表模式为msdos，分区信息为含有扩展分区，逻辑分区了，下面为新准备的盘进行分区，分区信息跟原来尽量一样，这个地方也可以根据自己的需要进行调整<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@zhongbo ~]# parted /dev/sda&#10;(parted) mklabel msdos &#10;(parted) mkpart primary 1049kB 263&#10;(parted) mkpart primary 263 7603&#10;(parted) mkpart primary 7603 9751 &#10;(parted) mkpart extended 9751 100%&#10;(parted) mkpart logical 9752 100%&#10;(parted) p                                                                &#10;Model: ATA INTEL SSDSC2BF24 (scsi)&#10;Disk /dev/sda: 240GB&#10;Sector size (logical/physical): 512B/512B&#10;Partition Table: msdos&#10;&#10;Number  Start   End     Size    Type      File system     Flags&#10; 1      1049kB  263MB   262MB   primary   ext4&#10; 2      263MB   7603MB  7340MB  primary   ext4&#10; 3      7603MB  9751MB  2147MB  primary   linux-swap(v1)&#10; 4      9751MB  240GB   230GB   extended                  lba&#10; 5      9752MB  240GB   230GB   logical   ext4</span><br></pre></td></tr></table></figure></p>
+<p>格式化硬盘</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@zhongbo ~]<span class="comment"># mkfs.ext4 /dev/sda1  </span></span><br><span class="line">[root@zhongbo ~]<span class="comment"># mkfs.ext4 /dev/sda2</span></span><br><span class="line">[root@zhongbo ~]<span class="comment"># mkswap /dev/sda3 </span></span><br><span class="line">[root@zhongbo ~]<span class="comment"># mkfs.ext4 /dev/sda5</span></span><br></pre></td></tr></table></figure>
+<h3 id="备份原始磁盘上的数据到备份目的盘">备份原始磁盘上的数据到备份目的盘</h3><p>在本地系统盘上创建一个备份的目录，将数据打包放到这个目录下面</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@zhongbo ~]<span class="comment"># mkdir /backup</span></span><br></pre></td></tr></table></figure>
+<p>按这个系统来说需要备份三个分区/ , /var/log/, /boot </p>
+<p>开始备份/<br>所有的操作都进入到/目录下操作<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@zhongbo ~]<span class="comment"># cd /</span></span><br><span class="line">[root@zhongbo /]<span class="comment"># tar zcvpf /backup/gen.tar.gz -C /  --exclude=boot/* --exclude=var/log/* --exclude=backup/*  --exclude=lost+found/* --exclude=mnt/*  --exclude=dev/* --exclude=proc/* --exclude=tmp/* --exclude=sys/* .</span></span><br></pre></td></tr></table></figure></p>
+<p>注意这里排除了很多不需要备份的目录</p>
+<p>备份boot分区<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@zhongbo /]<span class="comment"># tar zcvpf /backup/boot.tar.gz -C /boot/ .</span></span><br></pre></td></tr></table></figure></p>
+<p>备份/var/log<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@zhongbo /]<span class="comment"># tar zcvpf /backup/log.tar.gz -C /var/log/ .</span></span><br></pre></td></tr></table></figure></p>
+<p>恢复/的数据<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@zhongbo /]<span class="comment"># mkdir /mnt/gen</span></span><br><span class="line">[root@zhongbo /]<span class="comment"># mount /dev/sda5 /mnt/gen/</span></span><br><span class="line">[root@zhongbo /]<span class="comment"># tar zxvpf /backup/gen.tar.gz -C /mnt/gen/</span></span><br></pre></td></tr></table></figure></p>
+<p>恢复/boot的数据<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@zhongbo /]<span class="comment"># mkdir /mnt/boot</span></span><br><span class="line">[root@zhongbo /]<span class="comment"># mount /dev/sda1 /mnt/boot/</span></span><br><span class="line">[root@zhongbo /]<span class="comment"># tar zxvpf /backup/boot.tar.gz -C /mnt/boot/</span></span><br></pre></td></tr></table></figure></p>
+<p>恢复/var/log<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@zhongbo /]<span class="comment"># mkdir /mnt/log</span></span><br><span class="line">[root@zhongbo /]<span class="comment"># mount /dev/sda2 /mnt/log/</span></span><br><span class="line">[root@zhongbo /]<span class="comment"># tar zxvpf /backup/log.tar.gz -C /mnt/log/</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="修改启动文件">修改启动文件</h3><p>拿到新的分区的blkid<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@zhongbo /]# blkid /dev/sda1&#10;/dev/sda1: UUID=&#34;a6ca4369-109c-47ed-a522-7e1752a6681b&#34; TYPE=&#34;ext4&#34; &#10;&#23545;&#24212;boot&#10;[root@zhongbo /]# blkid /dev/sda2&#10;/dev/sda2: UUID=&#34;f775f248-57d8-49a7-9334-60bc75a53685&#34; TYPE=&#34;ext4&#34; &#10;&#23545;&#24212;log&#10;&#10;[root@zhongbo /]# blkid /dev/sda5&#10;/dev/sda5: UUID=&#34;6942c7d6-486c-4d51-bb4d-a126ee0c05b1&#34; TYPE=&#34;ext4&#34;&#10;&#23545;&#24212;/&#10;&#10;[root@zhongbo /]# blkid /dev/sda3&#10;/dev/sda3: UUID=&#34;154784d8-dbe3-45c8-8fcb-cb4f5a14ae44&#34; TYPE=&#34;swap&#34; &#10;&#23545;&#24212;swap</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@zhongbo /]<span class="comment"># vim /mnt/gen/etc/fstab </span></span><br><span class="line">修改对应分区的uuid信息</span><br><span class="line"></span><br><span class="line">修改menu.list </span><br><span class="line">[root@zhongbo ~]<span class="comment"># vim /mnt/boot/grub/menu.lst</span></span><br><span class="line">修改root= 根分区的uuid，第一次做的时候，就是在这个地方忘了修改，进入系统后能够看到启动画面，但是没法启动内核，修改好了后，就可以正常的启动了</span><br></pre></td></tr></table></figure>
+<h3 id="安装grub">安装grub</h3><p>查找grub分区<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">grub&#62; find /grub/grub.conf&#10;find /grub/grub.conf&#10; (hd0,0)&#10; (hd1,0)&#10;grub&#62;</span><br></pre></td></tr></table></figure></p>
+<p>修改其中的新盘上的grub然后分辨新的grub在哪台机器上，我的新盘是(hd0,0)<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">grub&gt; root (hd0,<span class="number">0</span>) </span><br><span class="line">grub&gt; setup (hd0)    </span><br><span class="line">setup (hd0)</span><br><span class="line"> Checking <span class="keyword">if</span> <span class="string">"/boot/grub/stage1"</span> exists... no</span><br><span class="line"> Checking <span class="keyword">if</span> <span class="string">"/grub/stage1"</span> exists... yes</span><br><span class="line"> Checking <span class="keyword">if</span> <span class="string">"/grub/stage2"</span> exists... yes</span><br><span class="line"> Checking <span class="keyword">if</span> <span class="string">"/grub/e2fs_stage1_5"</span> exists... yes</span><br><span class="line"> Running <span class="string">"embed /grub/e2fs_stage1_5 (hd0)"</span>...  <span class="number">27</span> sectors are embedded.</span><br><span class="line">succeeded</span><br><span class="line"> Running <span class="string">"install /grub/stage1 (hd0) (hd0)1+27 p (hd0,0)/grub/stage2 /grub/grub.conf"</span>... succeeded</span><br><span class="line">Done.</span><br><span class="line">grub&gt; quit</span><br></pre></td></tr></table></figure></p>
+<p>完成后，系统盘就完全备份了一份了，重启就可以启动一个一模一样的系统了</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/05/25/dm-crypt加密磁盘/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          dm-crypt加密磁盘
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/04/28/linux下制作软件包安装服务器/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">linux下制作软件包安装服务器</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'linux系统克隆系统盘',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

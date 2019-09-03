@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>rbd的image对象数与能写入文件数的关系 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言收到一个问题如下：
+
+一个300TB 的RBD，只有7800万的objects，如果存储小文件的话，感觉不够用
+
+对于这个问题，我原来的理解是：对象默认设置的大小是4M一个，存储下去的数据，如果小于4M，就会占用一个小于4M的对象，如果超过4M，那么存储的数据就会进行拆分成多个4M，这个地方其实是不严谨的
+对于rados接口来说，数据是多大对象put进去就是多大的对象，并没有进行拆分，进行拆分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rbd的image对象数与能写入文件数的关系">
+<meta property="og:url" content="http://www.zphj1987.com/2017/01/03/rbd-image-write-objects/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言收到一个问题如下：
+
+一个300TB 的RBD，只有7800万的objects，如果存储小文件的话，感觉不够用
+
+对于这个问题，我原来的理解是：对象默认设置的大小是4M一个，存储下去的数据，如果小于4M，就会占用一个小于4M的对象，如果超过4M，那么存储的数据就会进行拆分成多个4M，这个地方其实是不严谨的
+对于rados接口来说，数据是多大对象put进去就是多大的对象，并没有进行拆分，进行拆分">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/2017.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rbd的image对象数与能写入文件数的关系">
+<meta name="twitter:description" content="前言收到一个问题如下：
+
+一个300TB 的RBD，只有7800万的objects，如果存储小文件的话，感觉不够用
+
+对于这个问题，我原来的理解是：对象默认设置的大小是4M一个，存储下去的数据，如果小于4M，就会占用一个小于4M的对象，如果超过4M，那么存储的数据就会进行拆分成多个4M，这个地方其实是不严谨的
+对于rados接口来说，数据是多大对象put进去就是多大的对象，并没有进行拆分，进行拆分">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-rbd-image-write-objects" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/03/rbd-image-write-objects/" class="article-date">
+  	<time datetime="2017-01-03T06:35:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      rbd的image对象数与能写入文件数的关系
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/2017.png" alt=""><br></center>
+
+<h2 id="前言">前言</h2><p>收到一个问题如下：</p>
+<blockquote>
+<p>一个300TB 的RBD，只有7800万的objects，如果存储小文件的话，感觉不够用</p>
+</blockquote>
+<p>对于这个问题，我原来的理解是：对象默认设置的大小是4M一个，存储下去的数据，如果小于4M，就会占用一个小于4M的对象，如果超过4M，那么存储的数据就会进行拆分成多个4M，这个地方其实是不严谨的</p>
+<p>对于rados接口来说，数据是多大对象put进去就是多大的对象，并没有进行拆分，进行拆分的是再上一层的应用，比如rbd，比如cephfs</p>
+<p>那么对于rbd的image显示的对象数目和文件数目有什么关系呢？本篇将来看看这个问题，到底会不会出现上面的问题<br><a id="more"></a></p>
+<h2 id="实践过程">实践过程</h2><p>创建一个image<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># rbd create --image zpsize --size 100M</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># rbd info zpsize</span></span><br><span class="line">rbd image <span class="string">'zpsize'</span>:</span><br><span class="line">	size <span class="number">102400</span> kB <span class="keyword">in</span> <span class="number">25</span> objects</span><br><span class="line">	order <span class="number">22</span> (<span class="number">4096</span> kB objects)</span><br><span class="line">	block_name_prefix: rbd_data.<span class="number">85</span>c66b8b4567</span><br><span class="line">	format: <span class="number">2</span></span><br><span class="line">	features: layering</span><br><span class="line">	flags:</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，这个image从集群中分配到了25个对象，每个对象的大小为4M，假如我们写入1000个小文件看下会是什么情况</p>
+<p>映射到本地并且格式化xfs文件系统<br><figure class="highlight nix"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># rbd map zpsize</span></span><br><span class="line">/dev/rbd0</span><br><span class="line">[root@lab8106 ~]<span class="comment"># mkfs.xfs -f /dev/rbd0 </span></span><br><span class="line"><span class="variable">meta-data=</span>/dev/rbd0              <span class="variable">isize=</span><span class="number">256</span>    <span class="variable">agcount=</span><span class="number">4</span>, <span class="variable">agsize=</span><span class="number">6144</span> <span class="variable">blks</span><br><span class="line">         =</span>                       <span class="variable">sectsz=</span><span class="number">512</span>   <span class="variable">attr=</span><span class="number">2</span>, <span class="variable">projid32bit=</span><span class="number">1</span></span><br><span class="line">         =                       <span class="variable">crc=</span><span class="number">0</span>        <span class="variable">finobt=</span><span class="number">0</span></span><br><span class="line"><span class="variable">data     =</span>                       <span class="variable">bsize=</span><span class="number">4096</span>   <span class="variable">blocks=</span><span class="number">24576</span>, <span class="variable">imaxpct=</span><span class="number">25</span></span><br><span class="line">         =                       <span class="variable">sunit=</span><span class="number">1024</span>   <span class="variable">swidth=</span><span class="number">1024</span> blks</span><br><span class="line"><span class="variable">naming   =</span>version <span class="number">2</span>              <span class="variable">bsize=</span><span class="number">4096</span>   <span class="variable">ascii-ci=</span><span class="number">0</span> <span class="variable">ftype=</span><span class="number">0</span></span><br><span class="line"><span class="variable">log      =</span>internal log           <span class="variable">bsize=</span><span class="number">4096</span>   <span class="variable">blocks=</span><span class="number">624</span>, <span class="variable">version=</span><span class="number">2</span></span><br><span class="line">         =                       <span class="variable">sectsz=</span><span class="number">512</span>   <span class="variable">sunit=</span><span class="number">8</span> blks, <span class="variable">lazy-count=</span><span class="number">1</span></span><br><span class="line"><span class="variable">realtime =</span>none                   <span class="variable">extsz=</span><span class="number">4096</span>   <span class="variable">blocks=</span><span class="number">0</span>, <span class="variable">rtextents=</span><span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>挂载到本地<br>[root@lab8106 ~]# mount /dev/rbd0 /mnt</p>
+<p>写入1000个1K小文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># seq 1000|xargs -i dd if=/dev/zero of=/mnt/a&#123;&#125; bs=1K count=1</span></span><br></pre></td></tr></table></figure></p>
+<p>没有报错提示，正常写入了，我们看下写入了多少对象<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># rados  -p rbd ls|grep rbd_data.85c66b8b4567</span></span><br><span class="line">rbd_data.<span class="number">85</span>c66b8b4567.<span class="number">0000000000000018</span></span><br><span class="line">rbd_data.<span class="number">85</span>c66b8b4567.<span class="number">0000000000000000</span></span><br><span class="line">rbd_data.<span class="number">85</span>c66b8b4567.<span class="number">0000000000000006</span></span><br><span class="line">rbd_data.<span class="number">85</span>c66b8b4567.<span class="number">0000000000000001</span></span><br><span class="line">rbd_data.<span class="number">85</span>c66b8b4567.<span class="number">0000000000000017</span></span><br><span class="line">rbd_data.<span class="number">85</span>c66b8b4567.<span class="number">000000000000000</span>c</span><br><span class="line">rbd_data.<span class="number">85</span>c66b8b4567.<span class="number">0000000000000012</span></span><br><span class="line">rbd_data.<span class="number">85</span>c66b8b4567.<span class="number">0000000000000002</span></span><br></pre></td></tr></table></figure></p>
+<p>只写入了少量的对象，我们尝试下载下来看看<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ll -hl rbd_data.85c66b8b4567.0000000000000018</span></span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root <span class="number">4.0</span>M Jan  <span class="number">3</span> <span class="number">14</span>:<span class="number">27</span> rbd_data.<span class="number">85</span>c66b8b4567.<span class="number">0000000000000018</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># rados  -p rbd get rbd_data.85c66b8b4567.0000000000000000 rbd_data.85c66b8b4567.0000000000000000</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># ll -hl rbd_data.85c66b8b4567.0000000000000000</span></span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root <span class="number">4.0</span>M Jan  <span class="number">3</span> <span class="number">14</span>:<span class="number">27</span> rbd_data.<span class="number">85</span>c66b8b4567.<span class="number">0000000000000000</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到还是4M的对象，实际上写入的小文件已经进行了合并了，在底层已经是一个4M的对象文件了</p>
+<h2 id="总结">总结</h2><p>本篇的结论就是，rbd层之上的写入的文件的个数与底层的对象数目是没有关系的，对象数目和对象大小是底层处理的，再上一层就是文件系统去处理的了，总空间占用上是一致的</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/01/05/ceph-crush-straw/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ceph 的crush算法 straw
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/12/26/manage-ceph-osd-journal-uuid/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">处理Ceph osd的journal的uuid问题</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'rbd的image对象数与能写入文件数的关系',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

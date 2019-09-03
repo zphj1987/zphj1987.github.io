@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>替换OSD操作的优化与分析 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言之前有写过一篇删除OSD的正确方式，里面只是简单的讲了下删除的方式怎样能减少迁移量，本篇属于一个扩展，讲述了 Ceph 运维当中经常出现的坏盘提换盘的步骤的优化
+基础环境两台主机每台主机8个 OSD，一共 16 个 OSD，副本设置为2，PG 数设置为800，计算下来平均每个 OSD 上的 P G数目为100个，本篇将通过数据来分析不同的处理方法的差别
+开始测试前先把环境设置为 noout，然">
+<meta property="og:type" content="article">
+<meta property="og:title" content="替换OSD操作的优化与分析">
+<meta property="og:url" content="http://www.zphj1987.com/2016/09/19/替换OSD操作的优化与分析/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言之前有写过一篇删除OSD的正确方式，里面只是简单的讲了下删除的方式怎样能减少迁移量，本篇属于一个扩展，讲述了 Ceph 运维当中经常出现的坏盘提换盘的步骤的优化
+基础环境两台主机每台主机8个 OSD，一共 16 个 OSD，副本设置为2，PG 数设置为800，计算下来平均每个 OSD 上的 P G数目为100个，本篇将通过数据来分析不同的处理方法的差别
+开始测试前先把环境设置为 noout，然">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/reolaceosd/terminal.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="替换OSD操作的优化与分析">
+<meta name="twitter:description" content="前言之前有写过一篇删除OSD的正确方式，里面只是简单的讲了下删除的方式怎样能减少迁移量，本篇属于一个扩展，讲述了 Ceph 运维当中经常出现的坏盘提换盘的步骤的优化
+基础环境两台主机每台主机8个 OSD，一共 16 个 OSD，副本设置为2，PG 数设置为800，计算下来平均每个 OSD 上的 P G数目为100个，本篇将通过数据来分析不同的处理方法的差别
+开始测试前先把环境设置为 noout，然">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-替换OSD操作的优化与分析" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/19/替换OSD操作的优化与分析/" class="article-date">
+  	<time datetime="2016-09-19T02:56:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      替换OSD操作的优化与分析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/reolaceosd/terminal.png" alt="replaceosd"><br></center></p>
+<h2 id="前言">前言</h2><p>之前有写过一篇<a href="http://www.zphj1987.com/2016/01/12/%E5%88%A0%E9%99%A4osd%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%96%B9%E5%BC%8F/" target="_blank" rel="external">删除OSD的正确方式</a>，里面只是简单的讲了下删除的方式怎样能减少迁移量，本篇属于一个扩展，讲述了 Ceph 运维当中经常出现的坏盘提换盘的步骤的优化</p>
+<p>基础环境两台主机每台主机8个 OSD，一共 16 个 OSD，副本设置为2，PG 数设置为800，计算下来平均每个 OSD 上的 P G数目为100个，本篇将通过数据来分析不同的处理方法的差别</p>
+<p>开始测试前先把环境设置为 <code>noout</code>，然后通过停止 OSD 来模拟 OSD 出现了异常，之后进行不同处理方法<br><a id="more"></a></p>
+<h2 id="测试三种方法">测试三种方法</h2><h3 id="首先_out_一个_OSD，然后剔除_OSD，然后增加_OSD">首先 out 一个 OSD，然后剔除 OSD，然后增加 OSD</h3><ol>
+<li>停止指定 OSD 进程</li>
+<li>out 指定 OSD</li>
+<li>crush remove 指定 OSD</li>
+<li>增加一个新的 OSD</li>
+</ol>
+<p>一般生产环境会设置为 <code>noout</code>，当然不设置也可以，那就交给程序去控制节点的 out，默认是在进程停止后的五分钟，总之这个地方如果有 out 触发，不管是人为触发，还是自动触发数据流是一定的，我们这里为了便于测试，使用的是人为触发，上面提到的预制环境就是设置的 <code>noout</code></p>
+<p>开始测试前获取最原始的分布<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph pg dump pgs|awk '&#123;print $1,$15&#125;'|grep -v pg   &gt; pg1.txt</span></span><br></pre></td></tr></table></figure></p>
+<p>获取当前的 PG 分布,保存到文件pg1.txt，这个 PG 分布记录是 PG 所在的 OSD，记录下来，方便后面进行比较，从而得出需要迁移的数据 </p>
+<h4 id="停止指定的_OSD_进程">停止指定的 OSD 进程</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># systemctl stop ceph-osd@15</span></span><br></pre></td></tr></table></figure>
+<p>停止进程并不会触发迁移，只会引起 PG 状态的变化，比如原来主 PG 在停止的 OSD 上，那么停止掉 OSD 以后，原来的副本的那个 PG 就会角色升级为主 PG 了</p>
+<h4 id="out_掉一个_OSD">out 掉一个 OSD</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph osd out 15</span></span><br></pre></td></tr></table></figure>
+<p>在触发 out 以前，当前的 PG 状态应该有 <code>active+undersized+degraded</code>,触发 out 以后，所有的 PG 的状态应该会慢慢变成 <code>active+clean</code>,等待集群正常后，再次查询当前的 PG 分布状态<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph pg dump pgs|awk '&#123;print $1,$15&#125;'|grep -v pg   &gt; pg2.txt</span></span><br></pre></td></tr></table></figure></p>
+<p>保存当前的 PG 分布为pg2.txt<br>比较 out 前后的 PG 的变化情况，下面是比较具体的变化情况，只列出变化的部分<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># diff -y -W 100 pg1.txt pg2.txt  --suppress-common-lines</span></span><br></pre></td></tr></table></figure></p>
+<p>这里我们关心的是变动的数目，只统计变动的 PG 的数目<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># diff -y -W 100 pg1.txt pg2.txt  --suppress-common-lines|wc -l</span></span><br><span class="line"><span class="number">102</span></span><br></pre></td></tr></table></figure></p>
+<p>第一次 out 以后有102个 PG 的变动,这个数字记住，后面的统计会用到</p>
+<h4 id="从_crush_里面删除_OSD">从 crush 里面删除 OSD</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph osd crush remove osd.15</span></span><br></pre></td></tr></table></figure>
+<p>crush 删除以后同样会触发迁移，等待 PG 的均衡，也就是全部变成 <code>active+clean</code> 状态<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph pg dump pgs|awk '&#123;print $1,$15&#125;'|grep -v pg   &gt; pg3.txt</span></span><br></pre></td></tr></table></figure></p>
+<p>获取当前的 PG 分布的状态<br>现在来比较 crush remove 前后的 PG 变动<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># diff -y -W 100 pg2.txt pg3.txt  --suppress-common-lines|wc -l</span></span><br><span class="line"><span class="number">137</span></span><br></pre></td></tr></table></figure></p>
+<p>我们重新加上新的 OSD<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph-deploy osd prepare lab8107:/dev/sdi</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># ceph-deploy osd activate lab8107:/dev/sdi1</span></span><br></pre></td></tr></table></figure></p>
+<p>加完以后统计当前的新的 PG 状态<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph pg dump pgs|awk '&#123;print $1,$15&#125;'|grep -v pg   &gt; pg4.txt</span></span><br></pre></td></tr></table></figure></p>
+<p>比较前后的变化<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># diff -y -W 100 pg3.txt pg4.txt  --suppress-common-lines|wc -l</span></span><br><span class="line"><span class="number">167</span></span><br></pre></td></tr></table></figure></p>
+<p>整个替换流程完毕，统计上面的 PG 总的变动</p>
+<blockquote>
+<p>102 +137 +167 = 406</p>
+</blockquote>
+<p>也就是按这个方法的变动为406个 PG，因为是只有双主机，里面可能存在某些放大问题，这里不做深入的讨论，因为我的三组测试环境都是一样的情况，只做横向比较，原理相通，这里是用数据来分析出差别</p>
+<h3 id="先crush_reweight_0_，然后out，然后再增加osd">先crush reweight 0 ，然后out，然后再增加osd</h3><p>首先恢复环境为测试前的环境<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph pg dump pgs|awk '&#123;print $1,$15&#125;'|grep -v pg   &gt; 2pg1.txt</span></span><br></pre></td></tr></table></figure></p>
+<p>记录最原始的 PG 分布情况</p>
+<h4 id="crush_reweight_指定OSD">crush reweight 指定OSD</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph osd crush reweight osd.16 0</span></span><br><span class="line">reweighted item id <span class="number">16</span> name <span class="string">'osd.16'</span> to <span class="number">0</span> <span class="keyword">in</span> crush map</span><br></pre></td></tr></table></figure>
+<p>等待平衡了以后记录当前的 PG 分布状态<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph pg dump pgs|awk '&#123;print $1,$15&#125;'|grep -v pg   &gt; 2pg2.txt</span></span><br><span class="line">dumped pgs <span class="keyword">in</span> format plain</span><br></pre></td></tr></table></figure></p>
+<p>比较前后的变动<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># diff -y -W 100 2pg1.txt 2pg2.txt  --suppress-common-lines|wc -l</span></span><br><span class="line"><span class="number">166</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="crush_remove_指定_OSD">crush remove 指定 OSD</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph osd crush remove osd.16</span></span><br><span class="line">removed item id <span class="number">16</span> name <span class="string">'osd.16'</span> from crush map</span><br></pre></td></tr></table></figure>
+<p>这个地方因为上面 crush 已经是0了所以删除也不会引起 PG 变动<br>然后直接 <code>ceph osd rm osd.16</code> 同样没有 PG 变动</p>
+<h4 id="增加新的_OSD">增加新的 OSD</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment">#ceph-deploy osd prepare lab8107:/dev/sdi</span></span><br><span class="line">[root@lab8106 ~]<span class="comment">#ceph-deploy osd activate lab8107:/dev/sdi1</span></span><br></pre></td></tr></table></figure>
+<p>等待平衡以后获取当前的 PG 分布<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ceph pg dump pgs|awk '&#123;print $1,$15&#125;'|grep -v pg   &gt; 2pg3.txt</span></span><br></pre></td></tr></table></figure></p>
+<p>来比较前后的变化<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># diff -y -W 100 2pg2.txt 2pg3.txt --suppress-common-lines|wc -l</span></span><br><span class="line"><span class="number">159</span></span><br></pre></td></tr></table></figure></p>
+<p>总的 PG 变动为</p>
+<blockquote>
+<p>166+159=325</p>
+</blockquote>
+<h3 id="开始做norebalance，然后做crush_remove，然后做add">开始做norebalance，然后做crush remove，然后做add</h3><p>恢复环境为初始环境，然后获取当前的 PG 分布<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph pg dump pgs|awk '&#123;print $1,$15&#125;'|grep -v pg   &gt; 3pg1.txt</span></span><br><span class="line">dumped pgs <span class="keyword">in</span> format plain</span><br></pre></td></tr></table></figure></p>
+<h4 id="给集群做多种标记，防止迁移">给集群做多种标记，防止迁移</h4><p>设置为 norebalance，nobackfill，norecover,后面是有地方会解除这些设置的<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph osd set norebalance</span></span><br><span class="line"><span class="built_in">set</span> norebalance</span><br><span class="line">[root@lab8106 ~]<span class="comment"># ceph osd set nobackfill</span></span><br><span class="line"><span class="built_in">set</span> nobackfill</span><br><span class="line">[root@lab8106 ~]<span class="comment"># ceph osd set norecover</span></span><br><span class="line"><span class="built_in">set</span> norecover</span><br></pre></td></tr></table></figure></p>
+<h4 id="crush_reweight_指定_OSD">crush reweight 指定 OSD</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph osd crush reweight osd.15 0</span></span><br><span class="line">reweighted item id <span class="number">15</span> name <span class="string">'osd.15'</span> to <span class="number">0</span> <span class="keyword">in</span> crush map</span><br></pre></td></tr></table></figure>
+<p>这个地方因为已经做了上面的标记，所以只会出现状态变化，而没有真正的迁移，我们也先统计一下<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph pg dump pgs|awk '&#123;print $1,$15&#125;'|grep -v pg   &gt; 3pg2.txt</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># diff -y -W 100 3pg1.txt 3pg2.txt --suppress-common-lines|wc -l</span></span><br><span class="line"><span class="number">158</span></span><br></pre></td></tr></table></figure></p>
+<p>注意这里只是计算了，并没有真正的数据变动，可以通过监控两台的主机的网络流量来判断,所以这里的变动并不用计算到需要迁移的 PG 数目当中</p>
+<h4 id="crush_remove_指定_OSD-1">crush remove 指定 OSD</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment">#ceph osd crush remove osd.15</span></span><br></pre></td></tr></table></figure>
+<h4 id="删除指定的_OSD">删除指定的 OSD</h4><p>删除以后同样是没有 PG 的变动的<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph osd rm osd.<span class="number">15</span></span><br></pre></td></tr></table></figure></p>
+<p>这个地方有个小地方需要注意一下，不做 ceph auth del osd.15 把15的编号留着，这样好判断前后的 PG 的变化，不然相同的编号，就无法判断是不是做了迁移了</p>
+<h4 id="增加新的_OSD-1">增加新的 OSD</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment">#ceph-deploy osd prepare lab8107:/dev/sdi</span></span><br><span class="line">[root@lab8106 ~]<span class="comment">#ceph-deploy osd activate lab8107:/dev/sdi1</span></span><br></pre></td></tr></table></figure>
+<p>我的环境下，新增的 OSD 的编号为16了</p>
+<h4 id="解除各种标记">解除各种标记</h4><p>我们放开上面的设置，看下数据的变动情况<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ceph osd unset norebalance</span></span><br><span class="line"><span class="built_in">unset</span> norebalance</span><br><span class="line">[root@lab8106 ceph]<span class="comment"># ceph osd unset nobackfill</span></span><br><span class="line"><span class="built_in">unset</span> nobackfill</span><br><span class="line">[root@lab8106 ceph]<span class="comment"># ceph osd unset norecover</span></span><br><span class="line"><span class="built_in">unset</span> norecover</span><br></pre></td></tr></table></figure></p>
+<p>设置完了后数据才真正开始变动了，可以通过观察网卡流量看到，来看下最终pg变化<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ceph pg dump pgs|awk '&#123;print $1,$15&#125;'|grep -v pg   &gt; 3pg3.txt</span></span><br><span class="line">dumped pgs <span class="keyword">in</span> format plain</span><br><span class="line">[root@lab8106 ~]<span class="comment"># diff -y -W 100 3pg1.txt 3pg3.txt --suppress-common-lines|wc -l</span></span><br><span class="line"><span class="number">195</span></span><br></pre></td></tr></table></figure></p>
+<p>这里我们只需要跟最开始的 PG 分布状况进行比较就可以了，因为中间的状态实际上都没有做数据的迁移，所以不需要统计进去，可以看到这个地方动了195个 PG<br>总共的 PG 迁移量为</p>
+<blockquote>
+<p>195</p>
+</blockquote>
+<h2 id="数据汇总">数据汇总</h2><p>现在通过表格来对比下三种方法的迁移量的比较(括号内为迁移 PG 数目)</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">　</th>
+<th style="text-align:left">方法一</th>
+<th style="text-align:left">方法二</th>
+<th style="text-align:left">方法三</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">所做操作</td>
+<td style="text-align:left">stop osd (0)<br>out osd(102)<br>crush remove osd (137)<br> add osd(167)</td>
+<td style="text-align:left">crush reweight osd(166)<br>out osd(0)<br>crush remove osd (0)<br>add osd(159)</td>
+<td style="text-align:left">set 标记(0)<br>crush reweight osd(0)<br>crush remove osd (0)<br>add osd(195)</td>
+</tr>
+<tr>
+<td style="text-align:center">PG迁移数量</td>
+<td style="text-align:left">406</td>
+<td style="text-align:left">325</td>
+<td style="text-align:left">195</td>
+</tr>
+</tbody>
+</table>
+<p>可以很清楚的看到三种不同的方法，最终的触发的迁移量是不同的，处理的好的话，能节约差不多一半的迁移的数据量，这个对于生产环境来说还是很好的，关于这个建议先在测试环境上进行测试，然后再操作，上面的操作只要不对磁盘进行格式化，操作都是可逆的，也就是可以比较放心的做，记住所做的操作，每一步都做完都去检查 PG 的状态是否是正常的</p>
+<h2 id="总结">总结</h2><p>从我自己的操作经验来看，最开始是用的第一种方法，后面就用第二种方法减少了一部分迁移量，最近看到资料写做剔除OSD的时候可以关闭迁移防止无效的过多的迁移，然后就测试了一下，确实能够减少不少的迁移量，这个减少在某些场景下还是很好的，当然如果不太熟悉，用哪一种都可以，最终能达到的目的是一样的</p>
+<h2 id="附加">附加</h2><p>有人问到一个问题，为什么按照这个流程操作的时候，会出现slow request？在进行了一次验证后，发现在迁移过程中的请求路径还是很长的，所以出现slow request还是很容易的</p>
+<p>假如我们有三个osd，分别为0,1,2，里面有各种的分布，我们在踢掉一个osd.2后，可能出现的一个情况是<br>某个PG(0.3b)的[2,0]分布变成了[1,0]<br>而此时后台的osd.1的PG（0.3b）这个目录里面的内容实际是空的，如果这个时候，前端的请求一个对象正好是分布在0.3b这个PG上的时候，后台需要先将osd.0上面的这个0.3b的对象写入到osd.1的0.3b的pg里面去，然后再去响应客户端的请求，自然路径就长了，如果这样的请求一多，响应前台的性能就有问题了，增加节点的时候同理</p>
+<p>请求到这种空PG的对象，PG的状态会这样变化：</p>
+<blockquote>
+<p>从active+degraded 变成active+recovery_wait+degraded</p>
+</blockquote>
+<p>迁移的数据量是一定的，这个看是请求的时候实时迁移然后响应还是提前迁移，然后响应，所以这个中间操作过程尽量的快的完成，然后好迁移完响应前端的请求</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-09-19</td>
+</tr>
+<tr>
+<td style="text-align:center">修改排版，去掉打赏</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2017-02-04</td>
+</tr>
+<tr>
+<td style="text-align:center">增加附录段落</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2017-02-04</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/20/Ceph的Mon数据重新构建工具/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Ceph的Mon数据重新构建工具
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/12/Centos7下Jewel版本radosgw服务启动/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Centos7下Jewel版本radosgw服务启动</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '替换OSD操作的优化与分析',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

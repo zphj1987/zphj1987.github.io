@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ceph的Mon数据重新构建工具 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="关于mon的数据的问题，一般正常情况下都是配置的3个mon的，但是还是有人会担心 Mon 万一三个同时都挂掉了怎么办，那么集群所有的数据是不是都丢了，关于后台真实数据恢复，有去后台取对象，然后一个个拼接起来的方案，这个是确定可以成功的，但是这个方法对于生产的集群耗时巨大，并且需要导出数据，然后又配置新的集群，工程比较耗大，考虑到这个问题，Ceph 的中国（Redhat）的一位开发者 tchaiko">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph的Mon数据重新构建工具">
+<meta property="og:url" content="http://www.zphj1987.com/2016/09/20/Ceph的Mon数据重新构建工具/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="关于mon的数据的问题，一般正常情况下都是配置的3个mon的，但是还是有人会担心 Mon 万一三个同时都挂掉了怎么办，那么集群所有的数据是不是都丢了，关于后台真实数据恢复，有去后台取对象，然后一个个拼接起来的方案，这个是确定可以成功的，但是这个方法对于生产的集群耗时巨大，并且需要导出数据，然后又配置新的集群，工程比较耗大，考虑到这个问题，Ceph 的中国（Redhat）的一位开发者 tchaiko">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/rebuild/rebuild-shot.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ceph的Mon数据重新构建工具">
+<meta name="twitter:description" content="关于mon的数据的问题，一般正常情况下都是配置的3个mon的，但是还是有人会担心 Mon 万一三个同时都挂掉了怎么办，那么集群所有的数据是不是都丢了，关于后台真实数据恢复，有去后台取对象，然后一个个拼接起来的方案，这个是确定可以成功的，但是这个方法对于生产的集群耗时巨大，并且需要导出数据，然后又配置新的集群，工程比较耗大，考虑到这个问题，Ceph 的中国（Redhat）的一位开发者 tchaiko">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Ceph的Mon数据重新构建工具" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/20/Ceph的Mon数据重新构建工具/" class="article-date">
+  	<time datetime="2016-09-20T08:09:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ceph的Mon数据重新构建工具
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/rebuild/rebuild-shot.png" alt="rebuild"><br></center><br>关于mon的数据的问题，一般正常情况下都是配置的3个mon的，但是还是有人会担心 Mon 万一三个同时都挂掉了怎么办，那么集群所有的数据是不是都丢了，关于后台真实数据恢复，有去后台取对象，然后一个个拼接起来的方案，这个是确定可以成功的，但是这个方法对于生产的集群耗时巨大，并且需要导出数据，然后又配置新的集群，工程比较耗大，考虑到这个问题，Ceph 的中国（Redhat）的一位开发者 <a href="https://github.com/tchaikov" target="_blank" rel="external">tchaikov</a> 就写了一个新的工具，来对损坏的MON的数据进行原集群的重构，这个比起其他方案要好很多，本篇将讲述怎么使用这个工具，代码已经合并到 Ceph 的master分支当中去了</p>
+<p>关于这个工具相关的<a href="http://tracker.ceph.com/issues/17292" target="_blank" rel="external">issue</a></p>
+<a id="more"></a>
+<h2 id="打包一个合进新代码的master版本的ceph包">打包一个合进新代码的master版本的ceph包</h2><h3 id="从github上面获取代码">从github上面获取代码</h3><p>默认的分支就是master的直接去clone就可以了<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># git clone https://github.com/ceph/ceph.git</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="检查是否是master分支">检查是否是master分支</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># cd ceph</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment"># git branch</span></span><br><span class="line">* master</span><br></pre></td></tr></table></figure>
+<h3 id="检查代码是否是合进需要的代码了">检查代码是否是合进需要的代码了</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># cat ceph/doc/rados/troubleshooting/troubleshooting-mon.rst |grep rebuild</span></span><br><span class="line">  <span class="comment"># rebuild the monitor store from the collected map, if the cluster does not</span></span><br><span class="line">  <span class="comment"># i.e. use "ceph-monstore-tool /tmp/mon-store rebuild" instead</span></span><br><span class="line">  ceph-monstore-tool /tmp/mon-store rebuild -- --keyring /path/to/admin.keyring</span><br><span class="line"><span class="comment">#. then rebuild the store</span></span><br></pre></td></tr></table></figure>
+<p>因为这个代码是最近才合进去的 ，所以一定要检查代码的正确性</p>
+<h3 id="创建一个源码包">创建一个源码包</h3><p>进入到代码的根目录，修改make-dist文件里面的一个地方(第46行)，否则打出来的包可能没有版本号，因为打包的时候检查了有没有git目录<br>修改下面<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#tar cvf $outfile.version.tar $outfile/src/.git_version $outfile/src/ceph_ver.h $outfile/ceph.spec</span></span><br><span class="line">tar cvf <span class="variable">$outfile</span>.version.tar <span class="variable">$outfile</span>/src/.git_version <span class="variable">$outfile</span>/src/ceph_ver.h <span class="variable">$outfile</span>/ceph.spec <span class="variable">$outfile</span>/.git</span><br></pre></td></tr></table></figure></p>
+<h4 id="如果不改，就可能出现">如果不改，就可能出现</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ceph -v</span></span><br><span class="line">ceph version HEAD-HASH-NOTFOUND (GITDIR-NOTFOUND)</span><br></pre></td></tr></table></figure>
+<h4 id="创建源码包">创建源码包</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment">#cd ceph</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment">#./make-dist</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment"># cp ceph-11.0.0-2460-g22053d0.tar.bz2 /root/rpmbuild/SOURCES/</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment"># cp -f ceph.spec /root/rpmbuild/SPECS/</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment"># rpmbuild -bb /root/rpmbuild/SPECS/ceph.spec</span></span><br></pre></td></tr></table></figure>
+<p>执行完了以后就去这个路径取包<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ll /root/rpmbuild/RPMS/x86_64/</span></span><br><span class="line">total <span class="number">1643964</span></span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root      <span class="number">1972</span> Sep <span class="number">20</span> <span class="number">10</span>:<span class="number">32</span> ceph-<span class="number">11.0</span>.<span class="number">0</span>-<span class="number">2460</span>.g22053d0.el7.centos.x86_64.rpm</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root  <span class="number">42259096</span> Sep <span class="number">20</span> <span class="number">10</span>:<span class="number">32</span> ceph-base-<span class="number">11.0</span>.<span class="number">0</span>-<span class="number">2460</span>.g22053d0.el7.centos.x86_64.rpm</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root <span class="number">320843080</span> Sep <span class="number">20</span> <span class="number">10</span>:<span class="number">35</span> ceph-common-<span class="number">11.0</span>.<span class="number">0</span>-<span class="number">2460</span>.g22053d0.el7.centos.x86_64.rpm</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root  <span class="number">58138088</span> Sep <span class="number">20</span> <span class="number">10</span>:<span class="number">36</span> ceph-mds-<span class="number">11.0</span>.<span class="number">0</span>-<span class="number">2460</span>.g22053d0.el7.centos.x86_64.rpm</span><br><span class="line">···</span><br></pre></td></tr></table></figure></p>
+<h3 id="准备测试环境">准备测试环境</h3><p>使用打好的包进行集群的配置，创建一个正常的集群，这里就不讲述怎么配置集群了</p>
+<h4 id="模拟mon损坏">模拟mon损坏</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># systemctl stop ceph-mon@lab8106</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment"># mv /var/lib/ceph/mon/ceph-lab8106/  /var/lib/ceph/mon/ceph-lab8106bk</span></span><br></pre></td></tr></table></figure>
+<p>按上面的操作以后，mon的数据相当于全部丢失了，本测试环境是单mon的，多mon原理一样</p>
+<h4 id="重构数据">重构数据</h4><p>创建一个临时目录,停止掉所有的osd，这个地方因为mon已经完全挂掉了,所以停止所有osd也没什么大的影响了<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># mkdir /tmp/mon-store</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment"># ceph-objectstore-tool --data-path /var/lib/ceph/osd/ceph-0/ --op update-mon-db --mon-store-path /tmp/mon-store/</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment"># ceph-objectstore-tool --data-path /var/lib/ceph/osd/ceph-1/ --op update-mon-db --mon-store-path /tmp/mon-store/</span></span><br></pre></td></tr></table></figure></p>
+<p>注意如果有多台OSD机器，那么在一台台的OSD主机进行上面的操作，这个目录的数据要保持递增的，也就是一直对着这个目录弄，假如换了一台机器那么先把这个数据传递到另外一台机器<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@lab8106 ~]<span class="comment"># rsync -avz /tmp/mon-store 192.168.8.107:/tmp/mon-store</span></span><br><span class="line">sending incremental file list</span><br><span class="line">created directory /tmp/mon-store</span><br><span class="line">mon-store/</span><br><span class="line">mon-store/kv_backend</span><br><span class="line">mon-store/store.db/</span><br><span class="line">mon-store/store.db/<span class="number">000005</span>.sst</span><br><span class="line">mon-store/store.db/<span class="number">000008</span>.sst</span><br><span class="line">mon-store/store.db/<span class="number">000009</span>.log</span><br><span class="line">mon-store/store.db/CURRENT</span><br><span class="line">mon-store/store.db/LOCK</span><br><span class="line">mon-store/store.db/MANIFEST-<span class="number">000007</span></span><br><span class="line"></span><br><span class="line">sent <span class="number">11490</span> bytes  received <span class="number">153</span> bytes  <span class="number">7762.00</span> bytes/sec</span><br><span class="line">total size is <span class="number">74900</span>  speedup is <span class="number">6.43</span></span><br></pre></td></tr></table></figure></p>
+<p>等192.168.8.106的机器全部做完了，然后这个/tmp/mon-store传递到了192.168.8.107的机器上，然后再开始做192.168.8.107这台机器的，等全部做外了，把这个/tmp/mon-store弄到需要恢复mon的机器上</p>
+<h3 id="根据获得的数据进行重构">根据获得的数据进行重构</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># mkdir /var/lib/ceph/mon/ceph-lab8106</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># ceph-monstore-tool /tmp/mon-store rebuild</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># cp -ra /tmp/mon-store/* /var/lib/ceph/mon/ceph-lab8106</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># touch /var/lib/ceph/mon/ceph-lab8106/done</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># touch /var/lib/ceph/mon/ceph-lab8106/systemd</span></span><br><span class="line">[root@lab8106 ~]<span class="comment"># chown ceph:ceph -R /var/lib/ceph/mon/</span></span><br></pre></td></tr></table></figure>
+<h3 id="启动mon">启动mon</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># systemctl restart ceph-mon@lab8106</span></span><br></pre></td></tr></table></figure>
+<p>检查状态<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph -s</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到可以好了，在实践过程中，发现如果对修复的数据，马上进行破坏，再次进行修复的时候，就无法恢复了，应该是个bug，已经提交给作者 Issue:<a href="https://github.com/ceph/ceph/pull/11126" target="_blank" rel="external">11226</a></p>
+<h3 id="无法恢复的数据">无法恢复的数据</h3><ul>
+<li>pg settings: the full ratio and nearfull ratio 设置会丢失，这个无关紧要，再设置一次就可以了</li>
+<li>MDS Maps: the MDS maps are lost.</li>
+</ul>
+<h2 id="总结">总结</h2><p>因为工具才出来，可能难免有些bug，这个是为未来提供一种恢复数据的方式，使得 Ceph 变得更加的健壮</p>
+<h2 id="附加知识">附加知识</h2><p>如果指定ceph版本进行编译<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/ceph/ceph.git</span><br><span class="line">git checkout -b myceph v10.<span class="number">2.3</span></span><br><span class="line">git submodule update --init --recursive</span><br></pre></td></tr></table></figure></p>
+<p>v10.2.3为发行版本的tag，也就是release的版本号码，这个操作是切换到指定的tag，并且下载依赖的一些模块</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-09-20</td>
+</tr>
+<tr>
+<td style="text-align:center">增加git版本选择</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-10-12</td>
+</tr>
+</tbody>
+</table>
+<h2 id="For_me">For me</h2><p>如果本文有帮助到你，愿意欢迎进入<a href="http://www.zphj1987.com/payforask" target="_blank" rel="external">打赏</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/24/不小心清空了Ceph的OSD的分区表如何恢复/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          不小心清空了Ceph的OSD的分区表如何恢复
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/19/替换OSD操作的优化与分析/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">替换OSD操作的优化与分析</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'Ceph的Mon数据重新构建工具',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

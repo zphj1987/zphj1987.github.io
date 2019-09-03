@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>parted会启动你的ceph osd，意外不？ | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言如果看到标题，你是不是第一眼觉得写错了，这个怎么可能，完全就是两个不相关的东西，最开始我也是这么想的，直到我发现真的是这样的时候，也是很意外，还是弄清楚下比较好，不然在某个操作下，也许就会出现意想不到的情况">
+<meta property="og:type" content="article">
+<meta property="og:title" content="parted会启动你的ceph osd，意外不？">
+<meta property="og:url" content="http://www.zphj1987.com/2018/03/23/parted-may-start-your-osd/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言如果看到标题，你是不是第一眼觉得写错了，这个怎么可能，完全就是两个不相关的东西，最开始我也是这么想的，直到我发现真的是这样的时候，也是很意外，还是弄清楚下比较好，不然在某个操作下，也许就会出现意想不到的情况">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/yellowhelmet.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/u7va8eisqwexkyx19zxjhemk/parted.gif">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/xh8q4om2hyc7obw4xn09w8yx/image.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="parted会启动你的ceph osd，意外不？">
+<meta name="twitter:description" content="前言如果看到标题，你是不是第一眼觉得写错了，这个怎么可能，完全就是两个不相关的东西，最开始我也是这么想的，直到我发现真的是这样的时候，也是很意外，还是弄清楚下比较好，不然在某个操作下，也许就会出现意想不到的情况">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-parted-may-start-your-osd" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/03/23/parted-may-start-your-osd/" class="article-date">
+  	<time datetime="2018-03-23T15:54:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      parted会启动你的ceph osd，意外不？
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/yellowhelmet.png" alt="disk"><br></center>
+
+<h2 id="前言">前言</h2><p>如果看到标题，你是不是第一眼觉得写错了，这个怎么可能，完全就是两个不相关的东西，最开始我也是这么想的，直到我发现真的是这样的时候，也是很意外，还是弄清楚下比较好，不然在某个操作下，也许就会出现意想不到的情况</p>
+<a id="more"></a>
+<h2 id="定位">定位</h2><p>如果你看过我的博客，正好看过这篇<a href="http://www.zphj1987.com/2016/03/31/ceph%E5%9C%A8centos7%E4%B8%8B%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%AE%B9%E6%98%93%E5%8F%91%E7%8E%B0%E7%9A%84%E6%94%B9%E5%8F%98/" target="_blank" rel="external">ceph在centos7下一个不容易发现的改变</a>，那么应该还记得这个讲的是centos 7 下面通过udev来实现了osd的自动挂载，这个自动挂载就是本篇需要了解的前提<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 ~]<span class="comment"># df -h|grep ceph</span></span><br><span class="line">/dev/sdf1                <span class="number">233</span>G   <span class="number">34</span>M  <span class="number">233</span>G   <span class="number">1</span>% /var/lib/ceph/osd/ceph-<span class="number">1</span></span><br><span class="line">[root@lab101 ~]<span class="comment"># systemctl stop ceph-osd@1</span></span><br><span class="line">[root@lab101 ~]<span class="comment"># umount /dev/sdf1 </span></span><br><span class="line">[root@lab101 ~]<span class="comment"># parted -l &amp;&gt;/dev/null</span></span><br><span class="line">[root@lab101 ~]<span class="comment"># df -h|grep ceph</span></span><br><span class="line">/dev/sdf1                <span class="number">233</span>G   <span class="number">34</span>M  <span class="number">233</span>G   <span class="number">1</span>% /var/lib/ceph/osd/ceph-<span class="number">1</span></span><br><span class="line">[root@lab101 ~]<span class="comment"># ps -ef|grep osd</span></span><br><span class="line">ceph      <span class="number">62701</span>      <span class="number">1</span>  <span class="number">1</span> <span class="number">23</span>:<span class="number">25</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> /usr/bin/ceph-osd <span class="operator">-f</span> --cluster ceph --id <span class="number">1</span> --setuser ceph --setgroup ceph</span><br><span class="line">root      <span class="number">62843</span>  <span class="number">35114</span>  <span class="number">0</span> <span class="number">23</span>:<span class="number">25</span> pts/<span class="number">0</span>    <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> grep --color=auto osd</span><br></pre></td></tr></table></figure></p>
+<p>看这个操作过程，是不是很神奇，是不是很意外，不管怎么说，parted -l的一个操作把我们的osd给自动mount 起来了，也自动给启动了</p>
+<p>出现这个以后，我们先看下日志怎么出的，大概看起来的是这样的<br><img src="http://static.zybuluo.com/zphj1987/u7va8eisqwexkyx19zxjhemk/parted.gif" alt="parted.gif-4083.1kB"></p>
+<p>可以看到确实是实时去触发的</p>
+<p>服务器上面是有一个这个服务的 </p>
+<blockquote>
+<p>systemd-udevd.service<br>看到在做parted -l 后就会起一个这个子进程的<br><img src="http://static.zybuluo.com/zphj1987/xh8q4om2hyc7obw4xn09w8yx/image.png" alt="image.png-146.3kB"></p>
+</blockquote>
+<p>在尝试关闭这个服务后，再做parted -l操作就不会出现自动启动进程</p>
+<h2 id="原因">原因</h2><p>执行parted -l 对指定设备发起parted命令的时候，就会对内核做一个trigger，而我们的</p>
+<blockquote>
+<p>/lib/udev/rules.d/95-ceph-osd.rules<br>这个文件一旦触发是会去调用<br>/usr/sbin/ceph-disk —log-stdout -v trigger /dev/$name</p>
+</blockquote>
+<p>也就是自动挂载加上启动osd的的操作了</p>
+<h3 id="可能带来什么困扰">可能带来什么困扰</h3><p>其实这个我也不知道算不算bug，至少在正常使用的时候是没有问题的，以至于这个功能已经有了这么久，而我并没有察觉到，也没有感觉到它给我带来的干扰，那么作为一名测试人员，现在来构思一种可能出现的破坏场景，只要按照正常操作去做的，还会出现的，就是有可能发生的事情<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/lib/ceph/osd/</span><br><span class="line">[root@lab101 osd]<span class="comment"># df -h|grep osd</span></span><br><span class="line">/dev/sdf1                <span class="number">233</span>G   <span class="number">34</span>M  <span class="number">233</span>G   <span class="number">1</span>% /var/lib/ceph/osd/ceph-<span class="number">1</span></span><br><span class="line">[root@lab101 osd]<span class="comment"># systemctl stop ceph-osd@1</span></span><br><span class="line">[root@lab101 osd]<span class="comment"># umount /dev/sdf1</span></span><br><span class="line">[root@lab101 osd]<span class="comment"># parted -l  &amp;&gt;/dev/null</span></span><br><span class="line">[root@lab101 osd]<span class="comment"># rm -rf ceph-1/</span></span><br><span class="line">rm: cannot remove ‘ceph-<span class="number">1</span>/’: Device or resource busy</span><br><span class="line">[root@lab101 osd]<span class="comment"># ll ceph-1/</span></span><br><span class="line">total <span class="number">0</span></span><br><span class="line">[root@lab101 osd]<span class="comment"># df -h|grep ceph</span></span><br><span class="line">/dev/sdf1                <span class="number">233</span>G   <span class="number">33</span>M  <span class="number">233</span>G   <span class="number">1</span>% /var/lib/ceph/osd/ceph-<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到除了上面的parted -l以外，其他操作都是一个正常的操作，umount掉挂载点，然后清理掉这个目录，然后数据就被删了，当然正常情况下也许没人在正好那个点来了一个parted,但是不是完全没有可能</p>
+<p>还有种情况就是我是要做维护，我想umount掉挂载点，不想进程起来，执行parted是很常规的操作了，结果自己给我拉起来了，这个操作应该比较常见的</p>
+<h3 id="如何解决这个情况">如何解决这个情况</h3><p>第一种方法<br>什么都不动，你知道这个事情就行，执行过parted后再加上个df多检查下</p>
+<p>第二种方法<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl stop systemd-udevd</span><br></pre></td></tr></table></figure></p>
+<p>这个会带来其他什么影响，暂时不好判断，还没深入研究，影响应该也只会在硬件变动和一些udev触发的需求，不确定的情况可以不改，不推荐此方法</p>
+<p>第三种方法<br>不用这个/lib/udev/rules.d/95-ceph-osd.rules做控制了，自己去写配置文件，或者写fstab，都可以，保证启动后能够自动mount，服务能够正常启动就可以了，个人从维护角度还是偏向于第三种方法，记录的信息越多，维护的时候越方便，这个是逼着记录了一些信息，虽然可以什么信息也不记</p>
+<h2 id="总结">总结</h2><p>其实这个问题梳理清楚了也还好，最可怕的也许就是不知道为什么，特别是觉得完全不搭边的东西相互起了关联，至少在我们的研发跟我描述这个问题的时候，我想的是，还有这种神操作，是不是哪里加入了钩子程序什么的，花了点时间查到了原因，也方便在日后碰到不那么惊讶了</p>
+<p>ceph北京大会已经顺利开完了，等PPT出来以后再学习一下新的东西，内容应该还是很多的，其实干货不干货，都在于你发现了什么，如果有一个PPT里面你提取到了一个知识点，你都是赚到了，何况分享的人并没有告知的义务的，所以每次看到有分享都是很感谢分享者的</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2018-03-23</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/11/ceph-ISCSI-GATEWAY/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ceph的ISCSI GATEWAY
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/02/10/REDHAT-7-5beta-with-VDO/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">REDHAT 7.5beta 新推出的VDO功能</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'parted会启动你的ceph osd，意外不？',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

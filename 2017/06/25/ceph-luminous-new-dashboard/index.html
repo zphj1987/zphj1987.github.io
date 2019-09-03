@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ceph luminous 新功能之内置dashboard | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言ceph luminous版本新增加了很多有意思的功能，这个也是一个长期支持版本，所以这些新功能的特性还是很值得期待的，从底层的存储改造，消息方式的改变，以及一些之前未实现的功能的完成，都让ceph变得更强，这里面有很多核心模块来自中国的开发者，在这里准备用一系列的文章对这些新功能进行一个简单的介绍，也是自己的一个学习的过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph luminous 新功能之内置dashboard">
+<meta property="og:url" content="http://www.zphj1987.com/2017/06/25/ceph-luminous-new-dashboard/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言ceph luminous版本新增加了很多有意思的功能，这个也是一个长期支持版本，所以这些新功能的特性还是很值得期待的，从底层的存储改造，消息方式的改变，以及一些之前未实现的功能的完成，都让ceph变得更强，这里面有很多核心模块来自中国的开发者，在这里准备用一系列的文章对这些新功能进行一个简单的介绍，也是自己的一个学习的过程">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/dashboard.jpg">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/health.png">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/server.png">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/osdstat.png">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/rbd.png">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/filesystem.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ceph luminous 新功能之内置dashboard">
+<meta name="twitter:description" content="前言ceph luminous版本新增加了很多有意思的功能，这个也是一个长期支持版本，所以这些新功能的特性还是很值得期待的，从底层的存储改造，消息方式的改变，以及一些之前未实现的功能的完成，都让ceph变得更强，这里面有很多核心模块来自中国的开发者，在这里准备用一系列的文章对这些新功能进行一个简单的介绍，也是自己的一个学习的过程">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ceph-luminous-new-dashboard" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/06/25/ceph-luminous-new-dashboard/" class="article-date">
+  	<time datetime="2017-06-25T15:59:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ceph luminous 新功能之内置dashboard
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/dashboard.jpg" alt=""><br></center>
+
+<h2 id="前言">前言</h2><p>ceph luminous版本新增加了很多有意思的功能，这个也是一个长期支持版本，所以这些新功能的特性还是很值得期待的，从底层的存储改造，消息方式的改变，以及一些之前未实现的功能的完成，都让ceph变得更强，这里面有很多核心模块来自中国的开发者，在这里准备用一系列的文章对这些新功能进行一个简单的介绍，也是自己的一个学习的过程</p>
+<a id="more"></a>
+<h2 id="相关配置">相关配置</h2><h3 id="配置ceph国内源">配置ceph国内源</h3><p>修改 /etc/yum.repos.d/ceph.repo文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[ceph]</span><br><span class="line">name=ceph</span><br><span class="line">baseurl=http://mirrors.<span class="number">163</span>.com/ceph/rpm-luminous/el7/x86_64/</span><br><span class="line">gpgcheck=<span class="number">0</span></span><br><span class="line">[ceph-noarch]</span><br><span class="line">name=cephnoarch</span><br><span class="line">baseurl=http://mirrors.<span class="number">163</span>.com/ceph/rpm-luminous/el7/noarch/</span><br><span class="line">gpgcheck=<span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>添加完更新下缓存<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum makecache</span><br></pre></td></tr></table></figure></p>
+<p>前一段时间163源上的ceph没有了，可能是误操作的，现在的163源已经恢复，上面添加的是最新的luminous版本源，本篇实践的功能是在这个版本才加入的</p>
+<h3 id="安装ceph相关软件包">安装ceph相关软件包</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># yum install ceph-deploy ceph</span></span><br></pre></td></tr></table></figure>
+<p>检查版本<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph -v</span></span><br><span class="line">ceph version <span class="number">12.1</span>.<span class="number">0</span> (<span class="number">262617</span>c9f16c55e863693258061c5b25dea5b086) luminous (dev)</span><br></pre></td></tr></table></figure></p>
+<h3 id="搭建一个集群">搭建一个集群</h3><p>这个就不描述配置集群的步骤，这个网上很多资料，也是很基础的操作<br>这里提几个luminous重要的变化</p>
+<ul>
+<li>默认的消息处理从simple变成了async了（ms_type = async+posix）</li>
+<li>默认的后端存储从filestore变成了bluestore了</li>
+<li>ceph-s的命令的输出发生了改变(显示如下)</li>
+</ul>
+<p>添加mgr<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph-deploy mgr create lab8106</span><br><span class="line">ceph mgr module <span class="built_in">enable</span> dashboard</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ceph -s</span></span><br><span class="line">  cluster:</span><br><span class="line">    id:     <span class="number">49</span>ee8a7f-fb7c-<span class="number">4239</span><span class="operator">-a</span>4b7-acf0bc37430d</span><br><span class="line">    health: HEALTH_OK</span><br><span class="line"> </span><br><span class="line">  services:</span><br><span class="line">    mon: <span class="number">1</span> daemons, quorum lab8106</span><br><span class="line">    mgr: lab8106(active)</span><br><span class="line">    osd: <span class="number">2</span> osds: <span class="number">2</span> up, <span class="number">2</span> <span class="keyword">in</span></span><br><span class="line"> </span><br><span class="line">  data:</span><br><span class="line">    pools:   <span class="number">1</span> pools, <span class="number">64</span> pgs</span><br><span class="line">    objects: <span class="number">0</span> objects, <span class="number">0</span> bytes</span><br><span class="line">    usage:   <span class="number">2110</span> MB used, <span class="number">556</span> GB / <span class="number">558</span> GB avail</span><br><span class="line">    pgs:     <span class="number">64</span> active+clean</span><br></pre></td></tr></table></figure>
+<h3 id="开启监控模块">开启监控模块</h3><p>在/etc/ceph/ceph.conf中添加<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[mgr]</span><br><span class="line">mgr modules = dashboard</span><br></pre></td></tr></table></figure></p>
+<p>设置dashboard的ip和端口<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph config-key put mgr/dashboard/server_addr <span class="number">192.168</span>.<span class="number">8.106</span></span><br><span class="line">ceph config-key put mgr/dashboard/server_port <span class="number">7000</span></span><br></pre></td></tr></table></figure></p>
+<p>这个从代码上看应该是可以支持配置文件方式的设置，目前还没看到具体的文档，先按这个设置即可，默认的端口是7000</p>
+<p>重启mgr服务<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># systemctl restart ceph-mgr@lab8106</span></span><br></pre></td></tr></table></figure></p>
+<p>检查端口<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># netstat -tunlp|grep 7000</span></span><br><span class="line">tcp        <span class="number">0</span>      <span class="number">0</span> <span class="number">192.168</span>.<span class="number">8.106</span>:<span class="number">7000</span>      <span class="number">0.0</span>.<span class="number">0.0</span>:*               LISTEN      <span class="number">31485</span>/ceph-mgr</span><br></pre></td></tr></table></figure></p>
+<h3 id="访问界面">访问界面</h3><p><img src="http://mysrc.cn-bj.ufileos.com/health.png" alt="dashboard"><br>这个是首页的信息</p>
+<p><img src="http://mysrc.cn-bj.ufileos.com/server.png" alt="image.png-137.3kB"><br>这个是主机的相关信息</p>
+<p><img src="http://mysrc.cn-bj.ufileos.com/osdstat.png" alt="servers"><br>这个界面是显示的osd相关的信息的</p>
+<p><img src="http://mysrc.cn-bj.ufileos.com/rbd.png" alt="rbd"></p>
+<p>rbd相关的信息</p>
+<p><img src="http://mysrc.cn-bj.ufileos.com/filesystem.png" alt="filesystem"><br>文件系统相关的信息</p>
+<h2 id="总结">总结</h2><p>从部署方便性来说，这个部署还是非常的方便的，而且走的是ceph原生接口，ceph通过增加一个mgr模块，可以把一些管理的功能独立出来，从而让mon自己做最重要的一些事情</p>
+<p>目前的监控功能还比较少，主要是监控功能，未来应该会慢慢增加更多的功能，从产品角度来看，一个原生的UI监控使得ceph整个模块更加的完整了</p>
+<p>有的时候也许 simple is the best</p>
+<h2 id="参考资料">参考资料</h2><p>/usr/lib64/ceph/mgr/dashboard/README.rst</p>
+<h2 id="补充">补充</h2><p>目前还缺iscsi部分的，这个需要看下底层iscsi的实现方法</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2017-06-26</td>
+</tr>
+<tr>
+<td style="text-align:center">更新最新版的</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2017-08-29</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/06/28/ceph-luminous-new-osd-class/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ceph luminous 新功能之磁盘智能分组
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/14/different-change-pg/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">调整PG分多次调整和一次到位的迁移差别分析</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'ceph luminous 新功能之内置dashboard',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

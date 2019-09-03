@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ubuntu配置简单的DNS服务器 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="之所以说是简单的服务器，实现的功能很简单，通过这个dns server 查询制定域名的时候，能够根据设置的值来返回IP，当前的需求是需要轮询的返回IP
+DNS 轮询机制会受到多方面的影响，如：A记录的TTL时间长短的影响；别的 DNS 服务器 Cache 的影响；windows 客户端也有一个DNS Cache。这些都会影响 DNS 轮询的效果。
+下面的配置就是实现解析test.zp.com到不同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu配置简单的DNS服务器">
+<meta property="og:url" content="http://www.zphj1987.com/2015/03/24/ubuntu配置简单的DNS服务器/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="之所以说是简单的服务器，实现的功能很简单，通过这个dns server 查询制定域名的时候，能够根据设置的值来返回IP，当前的需求是需要轮询的返回IP
+DNS 轮询机制会受到多方面的影响，如：A记录的TTL时间长短的影响；别的 DNS 服务器 Cache 的影响；windows 客户端也有一个DNS Cache。这些都会影响 DNS 轮询的效果。
+下面的配置就是实现解析test.zp.com到不同">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ubuntu配置简单的DNS服务器">
+<meta name="twitter:description" content="之所以说是简单的服务器，实现的功能很简单，通过这个dns server 查询制定域名的时候，能够根据设置的值来返回IP，当前的需求是需要轮询的返回IP
+DNS 轮询机制会受到多方面的影响，如：A记录的TTL时间长短的影响；别的 DNS 服务器 Cache 的影响；windows 客户端也有一个DNS Cache。这些都会影响 DNS 轮询的效果。
+下面的配置就是实现解析test.zp.com到不同">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ubuntu配置简单的DNS服务器" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/24/ubuntu配置简单的DNS服务器/" class="article-date">
+  	<time datetime="2015-03-24T05:39:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ubuntu配置简单的DNS服务器
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之所以说是简单的服务器，实现的功能很简单，通过这个dns server 查询制定域名的时候，能够根据设置的值来返回IP，当前的需求是需要轮询的返回IP</p>
+<p>DNS 轮询机制会受到多方面的影响，如：A记录的TTL时间长短的影响；别的 DNS 服务器 Cache 的影响；windows 客户端也有一个DNS Cache。这些都会影响 DNS 轮询的效果。</p>
+<p>下面的配置就是实现解析test.zp.com到不同的IP地址</p>
+<h3 id="安装dns_server软件包">安装dns server软件包</h3><p>ubuntu下是通过安装bind9软件包来配置dns-server的<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab5106 ~]<span class="comment"># apt-get install bind9</span></span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<h3 id="配置dns">配置dns</h3><p>配置文件的路径在/etc/bind路径下面</p>
+<h4 id="添加一个zone">添加一个zone</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">	root@ubuntu14:/etc/<span class="built_in">bind</span><span class="comment"># vim /etc/bind/named.conf.local </span></span><br><span class="line">	添加下面，语法可以参照/etc/<span class="built_in">bind</span>/zones.rfc1918中的语法添加，如下：</span><br><span class="line"> </span><br><span class="line">	zone <span class="string">"zp.com"</span>  &#123; <span class="built_in">type</span> master; file <span class="string">"/etc/bind/db.zp.com"</span>; &#125;;</span><br><span class="line">```	</span><br><span class="line">修改db的配置文件</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">	root@ubuntu14:/etc/<span class="built_in">bind</span><span class="comment"># cp db.local db.zp.com</span></span><br><span class="line">	root@ubuntu14:/etc/<span class="built_in">bind</span><span class="comment"># vim db.zp.com</span></span><br><span class="line">	;</span><br><span class="line">	; BIND data file <span class="keyword">for</span> <span class="built_in">local</span> loopback interface</span><br><span class="line">	;</span><br><span class="line">	<span class="variable">$TTL</span>    <span class="number">604800</span></span><br><span class="line">	@       IN      SOA     zp.com. root.localhost. (</span><br><span class="line">	                              <span class="number">2</span>         ; Serial</span><br><span class="line">	                         <span class="number">604800</span>         ; Refresh</span><br><span class="line">	                          <span class="number">86400</span>         ; Retry</span><br><span class="line">	                        <span class="number">2419200</span>         ; Expire</span><br><span class="line">	                         <span class="number">604800</span> )       ; Negative Cache TTL</span><br><span class="line">	;</span><br><span class="line">	@       IN      NS      localhost.</span><br><span class="line">	@       IN      A       <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line">	@       IN      AAAA    ::<span class="number">1</span></span><br><span class="line">	<span class="built_in">test</span>       IN      A       <span class="number">192.168</span>.<span class="number">0.11</span></span><br><span class="line">	<span class="built_in">test</span>       IN      A       <span class="number">192.168</span>.<span class="number">0.12</span></span><br><span class="line">	<span class="built_in">test</span>       IN      A       <span class="number">192.168</span>.<span class="number">0.13</span></span><br><span class="line">	<span class="built_in">test</span>       IN      A       <span class="number">192.168</span>.<span class="number">0.14</span></span><br><span class="line">	<span class="built_in">test</span>       IN      A       <span class="number">192.168</span>.<span class="number">0.15</span></span><br><span class="line">	<span class="built_in">test</span>       IN      A       <span class="number">192.168</span>.<span class="number">0.16</span></span><br></pre></td></tr></table></figure>
+<p>修改<code>/etc/bind/named.conf.option</code> 配置文件，在 <code>named.conf.option</code> 中可以设置 bind 的 round-robin 的给出结果的顺序：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">rrset-order &#123; order cyclic; &#125;;&#10;&#10;rrset-order &#25903;&#25345;&#19977;&#20010;&#21442;&#25968;&#65306;fixed, random, cyclic &#12290;&#10;fixed &#20250;&#23558;&#22810;&#20010;A&#35760;&#24405;&#25353;&#37197;&#32622;&#25991;&#20214;&#30340;&#39034;&#24207;&#22266;&#23450;&#32473;&#20986;&#10;random &#20250;&#38543;&#26426;&#32473;&#20986;&#10;cyclic &#20250;&#24490;&#29615;&#32473;&#20986;</span><br></pre></td></tr></table></figure>
+<h3 id="重启服务">重启服务</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ubuntu14:/etc/<span class="built_in">bind</span><span class="comment"># /etc/init.d/bind9 restart</span></span><br></pre></td></tr></table></figure>
+<h3 id="检查配置效果">检查配置效果</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#20462;&#25913;&#22495;&#21517;&#35299;&#26512;&#37197;&#32622;&#25991;&#20214;&#10;root@ubuntu14:/etc/bind# vim /etc/resolv.conf &#10;nameserver 192.168.0.122&#10;&#28155;&#21152;&#20320;&#30340;&#22495;&#21517;&#26381;&#21153;&#22120;&#30340;IP&#22320;&#22336;&#10;&#10;&#36890;&#36807;&#22810;&#27425;ping&#22495;&#21517;&#26816;&#26597;&#36820;&#22238;&#30340;&#32467;&#26524;&#10;root@ubuntu14:/etc/bind# ping test.zp.com&#10;PING test.zp.com (192.168.0.13) 56(84) bytes of data.&#10;root@ubuntu14:/etc/bind# ping test.zp.com&#10;PING test.zp.com (192.168.0.14) 56(84) bytes of data.</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="后话">后话</h3><p>window的dns缓存的处理办法：<br>清空dns缓存<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ipconfig /flushdns</span><br></pre></td></tr></table></figure></p>
+<p>显示缓存的dns信息<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ipconfig/displaydns</span><br></pre></td></tr></table></figure></p>
+<p>临时禁用dns缓存<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">net stop dnscache</span><br></pre></td></tr></table></figure></p>
+<p>启动dns缓存<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">net start dnscache</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/03/25/压缩css与js/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          压缩css与js
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/03/24/mdtest测试工具/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">mdtest测试工具</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'ubuntu配置简单的DNS服务器',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

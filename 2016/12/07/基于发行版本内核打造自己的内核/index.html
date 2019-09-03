@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>基于发行版本内核打造自己的内核 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Linux当中最核心的部分就是内核，这个也是最基础，最可能被忽视的一部分，随便找一个刚入职的运维，学习个两三天，网上找些资料也能能自己安装编译内核了，很多运维的初期培训就是做的这些学习，为什么在网上已经有这么多文章的情况下，还要写一篇关于内核的文章，这是因为，我想讲的是如何去选择内核">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于发行版本内核打造自己的内核">
+<meta property="og:url" content="http://www.zphj1987.com/2016/12/07/基于发行版本内核打造自己的内核/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="Linux当中最核心的部分就是内核，这个也是最基础，最可能被忽视的一部分，随便找一个刚入职的运维，学习个两三天，网上找些资料也能能自己安装编译内核了，很多运维的初期培训就是做的这些学习，为什么在网上已经有这么多文章的情况下，还要写一篇关于内核的文章，这是因为，我想讲的是如何去选择内核">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/kernel.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/n8cgirh3357s5ky5bq0tqnsx/image_1b39jfbj2178udi87sdptj13809.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于发行版本内核打造自己的内核">
+<meta name="twitter:description" content="Linux当中最核心的部分就是内核，这个也是最基础，最可能被忽视的一部分，随便找一个刚入职的运维，学习个两三天，网上找些资料也能能自己安装编译内核了，很多运维的初期培训就是做的这些学习，为什么在网上已经有这么多文章的情况下，还要写一篇关于内核的文章，这是因为，我想讲的是如何去选择内核">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-基于发行版本内核打造自己的内核" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/07/基于发行版本内核打造自己的内核/" class="article-date">
+  	<time datetime="2016-12-07T07:55:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      基于发行版本内核打造自己的内核
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/kernel.png" alt="此处输入图片的描述"><br></center>
+
+<p>Linux当中最核心的部分就是内核，这个也是最基础，最可能被忽视的一部分，随便找一个刚入职的运维，学习个两三天，网上找些资料也能能自己安装编译内核了，很多运维的初期培训就是做的这些学习，为什么在网上已经有这么多文章的情况下，还要写一篇关于内核的文章，这是因为，我想讲的是如何去选择内核<br><a id="more"></a><br>一般来说，找内核的时候都会去下面这个网站进行选择</p>
+<blockquote>
+<p><a href="https://www.kernel.org/" target="_blank" rel="external">https://www.kernel.org/</a></p>
+</blockquote>
+<p>很多人在问我的时候，都会问，我该怎么去选择哪个版本的内核，一般来说我的回答是这样的</p>
+<blockquote>
+<p>选取最后一个长期支持版本，或者最后一个稳定的版本</p>
+</blockquote>
+<p>一般来说,选择这两个版本基本不会出太大的问题，并且即使有问题，后面做小版本的升级也不是很难的事情，当然这是基于你对自定义内核很有兴趣，或者需要自己去裁剪，增加一些东西的时候，用我上面说的两个版本都没有问题，下面是一个其他的选择</p>
+<p>最近把linus的just for fun看完了，也基本上了解了linux大概的发展历程，linux走向成功也有一定的原因是围绕在其周围的一些商业公司，红帽是其中最成功的一个公司，当然还有其他各种发型版本，开源版本和商业版本的最大区别在于服务上面，商业公司能够提供专业的服务，开源并不意味着免费，其中很大一部分是学习成本，然后其次就是包装和推广了，最终才是一个完整的产品</p>
+<p>开源有开源的规矩，当然这个规矩在中国不一定行得通，大部分公司不会将开源修改的东西回馈回去，而能够回馈回去的，基本都是技术非常领先的公司，这些公司核心在于自己的技术，以及对产品的把控，所以也就不介意源代码的开源了，并且乐意去引领行业的发展</p>
+<p>当然这个对于红帽这样级别的公司，代码当然是会开源的，而其发行版本的内核，其实都是经过了一些修改的，并且这些修改也都是会开源出来的，只是大部分时候我们并没有去关注它，这就是本篇的重点</p>
+<h2 id="获取源代码">获取源代码</h2><blockquote>
+<p><a href="http://vault.centos.org/7.2.1511/os/Source/SPackages/" target="_blank" rel="external">http://vault.centos.org/7.2.1511/os/Source/SPackages/</a><br>centos版本</p>
+</blockquote>
+<p>红帽的内核源码之前托管在ftp上的，现在全部放到了订阅中心了，这里进入红帽订阅中心，进行rpm包的搜索，找到需要的部分，选择下载即可</p>
+<blockquote>
+<p><a href="https://access.redhat.com/downloads/content/kernel/3.10.0-514.el7/x86_64/fd431d51/package" target="_blank" rel="external">https://access.redhat.com/downloads/content/kernel/3.10.0-514.el7/x86_64/fd431d51/package</a></p>
+</blockquote>
+<center><br><img src="http://static.zybuluo.com/zphj1987/n8cgirh3357s5ky5bq0tqnsx/image_1b39jfbj2178udi87sdptj13809.png" alt="image_1b39jfbj2178udi87sdptj13809.png-137.5kB"><br></center>
+
+<p>这里我们是要选择的是源码包，因为可能需要自己加些内核模块进去<br>安装源码包<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm -ivh kernel-<span class="number">3.10</span>.<span class="number">0</span>-<span class="number">514</span>.el7.src.rpm</span><br></pre></td></tr></table></figure></p>
+<p>安装后默认会放到下面的目录下面，如果你有自定义的目录，也可以直接解压rpm，解压的方法是,下面命令默认会将文件解压到当前目录<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm2cpio kernel-<span class="number">3.10</span>.<span class="number">0</span>-<span class="number">514</span>.el7.src.rpm |cpio -div</span><br></pre></td></tr></table></figure></p>
+<p>检查文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ll  /root/rpmbuild/SOURCES/</span></span><br><span class="line">total <span class="number">82804</span></span><br><span class="line">-rwxr-xr-x <span class="number">1</span> root root     <span class="number">3118</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> check-kabi</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root      <span class="number">150</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> cpupower.config</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root      <span class="number">294</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> cpupower.service</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root        <span class="number">0</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> extra_certificates</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root   <span class="number">121660</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> kernel-<span class="number">3.10</span>.<span class="number">0</span>-ppc64.config</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root   <span class="number">121951</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> kernel-<span class="number">3.10</span>.<span class="number">0</span>-ppc64-debug.config</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root   <span class="number">121229</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> kernel-<span class="number">3.10</span>.<span class="number">0</span>-ppc64le.config</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root   <span class="number">121531</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> kernel-<span class="number">3.10</span>.<span class="number">0</span>-ppc64le-debug.config</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root    <span class="number">58278</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> kernel-<span class="number">3.10</span>.<span class="number">0</span><span class="operator">-s</span>390x.config</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root    <span class="number">57895</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> kernel-<span class="number">3.10</span>.<span class="number">0</span><span class="operator">-s</span>390x-debug.config</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root    <span class="number">30834</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> kernel-<span class="number">3.10</span>.<span class="number">0</span><span class="operator">-s</span>390x-kdump.config</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root   <span class="number">137690</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> kernel-<span class="number">3.10</span>.<span class="number">0</span>-x86_64.config</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root   <span class="number">137991</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> kernel-<span class="number">3.10</span>.<span class="number">0</span>-x86_64-debug.config</span><br><span class="line">-rw-rw-r-- <span class="number">1</span> root root     <span class="number">8582</span> Oct <span class="number">19</span> <span class="number">22</span>:<span class="number">19</span> kernel-abi-whitelists-<span class="number">514</span>.tar.bz2</span><br><span class="line">-rw-rw-r-- <span class="number">1</span> root root <span class="number">83660860</span> Oct <span class="number">19</span> <span class="number">22</span>:<span class="number">19</span> linux-<span class="number">3.10</span>.<span class="number">0</span>-<span class="number">514</span>.el7.tar.xz</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root        <span class="number">0</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> linux-kernel-test.patch</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root     <span class="number">1757</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> Makefile.common</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root    <span class="number">34277</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> Module.kabi_ppc64</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root    <span class="number">34277</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> Module.kabi_ppc64le</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root    <span class="number">31748</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> Module.kabi_s390x</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root    <span class="number">36881</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> Module.kabi_x86_64</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root     <span class="number">1198</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> rheldup3.x509</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root     <span class="number">1176</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> rhelkpatch1.x509</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root      <span class="number">977</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> securebootca.cer</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root      <span class="number">899</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> secureboot.cer</span><br><span class="line">-rwxr-xr-x <span class="number">1</span> root root      <span class="number">507</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> sign-modules</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root      <span class="number">361</span> Oct <span class="number">19</span> <span class="number">23</span>:<span class="number">20</span> x509.genkey</span><br></pre></td></tr></table></figure></p>
+<h2 id="打包内核">打包内核</h2><p>如果需要修改默认的内核选项，就修改这个文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /root/rpmbuild/SOURCES/kernel-<span class="number">3.10</span>.<span class="number">0</span>-x86_64.config</span><br></pre></td></tr></table></figure></p>
+<p>然后开始编译内核rpm包<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpmbuild -ba /root/rpmbuild/SPECS/kernel.spec</span><br></pre></td></tr></table></figure></p>
+<p>然后内核包就生成了，在下面目录当中取rpm包即可</p>
+<blockquote>
+<p>/root/rpmbuild/RPMS/x86_64/</p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/12/08/查询Ceph的OSD占用内存/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          查询Ceph的OSD占用内存
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/11/29/The-Dos-and-Don-ts-for-Ceph-for-OpenStack/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">The Dos and Don&#39;ts for Ceph for OpenStack</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '基于发行版本内核打造自己的内核',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

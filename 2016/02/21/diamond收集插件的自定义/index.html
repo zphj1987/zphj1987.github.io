@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>diamond收集插件的自定义 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="diamond是与graphite配合使用的一个数据收集的软件，关于这个配置的资料很多，使用起来也比较简单，详细的安装和配置会在后面的关于整套监控系统的文章里面写到，本篇是专门讲解怎么自定义这个数据收集的插件
+diamond的结构比较简单:
+
+Collector 数据采集的模块
+handlers 数据发送的模块
+
+这里主要讲解的是Collector部分的插件的编写，diamond自身带了非常丰富的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="diamond收集插件的自定义">
+<meta property="og:url" content="http://www.zphj1987.com/2016/02/21/diamond收集插件的自定义/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="diamond是与graphite配合使用的一个数据收集的软件，关于这个配置的资料很多，使用起来也比较简单，详细的安装和配置会在后面的关于整套监控系统的文章里面写到，本篇是专门讲解怎么自定义这个数据收集的插件
+diamond的结构比较简单:
+
+Collector 数据采集的模块
+handlers 数据发送的模块
+
+这里主要讲解的是Collector部分的插件的编写，diamond自身带了非常丰富的">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="diamond收集插件的自定义">
+<meta name="twitter:description" content="diamond是与graphite配合使用的一个数据收集的软件，关于这个配置的资料很多，使用起来也比较简单，详细的安装和配置会在后面的关于整套监控系统的文章里面写到，本篇是专门讲解怎么自定义这个数据收集的插件
+diamond的结构比较简单:
+
+Collector 数据采集的模块
+handlers 数据发送的模块
+
+这里主要讲解的是Collector部分的插件的编写，diamond自身带了非常丰富的">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-diamond收集插件的自定义" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/21/diamond收集插件的自定义/" class="article-date">
+  	<time datetime="2016-02-21T11:23:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-02-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      diamond收集插件的自定义
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>diamond是与graphite配合使用的一个数据收集的软件，关于这个配置的资料很多，使用起来也比较简单，详细的安装和配置会在后面的关于整套监控系统的文章里面写到，本篇是专门讲解怎么自定义这个数据收集的插件</p>
+<p>diamond的结构比较简单:</p>
+<ul>
+<li>Collector 数据采集的模块</li>
+<li>handlers 数据发送的模块</li>
+</ul>
+<p>这里主要讲解的是Collector部分的插件的编写，diamond自身带了非常丰富的插件，可以很方便的使用自带的插件进行监控，包括ceph和cephstats这两个可以用来监控ceph的插件，弄清楚怎么去写插件会方便很多，并且能扩展原来插件所没有的数据,calamari里面的数据的收集就是通过的diamond的</p>
+<p>本例将讲解怎么写一个监控ceph的健康状态的插件</p>
+<a id="more"></a>
+<h3 id="1、diamond软件的安装">1、diamond软件的安装</h3><p>通过github上下载代码然后安装在服务器上即可</p>
+<h3 id="2、收集数据的py的编写">2、收集数据的py的编写</h3><p>收集数据的collect的路径：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/usr/share/diamond/collectors/</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-1_创建一个目录">2.1 创建一个目录</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir /usr/share/diamond/collectors/cephhealth/</span><br></pre></td></tr></table></figure>
+<h4 id="2-2_创建采集的py文件">2.2 创建采集的py文件</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /usr/share/diamond/collectors/cephhealth/cephhealth.py</span><br></pre></td></tr></table></figure>
+<p>添加下面的内容：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="string">""</span><span class="string">"</span><br><span class="line">本插件用于采集ceph的健康状态</span><br><span class="line">"</span><span class="string">""</span></span><br><span class="line">import diamond.collector</span><br><span class="line">import json</span><br><span class="line">import os</span><br><span class="line">class cephhealthCollector(diamond.collector.Collector):</span><br><span class="line"></span><br><span class="line">    def get_default_config_<span class="built_in">help</span>(self):</span><br><span class="line">        config_<span class="built_in">help</span> = super(cephhealthCollector, self).get_default_config_<span class="built_in">help</span>()</span><br><span class="line">        config_help.update(&#123;</span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="built_in">return</span> config_<span class="built_in">help</span></span><br><span class="line"></span><br><span class="line">    def get_default_config(self):</span><br><span class="line">        <span class="string">""</span><span class="string">"</span><br><span class="line">        Returns the default collector settings</span><br><span class="line">        "</span><span class="string">""</span></span><br><span class="line">        config = super(cephhealth, self).get_default_config()</span><br><span class="line">        config.update(&#123;</span><br><span class="line">            <span class="string">'path'</span>:     <span class="string">'ceph'</span></span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="built_in">return</span> config</span><br><span class="line"></span><br><span class="line">    def collect(self):</span><br><span class="line">        <span class="string">""</span><span class="string">"</span><br><span class="line">        Overrides the Collector.collect method</span><br><span class="line">        "</span><span class="string">""</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Set Metric Name</span></span><br><span class="line">        metric_name = <span class="string">"my.cephhealth.metric"</span></span><br><span class="line">        data = os.popen(<span class="string">'ceph health -f json'</span>).read()</span><br><span class="line">        ddata = json.loads(data)</span><br><span class="line">        status = ddata[<span class="string">'overall_status'</span>]</span><br><span class="line">        <span class="keyword">if</span> status == <span class="string">'HEALTH_ERR'</span>:</span><br><span class="line">                statuscode = <span class="number">10</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">                statuscode = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Set Metric Value</span></span><br><span class="line">        metric_value = statuscode</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Publish Metric</span></span><br><span class="line">        self.publish(metric_name, metric_value)</span><br></pre></td></tr></table></figure></p>
+<p>以上插件注意：<br>cephhealthCollector 为这个插件的名称，也是diamond.conf里面设置的时候设置的值<br>‘path’:     ‘ceph’ 这个是在最后输出结果中会显示这个名称<br>其他部分就是注意输出一个名称 metric_name，和最后的 metric_value 即可<br>中间的部分可以自己去用python去获取数值即可</p>
+<h4 id="3、修改diamond配置文件">3、修改diamond配置文件</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/diamond/diamond.conf</span><br></pre></td></tr></table></figure>
+<p>在[collectors]下面插件配置的区域添加<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">[[cephhealthCollector]]&#10;enabled = true</span><br></pre></td></tr></table></figure></p>
+<h4 id="4、重启diamond进程">4、重启diamond进程</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/etc/init.d/diamond restart</span><br></pre></td></tr></table></figure>
+<h4 id="5、检查输出的数值">5、检查输出的数值</h4><p>可以把其他插件全部关闭，然后查看文件<br>/var/log/diamond/archive.log的内容</p>
+<p>上面的插件的输出为：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">servers.grafana.ceph.my.cephhealth.metric 10 1456057146</span><br></pre></td></tr></table></figure></p>
+<p>这个结果的格式为:</p>
+<ul>
+<li>path_prefix = servers    （diamond.conf中配置）</li>
+<li>hostname = grafana        （diamond.conf中配置）</li>
+<li>get_default_config(self): path = ceph   (插件py中配置)</li>
+<li>metric_name = “my.cephhealth.metric”     （插件py中配置）</li>
+</ul>
+<p>到这来插件就完成了，写起来还是比较简单方便的，上面的地方因为ceph里面的输出的是字符串，而grafana里面的显示状态的地方使用的是数字的，所以在这里可以通过字符串转数字，然后在web界面上使用数字字符的匹配来显示这个状态</p>
+<hr>
+<p>diamond的性能是很牛的，1000 台服务器每分钟总共300万个监控数值的压力也能扛下来，对于我们普通级别的使用时绰绰有余的，关于这个规模的有人写了文章，优化的时候可以参考（<a href="https://answers.launchpad.net/graphite/+question/178969" title="1000台监控" target="_blank" rel="external">1000台监控</a>）</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/02/22/nginx状态监控统计/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          nginx状态监控统计
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/27/ubuntu安装软件自动交互/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ubuntu安装软件自动交互</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'diamond收集插件的自定义',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

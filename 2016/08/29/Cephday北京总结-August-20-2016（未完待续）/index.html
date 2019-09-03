@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Cephday北京总结-August 20, 2016（未完待续） | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="进度已完结，因为BLOG已经被抓取，为了防止链接失效，就不做标题的修改了
+前言这次的ceph day 在北京举办的，随着中国IT业的发展，中国的程序员在一些开源项目中做出了自己的贡献，同样的，国外的大厂也越来越关注中国的市场，这就促成了越来越多的交流活动，这次的北京站应该是CEPH DAY APAC ROADSHOW – BEIJING，这个是ceph的亚洲行的其中的一站，来中国，当然就有更多的中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cephday北京总结-August 20, 2016（未完待续）">
+<meta property="og:url" content="http://www.zphj1987.com/2016/08/29/Cephday北京总结-August-20-2016（未完待续）/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="进度已完结，因为BLOG已经被抓取，为了防止链接失效，就不做标题的修改了
+前言这次的ceph day 在北京举办的，随着中国IT业的发展，中国的程序员在一些开源项目中做出了自己的贡献，同样的，国外的大厂也越来越关注中国的市场，这就促成了越来越多的交流活动，这次的北京站应该是CEPH DAY APAC ROADSHOW – BEIJING，这个是ceph的亚洲行的其中的一站，来中国，当然就有更多的中">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/beijing.jpg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cephday北京总结-August 20, 2016（未完待续）">
+<meta name="twitter:description" content="进度已完结，因为BLOG已经被抓取，为了防止链接失效，就不做标题的修改了
+前言这次的ceph day 在北京举办的，随着中国IT业的发展，中国的程序员在一些开源项目中做出了自己的贡献，同样的，国外的大厂也越来越关注中国的市场，这就促成了越来越多的交流活动，这次的北京站应该是CEPH DAY APAC ROADSHOW – BEIJING，这个是ceph的亚洲行的其中的一站，来中国，当然就有更多的中">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Cephday北京总结-August-20-2016（未完待续）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/29/Cephday北京总结-August-20-2016（未完待续）/" class="article-date">
+  	<time datetime="2016-08-29T15:57:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-08-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Cephday北京总结-August 20, 2016（未完待续）
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/beijing.jpg" alt=""><br></center>
+
+<h2 id="进度">进度</h2><p>已完结，因为BLOG已经被抓取，为了防止链接失效，就不做标题的修改了</p>
+<h2 id="前言">前言</h2><p>这次的ceph day 在北京举办的，随着中国IT业的发展，中国的程序员在一些开源项目中做出了自己的贡献，同样的，国外的大厂也越来越关注中国的市场，这就促成了越来越多的交流活动，这次的北京站应该是CEPH DAY APAC ROADSHOW – BEIJING，这个是ceph的亚洲行的其中的一站，来中国，当然就有更多的中国的开发者进行的分享，作为一个长期关注ceph的爱好者，本篇将从我自己的角度来看下这次北京站讲了哪些东西</p>
+<p>由于工作的地方在武汉，没有那么多的机会去参加分享活动，就从分享的PPT当中进行解读了，所有的知识都是需要去根据环境进行实践的，也就是别人的经验只有适配好你的环境，对你才是有用的，废话不多说开始了</p>
+<a id="more"></a>
+<h2 id="分享的PPT">分享的PPT</h2><h3 id="开幕致辞-张建">开幕致辞-张建</h3><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/00-%E5%BC%80%E5%B9%95%E8%87%B4%E8%BE%9E-%E5%BC%A0%E5%BB%BA.pdf" width="850" height="700"></center>
+
+<p>首先说下这位分享者，之前在2015的Ceph Hackathon上，就是他最先发现的老版本的ceph与 TCMalloc结合的一个bug，然后提出了用jemalloc获取了随机IO的提升，并且降低了资源占用， 这对于老版本的环境提升还是比较大的，在新的环境下，差别没有那么大了，不过分享者还是非常无私的分享了他们的发现<br>本篇主要讲了下面几点：ceph在中国很火，intel投入很多，并且参与了很多的功能的开发，这只是一个致辞，发出的信号就是Intel 很关注ceph</p>
+<h3 id="Ceph社区进展-Patrick">Ceph社区进展-Patrick</h3><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/01-Ceph%E7%A4%BE%E5%8C%BA%E8%BF%9B%E5%B1%95-Patrick.pdf" width="850" height="700"></center>
+
+<p>Patrick是红帽的ceph社区的总监，负责推进ceph各方面的发展，<br>本篇主要讲了：ceph当前的发展情况，各大厂对ceph的关注，ceph的固定的活动，cephfs在jewel版本会稳定下来</p>
+<h3 id="Ceph中国社区-孙琦">Ceph中国社区-孙琦</h3><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/02-Ceph%E4%B8%AD%E5%9B%BD%E7%A4%BE%E5%8C%BA-%E5%AD%99%E7%90%A6.pdf" width="850" height="700"></center><br>这篇是由孙琦进行的演讲，他对推动ceph在中国的发展做了很多工作<br>本篇主要讲了：ceph中国社区在中国做了哪些推广方面的活动，主要是建立圈子，关注的人很多，发布了一本翻译的技术书籍，未来会做的事情，需要关注的是社区自己写的书会在10月份出来<br><br>###SSD-Ceph在360游戏云的应用-谷忠言<br><br><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/03-SSD%20Ceph%E5%9C%A8360%E6%B8%B8%E6%88%8F%E4%BA%91%E7%9A%84%E5%BA%94%E7%94%A8-%E8%B0%B7%E5%BF%A0%E8%A8%80.pdf" width="850" height="700"></center>
+
+<p>本篇是由360游戏的谷忠言进行演讲的，主要讲述了ceph在360游戏中使用的经验<br>提出了IO容量计算模型；概括了ceph主要调优的方法;相同负载情况下分池对线程和资源的占用帮助很大;如果不限流很有可能因为过载造成心跳超时，进程自杀了;扩容采用扩池的方式避免数据大量变动；网络问题不好定位，根据osd的提交时间的异常来追踪问题（这个数据看下采集方法）；图形化监控采用的是grafana；纯ssd才能满足360游戏主机对性能的需求</p>
+<h3 id="SPDK加速Ceph-XSKY_Bluestore案例分享-扬子夜-王豪迈">SPDK加速Ceph-XSKY Bluestore案例分享-扬子夜-王豪迈</h3><p><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/04-SPDK%E5%8A%A0%E9%80%9FCeph-XSKY%20Bluestore%E6%A1%88%E4%BE%8B%E5%88%86%E4%BA%AB-%E6%89%AC%E5%AD%90%E5%A4%9C-%E7%8E%8B%E8%B1%AA%E8%BF%88.pdf" width="850" height="700"></center><br>本篇是由xsky的扬子夜-王豪迈进行演讲的，ceph设计是在低性能硬件基础上设计的，现在的网络磁盘都是高性能的，软件设计和实现是性能瓶颈，介绍了底层对象存储的写入模型的优点和缺点；设计了新的写入方式，解决这些问题，介绍了spdk；spdk的nvme 驱动比内核的nvme驱动带来了6倍随机读性能的提升；spdk对iscsi场景也能带来很大性能提升；替换内核驱动NVME SSD的OSD为spdk驱动，OSD网络用dpdk替换；介绍bluestore，性能全线提升，当前还在完善功能；总之这个地方会对性能提升很多，但是目前资料太少，目前还没普及，只能有一定功底研发实力的才能参与进来，目前主要是xsky和Intel还有Redhat等大厂在进行驱动在</p>
+<h3 id="Ceph_Tiering高性能架构-Thor_Chin">Ceph Tiering高性能架构-Thor Chin</h3><p><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/05-Ceph%20Tiering%E9%AB%98%E6%80%A7%E8%83%BD%E6%9E%B6%E6%9E%84-Thor%20Chin.pdf" width="850" height="700"></center><br>本篇是由 Thor Chin 进行的演讲，首先介绍了自己的使用场景，然后介绍了下crushmap文件里面各个字段的意思；介绍了各种测试的工具；然后给出了测试的情况，这里作者没有给出测试模型，并且没有说明是否在cache满载的情况下，这个方案是可以使用的，但是性能数据就不做过多的评价</p>
+<h3 id="Ceph在视频应用上的性能优化-何营">Ceph在视频应用上的性能优化-何营</h3><p><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/06-Ceph%E5%9C%A8%E8%A7%86%E9%A2%91%E5%BA%94%E7%94%A8%E4%B8%8A%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E4%BD%95%E8%90%A5.pdf" width="850" height="700"></center><br>本篇来自浪潮的何营的演讲，主要介绍了ceph在视频行业的运用，并且提出了直接纠删码的实现方法，研发可以看看，实现起来代码量还是很高的</p>
+<h3 id="借助当今的NVM_Express固态盘和未来的英特尔Optane技术打造经济高效的高性能存储解决方案-周渊-张缘">借助当今的NVM Express固态盘和未来的英特尔Optane技术打造经济高效的高性能存储解决方案-周渊-张缘</h3><p><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/07-%E5%80%9F%E5%8A%A9%E5%BD%93%E4%BB%8A%E7%9A%84NVM%20Express%E5%9B%BA%E6%80%81%E7%9B%98%E5%92%8C%E6%9C%AA%E6%9D%A5%E7%9A%84%E8%8B%B1%E7%89%B9%E5%B0%94Optane%E6%8A%80%E6%9C%AF%E6%89%93%E9%80%A0%E7%BB%8F%E6%B5%8E%E9%AB%98%E6%95%88%E7%9A%84%E9%AB%98%E6%80%A7%E8%83%BD%E5%AD%98%E5%82%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-%E5%91%A8%E6%B8%8A-%E5%BC%A0%E7%BC%98.pdf" width="850" height="700"></center><br>本篇来自Intel的周渊-张缘作的演讲，开始介绍了Intel在ceph上的贡献，有三大工具，CeTune性能调优工具，Vsm部署管理工具，COSbench压力测试工具，三大工具目前都是开源可部署的，然后介绍了基于Intel的硬件的Ceph方案，介绍了几个调优点，4K随机写提高了6倍，4K随机读提高了16倍，介绍了Bluestore和Filestore在Intel硬件上性能的差别，根据火焰图的输出提出rocksdb需要调优；介绍了Intel的3D Xpoint，最后给出了参考配置文件，这个是针对全闪存的调优</p>
+<h3 id="基于ARM的Ceph可扩展高效解决方案-罗旭">基于ARM的Ceph可扩展高效解决方案-罗旭</h3><p><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/08-%E5%9F%BA%E4%BA%8EARM%E7%9A%84Ceph%E5%8F%AF%E6%89%A9%E5%B1%95%E9%AB%98%E6%95%88%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-%E7%BD%97%E6%97%AD.pdf " width="850" height="700"></center><br>本篇来自罗旭的演讲，介绍了arm在存储方面的应用，社区也在发布arm版本的发行包，提供了ceph的arm基本解决方案，介绍了功耗的优势，西数之前做了一个504个osd的arm的测试，arm目前在国内还属于起步概念的东西，很多人想上，但是因为因为不是通用平台，目前的成本其实并没有太大的优势，未来还是值得期待，在冷数据存储的场景上，还是大有可为的，还有一个原因，国内在功耗这一块并没有特别的重视</p>
+<h3 id="Ceph存储设备案例研究与S3对象存储性能优化-刘志刚">Ceph存储设备案例研究与S3对象存储性能优化-刘志刚</h3><p><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/09-Ceph%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87%E6%A1%88%E4%BE%8B%E7%A0%94%E7%A9%B6%E4%B8%8ES3%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%88%98%E5%BF%97%E5%88%9A.pdf " width="850" height="700"></center><br>本篇来自富士通的刘志刚演讲，这也是本次分享里面唯一的RGW方面的分享，开始介绍了富士通在ceph上的投入，介绍了cache tiering存在性能衰减的问题，介绍了一些方案上调优的点，介绍了ownCloud与对象存储对接的方案和性能，介绍了cosbench测试出来的性能的情况，介绍了rgw调优的参数</p>
+<h3 id="Ceph全闪存存储-周皓">Ceph全闪存存储-周皓</h3><p><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/10-Ceph%E5%85%A8%E9%97%AA%E5%AD%98%E5%AD%98%E5%82%A8-%E5%91%A8%E7%9A%93.pdf" width="850" height="700"></center><br>本篇来自SanDisk的周皓的演讲，介绍了Sandisk的全闪存ceph的方案InfiniFlash，性能确实非常的好，并且TCO非常的低；介绍了一些调优的点BlueStore，KV Store，Memory allocation等等</p>
+<h3 id="将Ceph引入企业-在30分钟安装一个50T移动集群">将Ceph引入企业-在30分钟安装一个50T移动集群</h3><p><center><embed src="http://mysrc.cn-bj.ufileos.com/cephdaybeijing201608/11-%E5%B0%86Ceph%E5%BC%95%E5%85%A5%E4%BC%81%E4%B8%9A-%E5%9C%A830%E5%88%86%E9%92%9F%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AA50T%E7%A7%BB%E5%8A%A8%E9%9B%86%E7%BE%A4-Alex%20Lau.pdf" width="850" height="700"></center><br>本篇来自Suse的劉俊賢的演讲，主要讲的是快速部署一个50T的ceph集群，介绍了Suse的iscsi的方案，目前Suse这块做的不错，商业版本提供了基于rbd的iscsi方案的高可用，介绍了基于LIO的LRBD，介绍了openATTIC，这个是之前一家做存储管理平台的公司，后来和Suse合作比较紧密，这个在openATTIC更稳定一点我会写下部署的相关文档，介绍了基于salt的快速部署</p>
+<h2 id="完结">完结</h2><p>现在一些大厂的分享都会带上一些优化的方法和优化的参数，这个比前几年已经好了很多，这些参数建议都自己在自己的环境上跑一跑，因为优化是基于当前环境的优化，如果有通用优化，那不用优化了，直接固定参数值就行了，举个简单的例子，在ssd场景上常用的一个优化需要调高IO的线程，如果直接参数硬套到sata的场景，性能不会提高，反而增大了延时，IO一般在增大到一个峰值后，就不会增大，延时反而会增大，所以调优就是找到自己环境的最适合的参数，上面只是简单的介绍了PPT里面的内容点，如果感兴趣可以深挖里面的东西</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-08-29</td>
+</tr>
+<tr>
+<td style="text-align:center">完成</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-09-06</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/01/Proftp最简匿名访问配置/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Proftp最简匿名访问配置
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/28/重写ceph-lazy/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">重写ceph-lazy</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'Cephday北京总结-August 20, 2016（未完待续）',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

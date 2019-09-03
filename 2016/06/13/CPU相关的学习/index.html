@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>CPU相关的学习 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="我理解的CPU目前对cpu的了解停留在这个水平查看CPU型号：cat /proc/cpuinfo |grep model |tail -n 1model name	: Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz
+查看有多少processor：cat /proc/cpuinfo |grep processor|tail -n 1processor	: 23
+然">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CPU相关的学习">
+<meta property="og:url" content="http://www.zphj1987.com/2016/06/13/CPU相关的学习/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="我理解的CPU目前对cpu的了解停留在这个水平查看CPU型号：cat /proc/cpuinfo |grep model |tail -n 1model name	: Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz
+查看有多少processor：cat /proc/cpuinfo |grep processor|tail -n 1processor	: 23
+然">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/gky2uc8l9xww4ozupmjxocdt/socket.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/vg7eprp72ibucwyq0fljvfl2/coremuti.gif">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/y0thygclxkbl9y8e1f6rl9yj/smpnuma.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/u4t0qbmeh2i4nemf007vqepr/nodesock.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CPU相关的学习">
+<meta name="twitter:description" content="我理解的CPU目前对cpu的了解停留在这个水平查看CPU型号：cat /proc/cpuinfo |grep model |tail -n 1model name	: Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz
+查看有多少processor：cat /proc/cpuinfo |grep processor|tail -n 1processor	: 23
+然">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-CPU相关的学习" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/13/CPU相关的学习/" class="article-date">
+  	<time datetime="2016-06-13T10:13:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CPU相关的学习
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><img src="http://static.zybuluo.com/zphj1987/gky2uc8l9xww4ozupmjxocdt/socket.jpg" alt="socket.jpg-59.6kB"></center>
+
+<h3 id="我理解的CPU">我理解的CPU</h3><p>目前对cpu的了解停留在这个水平<br>查看CPU型号：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat /proc/cpuinfo |grep model |tail -n <span class="number">1</span></span><br><span class="line">model name	: Intel(R) Xeon(R) CPU E5-<span class="number">2620</span> v2 @ <span class="number">2.10</span>GHz</span><br></pre></td></tr></table></figure></p>
+<p>查看有多少processor：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat /proc/cpuinfo |grep processor|tail -n <span class="number">1</span></span><br><span class="line">processor	: <span class="number">23</span></span><br></pre></td></tr></table></figure></p>
+<p>然后对性能要求就是主频越高越好，processor越多越好，其它的知道的很少，由于需要做性能相关调优，所以对CPU这一块做一个系统的学习，如果参考网上的一些CEPH性能调优的资料，很多地方都是让关闭numa，以免影响性能，这个从来都是只有人给出答案，至于为什么，对不对，适合不适合你的环境，没有人给出来，没有数据支持的调优都是耍流氓<br><a id="more"></a></p>
+<h3 id="单核和多核">单核和多核</h3><p>在英文里面，单核（single-core）和多核（multi-core）多称作uniprocessor和multiprocessor，这里先对这些概念做一个说明：</p>
+<blockquote>
+<p>这里所说的core（或processor），是一个泛指，是从使用者（或消费者）的角度看计算机系统。因此，core，或者processor，或者处理器（CPU），都是逻辑概念，指的是一个可以独立运算、处理的核心。<br>而这个核心，可以以任何形式存在，例如：单独的一个chip（如通常意义上的单核处理器）；一个chip上集成多个核心（如SMP，symmetric multiprocessing）；一个核心上实现多个hardware context，以支持多线程（如SMT，Simultaneous multithreading）；等等。这是从硬件实现的角度看的。<br>最后，从操作系统进程调度的角度，又会统一看待这些不同硬件实现的核心，例如上面开始所提及的CPU（24个CPUs，从0编号开始），因为它们都有一个共同的特点：执行进程（或线程）。</p>
+</blockquote>
+<h3 id="NUNA与SMP的概念">NUNA与SMP的概念</h3><p>NUMA(Non-Uniform Memory Access，非一致性内存访问)和SMP(Symmetric Multi-Processor，对称多处理器系统)是两种不同的CPU硬件体系架构</p>
+<p>SMP（Symmetric Multi-Processing）的主要特征是共享，所有的CPU共享使用全部资源，例如内存、总线和I/O，多个CPU对称工作，彼此之间没有主次之分，平等地访问共享的资源，这样势必引入资源的竞争问题，从而导致它的扩展内力非常有限。特别是在现在一台机器CPU核心比较多，内存比较大的情况</p>
+<p>NUMA技术将CPU划分成不同的组（Node)，每个Node由多个CPU组成，并且有独立的本地内存、I/O等资源。Node之间通过互联模块连接和沟通，因此除了本地内存外，每个CPU仍可以访问远端Node的内存，只不过效率会比访问本地内存差一些，我们用Node之间的距离（Distance，抽象的概念）来定义各个Node之间互访资源的开销。</p>
+<p>本章主要是去做NUMA的相关探索，下图是一个多核系统简单的topology</p>
+<center><img src="http://static.zybuluo.com/zphj1987/vg7eprp72ibucwyq0fljvfl2/coremuti.gif" alt="coremuti.gif-23.7kB"></center>
+
+<h3 id="Node-&gt;Socket-&gt;Core-&gt;Processor(Threads)">Node-&gt;Socket-&gt;Core-&gt;Processor(Threads)</h3><p>如果你只知道CPU这么一个概念，那么是无法理解CPU的拓扑的。事实上，在NUMA架构下，CPU的概念从大到小依次是：Node、Socket、Core、Processor</p>
+<ul>
+<li>Sockets 可以理解成主板上cpu的插槽数，物理cpu的颗数，一般同一socket上的core共享三级缓存</li>
+<li>Cores 而Socket中的每个核心被称为Core,常说的核,核有独立的物理资源.比如单独的一级二级缓存什么的</li>
+<li>Threads 为了进一步提升CPU的处理能力，Intel又引入了HT（Hyper-Threading，超线程)的技术，一个Core打开HT之后，在OS看来就是两个核，当然这个核是逻辑上的概念，所以也被称为Logical Processor,如果不开超线程,threads应该与cores相等,如果开了超线程,threads应该是cores的倍数.相互之间共享物理资源</li>
+<li>Nodes 上图的多核图中没有涉及， Node是NUMA体系中的概念．由于SMP体系中各个CPU访问内存只能通过单一的通道．导致内存访问成为瓶颈,cpu再多也无用．后来引入了NUMA．通过划分node,每个node有本地RAM,这样node内访问RAM速度会非常快．但跨Node的RAM访问代价会相对高一点，下面看一下两种架构的明显区别</li>
+</ul>
+<center><img src="http://static.zybuluo.com/zphj1987/y0thygclxkbl9y8e1f6rl9yj/smpnuma.png" alt="smpnuma.png-67.5kB"></center>
+
+
+<p>由此可以总结这样的逻辑关系(包含):Node &gt; Socket &gt; Core &gt; Thread 区分这几个概念为了了解cache的分布,因为cpu绑定的目的就是提高cache的命中率,降低cpu颠簸.所以了解cache与cpu之间的mapping关系是非常重要的.通常来讲:</p>
+<ul>
+<li>同Socket内的cpu共享三级级缓存</li>
+<li>每个Core有自己独立的二级缓存</li>
+<li>一个Core上超线程出来的Threads,避免绑定，看似可能会提高L2 cache命中率,但也可能有严重的cpu争抢，导致性能非常差.</li>
+</ul>
+<h3 id="查看CPU信息">查看CPU信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@server9 ~]<span class="comment"># lscpu </span></span><br><span class="line">Architecture:          x86_64</span><br><span class="line">CPU op-mode(s):        <span class="number">32</span>-bit, <span class="number">64</span>-bit</span><br><span class="line">Byte Order:            Little Endian</span><br><span class="line">CPU(s):                <span class="number">24</span></span><br><span class="line">On-line CPU(s) list:   <span class="number">0</span>-<span class="number">23</span></span><br><span class="line">Thread(s) per core:    <span class="number">2</span></span><br><span class="line">Core(s) per socket:    <span class="number">6</span></span><br><span class="line">Socket(s):             <span class="number">2</span></span><br><span class="line">NUMA node(s):          <span class="number">2</span></span><br><span class="line">Vendor ID:             GenuineIntel</span><br><span class="line">CPU family:            <span class="number">6</span></span><br><span class="line">Model:                 <span class="number">62</span></span><br><span class="line">Model name:            Intel(R) Xeon(R) CPU E5-<span class="number">2620</span> v2 @ <span class="number">2.10</span>GHz</span><br><span class="line">Stepping:              <span class="number">4</span></span><br><span class="line">CPU MHz:               <span class="number">1607.894</span></span><br><span class="line">BogoMIPS:              <span class="number">4205.65</span></span><br><span class="line">Virtualization:        VT-x</span><br><span class="line">L1d cache:             <span class="number">32</span>K</span><br><span class="line">L1i cache:             <span class="number">32</span>K</span><br><span class="line">L2 cache:              <span class="number">256</span>K</span><br><span class="line">L3 cache:              <span class="number">15360</span>K</span><br><span class="line">NUMA node0 CPU(s):     <span class="number">0</span>-<span class="number">5</span>,<span class="number">12</span>-<span class="number">17</span></span><br><span class="line">NUMA node1 CPU(s):     <span class="number">6</span>-<span class="number">11</span>,<span class="number">18</span>-<span class="number">23</span></span><br></pre></td></tr></table></figure>
+<p>2颗6核双线程，一共是24 processors,也可以看到是NUMA体系，可以使用以下命令详细查看numa信息.非NUMA体系时,所有cpu都划分为一个Node<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@server9 ~]<span class="comment"># numactl --hardware</span></span><br><span class="line">available: <span class="number">2</span> nodes (<span class="number">0</span>-<span class="number">1</span>)</span><br><span class="line">node <span class="number">0</span> cpus: <span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">12</span> <span class="number">13</span> <span class="number">14</span> <span class="number">15</span> <span class="number">16</span> <span class="number">17</span></span><br><span class="line">node <span class="number">0</span> size: <span class="number">31880</span> MB</span><br><span class="line">node <span class="number">0</span> free: <span class="number">19634</span> MB</span><br><span class="line">node <span class="number">1</span> cpus: <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span> <span class="number">10</span> <span class="number">11</span> <span class="number">18</span> <span class="number">19</span> <span class="number">20</span> <span class="number">21</span> <span class="number">22</span> <span class="number">23</span></span><br><span class="line">node <span class="number">1</span> size: <span class="number">32253</span> MB</span><br><span class="line">node <span class="number">1</span> free: <span class="number">29315</span> MB</span><br><span class="line">node distances:</span><br><span class="line">node   <span class="number">0</span>   <span class="number">1</span> </span><br><span class="line">  <span class="number">0</span>:  <span class="number">10</span>  <span class="number">21</span> </span><br><span class="line">  <span class="number">1</span>:  <span class="number">21</span>  <span class="number">10</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>cpu的id不连续的原因是开启了超线程，超线程的cpuid是从新的ID开始计数的，也就是从12开始计数的</p>
+</blockquote>
+<p>两个node，每个node32G内存左右，这台机器我的物理内存是64G</p>
+<h3 id="通过命令行查看cpu信息">通过命令行查看cpu信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取cpu名称与主频</span></span><br><span class="line">cat /proc/cpuinfo | grep <span class="string">'model name'</span>  | cut <span class="operator">-f</span>2 <span class="operator">-d</span>: | head -n1 | sed <span class="string">'s/^ //'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取逻辑核数</span></span><br><span class="line">cat /proc/cpuinfo | grep <span class="string">'model name'</span>  | wc <span class="operator">-l</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取物理核数</span></span><br><span class="line">cat /proc/cpuinfo | grep <span class="string">'physical id'</span> | sort | uniq | wc <span class="operator">-l</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看cpu的flags</span></span><br><span class="line">cat /proc/cpuinfo | grep flags | uniq | cut <span class="operator">-f</span>2 <span class="operator">-d</span> : | sed <span class="string">'s/^ //'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否打开超线程（检查 physical id * cpu cores 与 processor的比例 1:1为未开启）</span></span><br><span class="line">cat /proc/cpuinfo </span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看cache大小,X自省替换</span></span><br><span class="line">sudo cat /sys/devices/system/cpu/cpuX/cache/indexX/size</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看各个cpu之间与cache的mapping</span></span><br><span class="line">cat /sys/devices/system/cpu/cpuX/cache/indexX/shared_cpu_list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取CPU分布的信息（id-&gt; core信息）（这一个可以看出来CPU0和CPU12在同一个core）</span></span><br><span class="line">egrep <span class="string">'processor|core id|physical id'</span> /proc/cpuinfo | cut <span class="operator">-d</span> : <span class="operator">-f</span> <span class="number">2</span> | paste - - -  | awk <span class="string">'&#123;print "CPU"$1"\tsocket "$2" core "$3&#125;'</span></span><br><span class="line">CPU0	socket <span class="number">0</span> core <span class="number">0</span></span><br><span class="line">CPU1	socket <span class="number">0</span> core <span class="number">1</span></span><br><span class="line">CPU2	socket <span class="number">0</span> core <span class="number">2</span></span><br><span class="line">CPU3	socket <span class="number">0</span> core <span class="number">3</span></span><br><span class="line">CPU4	socket <span class="number">0</span> core <span class="number">4</span></span><br><span class="line">CPU5	socket <span class="number">0</span> core <span class="number">5</span></span><br><span class="line">CPU6	socket <span class="number">1</span> core <span class="number">0</span></span><br><span class="line">CPU7	socket <span class="number">1</span> core <span class="number">1</span></span><br><span class="line">CPU8	socket <span class="number">1</span> core <span class="number">2</span></span><br><span class="line">CPU9	socket <span class="number">1</span> core <span class="number">3</span></span><br><span class="line">CPU10	socket <span class="number">1</span> core <span class="number">4</span></span><br><span class="line">CPU11	socket <span class="number">1</span> core <span class="number">5</span></span><br><span class="line">CPU12	socket <span class="number">0</span> core <span class="number">0</span></span><br><span class="line">CPU13	socket <span class="number">0</span> core <span class="number">1</span></span><br><span class="line">CPU14	socket <span class="number">0</span> core <span class="number">2</span></span><br><span class="line">CPU15	socket <span class="number">0</span> core <span class="number">3</span></span><br><span class="line">CPU16	socket <span class="number">0</span> core <span class="number">4</span></span><br><span class="line">CPU17	socket <span class="number">0</span> core <span class="number">5</span></span><br><span class="line">CPU18	socket <span class="number">1</span> core <span class="number">0</span></span><br><span class="line">CPU19	socket <span class="number">1</span> core <span class="number">1</span></span><br><span class="line">CPU20	socket <span class="number">1</span> core <span class="number">2</span></span><br><span class="line">CPU21	socket <span class="number">1</span> core <span class="number">3</span></span><br><span class="line">CPU22	socket <span class="number">1</span> core <span class="number">4</span></span><br><span class="line">CPU23	socket <span class="number">1</span> core <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<p>lscpu,numactl都是读取proc,sys文件系统信息并进行格式化，输出人性化的内容．当没有网络,而lscpu,numactl都没有安装时，只能使用这种命令行方式了</p>
+<p>能用工具还是用工具，工具就是解放双手的</p>
+<h3 id="Cpu_Topology可视化">Cpu Topology可视化</h3><p>lstopo 指令由 hwloc 数据包提供，创建了用户的系统示意图。lstopo-no-graphics 指令提供详尽的文本输出<br>通过lscpu与numactl获取的信息，必要的时候查询了/sys/devices/system/cpu/cpuX/*的数据将正在使用的 Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz的topology进行可视化<br>详细的cache信息可以通过sysfs查看<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ls /sys/devices/system/cpu/cpu0/cache/</span><br><span class="line">index0 index1 index2 index3</span><br></pre></td></tr></table></figure></p>
+<p>包含以下4个目录：</p>
+<ul>
+<li>index0:1级数据cache </li>
+<li>index1:1级指令cache </li>
+<li>index2:2级cache </li>
+<li>index3:3级cache,对应cpuinfo里的cache</li>
+</ul>
+<p>目录里的文件是cache信息描述，以本机的cpu0/index0为例简单解释一下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">文件</th>
+<th style="text-align:center">内容</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">type</td>
+<td style="text-align:center">Data</td>
+<td style="text-align:center">数据cache，如果查看index1就是Instruction</td>
+</tr>
+<tr>
+<td style="text-align:center">Level</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">L1</td>
+</tr>
+<tr>
+<td style="text-align:center">Size</td>
+<td style="text-align:center">32K</td>
+<td style="text-align:center">大小为32K</td>
+</tr>
+<tr>
+<td style="text-align:center">coherency_line_size</td>
+<td style="text-align:center">64</td>
+<td style="text-align:center">64<em>4</em>128=32K</td>
+</tr>
+<tr>
+<td style="text-align:center">physical_line_partition</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">ways_of_associativity</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td style="text-align:center">number_of_sets</td>
+<td style="text-align:center">128</td>
+</tr>
+<tr>
+<td style="text-align:center">shared_cpu_map</td>
+<td style="text-align:center">00000101</td>
+<td style="text-align:center">表示这个cache被CPU0和CPU8 share</td>
+</tr>
+</tbody>
+</table>
+<p>解释一下shared_cpu_map内容的格式：<br>表面上看是2进制，其实是16进制表示，每个bit表示一个cpu，1个数字可以表示4个cpu 截取00000101的后4位，转换为2进制表示</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">CPU id</th>
+<th style="text-align:center">15</th>
+<th style="text-align:center">14</th>
+<th style="text-align:center">13</th>
+<th style="text-align:center">12</th>
+<th style="text-align:center">11</th>
+<th style="text-align:center">10</th>
+<th style="text-align:center">9</th>
+<th style="text-align:center">8</th>
+<th style="text-align:center">7</th>
+<th style="text-align:center">6</th>
+<th style="text-align:center">5</th>
+<th style="text-align:center">4</th>
+<th style="text-align:center">3</th>
+<th style="text-align:center">2</th>
+<th style="text-align:center">1</th>
+<th>0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0×0101的2进制表示</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>0101表示cpu8和cpu0，即cpu0的L1 data cache是和cpu8共享的。<br>也可以使用上面提到的lstopo-no-graphics命令进行查询<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@server9 ~]<span class="comment"># lstopo-no-graphics </span></span><br><span class="line">Machine (<span class="number">63</span>GB)</span><br><span class="line">  NUMANode L<span class="comment">#0 (P#0 31GB)</span></span><br><span class="line">    Socket L<span class="comment">#0 + L3 L#0 (15MB)</span></span><br><span class="line">      L2 L<span class="comment">#0 (256KB) + L1d L#0 (32KB) + L1i L#0 (32KB) + Core L#0</span></span><br><span class="line">        PU L<span class="comment">#0 (P#0)</span></span><br><span class="line">        PU L<span class="comment">#1 (P#12)</span></span><br><span class="line">      L2 L<span class="comment">#1 (256KB) + L1d L#1 (32KB) + L1i L#1 (32KB) + Core L#1</span></span><br><span class="line">        PU L<span class="comment">#2 (P#1)</span></span><br><span class="line">        PU L<span class="comment">#3 (P#13)</span></span><br><span class="line">      L2 L<span class="comment">#2 (256KB) + L1d L#2 (32KB) + L1i L#2 (32KB) + Core L#2</span></span><br><span class="line">        PU L<span class="comment">#4 (P#2)</span></span><br><span class="line">        PU L<span class="comment">#5 (P#14)</span></span><br><span class="line">      L2 L<span class="comment">#3 (256KB) + L1d L#3 (32KB) + L1i L#3 (32KB) + Core L#3</span></span><br><span class="line">        PU L<span class="comment">#6 (P#3)</span></span><br><span class="line">        PU L<span class="comment">#7 (P#15)</span></span><br><span class="line">      L2 L<span class="comment">#4 (256KB) + L1d L#4 (32KB) + L1i L#4 (32KB) + Core L#4</span></span><br><span class="line">        PU L<span class="comment">#8 (P#4)</span></span><br><span class="line">        PU L<span class="comment">#9 (P#16)</span></span><br><span class="line">      L2 L<span class="comment">#5 (256KB) + L1d L#5 (32KB) + L1i L#5 (32KB) + Core L#5</span></span><br><span class="line">        PU L<span class="comment">#10 (P#5)</span></span><br><span class="line">        PU L<span class="comment">#11 (P#17)</span></span><br><span class="line">    HostBridge L<span class="comment">#0</span></span><br><span class="line">      PCIBridge</span><br><span class="line">        PCI <span class="number">1000</span>:<span class="number">0086</span></span><br><span class="line">      PCIBridge</span><br><span class="line">        PCI <span class="number">8086</span>:<span class="number">1521</span></span><br><span class="line">          Net L<span class="comment">#0 "enp4s0f0"</span></span><br><span class="line">        PCI <span class="number">8086</span>:<span class="number">1521</span></span><br><span class="line">          Net L<span class="comment">#1 "enp4s0f1"</span></span><br><span class="line">        PCI <span class="number">8086</span>:<span class="number">1521</span></span><br><span class="line">          Net L<span class="comment">#2 "enp4s0f2"</span></span><br><span class="line">        PCI <span class="number">8086</span>:<span class="number">1521</span></span><br><span class="line">          Net L<span class="comment">#3 "enp4s0f3"</span></span><br><span class="line">      PCIBridge</span><br><span class="line">        PCI <span class="number">8086</span>:<span class="number">10</span>fb</span><br><span class="line">          Net L<span class="comment">#4 "enp6s0f0"</span></span><br><span class="line">        PCI <span class="number">8086</span>:<span class="number">10</span>fb</span><br><span class="line">          Net L<span class="comment">#5 "enp6s0f1"</span></span><br><span class="line">      PCIBridge</span><br><span class="line">        PCI <span class="number">8086</span>:<span class="number">1</span>d6b</span><br><span class="line">      PCIBridge</span><br><span class="line">        PCI <span class="number">102</span>b:<span class="number">0532</span></span><br><span class="line">          GPU L<span class="comment">#6 "card0"</span></span><br><span class="line">          GPU L<span class="comment">#7 "controlD64"</span></span><br><span class="line">      PCI <span class="number">8086</span>:<span class="number">1</span>d02</span><br><span class="line">        Block L<span class="comment">#8 "sda"</span></span><br><span class="line">  NUMANode L<span class="comment">#1 (P#1 31GB) + Socket L#1 + L3 L#1 (15MB)</span></span><br><span class="line">    L2 L<span class="comment">#6 (256KB) + L1d L#6 (32KB) + L1i L#6 (32KB) + Core L#6</span></span><br><span class="line">      PU L<span class="comment">#12 (P#6)</span></span><br><span class="line">      PU L<span class="comment">#13 (P#18)</span></span><br><span class="line">    L2 L<span class="comment">#7 (256KB) + L1d L#7 (32KB) + L1i L#7 (32KB) + Core L#7</span></span><br><span class="line">      PU L<span class="comment">#14 (P#7)</span></span><br><span class="line">      PU L<span class="comment">#15 (P#19)</span></span><br><span class="line">    L2 L<span class="comment">#8 (256KB) + L1d L#8 (32KB) + L1i L#8 (32KB) + Core L#8</span></span><br><span class="line">      PU L<span class="comment">#16 (P#8)</span></span><br><span class="line">      PU L<span class="comment">#17 (P#20)</span></span><br><span class="line">    L2 L<span class="comment">#9 (256KB) + L1d L#9 (32KB) + L1i L#9 (32KB) + Core L#9</span></span><br><span class="line">      PU L<span class="comment">#18 (P#9)</span></span><br><span class="line">      PU L<span class="comment">#19 (P#21)</span></span><br><span class="line">    L2 L<span class="comment">#10 (256KB) + L1d L#10 (32KB) + L1i L#10 (32KB) + Core L#10</span></span><br><span class="line">      PU L<span class="comment">#20 (P#10)</span></span><br><span class="line">      PU L<span class="comment">#21 (P#22)</span></span><br><span class="line">    L2 L<span class="comment">#11 (256KB) + L1d L#11 (32KB) + L1i L#11 (32KB) + Core L#11</span></span><br><span class="line">      PU L<span class="comment">#22 (P#11)</span></span><br><span class="line">      PU L<span class="comment">#23 (P#23)</span></span><br></pre></td></tr></table></figure></p>
+<p>这个得到的是文本的拓扑，这个转换成一个图看的要清楚一些<br><img src="http://static.zybuluo.com/zphj1987/u4t0qbmeh2i4nemf007vqepr/nodesock.png" alt="nodesock.png-45.9kB"></p>
+<h4 id="NUMA分组信息">NUMA分组信息</h4><ul>
+<li>通过图可以看到cpu为numa架构,且有两个node</li>
+<li>将同一socket内的cpu(threads)都划分在一个node中.通过上图也解释了node中cpu序列不连续的问题.因为同一个Core上的两个Threads是超线程出来的.超线程Thread的cpu id在原有的core id基础上增长的</li>
+<li>每个node中有32G左右的本地RAM可用</li>
+</ul>
+<h4 id="cache信息">cache信息</h4><ul>
+<li>每个core都有独立的二级缓存,而不是socket中所有的core共享二级缓存</li>
+<li>同node中的cpu共享三级缓存</li>
+<li>跨node的内存访问的花费要大些</li>
+</ul>
+<h3 id="cpu绑定注意的几点">cpu绑定注意的几点</h3><ul>
+<li>Numa体系中,如果夸node绑定,性能会下降.因为L3 cache命中率低,跨node内存访问代价高.</li>
+<li>绑定同Node,同一个Core中的两个超线程出来的cpu,性能会急剧下降.cpu密集型的线程硬件争用严重.”玩转CPU Topology”中也提到了.</li>
+<li>Numa架构可能引起swap insanity.需要注意</li>
+</ul>
+<h3 id="测试CPU绑定性能">测试CPU绑定性能</h3><p>这个部分就不在这里赘述了，上面是把cpu比较清晰的剥离出来，至于效果，需要在实际环境当中去验证了，有可能变坏，也有可能变好</p>
+<p>本篇参考了很多网络上的很多其他资料</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/06/15/我的分答-付费语音回答问题-￥1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          我的分答-付费语音回答问题-￥1
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/06/13/推荐一本性能相关的书/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">推荐一本性能相关的书</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'CPU相关的学习',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

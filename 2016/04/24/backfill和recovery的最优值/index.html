@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>backfill和recovery的最优值 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ceph在增加osd的时候会触发backfill，让数据得到平均，触发数据的迁移ceph在移除osd的时候需要在节点上进行数据的恢复，也有数据的迁移和生成
+只要是集群里面有数据的变动就会有网卡流量，cpu，内存等资源的占用，并且最重要的是还有磁盘的占用，这个客户端也是需要对磁盘进行访问的，当请求出现碰撞的时候，肯定会比正常的情况下要慢很多，而且还有可能因为资源方面的原因而引起机器down机等异常状">
+<meta property="og:type" content="article">
+<meta property="og:title" content="backfill和recovery的最优值">
+<meta property="og:url" content="http://www.zphj1987.com/2016/04/24/backfill和recovery的最优值/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="ceph在增加osd的时候会触发backfill，让数据得到平均，触发数据的迁移ceph在移除osd的时候需要在节点上进行数据的恢复，也有数据的迁移和生成
+只要是集群里面有数据的变动就会有网卡流量，cpu，内存等资源的占用，并且最重要的是还有磁盘的占用，这个客户端也是需要对磁盘进行访问的，当请求出现碰撞的时候，肯定会比正常的情况下要慢很多，而且还有可能因为资源方面的原因而引起机器down机等异常状">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/u6iiuglqxdx47nuogt9r6a0g/back%E5%BD%B1%E5%93%8D.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/fi2557g55ucsdpyblopyfudl/newpay.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="backfill和recovery的最优值">
+<meta name="twitter:description" content="ceph在增加osd的时候会触发backfill，让数据得到平均，触发数据的迁移ceph在移除osd的时候需要在节点上进行数据的恢复，也有数据的迁移和生成
+只要是集群里面有数据的变动就会有网卡流量，cpu，内存等资源的占用，并且最重要的是还有磁盘的占用，这个客户端也是需要对磁盘进行访问的，当请求出现碰撞的时候，肯定会比正常的情况下要慢很多，而且还有可能因为资源方面的原因而引起机器down机等异常状">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-backfill和recovery的最优值" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/24/backfill和recovery的最优值/" class="article-date">
+  	<time datetime="2016-04-24T15:37:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-04-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      backfill和recovery的最优值
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>ceph在增加osd的时候会触发backfill，让数据得到平均，触发数据的迁移<br>ceph在移除osd的时候需要在节点上进行数据的恢复，也有数据的迁移和生成</p>
+<p>只要是集群里面有数据的变动就会有网卡流量，cpu，内存等资源的占用，并且最重要的是还有磁盘的占用，这个客户端也是需要对磁盘进行访问的，当请求出现碰撞的时候，肯定会比正常的情况下要慢很多，而且还有可能因为资源方面的原因而引起机器down机等异常状况的出现</p>
+<p>主要引起的问题可能：</p>
+<ul>
+<li>在peering的时候 block 了IO请求</li>
+<li>在backfill的引起了slow requests</li>
+<li>上面的两个情况会引起客户端的降速和出现soft lockup</li>
+</ul>
+<p>这个在一般情况下会出现不同的需求：</p>
+<ol>
+<li>慢点可以一定不能出问题，不能中断业务</li>
+<li>越快迁移完越好，早点结束维护服务</li>
+<li>需要又快又不能影响业务</li>
+</ol>
+<a id="more"></a>
+<p>这个需要根据自己可以掌控的程度来进行控制，首先环境的不同，影响不同，迁移数据量，网卡的带宽都是重要的影响因素，从整体上可以根据自己的环境按照上面的三个要求中的一个进行控制</p>
+<p>上面的三种情况：<br>第一个慢点迁移不能出问题，这个处理方式比较简单，直接将相关参数控制到最低的值，这个能保证业务的影响最低，但是带来的影响就是迁移需要很久的时间，可能长达几十个小时</p>
+<p>第二个越快越好就是用默认的参数或者加大参数，然后观察这个迁移过程中的资源的占用情况</p>
+<p>第三个就是需要在自己的环境下进行多测试验证这个参数，本篇主要就是根据思科的测试出来的参数进行分析</p>
+<p>下面的参数是思科测试出来的值：</p>
+<blockquote>
+<p>osd recovery max active = 3    （default    : 15)<br>osd    recovery op priority = 3    (default : 10)<br>osd    max    backfills = 1 (default : 10)    </p>
+</blockquote>
+<h3 id="测试过程的数据图">测试过程的数据图</h3><p><img src="http://static.zybuluo.com/zphj1987/u6iiuglqxdx47nuogt9r6a0g/back%E5%BD%B1%E5%93%8D.png" alt="back影响.png-58.2kB"></p>
+<p>这个图开始的时候我也没太明白，后来多看下就理解了，实际上在很多情况下，一个因素的变化是会引起其他两个因素的变化，而这两个因素是一个正面的因素和一个负面的因素，而找到这个平衡值就是最优的情况，在这里的因素包括：<br>max-backfill和max-recovery :迁移相关参数<br>MTTR（mean time to recovery）:失效恢复时间，也就是迁移完成<br>Soft Lockup:前面虚拟机出现的soft lockup，也可以理解为对前端的影响</p>
+<p>测试环境一致，都是 down 掉10%的osd进行恢复：<br>在迁移参数最低的时候，没有出现soft lockup ，也就是最低迁移参数的时候，影响最小，恢复使用了45分钟<br>随着迁移相关参数调大的时候，迁移的时间的曲线是先降低，在到达一定的值后又开始增加（这个地方可能是迁移过大出现了前端io锁住，然后影响了迁移速度）<br>随着迁移相关参数的调大，出现soft lockup的情况是增加的</p>
+<p>从测试的曲线来看，在2-6之间是出现的最优值，也就是出现异常的情况概率最低，并且迁移速度最快，最终选择了一组最优的值 ：</p>
+<blockquote>
+<p>osd recovery max active = 3    （default    : 15)<br>osd    recovery op priority = 3    (default : 10)<br>osd    max    backfills = 1 (default : 10)</p>
+</blockquote>
+<p>这个值是思科的测试出来的值，这个值可以根据自己的需要进行取用，大概的情况是这样</p>
+<ul>
+<li>完全无法把控就把参数调整到最低</li>
+<li>使用思科的推荐值</li>
+<li>根据自己的环境测出自己环境的最优值</li>
+</ul>
+<p>很多参数是别人根据自己的环境测试出来的，很多情况并不是通用的，得到别人测试的思路是最重要的，然后消化后自己根据自己的需要得出自己的值</p>
+<hr>
+<h3 id="说点自己最近的感想">说点自己最近的感想</h3><p>根据自己的观察和自己的经验，所有的知识都是需要自己主动去获取主动的去消化，然后去实践的，在任何地方没有说通过传授知识，你就能学会了，公司的程序员的技术也是自己主动的去学习的，所谓的经验也只能是告诉你一些方法，而且你也没办法要求任何人与你一样的努力，一样的对你所做的东西感兴趣，认同你的观点，很多时候需要的是技术的碰撞，在一家公司需要的是员工能够完成你的事情，所以我们要尊重努力的员工，这类员工非常努力，但是可能无法达到你的要求，这个需要鼓励，还有一种是效率非常高的员工，这类员工能够轻松的完成任何事情，这类员工可以给与充分的自由，最终以时间以及结果双向评估员工对公司的贡献</p>
+<p>最近tinyfool老师在进行ios开发的一个分享的时候，一堆想获取的干活的人去听，而tinyfool老师在这个分享会上通知了自己公司破产解散的事情，宣告再次的失败，而一些来想获取干货的人却开喷了，说没有获取到任何干货，这些人想获取的干货就是拿来直接干的货，而tinyfool老师分享的经验，包括在最后宣告解散的时候准备开源自己的东西，极力的推荐自己的员工是多么的优秀，还有其他的一些东西，这些其实都是干货，引用高春辉老师对这件事的看法的一段话：</p>
+<blockquote>
+<p>很多人可能相比之下，觉得代码语言这些硬技能最重要。其实我和我周边的朋友基本都认为，软技能才最重要，其实人的智商都差不多，再笨也不会笨很多，但如何待人接物，如何对待同事和朋友，如何高效利用时间，内心对成功的渴望，还有是否有责任心和荣誉感还有成就感这些，包括个人兴趣以及性格，这些是很难在进入社会之后再改变的了，除非有重大事情发生，否则很难很难改变。所以多数情况下，十年后的你的境遇，其实是十年前就已经决定的了  —高春辉</p>
+</blockquote>
+<p>任何公司任何员工都不可能十全十美，其实有时候换位思考一下，站在企业角度想一下，公司需要什么样的员工，站在员工的角度想一下，想要公司怎么的为自己保证最大利益，如果能够做到相互的价值观一致，就能处于一个和谐的状态了</p>
+<blockquote>
+<p>今后会写更多文字来分享一些东西，这些也不再仅限于ceph，这也是一个二次消化的过程，欢迎大家点评讨论</p>
+</blockquote>
+<h3 id="打赏通道">打赏通道</h3><center><br><img src="http://static.zybuluo.com/zphj1987/fi2557g55ucsdpyblopyfudl/newpay.png" alt="打赏" title="打赏"><br></center>
+
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/25/mon的稳定性问题/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          mon的稳定性问题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/23/福昕pdf加载慢崩溃的解决办法/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">福昕pdf加载慢崩溃的解决办法</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'backfill和recovery的最优值',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

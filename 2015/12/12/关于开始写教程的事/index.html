@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>关于开始写教程的事 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在加入到ceph社区的群里以后，尝试着去回答一些有关ceph的问题，发现很多问题其实自己都遇到过，而且很多问题是反复的会被人提起，对于新手来说，由于资源太多，可能就无法比较系统的去学习这个东西，网上的文档也很多，到底从哪里开始，怎么去做，遇到的问题到底是什么造成的，这些都很难一下找到解决办法
+有一天想到了是不是自己也可以尝试着去做一下这个事情，网上也会有相关的教程，但是这个实在太少太少，一来专业的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于开始写教程的事">
+<meta property="og:url" content="http://www.zphj1987.com/2015/12/12/关于开始写教程的事/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="在加入到ceph社区的群里以后，尝试着去回答一些有关ceph的问题，发现很多问题其实自己都遇到过，而且很多问题是反复的会被人提起，对于新手来说，由于资源太多，可能就无法比较系统的去学习这个东西，网上的文档也很多，到底从哪里开始，怎么去做，遇到的问题到底是什么造成的，这些都很难一下找到解决办法
+有一天想到了是不是自己也可以尝试着去做一下这个事情，网上也会有相关的教程，但是这个实在太少太少，一来专业的">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于开始写教程的事">
+<meta name="twitter:description" content="在加入到ceph社区的群里以后，尝试着去回答一些有关ceph的问题，发现很多问题其实自己都遇到过，而且很多问题是反复的会被人提起，对于新手来说，由于资源太多，可能就无法比较系统的去学习这个东西，网上的文档也很多，到底从哪里开始，怎么去做，遇到的问题到底是什么造成的，这些都很难一下找到解决办法
+有一天想到了是不是自己也可以尝试着去做一下这个事情，网上也会有相关的教程，但是这个实在太少太少，一来专业的">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-关于开始写教程的事" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/12/关于开始写教程的事/" class="article-date">
+  	<time datetime="2015-12-11T16:37:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-12-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于开始写教程的事
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在加入到ceph社区的群里以后，尝试着去回答一些有关ceph的问题，发现很多问题其实自己都遇到过，而且很多问题是反复的会被人提起，对于新手来说，由于资源太多，可能就无法比较系统的去学习这个东西，网上的文档也很多，到底从哪里开始，怎么去做，遇到的问题到底是什么造成的，这些都很难一下找到解决办法</p>
+<p>有一天想到了是不是自己也可以尝试着去做一下这个事情，网上也会有相关的教程，但是这个实在太少太少，一来专业的讲师可能不会非常的熟悉集群，二来非常熟悉集群的人，也不一定有精力去完成这个事情，而我也不确定能不能很好的去做这个事情，但是总算是起步了</p>
+<a id="more"></a>
+<p>关于教程，我想一方面需要有视频，一方面是要有很好的文档作为支撑的，最好观看视频的人，可以根据这个文档去一步一步实现视频里面所能实现的东西，作为技术来说文档一般可以很好的去完成一个配置，但是视频的效果也许会更直接，在你还没看完文档的情况下，就能清楚的知道，这个到底是不是我要的，还有一个就是在有时间情况下，我可以对所提到的问题进行反馈</p>
+<p>视频的质量自己也不好评判，只是记录了自己的操作，和一些个人的理解，通过相同的操作，能够实现你所想要的，这里面举个最简单的例子，在做ceph的osd的部署的时候，格式化osd的方式就有五种之多，这个对于我自己来说，进行操作的时候，都需要验证几次才能确定这样能去部署好，然后总结下来，当然你可以选择你自己想要的一种即可</p>
+<p>前期可能出的都是比较基础的操作，在一定的时候会去尝试讲解一些国外大牛做的ppt，在一些峰会上，总会有一些比较好的经验总结，这些都是值得学习的，有的时候也能提供一些不一样的思路</p>
+<p>关于视频，这个我想了下，还是准备收费的，关于收费的问题，这想提出我自己的一个想法，我会在博客中提到我的视频会讲到哪些东西，如果值得看，你就可以通过支付宝的方式进行购买，并告诉我您需要哪个资源，如果你想先看再考虑是不是要付钱，这个也是可以的，如果你付了钱看完了视频，觉得这个视频也就这样，看的东西我都知道，那么你也可以告诉我，我会从支付宝上原路退回的，所以就算这样的：</p>
+<p>视频的获取是会收费的，都是10块钱就可以获取，如果你觉得这个帮助你很多，你也可以付多点，这个我不会介意的，这个完全自愿我会发资源链接给你<br>可以先获取资源，再考虑要不要付费<br>也可以付费了后，不满意退费<br>所以，我想这个对于大多数人应该是个可以接受的方式，10块钱不多，当然得由您来判断它的价值了，如果有我的视频没有提到的，而您又比较关心的问题，我也可以尝试做一个新的专题</p>
+<p>最后一点，这个视频是不涉及版权的，你可以随便使用，但是如果你想分享给其他朋友的时候，我希望您能让他来我的博客购买，对于购买视频的朋友，我在有空的时候去回答您关于视频当中的问题的，当然我也有我自己的工作，这些可能只能在空余时间进行了</p>
+<p>最后希望大家都能成为朋友，毕竟都是这一行的，在不涉及到各自公司的机密技术的情况下，共同进步应该是对整个生态圈是有好处的，好了就写到这里了，欢迎大家多多支持，多多提出宝贵的意见，共同进步</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/12/13/如何在所有的mon的损坏情况下将数据恢复如初/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          如何在所有的mon的损坏情况下将数据恢复如初
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/12/12/ceph集群的安装和配置教程/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ceph集群的安装和配置教程</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '关于开始写教程的事',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

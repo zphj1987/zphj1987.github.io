@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>centos7下做内存盘的方法 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在找这个资料的时候，基本没几个能用的或者过时了的，或者是换了概念，做的不是需要的那种盘，只有少数文章有提到关键部分应该怎么去操作，现在还是自己总结一下
+内存盘tmpfs和ramdisk的区别这个在网上的很多资料里面都有提到，很多文章去写怎么做ramdisk的时候，都是去做的tmpfs，两者虽然都是使用的内存来存储东西，但是是完全有区别的
+
+tmpfs这个只需要mount挂载就可以分配一个目录使用内">
+<meta property="og:type" content="article">
+<meta property="og:title" content="centos7下做内存盘的方法">
+<meta property="og:url" content="http://www.zphj1987.com/2016/01/14/centos7下做内存盘的方法/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="在找这个资料的时候，基本没几个能用的或者过时了的，或者是换了概念，做的不是需要的那种盘，只有少数文章有提到关键部分应该怎么去操作，现在还是自己总结一下
+内存盘tmpfs和ramdisk的区别这个在网上的很多资料里面都有提到，很多文章去写怎么做ramdisk的时候，都是去做的tmpfs，两者虽然都是使用的内存来存储东西，但是是完全有区别的
+
+tmpfs这个只需要mount挂载就可以分配一个目录使用内">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="centos7下做内存盘的方法">
+<meta name="twitter:description" content="在找这个资料的时候，基本没几个能用的或者过时了的，或者是换了概念，做的不是需要的那种盘，只有少数文章有提到关键部分应该怎么去操作，现在还是自己总结一下
+内存盘tmpfs和ramdisk的区别这个在网上的很多资料里面都有提到，很多文章去写怎么做ramdisk的时候，都是去做的tmpfs，两者虽然都是使用的内存来存储东西，但是是完全有区别的
+
+tmpfs这个只需要mount挂载就可以分配一个目录使用内">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-centos7下做内存盘的方法" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/14/centos7下做内存盘的方法/" class="article-date">
+  	<time datetime="2016-01-14T01:07:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      centos7下做内存盘的方法
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在找这个资料的时候，基本没几个能用的或者过时了的，或者是换了概念，做的不是需要的那种盘，只有少数文章有提到关键部分应该怎么去操作，现在还是自己总结一下</p>
+<h2 id="内存盘tmpfs和ramdisk的区别">内存盘tmpfs和ramdisk的区别</h2><p>这个在网上的很多资料里面都有提到，很多文章去写怎么做ramdisk的时候，都是去做的tmpfs，两者虽然都是使用的内存来存储东西，但是是完全有区别的</p>
+<ul>
+<li>tmpfs这个只需要mount挂载就可以分配一个目录使用内存了，只是一个目录</li>
+<li>ramdisk这个是真的分配一个空间，这个分区是可以格式化的（这个格式化是关键）</li>
+<li>tmpfs卸载再挂载数据会消失，ramdisk卸载再挂载数据还在</li>
+<li>二者共同点是，系统重启后，里面的东西会消失</li>
+</ul>
+<blockquote>
+<p>本文章主要是讲怎么去做ramdisk</p>
+</blockquote>
+<a id="more"></a>
+<p>ramdisk是依赖于内核模块brd的，首先可以查看下这个模块的信息<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 src]<span class="comment"># modinfo brd</span></span><br><span class="line">filename:       /lib/modules/<span class="number">3.10</span>.<span class="number">0</span>-<span class="number">229</span>.el7.x86_64/kernel/drivers/block/brd.ko</span><br><span class="line"><span class="built_in">alias</span>:          rd</span><br><span class="line"><span class="built_in">alias</span>:          block-major-<span class="number">1</span>-*</span><br><span class="line">license:        GPL</span><br><span class="line">rhelversion:    <span class="number">7.1</span></span><br><span class="line">srcversion:     F38BA5B60FC8B94786C7907</span><br><span class="line">depends:        </span><br><span class="line">intree:         Y</span><br><span class="line">vermagic:       <span class="number">3.10</span>.<span class="number">0</span> SMP mod_unload modversions </span><br><span class="line">parm:           rd_nr:Maximum number of brd devices (int)</span><br><span class="line">parm:           rd_size:Size of each RAM disk <span class="keyword">in</span> kbytes. (int)</span><br><span class="line">parm:           max_part:Maximum number of partitions per RAM disk (int)</span><br></pre></td></tr></table></figure></p>
+<p>默认是不加载的，需要加载这个模块<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 src]<span class="comment"># modprobe brd</span></span><br></pre></td></tr></table></figure></p>
+<p>加载模块后就会生成下面的的盘符路径，这个就是内存盘<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 src]<span class="comment"># ll /dev/ram*</span></span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">1</span>, <span class="number">0</span> Jan <span class="number">14</span> <span class="number">00</span>:<span class="number">43</span> /dev/ram0</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">1</span>, <span class="number">1</span> Jan <span class="number">14</span> <span class="number">00</span>:<span class="number">43</span> /dev/ram1</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">1</span>, <span class="number">2</span> Jan <span class="number">14</span> <span class="number">00</span>:<span class="number">42</span> /dev/ram2</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">1</span>, <span class="number">3</span> Jan <span class="number">14</span> <span class="number">00</span>:<span class="number">42</span> /dev/ram3</span><br></pre></td></tr></table></figure></p>
+<p>这个的默认大小是16M，设备的数目是16个，这个显然是不符合我们的需求的</p>
+<p>这个个数信息和大小信息是写在内核模块里面的,这个目前还找到办法在外面修改的地方(已经找到了见本文补充)，现在通过修改内核模块的方式来达到修改的目的</p>
+<h2 id="获取内核源码">获取内核源码</h2><p> CentOS-7-x86_64-1503-01版本的内核是3.10.0-229.el7.x86_64，这个最好是使用的对应版本的内核代码，这样不会出现其他的问题，下载该distribution版本的内核源码，拷贝到根目录：<br><a href="http://vault.centos.org/7.1.1503/updates/Source/SPackages/kernel-3.10.0-229.1.2.el7.src.rpm" target="_blank" rel="external">http://vault.centos.org/7.1.1503/updates/Source/SPackages/kernel-3.10.0-229.1.2.el7.src.rpm</a></p>
+<h3 id="安装该源码包">安装该源码包</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># rpm -i kernel-3.10.0-229.1.2.el7.src.rpm</span></span><br></pre></td></tr></table></figure>
+<p>安装完了以后，这个rpm包里面的源码会被放在 ~/rpmbuild/SOURCES/ 这个目录内，源码文件是linux-3.10.0-229.1.2.el7.tar.xz </p>
+<h2 id="编译内核源码">编译内核源码</h2><p>将linux-3.10.0-229.1.2.el7.tar.xz 文件拷贝到目录  /usr/src/zp 下<br>这个是你自己定义一个编译的目录</p>
+<h2 id="解压内核源码">解压内核源码</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 zp]<span class="comment"># tar -xvf linux-3.10.0-229.1.2.el7.tar.xz</span></span><br><span class="line">[root@lab8106 zp]<span class="comment"># cd linux-3.10.0-229.1.2.el7/</span></span><br></pre></td></tr></table></figure>
+<h2 id="清理编译环境的状态，如果你是下载的内核源码，而且是第一次编译，就没有必要执行这一步操作">清理编译环境的状态，如果你是下载的内核源码，而且是第一次编译，就没有必要执行这一步操作</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># make mrproper</span></span><br></pre></td></tr></table></figure>
+<h3 id="将已存在的-/-config文件内容，作为新版本内核的默认值">将已存在的./.config文件内容，作为新版本内核的默认值</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># make oldconfig</span></span><br></pre></td></tr></table></figure>
+<h3 id="配置内核的参数，修改ramdisk的相关属性">配置内核的参数，修改ramdisk的相关属性</h3><p>在内核配置菜单中配置ramdisk块驱动模块的个数和大小，并保存退出<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Device Drivers </span><br><span class="line">       |--&gt;Block devices </span><br><span class="line">                  |--&gt;  [M]RAM block device support </span><br><span class="line">                           (xx) Default number of RAM disks </span><br><span class="line">                           (xx) Default RAM disk size(kbytes)</span><br></pre></td></tr></table></figure></p>
+<p>如果内存够大，可以修改大点，注意这个地方是每个内存盘的大小</p>
+<h2 id="编译内核模块">编译内核模块</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 zp]<span class="comment"># make modules -j8</span></span><br></pre></td></tr></table></figure>
+<h3 id="编译后的Ramdisk模块的存放位置">编译后的Ramdisk模块的存放位置</h3><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/usr/</span>src<span class="regexp">/zp/</span>linux-<span class="number">3.10</span>.<span class="number">0</span>-<span class="number">229.1</span>.<span class="number">2</span>.el7<span class="regexp">/drivers/</span>block<span class="regexp">/brd.ko</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装新的brd-ko模块">安装新的brd.ko模块</h2><p>将旧的brd.ko模块从内核中移除。<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 zp]<span class="comment"># rmmod brd</span></span><br></pre></td></tr></table></figure></p>
+<p>将新的brd.ko模块拷贝到Centos7系统的 如下目录/lib/modules/3.10.0-229.el7.x86_64/kernel/drivers/block/，<br>覆盖原来的ramDisk模块brd.ko</p>
+<h2 id="更新内核模块依赖">更新内核模块依赖</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 zp]<span class="comment"># depmod -a</span></span><br></pre></td></tr></table></figure>
+<h2 id="8、重新挂载内核模块。_如果加载的时候报错就强制加载_modprobe_-f_brd">8、重新挂载内核模块。 如果加载的时候报错就强制加载  <code>modprobe -f brd</code></h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 zp]<span class="comment"># modprobe brd</span></span><br></pre></td></tr></table></figure>
+<h2 id="检查是否生成了">检查是否生成了</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 zp]<span class="comment"># ls /dev/ram*</span></span><br></pre></td></tr></table></figure>
+<p>然后就可以使用/dev/ram*这个设备了，当磁盘一样使用</p>
+<p>我的为测试环境，内存不是那么大，就是5G内存盘，4个，做对比测试，ceph默认的5G的journal，这个内存就稍微给大那么一点点6G，防止单位换算的原因造成空间不够，需要重来</p>
+<hr>
+<h2 id="补充">补充</h2><p>在线添加内存盘操作<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">modprobe brd rd_nr=<span class="number">2</span> rd_size=<span class="number">2048000</span> max_part=<span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>说明：</p>
+<blockquote>
+<p>rd_nr：ramdisk的个数<br>rd_size：ramdisk的大小<br>max_part：ramdisk单个分区的最大个数</p>
+</blockquote>
+<p>在线卸载内存盘的操作<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">modprobe -r brd</span><br></pre></td></tr></table></figure></p>
+<p>如果需要开机自启动：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/modules-load.d/memdisk.conf</span><br></pre></td></tr></table></figure></p>
+<p>添加需要加载的模块</p>
+<blockquote>
+<p>brd</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/modprobe.d/memdisk.conf</span><br></pre></td></tr></table></figure>
+<p>添加给定相关参数</p>
+<blockquote>
+<p>options brd rd_nr=2 rd_size=2048000 max_part=0</p>
+</blockquote>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-01-14</td>
+</tr>
+<tr>
+<td style="text-align:center">修改添加方案</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-09-22</td>
+</tr>
+</tbody>
+</table>
+<p>这篇文章基本都是参考了：<br><a href="http://my.oschina.net/u/658505/blog/544547?fromerr=wWO13oYJ" target="_blank" rel="external">http://my.oschina.net/u/658505/blog/544547?fromerr=wWO13oYJ</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/14/ceph使用memdisk做journal/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ceph使用memdisk做journal
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/12/删除osd的正确方式/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">删除osd的正确方式</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'centos7下做内存盘的方法',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

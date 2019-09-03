@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>cephonebox发布 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言现在已经是2016年收官的一个月了，之前一直想做一个calamari的集成版本，之所以有这个想法，是因为，即使在已经打好包的情况下，因为各种软件版本的原因，造成很多人无法配置成功，calamari发布以后，因为版本的更迭，经常出现软件版本引起的BUG">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cephonebox发布">
+<meta property="og:url" content="http://www.zphj1987.com/2016/12/18/cephonebox发布/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言现在已经是2016年收官的一个月了，之前一直想做一个calamari的集成版本，之所以有这个想法，是因为，即使在已经打好包的情况下，因为各种软件版本的原因，造成很多人无法配置成功，calamari发布以后，因为版本的更迭，经常出现软件版本引起的BUG">
+<meta property="og:image" content="http://mypic.cn-bj.ufileos.com/shipin/cephoneboxpre3.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/ui9hlsqffofb26ofgz7zz6i7/%E6%95%85%E9%9A%9C%E4%B8%80%E5%A4%84%E7%90%86.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/wwwynt1mzipi2knbkmj8x8w4/%E6%95%85%E9%9A%9C%E4%BA%8C%E5%A4%84%E7%90%86.jpg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cephonebox发布">
+<meta name="twitter:description" content="前言现在已经是2016年收官的一个月了，之前一直想做一个calamari的集成版本，之所以有这个想法，是因为，即使在已经打好包的情况下，因为各种软件版本的原因，造成很多人无法配置成功，calamari发布以后，因为版本的更迭，经常出现软件版本引起的BUG">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-cephonebox发布" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/18/cephonebox发布/" class="article-date">
+  	<time datetime="2016-12-18T14:25:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      cephonebox发布
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mypic.cn-bj.ufileos.com/shipin/cephoneboxpre3.jpg" alt=""><br></center>
+
+<h2 id="前言">前言</h2><p>现在已经是2016年收官的一个月了，之前一直想做一个calamari的集成版本，之所以有这个想法，是因为，即使在已经打好包的情况下，因为各种软件版本的原因，造成很多人无法配置成功，calamari发布以后，因为版本的更迭，经常出现软件版本引起的BUG<br><a id="more"></a><br>这里直接把需要的软件集成在一起了，按照本篇指导，一步一步是能够很简单的配置起来的，并且提供了一个视频的指导，应该能够很大程度上降低calamari的部署难度，希望能够帮助到更多的人</p>
+<h2 id="集成软件版本说明">集成软件版本说明</h2><h3 id="操作系统_Centos_7-3">操作系统 Centos 7.3</h3><p>之所以选择这个版本是因为这个是最新发布的，centos小版本的发布能够解决一些BUG，并且不会做很大的改动，并且能够让这个集成系统保持一定的生命周期</p>
+<h3 id="ceph">ceph</h3><p>ceph采用的是Jewel版本的10.2.5，这个是最新发布的，因为Jewel版本是一个长期支持版本，并且小版本号已经到5了，已经在一定程度上达到了稳定</p>
+<h3 id="calamari">calamari</h3><p>calamari采用的是1.3版本，因为calamari要做新的接口，基本上这个就是当前系统的最后的一个稳定版本，集成的版本适配Jewel版本接口名称的变化<br>集成版本的diamond解决了无法获取iops的BUG</p>
+<h2 id="视频演示教程">视频演示教程</h2><div class="video-container"><object><video play="false" poster="http://mypic.cn-bj.ufileos.com/shipin/cephoneboxpre2.jpg" src="http://mypic.cn-bj.ufileos.com/shipin/cephonebox.mp4" controls="controls"></video></object></div>
+
+<h2 id="配置教程">配置教程</h2><h3 id="获取ISO">获取ISO</h3><p>地址如下：<br>链接：<a href="http://pan.baidu.com/s/1cimGYa" target="_blank" rel="external">http://pan.baidu.com/s/1cimGYa</a> 密码：1bs6<br>大小为811M</p>
+<p>安装完成后默认：<br>用户名为root ,密码为123456</p>
+<h3 id="安装操作系统">安装操作系统</h3><p>本系统是定制的系统，默认本地硬盘启动，选择到第二项进行安装<br>需要配置的地方：</p>
+<ul>
+<li>配置磁盘分区 </li>
+<li>配置主机名和IP</li>
+</ul>
+<h3 id="进行ceph集群的配置">进行ceph集群的配置</h3><p>这个地方可以参考网上的教程进行配置，或者已经有的集群就可以直接跳过这步，这里不做过多的讲解</p>
+<h3 id="配置calamari">配置calamari</h3><p>安装好机器后，在服务器上进行calamari的初始化<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">calamari-ctl  initialize</span><br></pre></td></tr></table></figure></p>
+<p>输入用户名，和密码 ，这个是用于登录web的用户名密码</p>
+<h3 id="配置集群到calamari的连接">配置集群到calamari的连接</h3><p>集群到calamari连接一共有两个地方，一个是diamond来采集一些监控信息，一个是salt-minion来采集集群的一些信息以及接收控制</p>
+<h4 id="修改diamond-conf">修改diamond.conf</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cp /etc/diamond/diamond.conf.example /etc/diamond/diamond.conf</span><br></pre></td></tr></table></figure>
+<p>然后修改/etc/diamond/diamond.conf<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[[GraphiteHandler]]</span><br><span class="line"><span class="comment">### Options for GraphiteHandler</span></span><br><span class="line"><span class="comment"># Graphite server host</span></span><br><span class="line">host = graphite</span><br><span class="line"><span class="comment"># Port to send metrics to</span></span><br><span class="line">port = <span class="number">2003</span></span><br><span class="line"><span class="comment"># Socket timeout (seconds)</span></span><br><span class="line">timeout = <span class="number">15</span></span><br><span class="line"><span class="comment"># Batch size for metrics</span></span><br><span class="line">batch = <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>修改为：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[[GraphiteHandler]]</span><br><span class="line"><span class="comment">### Options for GraphiteHandler</span></span><br><span class="line"><span class="comment"># Graphite server host</span></span><br><span class="line">host = cephoneweb</span><br><span class="line"><span class="comment"># Port to send metrics to</span></span><br><span class="line">port = <span class="number">2003</span></span><br><span class="line"><span class="comment"># Socket timeout (seconds)</span></span><br><span class="line">timeout = <span class="number">15</span></span><br><span class="line"><span class="comment"># Batch size for metrics</span></span><br><span class="line">batch = <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>修改集群节点的这个配置文件当中的上面的host字段的主机名为运行calamariweb机器的主机名</p>
+<blockquote>
+<p>注意要在集群节点的hosts文件当中配置好calamari的web的主机名和IP的对应关系</p>
+</blockquote>
+<p>重启diamond<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl restart diamond</span><br></pre></td></tr></table></figure></p>
+<h4 id="修改/etc/salt/minion">修改/etc/salt/minion</h4><p>修改下面的master后面字段为cephoneweb的主机名<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Set the location of the salt master server. If the master server cannot be</span></span><br><span class="line"><span class="comment"># resolved, then the minion will fail to start.</span></span><br><span class="line">master: cephoneweb</span><br></pre></td></tr></table></figure></p>
+<p>重启salt-minion<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl restart salt-minion</span><br></pre></td></tr></table></figure></p>
+<h3 id="访问WEB">访问WEB</h3><p>配置已经完成通过web 访问cephoneweb的IP即可</p>
+<h2 id="故障处理">故障处理</h2><center><br><img src="http://static.zybuluo.com/zphj1987/ui9hlsqffofb26ofgz7zz6i7/%E6%95%85%E9%9A%9C%E4%B8%80%E5%A4%84%E7%90%86.jpg" alt="故障一处理.jpg-42.6kB"><br></center><br><center><br><img src="http://static.zybuluo.com/zphj1987/wwwynt1mzipi2knbkmj8x8w4/%E6%95%85%E9%9A%9C%E4%BA%8C%E5%A4%84%E7%90%86.jpg" alt="故障二处理.jpg-54.8kB"><br></center>
+
+
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/12/22/Ceph数据盘怎样实现自动挂载/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Ceph数据盘怎样实现自动挂载
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/12/14/rbd的image快照与Pool快照/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">rbd的image快照与Pool快照</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'cephonebox发布',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

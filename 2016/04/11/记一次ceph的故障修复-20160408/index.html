@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>记一次ceph的故障修复(20160408) | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ceph的在正常运行的时候基本不会出现故障，出现故障一般在变动的时候，具体有下面几种可能出现的情形
+
+软件升级
+增加存储节点
+减少存储节点
+调整副本数目
+调整pg数目
+磁盘出现损坏
+节点网络出现异常
+
+以上这些操作过程中是最可能出现异常的情形，并不是一定会出问题，以上问题除了网络和磁盘问题出现的异常是基本无法避免外，其他出现的时候，一般是非正常操作引起的，也就是我通常认为的人为事故，这个一般出现在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次ceph的故障修复(20160408)">
+<meta property="og:url" content="http://www.zphj1987.com/2016/04/11/记一次ceph的故障修复-20160408/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="ceph的在正常运行的时候基本不会出现故障，出现故障一般在变动的时候，具体有下面几种可能出现的情形
+
+软件升级
+增加存储节点
+减少存储节点
+调整副本数目
+调整pg数目
+磁盘出现损坏
+节点网络出现异常
+
+以上这些操作过程中是最可能出现异常的情形，并不是一定会出问题，以上问题除了网络和磁盘问题出现的异常是基本无法避免外，其他出现的时候，一般是非正常操作引起的，也就是我通常认为的人为事故，这个一般出现在">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/fi2557g55ucsdpyblopyfudl/newpay.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一次ceph的故障修复(20160408)">
+<meta name="twitter:description" content="ceph的在正常运行的时候基本不会出现故障，出现故障一般在变动的时候，具体有下面几种可能出现的情形
+
+软件升级
+增加存储节点
+减少存储节点
+调整副本数目
+调整pg数目
+磁盘出现损坏
+节点网络出现异常
+
+以上这些操作过程中是最可能出现异常的情形，并不是一定会出问题，以上问题除了网络和磁盘问题出现的异常是基本无法避免外，其他出现的时候，一般是非正常操作引起的，也就是我通常认为的人为事故，这个一般出现在">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-记一次ceph的故障修复-20160408" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/11/记一次ceph的故障修复-20160408/" class="article-date">
+  	<time datetime="2016-04-10T17:24:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-04-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      记一次ceph的故障修复(20160408)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>ceph的在正常运行的时候基本不会出现故障，出现故障一般在变动的时候，具体有下面几种可能出现的情形</p>
+<ul>
+<li>软件升级</li>
+<li>增加存储节点</li>
+<li>减少存储节点</li>
+<li>调整副本数目</li>
+<li>调整pg数目</li>
+<li>磁盘出现损坏</li>
+<li>节点网络出现异常</li>
+</ul>
+<p>以上这些操作过程中是最可能出现异常的情形，并不是一定会出问题，以上问题除了网络和磁盘问题出现的异常是基本无法避免外，其他出现的时候，一般是非正常操作引起的，也就是我通常认为的人为事故，这个一般出现在操作的不谨慎上</p>
+<a id="more"></a>
+<p>本篇记录了一次故障的修复过程，这个故障不是出现在我们公司的产品上，是看到一个ceph社区群里有一个成员在里面问到一个异常是否能解决，这个不同于普通的问题，从他贴出的信息来看，集群已经是非常严重的状态了</p>
+<p>正好看到是周五，周六还可以休息下，所以即使快到了晚上12点了，我还是联系了一下那哥们，从简短的几句交流后，基本可以判断对方对于ceph基本处于刚接触的阶段，在询问是否有其他人能协助他做一些比较有难度的操作的时候，他说没有，就他一个人，我想在目前中国很多公司，都是让一个并不太熟悉ceph的运维人员，或者完全就是开发人员维护着存储着非常宝贵的数据的云存储环境，上面运行的应该都是客户的数据，想想我们自己的电脑在硬盘损坏后，自己有多么不爽，而对于企业来说，一个运行环境的损坏有多么严重，一方面损失了数据，另一方面，基本不会再选择这个服务的提供商了，而这些都是一个定时炸弹，运行在中国的开源存储网络环境当中，而且基本都是初创小企业，大企业会有专门的专业的相关人员，而一个数据损失基本会对这些初创企业带来巨大的损失，这些都是需要企业的boss多关注的，这也是我一直持有的一个观点，越来越多的企业是用ceph，也意味着存储需要修复的出现几率就越大，其实我们也是一个小企业，我个人是非常关注数据恢复这一块的，这个比调优更加的重要，大环境的吐槽就到这里，下面开始讲下具体的经过</p>
+<h3 id="首先找对方要了一个ssh登陆环境">首先找对方要了一个ssh登陆环境</h3><p>这个对方正好有这个环境允许我的登陆，虽然中间经过了堡垒机，虽然运行命令比较卡顿，但好歹能上去，这个是我个人非常支持的一种做法，不管怎样，是VPN也好，代理也好，一定留一个外网的ssh端口能够让连上机器，这个能允许随时随地能上去处理问题，等你运维人员到达现场，真是黄花菜都凉了，对于比较保密的环境，最好也能够有一个在紧急情况下开启远程允许环境的条件，这个具体花费，一个上网卡，一台破旧的笔记本就基本能实现了，在需要远程操作的时候能够连上去处理，目前已经协助了几个朋友处理了一些简单的问题，基本都是ssh连过去的，而没有远程环境的，我也是无能为力的</p>
+<h3 id="检查环境">检查环境</h3><p>登陆上去以后，检查环境发现提示的是2个pg的状态imcomplete，这个是pg的数据不一致的提示，而在检查了对应的osd上的这个pg的数据的时候，发现映射计算到的3个上面有两个是没有数据的，有一个是有数据的，在询问对方做过的操作后，对方是做了一个删除osd的操作，并且是多台机器上面都做过删除，到这里我询问了一下对方，对方是按照一些通用的操作去做的删除操作，命令肯定是没有问题的，这个在后面我处理完后，基本能判断出对方是人为的操作失误引起的</p>
+<h3 id="尝试修复">尝试修复</h3><p>开始想起之前做过的一次模拟修复，本来以为这个可以把环境弄好了，基本想法就是如下流程：</p>
+<ul>
+<li>停止pg对应的3个osd</li>
+<li>导出有数据的pg</li>
+<li>在无数据的osd上进行pg的数据导入</li>
+<li>启动三个osd</li>
+</ul>
+<p>在进行到数据的导入的时候提示了pg is blocked，这个在我之前的做的测试中是没有遇到过的，后来进行pg的状态查询时候，发现是pg的显示的数据全是0，也就是集群认为这个pg是没有数据的，并且被几个已经删除了的osd blocked,而且做ceph osd  lost 也是无法操作的，提示没有osd，这个应该是pg状态不一致，也就是这个pg状态完全异常了，并且还无法导入了</p>
+<h3 id="思考解决办法">思考解决办法</h3><p>到这里我个人判断基本是回天无力了，再次跟对方确认删除的过程，发现对方好在数据盘都保留了，并且还插在机器上，只是有部分osd在进行增加的时候还占用了删除的osd的id</p>
+<p>到这里我基本想出来两种方法：</p>
+<ul>
+<li>最不济，也是终极解决办法就是把后台缺失的数据拼起来，这个耗时巨大，操作难度大，基本上只能作为最后终极挽回的方法，这个只有在客户已经觉得数据可能要丢了，然后去做最后的终极挽回大法了，客户的容忍度是会随着你问题严重性而改变的，相信我数据还在都好说</li>
+<li>就是将删除的数据盘给加进来，这个操作在我几年ceph生涯中也是从未做过的，也想不出什么场景下需要这种操作，好吧，不管多么特殊的操作，总有它的存在的意义，我也不能确定ceph是否支持这种操作，那就试试这种</li>
+</ul>
+<p>这个集群之所以能挽回，有几个特殊点正好都在，缺一不可 </p>
+<ol>
+<li>删除的数据盘居然没被格式化，或者搞掉，这个如果弄没了，数据必丢</li>
+<li>删除的数据盘的盘位部分被新加的节点占用了，部分还没有被占用，而这个缺失数据的pg的数据所删除的osd正好又没有被占用（所以以后替换osd的时候最好是用新的编号，老的盘和编号保留着）</li>
+</ol>
+<h3 id="开始恢复的操作">开始恢复的操作</h3><p>之前我加节点的操作都是用的ceph-deploy，可以说基本没有遇到过手动能做的ceph-deploy无法完成的，好吧这次我知道了还是有无法完成的，手动的还是多学学比较好，好在我比较熟悉，就按步骤去做</p>
+<h4 id="1、增加认证">1、增加认证</h4><p>我们在删除osd的最后一步的时候操作都是ceph auth del<br>我就反向的操作<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph auth add osd.<span class="number">0</span> osd <span class="string">'allow *'</span> mon <span class="string">'allow rwx'</span> -i /var/lib/ceph/osd0/keyring</span><br></pre></td></tr></table></figure></p>
+<p>这个对应keyring就是在删除那个osd上面有，每个osd上面都有的<br>这一步操作完成后auth里面就有osd.0了</p>
+<h4 id="2、创建osd">2、创建osd</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph osd create</span><br></pre></td></tr></table></figure>
+<p>这个步骤也是之前没有做过的，之前准备直接加crush 直接启动发现都是无法启动，提示没有osd<br>这一步相对于删除里面的操作应该就是 ceph osd rm 的操作了</p>
+<h4 id="3、增加crush">3、增加crush</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph osd crush add osd.<span class="number">0</span> <span class="number">0.9</span> host=node1</span><br></pre></td></tr></table></figure>
+<p>这个就是加入到crush里面去</p>
+<h4 id="4、启动osd">4、启动osd</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/etc/init.d/ceph start osd.<span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h3 id="检查现在环境状况">检查现在环境状况</h3><p>在检查的时候发现osd真的就加进来了，然后在添加了另一个被block的osd后，集群状态就没有imcomplete了就是active+其他的一些恢复状态什么的，只需要等待恢复，集群即可恢复正常了，到这个时候已经凌晨三点了，事情能够完满解决是最开心的事情</p>
+<h3 id="后记">后记</h3><p>集群的删除操作随意，集群的信息基本无记录，环境的基础记录都没有，这个是这个事故的最大原因，再往上走就是对于数据操作这块，公司没有一个重视的态度，上面的boss永远不会关心你运维做了什么操作，而运维人员也可以说是我按标准流程操作的，也没法去定谁的责任，丢了就是丢了，运维最多也就是丢了工作，而企业损失应该就是以万为单位的损失加客户的流失了<br>到这里也许这家公司的头并不知道发生了什么，也许只是认为是一个小的业务中断，但真的某一天出事了，这就是大事了，所以一定要重视系统的监控和系统操作的谨慎，boss不需要关心，你cto，研发的头，运维的头，总有一个人需要重视这个问题，而大部分应该是散养状态，也是就是在集群交付以后基本是没有运维监控的状态，因为即使在我们的环境下，即使我有这个意识，但是也无法推动这个事情的</p>
+<p>之前我总在跟别人说欢迎打赏，有时能收到几十，目前最高就是小白的100块，其实我知道大家都是上着班，为公司而工作，为了公司的事情需要自己再去掏钱，似乎也没有太多理由，所以对于一般的情况，别人要感谢，要请吃饭，我也就是说着好好，心意我领了，我的收入在我所在的城市其实已经可以了，只是最近因为有一些需要用钱的地方，所以又是录课程，又是翻译书籍，为了赚取10块钱也是费尽心机啊，其实大家不打赏也无所谓的，能认识一些朋友，在某天，记得我有帮过你就行了，我认识的一个中科院的博士，那个时候还是2011年，他是我的老师的同学，即使现在他linux或者服务器有什么问题，需要帮助的时候，我有时间也会帮处理他，举手之劳就能帮别人解决问题，对于自己也是很开心的</p>
+<p>好了，就到这里，如果你的集群是生产环境，相信我话，需要帮助的话，留个ssh，有时间的时候我可以帮忙处理，绝对不会出现要给钱才弄的情况，当然你如果财力雄厚，事后给点劳务费，我也不会拒绝的，测试环境话，就自己研究下为好，特别不好解决的问题也可以沟通一下，当然我也有我的工作，需要我有时间的时候</p>
+<blockquote>
+<p>by 运维-武汉-磨渣<br>2016年04月11日夜</p>
+</blockquote>
+<h3 id="打赏通道">打赏通道</h3><center><br><img src="http://static.zybuluo.com/zphj1987/fi2557g55ucsdpyblopyfudl/newpay.png" alt="打赏" title="打赏"><br></center>
+
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/13/记一次不完全成功到成功的失效恢复-20160412/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          记一次不完全成功到成功的失效恢复(20160412)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/31/ceph在centos7下一个不容易发现的改变/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ceph在centos7下一个不容易发现的改变</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '记一次ceph的故障修复(20160408)',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

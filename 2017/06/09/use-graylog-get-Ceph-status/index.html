@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用日志系统graylog获取Ceph集群状态 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言在看集群的配置文件的时候看到ceph里面有一个graylog的输出选择，目前看到的是可以收集mon日志和clog，osd单个的日志没有看到，Elasticsearch有整套的日志收集系统，可以很方便的将所有日志汇总到一起，这个graylog的收集采用的是自有的udp协议，从配置上来说可以很快的完成，这里只做一个最基本的实践">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用日志系统graylog获取Ceph集群状态">
+<meta property="og:url" content="http://www.zphj1987.com/2017/06/09/use-graylog-get-Ceph-status/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言在看集群的配置文件的时候看到ceph里面有一个graylog的输出选择，目前看到的是可以收集mon日志和clog，osd单个的日志没有看到，Elasticsearch有整套的日志收集系统，可以很方便的将所有日志汇总到一起，这个graylog的收集采用的是自有的udp协议，从配置上来说可以很快的完成，这里只做一个最基本的实践">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/graylog.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/c07fkvdhinqn3ewzg0slxc44/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/6nvvez8axru9djfrn4iyx4hj/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/d2rbv3q5mfwvhkrqrf0bfyvc/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/0p2lgnam8tq0mn9ebcturx6i/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/r5yibecnxsp04vo5hw8iboj2/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/haiphagvwq5fwgpe8cls2bm0/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/niv3p6tq44rv7xif0ao62ykg/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/cz7qz8qdi0if4ddvtb60nike/image.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用日志系统graylog获取Ceph集群状态">
+<meta name="twitter:description" content="前言在看集群的配置文件的时候看到ceph里面有一个graylog的输出选择，目前看到的是可以收集mon日志和clog，osd单个的日志没有看到，Elasticsearch有整套的日志收集系统，可以很方便的将所有日志汇总到一起，这个graylog的收集采用的是自有的udp协议，从配置上来说可以很快的完成，这里只做一个最基本的实践">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-use-graylog-get-Ceph-status" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/06/09/use-graylog-get-Ceph-status/" class="article-date">
+  	<time datetime="2017-06-09T08:30:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用日志系统graylog获取Ceph集群状态
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/graylog.png" alt=""><br></center>
+
+<h2 id="前言">前言</h2><p>在看集群的配置文件的时候看到ceph里面有一个graylog的输出选择，目前看到的是可以收集mon日志和clog，osd单个的日志没有看到，Elasticsearch有整套的日志收集系统，可以很方便的将所有日志汇总到一起，这个graylog的收集采用的是自有的udp协议，从配置上来说可以很快的完成，这里只做一个最基本的实践<br><a id="more"></a></p>
+<h2 id="系统实践">系统实践</h2><p>graylog日志系统主要由三个组件组成的</p>
+<ul>
+<li>MongoDB – 存储配置信息和一些元数据信息的，MongoDB (&gt;= 2.4)</li>
+<li>Elasticsearch – 用来存储Graylog server收取的log messages的，Elasticsearch (&gt;= 2.x)</li>
+<li>Graylog server – 用来解析日志的并且提供内置的web的访问接口</li>
+</ul>
+<p>配置好基础源文件</p>
+<blockquote>
+<p>CentOS-Base.repo<br>epel.repo</p>
+</blockquote>
+<h3 id="安装java">安装java</h3><p>要求版本Java (&gt;= 8)<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install java-<span class="number">1.8</span>.<span class="number">0</span>-openjdk</span><br></pre></td></tr></table></figure></p>
+<h3 id="安装MongoDB">安装MongoDB</h3><p>安装软件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install mongodb mongodb-server</span><br></pre></td></tr></table></figure></p>
+<p>启动服务并且加入自启动<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl restart mongod</span><br><span class="line">systemctl <span class="built_in">enable</span> mongod</span><br></pre></td></tr></table></figure></p>
+<p>安装完成检查服务启动端口<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># netstat -tunlp|grep 27017</span></span><br><span class="line">tcp        <span class="number">0</span>      <span class="number">0</span> <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">27017</span>         <span class="number">0.0</span>.<span class="number">0.0</span>:*               LISTEN      <span class="number">151840</span>/mongod</span><br></pre></td></tr></table></figure></p>
+<h3 id="安装Elasticsearch">安装Elasticsearch</h3><p>倒入认证文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch</span><br></pre></td></tr></table></figure></p>
+<p>添加源文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/yum.repos.d/elasticsearch.repo</span><br><span class="line">添加</span><br><span class="line">[elasticsearch-<span class="number">2</span>.x]</span><br><span class="line">name=Elasticsearch repository <span class="keyword">for</span> <span class="number">2</span>.x packages</span><br><span class="line">baseurl=https://packages.elastic.co/elasticsearch/<span class="number">2</span>.x/centos</span><br><span class="line">gpgcheck=<span class="number">1</span></span><br><span class="line">gpgkey=https://packages.elastic.co/GPG-KEY-elasticsearch</span><br><span class="line">enabled=<span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<p>安装elasticsearch包<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install elasticsearch</span><br></pre></td></tr></table></figure></p>
+<p>配置自启动<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> elasticsearch</span><br></pre></td></tr></table></figure></p>
+<p>修改配置文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># vim /etc/elasticsearch/elasticsearch.yml</span></span><br><span class="line"></span><br><span class="line">cluster.name: graylog</span><br></pre></td></tr></table></figure></p>
+<p>重启服务<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl restart  elasticsearch</span><br></pre></td></tr></table></figure></p>
+<p>检查运行服务端口<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># netstat -tunlp|grep java</span></span><br><span class="line">tcp        <span class="number">0</span>      <span class="number">0</span> <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">9200</span>          <span class="number">0.0</span>.<span class="number">0.0</span>:*               LISTEN      <span class="number">154116</span>/java </span><br><span class="line">tcp        <span class="number">0</span>      <span class="number">0</span> <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">9300</span>          <span class="number">0.0</span>.<span class="number">0.0</span>:*               LISTEN      <span class="number">154116</span>/java</span><br></pre></td></tr></table></figure></p>
+<p>检查elasticsearch状态<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment">#  curl -X GET http://localhost:9200</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span> : <span class="string">"Vibro"</span>,</span><br><span class="line">  <span class="string">"cluster_name"</span> : <span class="string">"graylog"</span>,</span><br><span class="line">  <span class="string">"cluster_uuid"</span> : <span class="string">"11Y2GOTmQ9ynNbTlruFcyA"</span>,</span><br><span class="line">  <span class="string">"version"</span> : &#123;</span><br><span class="line">    <span class="string">"number"</span> : <span class="string">"2.4.5"</span>,</span><br><span class="line">    <span class="string">"build_hash"</span> : <span class="string">"c849dd13904f53e63e88efc33b2ceeda0b6a1276"</span>,</span><br><span class="line">    <span class="string">"build_timestamp"</span> : <span class="string">"2017-04-24T16:18:17Z"</span>,</span><br><span class="line">    <span class="string">"build_snapshot"</span> : <span class="literal">false</span>,</span><br><span class="line">    <span class="string">"lucene_version"</span> : <span class="string">"5.5.4"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"tagline"</span> : <span class="string">"You Know, for Search"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># curl -XGET 'http://localhost:9200/_cluster/health?pretty=true'</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"cluster_name"</span> : <span class="string">"graylog"</span>,</span><br><span class="line">  <span class="string">"status"</span> : <span class="string">"green"</span>,</span><br></pre></td></tr></table></figure>
+<p>状态应该是green</p>
+<h3 id="安装graylog">安装graylog</h3><p>安装源<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rpm -Uvh https://packages.graylog2.org/repo/packages/graylog-<span class="number">2.2</span>-repository_latest.rpm</span><br></pre></td></tr></table></figure></p>
+<p>安装软件包<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install graylog-server pwgen</span><br></pre></td></tr></table></figure></p>
+<p>生成password_secret<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># pwgen -N 1 -s 96</span></span><br><span class="line">DoqTYuvQPHaNW6XGFj5jru3FH8qxMjehj7Xk9OaVxhxaLYphF871CyiCMOKuAsHsJc0DtUUkK3ioFeqYo73mkMDUN7YklqgS</span><br></pre></td></tr></table></figure></p>
+<p>在配置文件/etc/graylog/server/server.conf中password_secret填上上面的输出</p>
+<p>生成root_password_sha2（后面生成的-不需要）<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># echo -n 123456 |shasum -a 256</span></span><br><span class="line"><span class="number">8</span>d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92  -</span><br></pre></td></tr></table></figure></p>
+<p>123456是我设置的密码<br>在配置文件/etc/graylog/server/server.conf中root_password_sha2填上上面的输出</p>
+<p>设置时区<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root_timezone = Asia/Shanghai</span><br></pre></td></tr></table></figure></p>
+<p>配置web监听端口<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rest_listen_uri = http://<span class="number">192.168</span>.<span class="number">10.2</span>:<span class="number">9000</span>/api/</span><br><span class="line">web_listen_uri = http://<span class="number">192.168</span>.<span class="number">10.2</span>:<span class="number">9000</span>/</span><br></pre></td></tr></table></figure></p>
+<p>这里注意写上你的web准备使用的那个网卡的IP地址，不要全局监听</p>
+<p>启动服务并配置自启动<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># systemctl restart graylog-server</span></span><br><span class="line">[root@lab102 ~]<span class="comment"># systemctl enable graylog-server</span></span><br></pre></td></tr></table></figure></p>
+<p>检查服务端口<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># netstat -tunlp|grep 9000</span></span><br><span class="line">tcp        <span class="number">0</span>      <span class="number">0</span> <span class="number">192.168</span>.<span class="number">10.2</span>:<span class="number">9000</span>       <span class="number">0.0</span>.<span class="number">0.0</span>:*               LISTEN      <span class="number">160129</span>/java</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用web进行访问">使用web进行访问</h3><p>使用地址<a href="http://192.168.10.2:9000进行访问" target="_blank" rel="external">http://192.168.10.2:9000进行访问</a><br><img src="http://static.zybuluo.com/zphj1987/c07fkvdhinqn3ewzg0slxc44/image.png" alt="image.png-312kB"><br>用户名admin<br>密码123456</p>
+<p><img src="http://static.zybuluo.com/zphj1987/6nvvez8axru9djfrn4iyx4hj/image.png" alt="image.png-69.9kB"><br>进来就是引导界面，这个地方是<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">1、把日志发送到graylog</span><br><span class="line">2、对收集到的数据做点搜索</span><br><span class="line">3、创建一个图表</span><br><span class="line">4、创建告警</span><br></pre></td></tr></table></figure></p>
+<p>到这里配置graylog平台的基础工作就完成了，现在看下怎么跟ceph对接</p>
+<p><img src="http://static.zybuluo.com/zphj1987/d2rbv3q5mfwvhkrqrf0bfyvc/image.png" alt="image.png-38.6kB"></p>
+<h2 id="配置ceph的支持">配置ceph的支持</h2><p>日志从ceph里面输出是采用的GELF UDP方式的</p>
+<p>GELF is Graylog2 的json格式的数据，内部采用键值对的方式，ceoh内部传输出来的数据不光有message还有下面的</p>
+<ul>
+<li>hostname</li>
+<li>thread id</li>
+<li>priority</li>
+<li>subsystem name and id</li>
+<li>fsid</li>
+</ul>
+<p><img src="http://static.zybuluo.com/zphj1987/0p2lgnam8tq0mn9ebcturx6i/image.png" alt="image.png-68.5kB"></p>
+<p>选择GELF UDP协议 </p>
+<p><img src="http://static.zybuluo.com/zphj1987/r5yibecnxsp04vo5hw8iboj2/image.png" alt="image.png-77.1kB"></p>
+<p>选择节点，配置监听端口为12201，保存</p>
+<p>在lab102上检查端口的监听情况<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab102 ~]<span class="comment"># netstat -tunlp|grep 12201</span></span><br><span class="line">udp        <span class="number">0</span>      <span class="number">0</span> <span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">12201</span>           <span class="number">0.0</span>.<span class="number">0.0</span>:*                           <span class="number">160129</span>/java</span><br></pre></td></tr></table></figure></p>
+<p>可以看到已经监听好了</p>
+<p>修改ceph的配置文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#log_to_graylog = true</span></span><br><span class="line"><span class="comment">#err_to_graylog = true</span></span><br><span class="line"><span class="comment">#log_graylog_host = 192.168.10.2</span></span><br><span class="line"><span class="comment">#log_graylog_port = 12201</span></span><br><span class="line">clog_to_graylog = <span class="literal">true</span></span><br><span class="line">clog_to_graylog_host = <span class="number">192.168</span>.<span class="number">10.2</span></span><br><span class="line">clog_to_graylog_port = <span class="number">12201</span></span><br><span class="line">mon_cluster_<span class="built_in">log</span>_to_graylog = <span class="literal">true</span></span><br><span class="line">mon_cluster_<span class="built_in">log</span>_to_graylog_host = <span class="number">192.168</span>.<span class="number">10.2</span></span><br><span class="line">mon_cluster_<span class="built_in">log</span>_to_graylog_port = <span class="number">12201</span></span><br></pre></td></tr></table></figure></p>
+<p>ceph.conf当中跟graylog有关的就是这些配置文件了，配置好端口是刚刚监听的那个udp端口，然后重启ceph服务，这里我只需要mon_cluster日志和clog，这个根据自己的需要选择</p>
+<p><img src="http://static.zybuluo.com/zphj1987/haiphagvwq5fwgpe8cls2bm0/image.png" alt="image.png-199.9kB"></p>
+<p>可以看到ceph -w的输出都可以在这个里面查询了</p>
+<h3 id="配置告警">配置告警</h3><p><img src="http://static.zybuluo.com/zphj1987/niv3p6tq44rv7xif0ao62ykg/image.png" alt="image.png-128.7kB"><br>出现异常的时候<br><img src="http://static.zybuluo.com/zphj1987/cz7qz8qdi0if4ddvtb60nike/image.png" alt="image.png-62.2kB"></p>
+<h2 id="总结">总结</h2><p>这个系统支持原生的接口接入，未来应该可以支持更多类型的日志倒入，这样相当于很容易就部署了一个日志搜索系统了，当然还有很多其他的方案，从功能完整性来说Elasticsearch要比这个强大，这套系统目前来看配置是非常的简单，也是一个优势</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2017-06-09</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/06/14/different-change-pg/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          调整PG分多次调整和一次到位的迁移差别分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/06/Ceph-deploymon-with-error-address/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Ceph部署mon出现0.0.0.0地址</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '使用日志系统graylog获取Ceph集群状态',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ceph的ISCSI GATEWAY | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言最开始接触这个是在L版本的监控平台里面看到的，有个iscsi网关，但是没看到有类似的介绍，然后通过接口查询到了一些资料，当时由于有比较多的东西需要新内核，新版本的支持，所以并没有配置出来，由于内核已经更新迭代了几个小版本了，经过测试验证可以跑起来了，这里只是把东西跑起来，性能相关的对比需要根据去做">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph的ISCSI GATEWAY">
+<meta property="og:url" content="http://www.zphj1987.com/2018/04/11/ceph-ISCSI-GATEWAY/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言最开始接触这个是在L版本的监控平台里面看到的，有个iscsi网关，但是没看到有类似的介绍，然后通过接口查询到了一些资料，当时由于有比较多的东西需要新内核，新版本的支持，所以并没有配置出来，由于内核已经更新迭代了几个小版本了，经过测试验证可以跑起来了，这里只是把东西跑起来，性能相关的对比需要根据去做">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/w0jdxwzox8vxnjagipexheoa/gateway.jpg">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/hnknjcp8kkiha844m4fyejm4/Ceph_iSCSI_HA_424879_1116_ECE-01.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/b74q5lumh96ui9uhknf2329i/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/erpd7tv1gymtrdkny0h33afy/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/fqt0s8h75jm5joffglsm7z4t/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/yp7pteay72mms7fbf7jf6z1u/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/3r2crtvesqir0f2qzhqow8dq/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/2oliqvnxb9rogfwimy8ogvx6/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/138747o4l4cxch52sb5z2z5w/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/qn4zzyofhh2546fv4nxczbs3/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/hi5flzjcsbdhv0wglrrkenda/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/h7yj7k87fllhxuqfz5utc4mv/image.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ceph的ISCSI GATEWAY">
+<meta name="twitter:description" content="前言最开始接触这个是在L版本的监控平台里面看到的，有个iscsi网关，但是没看到有类似的介绍，然后通过接口查询到了一些资料，当时由于有比较多的东西需要新内核，新版本的支持，所以并没有配置出来，由于内核已经更新迭代了几个小版本了，经过测试验证可以跑起来了，这里只是把东西跑起来，性能相关的对比需要根据去做">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ceph-ISCSI-GATEWAY" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/04/11/ceph-ISCSI-GATEWAY/" class="article-date">
+  	<time datetime="2018-04-11T06:57:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ceph的ISCSI GATEWAY
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><br><img src="http://static.zybuluo.com/zphj1987/w0jdxwzox8vxnjagipexheoa/gateway.jpg" alt="gateway"><br><br></center>
+
+
+
+
+
+
+<h2 id="前言">前言</h2><p>最开始接触这个是在L版本的监控平台里面看到的，有个iscsi网关，但是没看到有类似的介绍，然后通过接口查询到了一些资料，当时由于有比较多的东西需要新内核，新版本的支持，所以并没有配置出来，由于内核已经更新迭代了几个小版本了，经过测试验证可以跑起来了，这里只是把东西跑起来，性能相关的对比需要根据去做</p>
+<a id="more"></a>
+<h2 id="实践过程">实践过程</h2><h3 id="架构图">架构图</h3><p><img src="http://static.zybuluo.com/zphj1987/hnknjcp8kkiha844m4fyejm4/Ceph_iSCSI_HA_424879_1116_ECE-01.png" alt="Ceph_iSCSI_HA_424879_1116_ECE-01.png-79.4kB"></p>
+<p>这个图是引用的红帽的架构图，可以理解为一个多路径的实现方式，那么这个跟之前的有什么不同</p>
+<p>主要是有个新的tcmu-runner来处理LIO TCM后端存储的用户空间端的守护进程，这个是在内核之上多了一个用户态的驱动层，这样只需要根据tcmu的标准来对接接口就可以了，而不用去直接跟内核进行交互</p>
+<h3 id="需要的软件">需要的软件</h3><p>Ceph Luminous 版本的集群或者更新的版本<br>RHEL/CentOS 7.5或者Linux kernel v4.16或者更新版本的内核<br>其他控制软件</p>
+<blockquote>
+<p>targetcli-2.1.fb47 or newer package<br> ython-rtslib-2.1.fb64 or newer package<br> cmu-runner-1.3.0 or newer package<br> eph-iscsi-config-2.4 or newer package<br> eph-iscsi-cli-2.5 or newer package</p>
+</blockquote>
+<p>以上为配置这个环境需要的软件，下面为我使用的版本的软件，统一打包放在一个下载路径<br>我安装的版本如下：</p>
+<blockquote>
+<p>kernel-4.16.0-0.rc5.git0.1<br>targetcli-fb-2.1.fb48<br>python-rtslib-2.1.67<br>tcmu-runner-1.3.0-rc4<br>ceph-iscsi-config-2.5<br>ceph-iscsi-cli-2.6</p>
+</blockquote>
+<p>下载链接：</p>
+<blockquote>
+<p>链接:<a href="https://pan.baidu.com/s/12OwR5ZNtWFW13feLXy3Ezg" target="_blank" rel="external">https://pan.baidu.com/s/12OwR5ZNtWFW13feLXy3Ezg</a> 密码:m09k</p>
+</blockquote>
+<p>如果环境之前有安装过其他版本，需要先卸载掉，并且需要提前部署好一个Luminous 最新版本的集群<br>官方建议调整的参数<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ceph tell osd.* injectargs '--osd_client_watch_timeout 15'</span></span><br><span class="line"><span class="comment"># ceph tell osd.* injectargs '--osd_heartbeat_grace 20'</span></span><br><span class="line"><span class="comment"># ceph tell osd.* injectargs '--osd_heartbeat_interval 5'</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="配置过程">配置过程</h3><p>创建一个存储池<br>需要用到rbd存储池，用来存储iscsi的配置文件，提前创建好一个名字是rbd的存储池</p>
+<p>创建iscsi-gateway配置文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">touch /etc/ceph/iscsi-gateway.cfg</span><br></pre></td></tr></table></figure></p>
+<p>修改iscsi-gateway.cfg配置文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[config]</span><br><span class="line"><span class="comment"># Name of the Ceph storage cluster. A suitable Ceph configuration file allowing</span></span><br><span class="line"><span class="comment"># access to the Ceph storage cluster from the gateway node is required, if not</span></span><br><span class="line"><span class="comment"># colocated on an OSD node.</span></span><br><span class="line">cluster_name = ceph</span><br><span class="line"></span><br><span class="line"><span class="comment"># Place a copy of the ceph cluster's admin keyring in the gateway's /etc/ceph</span></span><br><span class="line"><span class="comment"># drectory and reference the filename here</span></span><br><span class="line">gateway_keyring = ceph.client.admin.keyring</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># API settings.</span></span><br><span class="line"><span class="comment"># The API supports a number of options that allow you to tailor it to your</span></span><br><span class="line"><span class="comment"># local environment. If you want to run the API under https, you will need to</span></span><br><span class="line"><span class="comment"># create cert/key files that are compatible for each iSCSI gateway node, that is</span></span><br><span class="line"><span class="comment"># not locked to a specific node. SSL cert and key files *must* be called</span></span><br><span class="line"><span class="comment"># 'iscsi-gateway.crt' and 'iscsi-gateway.key' and placed in the '/etc/ceph/' directory</span></span><br><span class="line"><span class="comment"># on *each* gateway node. With the SSL files in place, you can use 'api_secure = true'</span></span><br><span class="line"><span class="comment"># to switch to https mode.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># To support the API, the bear minimum settings are:</span></span><br><span class="line">api_secure = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Additional API configuration options are as follows, defaults shown.</span></span><br><span class="line"><span class="comment"># api_user = admin</span></span><br><span class="line"><span class="comment"># api_password = admin</span></span><br><span class="line"><span class="comment"># api_port = 5001</span></span><br><span class="line"><span class="comment"># trusted_ip_list = 192.168.0.10,192.168.0.11</span></span><br></pre></td></tr></table></figure></p>
+<p>最后一行的trusted_ip_list修改为用来配置网关的主机IP，我的环境为</p>
+<blockquote>
+<p>trusted_ip_list =192.168.219.128,192.168.219.129</p>
+</blockquote>
+<p>所有网关节点的这个配置文件的内容需要一致，修改好一台直接scp到每个网关节点上</p>
+<p>启动API服务<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 install]<span class="comment"># systemctl daemon-reload</span></span><br><span class="line">[root@lab101 install]<span class="comment"># systemctl enable rbd-target-api</span></span><br><span class="line">[root@lab101 install]<span class="comment"># systemctl start rbd-target-api</span></span><br><span class="line">[root@lab101 install]<span class="comment"># systemctl status rbd-target-api</span></span><br><span class="line">● rbd-target-api.service - Ceph iscsi target configuration API</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/rbd-target-api.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since Thu <span class="number">2018</span>-<span class="number">03</span>-<span class="number">15</span> <span class="number">09</span>:<span class="number">44</span>:<span class="number">34</span> CST; <span class="number">18</span>min ago</span><br><span class="line"> Main PID: <span class="number">1493</span> (rbd-target-api)</span><br><span class="line">   CGroup: /system.slice/rbd-target-api.service</span><br><span class="line">           └─<span class="number">1493</span> /usr/bin/python /usr/bin/rbd-target-api</span><br><span class="line"></span><br><span class="line">Mar <span class="number">15</span> <span class="number">09</span>:<span class="number">44</span>:<span class="number">34</span> lab101 systemd[<span class="number">1</span>]: Started Ceph iscsi target configuration API.</span><br><span class="line">Mar <span class="number">15</span> <span class="number">09</span>:<span class="number">44</span>:<span class="number">34</span> lab101 systemd[<span class="number">1</span>]: Starting Ceph iscsi target configuration API...</span><br><span class="line">Mar <span class="number">15</span> <span class="number">09</span>:<span class="number">44</span>:<span class="number">58</span> lab101 rbd-target-api[<span class="number">1493</span>]: Started the configuration object watcher</span><br><span class="line">Mar <span class="number">15</span> <span class="number">09</span>:<span class="number">44</span>:<span class="number">58</span> lab101 rbd-target-api[<span class="number">1493</span>]: Checking <span class="keyword">for</span> config object changes every <span class="number">1</span>s</span><br><span class="line">Mar <span class="number">15</span> <span class="number">09</span>:<span class="number">44</span>:<span class="number">58</span> lab101 rbd-target-api[<span class="number">1493</span>]:  * Running on http://<span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">5000</span>/</span><br></pre></td></tr></table></figure></p>
+<p>配置iscsi<br>执行gwcli命令<br><img src="http://static.zybuluo.com/zphj1987/b74q5lumh96ui9uhknf2329i/image.png" alt="image.png-23kB"></p>
+<p>默认是这样的</p>
+<p>进入icsi-target创建一个target<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/&gt; <span class="built_in">cd</span> iscsi-target </span><br><span class="line">/iscsi-target&gt; create iqn.<span class="number">2003</span>-<span class="number">01</span>.com.redhat.iscsi-gw:iscsi-igw</span><br><span class="line">ok</span><br></pre></td></tr></table></figure></p>
+<p>创建iSCSI网关。以下使用的IP是用于iSCSI数据传输的IP,它们可以与trusted_ip_list中列出的用于管理操作的IP相同，也可以不同，看有没有做多网卡分离<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/iscsi-target&gt; <span class="built_in">cd</span> iqn.<span class="number">2003</span>-<span class="number">01</span>.com.redhat.iscsi-gw:iscsi-igw/</span><br><span class="line">/iscsi-target...-gw:iscsi-igw&gt; <span class="built_in">cd</span> gateways </span><br><span class="line">/iscsi-target...-igw/gateways&gt; create lab101 <span class="number">192.168</span>.<span class="number">219.128</span> skipchecks=<span class="literal">true</span></span><br><span class="line">OS version/package checks have been bypassed</span><br><span class="line">Adding gateway, syncing <span class="number">0</span> disk(s) and <span class="number">0</span> client(s)</span><br><span class="line">  /iscsi-target...-igw/gateways&gt; create lab102 <span class="number">192.168</span>.<span class="number">219.129</span> skipchecks=<span class="literal">true</span></span><br><span class="line">OS version/package checks have been bypassed</span><br><span class="line">Adding gateway, sync<span class="string">'ing 0 disk(s) and 0 client(s)</span><br><span class="line">ok</span><br><span class="line">/iscsi-target...-igw/gateways&gt; ls</span><br><span class="line">o- gateways ............. [Up: 2/2, Portals: 2]</span><br><span class="line">  o- lab101 ............. [192.168.219.128 (UP)]</span><br><span class="line">  o- lab102 ............. [192.168.219.129 (UP)]</span></span><br></pre></td></tr></table></figure></p>
+<p>创建一个rbd设备disk_1<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/iscsi-target...-igw/gateways&gt; <span class="built_in">cd</span> /disks </span><br><span class="line">/disks&gt; create pool=rbd image=disk_1 size=<span class="number">100</span>G</span><br><span class="line">ok</span><br></pre></td></tr></table></figure></p>
+<p>创建一个客户端名称iqn.1994-05.com.redhat:75c3d5efde0<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/disks&gt; <span class="built_in">cd</span> /iscsi-target/iqn.<span class="number">2003</span>-<span class="number">01</span>.com.redhat.iscsi-gw:iscsi-igw/hosts </span><br><span class="line">/iscsi-target...csi-igw/hosts&gt; create iqn.<span class="number">1994</span>-<span class="number">05</span>.com.redhat:<span class="number">75</span>c3d5efde0</span><br><span class="line">ok</span><br></pre></td></tr></table></figure></p>
+<p>创建chap的用户名密码，由于用户名密码都有特殊要求，如果你不确定，就按我给的去设置，并且chap必须设置，否则服务端是禁止连接的<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/iscsi-target...t:<span class="number">75</span>c3d5efde0&gt; auth chap=iqn.<span class="number">1994</span>-<span class="number">05</span>.com.redhat:<span class="number">75</span>c3d5efde0/admin@a_12a-bb</span><br><span class="line">ok</span><br></pre></td></tr></table></figure></p>
+<p>chap的命名规则可以这样查询<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/iscsi-target...t:<span class="number">75</span>c3d5efde0&gt; <span class="built_in">help</span> auth</span><br><span class="line"></span><br><span class="line">SYNTAX</span><br><span class="line">======</span><br><span class="line">auth [chap] </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">DESCRIPTION</span><br><span class="line">===========</span><br><span class="line"></span><br><span class="line">Client authentication can be <span class="built_in">set</span> to use CHAP by supplying the</span><br><span class="line">a string of the form &lt;username&gt;/&lt;password&gt;</span><br><span class="line"></span><br><span class="line">e.g.</span><br><span class="line">auth chap=username/password | nochap</span><br><span class="line"></span><br><span class="line">username ... the username is <span class="number">8</span>-<span class="number">64</span> character string. Each character</span><br><span class="line">             may either be an alphanumeric or use one of the following</span><br><span class="line">             special characters .,:,-,@.</span><br><span class="line">             Consider using the hosts <span class="string">'shortname'</span> or the initiators IQN</span><br><span class="line">             value as the username</span><br><span class="line"></span><br><span class="line">password ... the password must be between <span class="number">12</span>-<span class="number">16</span> chars <span class="keyword">in</span> length</span><br><span class="line">             containing alphanumeric characters, plus the following</span><br><span class="line">             special characters @,_,-</span><br><span class="line"></span><br><span class="line">WARNING: Using unsupported special characters may result <span class="keyword">in</span> truncation,</span><br><span class="line">         resulting <span class="keyword">in</span> failed logins.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Specifying <span class="string">'nochap'</span> will remove chap authentication <span class="keyword">for</span> the client</span><br><span class="line">across all gateways.</span><br></pre></td></tr></table></figure></p>
+<p>增加磁盘到客户端<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/iscsi-target...t:<span class="number">75</span>c3d5efde0&gt; disk add rbd.disk_1</span><br><span class="line">ok</span><br></pre></td></tr></table></figure></p>
+<p>到这里就配置完成了，我们看下最终应该是怎么样的<br><img src="http://static.zybuluo.com/zphj1987/erpd7tv1gymtrdkny0h33afy/image.png" alt="image.png-38.5kB"></p>
+<h2 id="windows客户端配置">windows客户端配置</h2><p>这个地方我配置的时候用的win10配置的时候出现了无法连接的情况，可能是windows10自身的认证要求跟服务端冲突了，这里用windows server 2016 进行连接测试</p>
+<p>windows server开启下Multipath IO</p>
+<p>修改windows iscsi客户端的名称<br><img src="http://static.zybuluo.com/zphj1987/fqt0s8h75jm5joffglsm7z4t/image.png" alt="image.png-47.5kB"><br>修改为上面创建的客户端名称</p>
+<p>发现门户<br><img src="http://static.zybuluo.com/zphj1987/yp7pteay72mms7fbf7jf6z1u/image.png" alt="image.png-37.7kB"><br>点击发现门户，填写好服务端的IP后直接点确定，这里先不用高级里面的配置</p>
+<p><img src="http://static.zybuluo.com/zphj1987/3r2crtvesqir0f2qzhqow8dq/image.png" alt="image.png-35.1kB"></p>
+<p>这个时候目标里面已经有一个发现的目标了，显示状态是不活动的，准备点击连接</p>
+<p><img src="http://static.zybuluo.com/zphj1987/2oliqvnxb9rogfwimy8ogvx6/image.png" alt="image.png-80.7kB"><br>点击高级，选择门户IP，填写chap登陆信息，然后chap名称就是上面设置的用户名称，因为跟客户端名称设置的一致，也就是客户端的名称，密码就是上面设置的admin@a_12a-bb</p>
+<p><img src="http://static.zybuluo.com/zphj1987/138747o4l4cxch52sb5z2z5w/image.png" alt="image.png-21.9kB"></p>
+<p>切换到卷和设备，点击自动配置<br><img src="http://static.zybuluo.com/zphj1987/qn4zzyofhh2546fv4nxczbs3/image.png" alt="image.png-47.4kB"></p>
+<p>可以看到已经装载设备了</p>
+<p>在服务管理器，文件存储服务，卷，磁盘里面查看设备<br><img src="http://static.zybuluo.com/zphj1987/hi5flzjcsbdhv0wglrrkenda/image.png" alt="image.png-92.8kB"></p>
+<p>可以看到是配置的LIO-ORG TCMU设备，对设备进行格式化即可</p>
+<p><img src="http://static.zybuluo.com/zphj1987/h7yj7k87fllhxuqfz5utc4mv/image.png" alt="image.png-42.6kB"></p>
+<p>完成了连接了</p>
+<h2 id="Linux的客户端连接">Linux的客户端连接</h2><p>Linux客户端选择建议就选择3.10默认内核，选择高版本的内核的时候在配置多路径的时候碰到内核崩溃的问题</p>
+<p>安装连接软件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab103 ~]<span class="comment"># yum install iscsi-initiator-utils</span></span><br><span class="line">[root@lab103 ~]<span class="comment"># yum install device-mapper-multipath</span></span><br></pre></td></tr></table></figure></p>
+<p>配置多路径</p>
+<p>开启服务<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab103 ~]<span class="comment"># mpathconf --enable --with_multipathd y</span></span><br></pre></td></tr></table></figure></p>
+<p>修改配置文件/etc/multipath.conf<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">devices &#123;</span><br><span class="line">        device &#123;</span><br><span class="line">                vendor                 <span class="string">"LIO-ORG"</span></span><br><span class="line">                hardware_handler       <span class="string">"1 alua"</span></span><br><span class="line">                path_grouping_policy   <span class="string">"failover"</span></span><br><span class="line">                path_selector          <span class="string">"queue-length 0"</span></span><br><span class="line">                failback               <span class="number">60</span></span><br><span class="line">                path_checker           tur</span><br><span class="line">                prio                   alua</span><br><span class="line">                prio_args              exclusive_pref_bit</span><br><span class="line">                fast_io_fail_tmo       <span class="number">25</span></span><br><span class="line">                no_path_retry          queue</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>重启多路径服务<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab103 ~]<span class="comment"># systemctl reload multipathd</span></span><br></pre></td></tr></table></figure></p>
+<p>配置chap的认证</p>
+<p>修改配置客户端的名称为上面设置的名称<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab103 ~]<span class="comment"># cat /etc/iscsi/initiatorname.iscsi </span></span><br><span class="line">InitiatorName=iqn.<span class="number">1994</span>-<span class="number">05</span>.com.redhat:<span class="number">75</span>c3d5efde0</span><br></pre></td></tr></table></figure></p>
+<p>修改认证的配置文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab103 ~]<span class="comment"># cat /etc/iscsi/iscsid.conf |grep "node.session.auth.username\|node.session.auth.password\|node.session.auth.authmethod"</span></span><br><span class="line">node.session.auth.authmethod = CHAP</span><br><span class="line">node.session.auth.username = iqn.<span class="number">1994</span>-<span class="number">05</span>.com.redhat:<span class="number">75</span>c3d5efde0</span><br><span class="line">node.session.auth.password = admin@a_12a-bb</span><br></pre></td></tr></table></figure></p>
+<p>查询iscsi target<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab103 ~]<span class="comment"># iscsiadm -m discovery -t st -p 192.168.219.128</span></span><br><span class="line"><span class="number">192.168</span>.<span class="number">219.128</span>:<span class="number">3260</span>,<span class="number">1</span> iqn.<span class="number">2003</span>-<span class="number">01</span>.com.redhat.iscsi-gw:iscsi-igw</span><br><span class="line"><span class="number">192.168</span>.<span class="number">219.129</span>:<span class="number">3260</span>,<span class="number">2</span> iqn.<span class="number">2003</span>-<span class="number">01</span>.com.redhat.iscsi-gw:iscsi-igw</span><br></pre></td></tr></table></figure></p>
+<p>连接target<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab103 ~]<span class="comment"># iscsiadm -m node -T iqn.2003-01.com.redhat.iscsi-gw:iscsi-igw -l</span></span><br><span class="line">Logging <span class="keyword">in</span> to [iface: default, target: iqn.<span class="number">2003</span>-<span class="number">01</span>.com.redhat.iscsi-gw:iscsi-igw, portal: <span class="number">192.168</span>.<span class="number">219.129</span>,<span class="number">3260</span>] (multiple)</span><br><span class="line">Logging <span class="keyword">in</span> to [iface: default, target: iqn.<span class="number">2003</span>-<span class="number">01</span>.com.redhat.iscsi-gw:iscsi-igw, portal: <span class="number">192.168</span>.<span class="number">219.129</span>,<span class="number">3260</span>] (multiple)</span><br><span class="line">Login to [iface: default, target: iqn.<span class="number">2003</span>-<span class="number">01</span>.com.redhat.iscsi-gw:iscsi-igw, portal: <span class="number">192.168</span>.<span class="number">219.129</span>,<span class="number">3260</span>] successful.</span><br><span class="line">Login to [iface: default, target: iqn.<span class="number">2003</span>-<span class="number">01</span>.com.redhat.iscsi-gw:iscsi-igw, portal: <span class="number">192.168</span>.<span class="number">219.129</span>,<span class="number">3260</span>] successful.</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 ~]<span class="comment"># multipath -ll</span></span><br><span class="line">mpathb (<span class="number">360014052</span><span class="built_in">fc</span>39ba627874fdba9aefcf6c) dm-<span class="number">4</span> LIO-ORG ,TCMU device     </span><br><span class="line">size=<span class="number">100</span>G features=<span class="string">'1 queue_if_no_path'</span> hwhandler=<span class="string">'1 alua'</span> wp=rw</span><br><span class="line">|-+- policy=<span class="string">'queue-length 0'</span> prio=<span class="number">10</span> status=active</span><br><span class="line">| `- <span class="number">5</span>:<span class="number">0</span>:<span class="number">0</span>:<span class="number">0</span> sdc <span class="number">8</span>:<span class="number">32</span> active ready running</span><br><span class="line">`-+- policy=<span class="string">'queue-length 0'</span> prio=<span class="number">10</span> status=enabled</span><br><span class="line">  `- <span class="number">6</span>:<span class="number">0</span>:<span class="number">0</span>:<span class="number">0</span> sdd <span class="number">8</span>:<span class="number">48</span> active ready running</span><br></pre></td></tr></table></figure>
+<p>查看盘符<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 ~]<span class="comment"># parted -s /dev/mapper/mpathb print</span></span><br><span class="line">Model: Linux device-mapper (multipath) (dm)</span><br><span class="line">Disk /dev/mapper/mpathb: <span class="number">107</span>GB</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span>B/<span class="number">512</span>B</span><br><span class="line">Partition Table: gpt</span><br><span class="line">Disk Flags: </span><br><span class="line"></span><br><span class="line">Number  Start   End    Size   File system  Name                          Flags</span><br><span class="line"> <span class="number">1</span>      <span class="number">17.4</span>kB  <span class="number">134</span>MB  <span class="number">134</span>MB               Microsoft reserved partition  msftres</span><br><span class="line"> <span class="number">2</span>      <span class="number">135</span>MB   <span class="number">107</span>GB  <span class="number">107</span>GB  ntfs         Basic data partition</span><br></pre></td></tr></table></figure></p>
+<p>直接使用这个/dev/mapper/mpathb设备即可</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2018-04-11</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/12/cosbench-how-to-use/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          cosbench使用方法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/23/parted-may-start-your-osd/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">parted会启动你的ceph osd，意外不？</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'ceph的ISCSI GATEWAY',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

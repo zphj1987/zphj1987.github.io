@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux下如何创建loop device | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在Linux中,有一种特殊的块设备叫loop device,这种loop device设备是通过映射操作系统上的正常的文件而形成的虚拟块设备
+因为这种设备的存在,就为我们提供了一种创建一个存在于其他文件中的虚拟文件系统的机制.下面是一个示例:第一步:用dd创建一个大文件:dd if=/dev/zero of=node1 bs=4M count=500
+这样就在当前目录下创建了一个2G的文件”nod">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux下如何创建loop device">
+<meta property="og:url" content="http://www.zphj1987.com/2015/03/22/Linux下如何创建loop-device/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="在Linux中,有一种特殊的块设备叫loop device,这种loop device设备是通过映射操作系统上的正常的文件而形成的虚拟块设备
+因为这种设备的存在,就为我们提供了一种创建一个存在于其他文件中的虚拟文件系统的机制.下面是一个示例:第一步:用dd创建一个大文件:dd if=/dev/zero of=node1 bs=4M count=500
+这样就在当前目录下创建了一个2G的文件”nod">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux下如何创建loop device">
+<meta name="twitter:description" content="在Linux中,有一种特殊的块设备叫loop device,这种loop device设备是通过映射操作系统上的正常的文件而形成的虚拟块设备
+因为这种设备的存在,就为我们提供了一种创建一个存在于其他文件中的虚拟文件系统的机制.下面是一个示例:第一步:用dd创建一个大文件:dd if=/dev/zero of=node1 bs=4M count=500
+这样就在当前目录下创建了一个2G的文件”nod">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Linux下如何创建loop-device" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/22/Linux下如何创建loop-device/" class="article-date">
+  	<time datetime="2015-03-22T09:07:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Linux下如何创建loop device
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在Linux中,有一种特殊的块设备叫loop device,这种loop device设备是通过映射操作系统上的正常的文件而形成的虚拟块设备</p>
+<p>因为这种设备的存在,就为我们提供了一种创建一个存在于其他文件中的虚拟文件系统的机制.下面是一个示例:<br>第一步:用dd创建一个大文件:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=/dev/zero of=node1 bs=<span class="number">4</span>M count=<span class="number">500</span></span><br></pre></td></tr></table></figure></p>
+<p>这样就在当前目录下创建了一个2G的文件”node1”</p>
+<p>第二步:使用losetup命令创建一个loop device<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">losetup /dev/loop0 node1</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>第三步:创建一个文件系统<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkfs -t ext3 /dev/loop0</span><br></pre></td></tr></table></figure></p>
+<p>第四步:挂载这个文件系统<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mount /dev/loop0 /mnt/</span><br></pre></td></tr></table></figure></p>
+<p>最后:如果要删除刚才创建的这些对象:依次执行如下步骤:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ umount /dev/loop0</span><br><span class="line">$ losetup <span class="operator">-d</span> /dev/loop0</span><br><span class="line">$ rm node1</span><br></pre></td></tr></table></figure></p>
+<p>说明:<br>详细的losetup命令如下:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@vm11g ~]<span class="comment"># losetup</span></span><br><span class="line">usage:</span><br><span class="line">losetup loop_device <span class="comment"># give info</span></span><br><span class="line">losetup <span class="operator">-d</span> loop_device <span class="comment"># delete</span></span><br><span class="line">losetup [ <span class="operator">-e</span> encryption ] [ -o offset ] loop_device file <span class="comment"># setup</span></span><br></pre></td></tr></table></figure></p>
+<p>其中加密选项有如下几种方式:<br>NONE use no encryption (default).<br>XOR use a simple XOR encryption.<br>DES use DES encryption. </p>
+<p>DES encryption is only available if the optional DES package has been added to the kernel.<br>DES encryption uses an additional start value that is used to protect passwords against dictionary attacks.</p>
+<p>默认情况下系统支持的loop device是8个<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@vm11g dev]<span class="comment"># ls -ltr /dev/loop*</span></span><br><span class="line">brw-r----- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">0</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop0</span><br><span class="line">brw-r----- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">1</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop1</span><br><span class="line">brw-r----- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">2</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop2</span><br><span class="line">brw-r----- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">3</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop3</span><br><span class="line">brw-r----- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">4</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop4</span><br><span class="line">brw-r----- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">5</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop5</span><br><span class="line">brw-r----- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">6</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop6</span><br><span class="line">brw-r----- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">7</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop7</span><br></pre></td></tr></table></figure></p>
+<p>　<br>如果需要超过8个loop device,那么使用losetup命令的时候可能会遇到类似的错误 ‘no such device’,这是因为超过了可用</p>
+<p>loop device设备的最大限制,依据你的Linux系统,可以通过修改/etc/modprobe.conf 配置文件,增加如下参数的方式进行扩展:<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">options loop max_loop=20 --&#27604;&#22914;&#25105;&#22686;&#21152;&#21040;20&#20010;</span><br></pre></td></tr></table></figure></p>
+<p>保存退出,如果要了马上生效的话,可以通过<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">modprobe -v loop</span><br></pre></td></tr></table></figure></p>
+<p>命令立即加载该模块。<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@vm11g dev]<span class="comment"># cat /etc/modprobe.conf|grep loop</span></span><br><span class="line">options loop max_loop=<span class="number">20</span></span><br><span class="line">[root@vm11g dev]<span class="comment"># modprobe -v loop</span></span><br><span class="line">insmod /lib/modules/<span class="number">2.6</span>.<span class="number">9</span>-<span class="number">42.0</span>.<span class="number">0.0</span>.<span class="number">1</span>.ELsmp/kernel/drivers/block/loop.ko max_loop=<span class="number">20</span></span><br><span class="line">[root@vm11g dev]<span class="comment"># ls -ltr /dev/loop*</span></span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">8</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop8</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">9</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop9</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">10</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop10</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">11</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop11</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">12</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop12</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">13</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop13</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">14</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop14</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">15</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop15</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">16</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop16</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">17</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop17</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">18</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop18</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">19</span> Jul <span class="number">19</span> <span class="number">07</span>:<span class="number">44</span> /dev/loop19</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">0</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop0</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">1</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop1</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">2</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop2</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">3</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop3</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">4</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop4</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">5</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop5</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">6</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop6</span><br><span class="line">brw-rw---- <span class="number">1</span> root disk <span class="number">7</span>, <span class="number">7</span> Jul <span class="number">19</span> <span class="number">2009</span> /dev/loop7</span><br></pre></td></tr></table></figure></p>
+<p>有了这个东西,在Linux下就可以用文件来生成块设备进行测试了</p>
+<p>写于: 2012年08月02日<br>更新于: 2015年03月22日</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/03/22/使用Ganglia监控系统监控集群-debian/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          使用Ganglia监控系统监控集群(debian)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/03/22/用rsync备份一台linux服务器上的数据/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">用rsync备份一台linux服务器上的数据</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'Linux下如何创建loop device',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

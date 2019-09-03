@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ceph使用memdisk做journal | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="记得在很久很久以前，ceph当时的版本是有提供使用内存做journal的配置的，当时是使用的tmpfs，但是现在的版本在搜资料的时候，发现关于这个的没怎么找到资料，邮件列表里面有人有提到怎么做，看了下大致的原理，然后还是自己来实践一次
+预备知识：首先需要知道的是什么是内存盘，内存盘就是划分了一个内存空间来当磁盘使用来进行加速的，这个在某些操作系统里面会把/tmp/分区挂载到tmpfs下，来达到加速">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph使用memdisk做journal">
+<meta property="og:url" content="http://www.zphj1987.com/2016/01/14/ceph使用memdisk做journal/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="记得在很久很久以前，ceph当时的版本是有提供使用内存做journal的配置的，当时是使用的tmpfs，但是现在的版本在搜资料的时候，发现关于这个的没怎么找到资料，邮件列表里面有人有提到怎么做，看了下大致的原理，然后还是自己来实践一次
+预备知识：首先需要知道的是什么是内存盘，内存盘就是划分了一个内存空间来当磁盘使用来进行加速的，这个在某些操作系统里面会把/tmp/分区挂载到tmpfs下，来达到加速">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ceph使用memdisk做journal">
+<meta name="twitter:description" content="记得在很久很久以前，ceph当时的版本是有提供使用内存做journal的配置的，当时是使用的tmpfs，但是现在的版本在搜资料的时候，发现关于这个的没怎么找到资料，邮件列表里面有人有提到怎么做，看了下大致的原理，然后还是自己来实践一次
+预备知识：首先需要知道的是什么是内存盘，内存盘就是划分了一个内存空间来当磁盘使用来进行加速的，这个在某些操作系统里面会把/tmp/分区挂载到tmpfs下，来达到加速">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ceph使用memdisk做journal" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/14/ceph使用memdisk做journal/" class="article-date">
+  	<time datetime="2016-01-14T02:00:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ceph使用memdisk做journal
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>记得在很久很久以前，ceph当时的版本是有提供使用内存做journal的配置的，当时是使用的tmpfs，但是现在的版本在搜资料的时候，发现关于这个的没怎么找到资料，邮件列表里面有人有提到怎么做，看了下大致的原理，然后还是自己来实践一次</p>
+<h3 id="预备知识：">预备知识：</h3><p>首先需要知道的是什么是内存盘，内存盘就是划分了一个内存空间来当磁盘使用来进行加速的，这个在某些操作系统里面会把/tmp/分区挂载到tmpfs下，来达到加速的目的，这样就是重启后，会清空/tmp的内容，centos7 默认的分区方式也使用了tmpfs来加速，df -h可以看下那个tmpfs就是内存盘了</p>
+<p>本文使用的不是tmpfs，这个是因为tmpfs不是我们常见意义上的那种文件系统，它不能格式化，ceph 在进行日志创建的时候会去检查journal 所在分区的 uuid， 而tmpfs在检测的时候 会返回一个全0的字符串，这个在校验的时候显示的无效的，所以也就部署起来有问题，下面开始介绍我的做法，这个里面做法很多，步骤也可以自己去变化，这里只是提供了我的一种思路</p>
+<p>我使用的是ramdisk，关于怎么做ramdisk这个也研究了一下，因为篇幅有点长并且属于预备步骤，请参考我的另外一篇文章：</p>
+<p><a href="http://www.zphj1987.com/2016/01/14/centos7%E4%B8%8B%E5%81%9A%E5%86%85%E5%AD%98%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95/" title="centos7下做内存盘的方法" target="_blank" rel="external">centos7下做内存盘的方法</a></p>
+<a id="more"></a>
+<h3 id="测试环境：">测试环境：</h3><p>单机，四块SAS的OSD，日志为5G（内存盘大小为6G），副本 2， osd分组</p>
+<p>说明：因为这里只去研究这个内存盘journal的实现，以及性能的差别，其他的组合方案需要自己去配置，所以单机的环境已经可以完成这个</p>
+<h3 id="1、准备journal的内存盘">1、准备journal的内存盘</h3><h4 id="检查内存盘大小">检查内存盘大小</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># fdisk -l /dev/ram0</span></span><br><span class="line"></span><br><span class="line">Disk /dev/ram0: <span class="number">6797</span> MB, <span class="number">6797721600</span> bytes, <span class="number">13276800</span> sectors</span><br><span class="line">Units = sectors of <span class="number">1</span> * <span class="number">512</span> = <span class="number">512</span> bytes</span><br><span class="line">Sector size (logical/physical): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br><span class="line">I/O size (minimum/optimal): <span class="number">512</span> bytes / <span class="number">512</span> bytes</span><br></pre></td></tr></table></figure>
+<p>我的大小为6G</p>
+<h4 id="格式化内存盘，并且挂载">格式化内存盘，并且挂载</h4><h5 id="创建挂载目录（有多少osd建几个）">创建挂载目录（有多少osd建几个）</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># mkdir -p /var/lib/ceph/mem/ceph-0</span></span><br></pre></td></tr></table></figure>
+<h5 id="格式化memdisk(需要几个格式化几个)">格式化memdisk(需要几个格式化几个)</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># mkfs.xfs /dev/ram0  -f</span></span><br></pre></td></tr></table></figure>
+<h5 id="挂载内存盘">挂载内存盘</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># mount /dev/ram0 /var/lib/ceph/mem/ceph-0/</span></span><br></pre></td></tr></table></figure>
+<h5 id="挂载完了后的效果如下：">挂载完了后的效果如下：</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># df -h</span></span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/sda2        <span class="number">50</span>G  <span class="number">9.7</span>G   <span class="number">41</span>G  <span class="number">20</span>% /</span><br><span class="line">devtmpfs         <span class="number">24</span>G     <span class="number">0</span>   <span class="number">24</span>G   <span class="number">0</span>% /dev</span><br><span class="line">tmpfs            <span class="number">24</span>G     <span class="number">0</span>   <span class="number">24</span>G   <span class="number">0</span>% /dev/shm</span><br><span class="line">tmpfs            <span class="number">24</span>G   <span class="number">17</span>M   <span class="number">24</span>G   <span class="number">1</span>% /run</span><br><span class="line">tmpfs            <span class="number">24</span>G     <span class="number">0</span>   <span class="number">24</span>G   <span class="number">0</span>% /sys/fs/cgroup</span><br><span class="line">/dev/sda1       <span class="number">283</span>M   <span class="number">94</span>M  <span class="number">190</span>M  <span class="number">33</span>% /boot</span><br><span class="line">/dev/ram0       <span class="number">6.4</span>G   <span class="number">33</span>M  <span class="number">6.3</span>G   <span class="number">1</span>% /var/lib/ceph/mem/ceph-<span class="number">0</span></span><br><span class="line">/dev/ram1       <span class="number">6.4</span>G   <span class="number">33</span>M  <span class="number">6.3</span>G   <span class="number">1</span>% /var/lib/ceph/mem/ceph-<span class="number">1</span></span><br><span class="line">/dev/ram2       <span class="number">6.4</span>G   <span class="number">33</span>M  <span class="number">6.3</span>G   <span class="number">1</span>% /var/lib/ceph/mem/ceph-<span class="number">2</span></span><br><span class="line">/dev/ram3       <span class="number">6.4</span>G   <span class="number">33</span>M  <span class="number">6.3</span>G   <span class="number">1</span>% /var/lib/ceph/mem/ceph-<span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h3 id="2、准备ceph的环境">2、准备ceph的环境</h3><p>修改deploy的ceph.conf文件，在部署前修改好<br>单机环境添加下面的三个<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">osd_crush_chooseleaf_<span class="built_in">type</span> = <span class="number">0</span></span><br><span class="line">osd_pool_default_size = <span class="number">2</span></span><br><span class="line">osd_journal = /var/lib/ceph/mem/<span class="variable">$cluster</span>-<span class="variable">$id</span>/journal</span><br></pre></td></tr></table></figure></p>
+<p>意思就不在这里介绍了</p>
+<h4 id="创建mon">创建mon</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ceph-deploy mon create lab8106</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment"># ceph-deploy gatherkeys lab8106</span></span><br></pre></td></tr></table></figure>
+<h4 id="创建osd">创建osd</h4><p>[root@lab8106 ceph]# ceph-deploy osd prepare lab8106:/dev/sdb1:/var/lib/ceph/mem/ceph-0/journal<br>[root@lab8106 ceph]# ceph-deploy osd activate lab8106:/dev/sdb1<br>部署完这个检查下<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># df -h</span></span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">……</span><br><span class="line">/dev/ram0       <span class="number">6.4</span>G  <span class="number">5.1</span>G  <span class="number">1.3</span>G  <span class="number">80</span>% /var/lib/ceph/mem/ceph-<span class="number">0</span></span><br><span class="line">/dev/ram1       <span class="number">6.4</span>G   <span class="number">33</span>M  <span class="number">6.3</span>G   <span class="number">1</span>% /var/lib/ceph/mem/ceph-<span class="number">1</span></span><br><span class="line">/dev/ram2       <span class="number">6.4</span>G   <span class="number">33</span>M  <span class="number">6.3</span>G   <span class="number">1</span>% /var/lib/ceph/mem/ceph-<span class="number">2</span></span><br><span class="line">/dev/ram3       <span class="number">6.4</span>G   <span class="number">33</span>M  <span class="number">6.3</span>G   <span class="number">1</span>% /var/lib/ceph/mem/ceph-<span class="number">3</span></span><br><span class="line">/dev/sdb1       <span class="number">280</span>G   <span class="number">34</span>M  <span class="number">280</span>G   <span class="number">1</span>% /var/lib/ceph/osd/ceph-<span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到内存盘分区内已经生成可一个5G的journal文件<br><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">[root<span class="annotation">@lab</span>8106 ceph]# ll <span class="regexp">/var/</span>lib<span class="regexp">/ceph/</span>osd/ceph-<span class="number">0</span></span><br><span class="line">total <span class="number">40</span></span><br><span class="line">……</span><br><span class="line">lrwxrwxrwx  <span class="number">1</span> root root   <span class="number">32</span> Jan <span class="number">14</span> <span class="number">10</span>:<span class="number">28</span> journal -&gt; <span class="regexp">/var/</span>lib<span class="regexp">/ceph/</span>mem<span class="regexp">/ceph-0/</span>journal</span><br></pre></td></tr></table></figure></p>
+<p>可以看到osd分区的也是链接到了内存盘，环境没问题</p>
+<h4 id="继续部署生效的三个osd">继续部署生效的三个osd</h4><p>部署完再次检查环境<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># df -h|grep ceph</span></span><br><span class="line">/dev/ram0       <span class="number">6.4</span>G  <span class="number">5.1</span>G  <span class="number">1.3</span>G  <span class="number">80</span>% /var/lib/ceph/mem/ceph-<span class="number">0</span></span><br><span class="line">/dev/ram1       <span class="number">6.4</span>G  <span class="number">5.1</span>G  <span class="number">1.3</span>G  <span class="number">80</span>% /var/lib/ceph/mem/ceph-<span class="number">1</span></span><br><span class="line">/dev/ram2       <span class="number">6.4</span>G  <span class="number">5.1</span>G  <span class="number">1.3</span>G  <span class="number">80</span>% /var/lib/ceph/mem/ceph-<span class="number">2</span></span><br><span class="line">/dev/ram3       <span class="number">6.4</span>G  <span class="number">5.1</span>G  <span class="number">1.3</span>G  <span class="number">80</span>% /var/lib/ceph/mem/ceph-<span class="number">3</span></span><br><span class="line">/dev/sdb1       <span class="number">280</span>G   <span class="number">34</span>M  <span class="number">280</span>G   <span class="number">1</span>% /var/lib/ceph/osd/ceph-<span class="number">0</span></span><br><span class="line">/dev/sdc1       <span class="number">280</span>G   <span class="number">34</span>M  <span class="number">280</span>G   <span class="number">1</span>% /var/lib/ceph/osd/ceph-<span class="number">1</span></span><br><span class="line">/dev/sdd1       <span class="number">280</span>G   <span class="number">34</span>M  <span class="number">280</span>G   <span class="number">1</span>% /var/lib/ceph/osd/ceph-<span class="number">2</span></span><br><span class="line">/dev/sde1       <span class="number">280</span>G   <span class="number">33</span>M  <span class="number">280</span>G   <span class="number">1</span>% /var/lib/ceph/osd/ceph-<span class="number">3</span></span><br></pre></td></tr></table></figure></p>
+<p>都挂载正确<br>检查集群的状态<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster <span class="number">68735617</span>-<span class="number">2</span>d30-<span class="number">4</span>a81-<span class="number">9865</span>-aeab3ea85e6e</span><br><span class="line">     health HEALTH_OK</span><br><span class="line">     monmap e1: <span class="number">1</span> mons at &#123;lab8106=<span class="number">192.168</span>.<span class="number">8.106</span>:<span class="number">6789</span>/<span class="number">0</span>&#125;</span><br><span class="line">            election epoch <span class="number">2</span>, quorum <span class="number">0</span> lab8106</span><br><span class="line">     osdmap e21: <span class="number">4</span> osds: <span class="number">4</span> up, <span class="number">4</span> <span class="keyword">in</span></span><br><span class="line">      pgmap v35: <span class="number">192</span> pgs, <span class="number">1</span> pools, <span class="number">0</span> bytes data, <span class="number">0</span> objects</span><br><span class="line">            <span class="number">136</span> MB used, <span class="number">1116</span> GB / <span class="number">1117</span> GB avail</span><br><span class="line">                 <span class="number">192</span> active+clean</span><br></pre></td></tr></table></figure></p>
+<p>环境部署完毕</p>
+<h3 id="开始测试">开始测试</h3><p>测试一：采用内存盘journal的方式<br>使用radosbench进行测试（采取默认的写，并且不删除的测试，尽量把内存写满，未进行任何调优）<br><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">[root<span class="annotation">@lab</span>8106 ceph]# rados bench -p rbd <span class="number">120</span> write --no-cleanup --run-name testmemdisk</span><br><span class="line">Total time <span class="string">run:</span>         <span class="number">120.568031</span></span><br><span class="line">Total writes <span class="string">made:</span>      <span class="number">5857</span></span><br><span class="line">Write <span class="string">size:</span>             <span class="number">4194304</span></span><br><span class="line">Bandwidth (MB/sec):     <span class="number">194.314</span> </span><br><span class="line"></span><br><span class="line">Stddev <span class="string">Bandwidth:</span>       <span class="number">144.18</span></span><br><span class="line">Max bandwidth (MB/sec): <span class="number">504</span></span><br><span class="line">Min bandwidth (MB/sec): <span class="number">0</span></span><br><span class="line">Average <span class="string">Latency:</span>        <span class="number">0.329322</span></span><br><span class="line">Stddev <span class="string">Latency:</span>         <span class="number">0.48777</span></span><br><span class="line">Max <span class="string">latency:</span>            <span class="number">3.01612</span></span><br><span class="line">Min <span class="string">latency:</span>            <span class="number">0.0377235</span></span><br></pre></td></tr></table></figure></p>
+<p>测试二：采用默认的磁盘journal的方式，环境恢复要原始的情况<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># rados bench -p rbd 120 write --no-cleanup --run-name testmemdisk</span></span><br><span class="line">Total time run:         <span class="number">120.613851</span></span><br><span class="line">Total writes made:      <span class="number">3404</span></span><br><span class="line">Write size:             <span class="number">4194304</span></span><br><span class="line">Bandwidth (MB/sec):     <span class="number">112.889</span> </span><br><span class="line"></span><br><span class="line">Stddev Bandwidth:       <span class="number">26.3641</span></span><br><span class="line">Max bandwidth (MB/sec): <span class="number">160</span></span><br><span class="line">M<span class="keyword">in</span> bandwidth (MB/sec): <span class="number">0</span></span><br><span class="line">Average Latency:        <span class="number">0.566656</span></span><br><span class="line">Stddev Latency:         <span class="number">0.305038</span></span><br><span class="line">Max latency:            <span class="number">2.00623</span></span><br><span class="line">M<span class="keyword">in</span> latency:            <span class="number">0.105026</span></span><br></pre></td></tr></table></figure></p>
+<p>测试的结果如上，上表格也许看的更直观，正好之前在找一个表格插件，现在用用</p>
+<h3 id="内存盘journal与磁盘journal性能对比">内存盘journal与磁盘journal性能对比</h3><p></p><p><link rel="stylesheet" href="http://mypic.cn-bj.ufileos.com/compareninja%2Fskin.css" type="text/css"></p><div id="tableWrapper" style="width: 100%; "><table id="vsTable"><tbody><tr><td class="cat title" style="width: 20%; "></td><td class="title" style="width: 40%; "><div class="">内存盘journal</div></td><td class="title" style="width: 40%; "><div class="">磁盘journal</div></td></tr><tr class="second"><td class="cat" style="width: 20%; "><div class="">测试时间(s)</div></td><td style="width: 40%; "><div class="">120.568031</div></td><td style="width: 40%; "><div class="">120.613851</div></td></tr><tr><td class="cat" style="width: 20%; "><div class="">写数据块数</div></td><td style="width: 40%; "><div class="">5857</div></td><td style="width: 40%; "><div class="">3404</div></td></tr><tr><td class="cat" style="width: 20%; "><div class="">总共写入数据(MB)</div></td><td style="width: 40%; "><div class="">23428</div></td><td style="width: 40%; "><div class="">13616</div></td></tr><tr><td class="cat" style="width: 20%; "><div class="">数据块大小</div></td><td style="width: 40%; "><div class="">4194304</div></td><td style="width: 40%; "><div class="">4194304</div></td></tr><tr class="second"><td class="cat" style="width: 20%; "><div class="">写带宽(MB/sec)</div></td><td style="width: 40%; "><div class="">194.314</div></td><td style="width: 40%; "><div class="">112.889</div></td></tr><tr><td class="cat" style="width: 20%; "><div class="">带宽标准偏差</div></td><td style="width: 40%; "><div class="">144.18</div></td><td style="width: 40%; "><div class="">26.3641</div></td></tr><tr class="second"><td class="cat" style="width: 20%; "><div class="">最大带宽(MB/sec)</div></td><td style="width: 40%; "><div class="">504</div></td><td style="width: 40%; "><div class="">160</div></td></tr><tr><td class="cat" style="width: 20%; "><div class="">平均延时</div></td><td style="width: 40%; "><div class="">0.32932</div></td><td style="width: 40%; "><div class="">0.566656</div></td></tr><tr class="second"><td class="cat" style="width: 20%; "><div class="">延时偏差</div></td><td style="width: 40%; "><div class="">0.48777</div></td><td style="width: 40%; "><div class="">0.305038</div></td></tr><tr class="second"><td class="cat" style="width: 20%; "><div class="">最大延时</div></td><td style="width: 40%; "><div class="">3.01612</div></td><td style="width: 40%; "><div class="">2.00623</div></td></tr><tr class="second"><td class="cat" style="width: 20%; "><div class="">最小延时</div></td><td style="width: 40%; "><div class="">0.0377235</div></td><td style="width: 40%; "><div class="">0.105026</div></td></tr></tbody></table></div><p></p>
+<p>可以看到相关数据，光写带宽就提升了接近一倍，这个是因为，在磁盘journal情况下，写入journal的同时还有filestore的数据写入，相当于同时有两个写入在磁盘上，磁盘的性能自然只有一半了</p>
+<p>以上就是关于journal的内存盘实现，这里面还会面临着其他的问题</p>
+<ul>
+<li>机器内存的占用问题</li>
+<li>断电后的处理</li>
+<li>同时断电是否会搞坏pg状态</li>
+<li>搞坏的情况是否能恢复</li>
+</ul>
+<p>如果解决了这些问题，这个不失为一种性能提升的方案，毕竟内存的成本和速度是ssd的磁盘和单独磁盘journal不能比的，journal本身也是一种循环的写入的空间</p>
+<h2 id="增加知识（/dev/shm模式）">增加知识（/dev/shm模式）</h2><p>上面的通过memdisk的方式是可以，还有更方便的方式就是直接用内存路径，需要处理几个地方，我们来看下怎么处理</p>
+<p>首先修改配置文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">osd_journal =/dev/shm/<span class="variable">$cluster</span>-<span class="variable">$id</span>/journal</span><br><span class="line">journal dio = <span class="literal">false</span></span><br><span class="line">journal aio = <span class="literal">false</span></span><br></pre></td></tr></table></figure></p>
+<p>增加这三个选项，否则会失败，这个是因为在内存这个路径下用文件的时候是无法满足默认的dio,和aio选项的，会造成无法生成journal文件，生成的journal的文件的大小为0，无法成功</p>
+<p>假如我们给osd.5替换journal，我们看下操作步骤<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph-<span class="number">5</span>]<span class="comment"># mkdir /dev/shm/ceph-5</span></span><br><span class="line">[root@lab8106 ceph-<span class="number">5</span>]<span class="comment"># chown ceph:ceph /dev/shm/ceph-5</span></span><br></pre></td></tr></table></figure></p>
+<p>创建目录并且修改权限<br>修改fsid<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph-<span class="number">5</span>]<span class="comment"># cat fsid </span></span><br><span class="line">f66832a7-<span class="number">6</span>bd0-<span class="number">4</span>eef<span class="operator">-a</span>538-<span class="number">15</span>ba2404243f</span><br></pre></td></tr></table></figure></p>
+<p>这个fsid是用来校验journal的<br>而内存的uuid为<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph-<span class="number">5</span>]<span class="comment">#ceph-osd -i 7 --get-journal-uuid --osd-journal /dev/shm/ceph-7/journal</span></span><br><span class="line"><span class="number">00000000</span>-<span class="number">0000</span>-<span class="number">0000</span>-<span class="number">0000</span>-<span class="number">000000000000</span></span><br></pre></td></tr></table></figure></p>
+<p>所以修改这个文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="number">00000000</span>-<span class="number">0000</span>-<span class="number">0000</span>-<span class="number">0000</span>-<span class="number">000000000000</span> &gt; fsid</span><br></pre></td></tr></table></figure></p>
+<p>创建journal<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ceph-<span class="number">5</span>]<span class="comment"># ceph-osd -i 5 --mkjournal --setuser ceph --setgroup ceph --debug_ms 20 --debug_osd 20</span></span><br><span class="line"><span class="number">2017</span>-<span class="number">01</span>-<span class="number">20</span> <span class="number">10</span>:<span class="number">58</span>:<span class="number">22.297737</span> <span class="number">7</span>f0f1a75a800 -<span class="number">1</span> created new journal /dev/shm/ceph-<span class="number">5</span>/journal <span class="keyword">for</span> object store /var/lib/ceph/osd/ceph-<span class="number">5</span></span><br><span class="line">[root@lab8106 ceph-<span class="number">5</span>]<span class="comment"># ll /dev/shm/ceph-5/journal</span></span><br><span class="line">-rw-r--r-- <span class="number">1</span> ceph ceph <span class="number">1073741824</span> Jan <span class="number">20</span> <span class="number">10</span>:<span class="number">58</span> /dev/shm/ceph-<span class="number">5</span>/journal</span><br></pre></td></tr></table></figure></p>
+<p>启动osd就可以了</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2016-01-14</td>
+</tr>
+<tr>
+<td style="text-align:center">增加/dev/shm/路径模式</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2017-01-20</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/14/ceph单机多mon的实现/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ceph单机多mon的实现
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/14/centos7下做内存盘的方法/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">centos7下做内存盘的方法</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'ceph使用memdisk做journal',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

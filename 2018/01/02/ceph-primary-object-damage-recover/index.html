@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ceph对象主本损坏的修复方法 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言问题的触发是在进行一个目录的查询的时候，osd就会挂掉，开始以为是osd操作超时了，后来发现每次访问这个对象都有问题log [WRN] ： slow request 60.793196 seconds old, received at osd_op(mds.0.188:728345234100006c6ddc.00000000 [o map-get-header 0-0,omap-get-va">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph对象主本损坏的修复方法">
+<meta property="og:url" content="http://www.zphj1987.com/2018/01/02/ceph-primary-object-damage-recover/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言问题的触发是在进行一个目录的查询的时候，osd就会挂掉，开始以为是osd操作超时了，后来发现每次访问这个对象都有问题log [WRN] ： slow request 60.793196 seconds old, received at osd_op(mds.0.188:728345234100006c6ddc.00000000 [o map-get-header 0-0,omap-get-va">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/dog.jpg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ceph对象主本损坏的修复方法">
+<meta name="twitter:description" content="前言问题的触发是在进行一个目录的查询的时候，osd就会挂掉，开始以为是osd操作超时了，后来发现每次访问这个对象都有问题log [WRN] ： slow request 60.793196 seconds old, received at osd_op(mds.0.188:728345234100006c6ddc.00000000 [o map-get-header 0-0,omap-get-va">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ceph-primary-object-damage-recover" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/02/ceph-primary-object-damage-recover/" class="article-date">
+  	<time datetime="2018-01-02T14:21:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ceph对象主本损坏的修复方法
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/dog.jpg" alt="dog"><br></center>
+
+<h2 id="前言">前言</h2><p>问题的触发是在进行一个目录的查询的时候，osd就会挂掉，开始以为是osd操作超时了，后来发现每次访问这个对象都有问题<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">log</span> [WRN] ： slow request <span class="number">60.793196</span> seconds old, received at osd_op(mds.<span class="number">0.188</span>:<span class="number">728345234100006</span>c6ddc.<span class="number">00000000</span> [o map-get-header <span class="number">0</span>-<span class="number">0</span>,omap-get-vals <span class="number">0</span>~<span class="number">16</span>,getxattr parent] snapc <span class="number">0</span>=[] ack+<span class="built_in">read</span>+known_<span class="keyword">if</span>_redirected+full_force e218901) currently started</span><br><span class="line">heartbeat_map is_healthy  ··· osd_op_tp thread ··· had timed out after <span class="number">60</span></span><br></pre></td></tr></table></figure></p>
+<p>这个对象是元数据的一个空对象，保留数据在扩展属性当中<br><a id="more"></a><br>然后做了一个操作判断是对象损坏了:</p>
+<p>直接列取omapkeys</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rados -p metadata listomapvals <span class="number">100006</span>c6ddc.<span class="number">00000000</span></span><br></pre></td></tr></table></figure>
+<p>发现会卡住，然后关闭这个osd再次做操作，就可以了，启动后还是不行，这里可以判断是主本的对象已经有问题了，本篇将讲述多种方法来解决这个问题</p>
+<h2 id="处理办法">处理办法</h2><p>本章将会根据操作粒度的不同来讲述三种方法的恢复，根据自己的实际情况，和风险的判断来选择自己的操作</p>
+<h3 id="方法一：通过repair修复">方法一：通过repair修复</h3><p>首先能确定是主本损坏了，那么先把主本的对象进行一个备份，然后移除<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># systemctl stop ceph-osd@0</span></span><br><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># cp -ra 100.00000000__head_C5265AB3__2 ../../</span></span><br></pre></td></tr></table></figure></p>
+<p>通过ceph-object-tool进行移除的时候有bug,无法移除metadata的对象，已经提了一个<a href="http://tracker.ceph.com/issues/22553" target="_blank" rel="external">bug</a><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># mv 100.00000000__head_C5265AB3__2 ../</span></span><br></pre></td></tr></table></figure></p>
+<p>注意一下在老版本的时候，对对象进行删除以后，可能元数据里面记录了对象信息，而对象又不在的时候可能会引起osd无法启动，这个在10.2.10是没有这个问题</p>
+<p>重启osd<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># systemctl restart ceph-osd@0</span></span><br></pre></td></tr></table></figure></p>
+<p>对pg做scrub<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># ceph pg scrub 2.0</span></span><br><span class="line">instructing pg <span class="number">2.0</span> on osd.<span class="number">0</span> to scrub</span><br></pre></td></tr></table></figure></p>
+<p>这种方法就是需要做scrub的操作，如果对象特别多，并且是线上环境，可能不太好去做scrub的操作<br>检查状态<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster <span class="number">03580</span>f14-<span class="number">9906</span>-<span class="number">4257</span>-<span class="number">9182</span>-<span class="number">65</span>c886e7f5a7</span><br><span class="line">     health HEALTH_ERR</span><br><span class="line">            <span class="number">1</span> pgs inconsistent</span><br><span class="line">            <span class="number">1</span> scrub errors</span><br><span class="line">            too few PGs per OSD (<span class="number">3</span> &lt; min <span class="number">30</span>)</span><br><span class="line">     monmap e1: <span class="number">1</span> mons at &#123;lab71=<span class="number">20.20</span>.<span class="number">20.71</span>:<span class="number">6789</span>/<span class="number">0</span>&#125;</span><br><span class="line">            election epoch <span class="number">4</span>, quorum <span class="number">0</span> lab71</span><br><span class="line">      fsmap e30: <span class="number">1</span>/<span class="number">1</span>/<span class="number">1</span> up &#123;<span class="number">0</span>=lab71=up:active&#125;</span><br><span class="line">     osdmap e101: <span class="number">2</span> osds: <span class="number">2</span> up, <span class="number">2</span> <span class="keyword">in</span></span><br><span class="line">            flags sortbitwise,require_jewel_osds</span><br><span class="line">      pgmap v377: <span class="number">3</span> pgs, <span class="number">3</span> pools, <span class="number">100814</span> bytes data, <span class="number">41</span> objects</span><br><span class="line">            <span class="number">70196</span> kB used, <span class="number">189</span> GB / <span class="number">189</span> GB avail</span><br><span class="line">                   <span class="number">2</span> active+clean</span><br><span class="line">                   <span class="number">1</span> active+clean+inconsistent</span><br></pre></td></tr></table></figure></p>
+<p>发起修复请求<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># ceph pg repair 2.0</span></span><br><span class="line">instructing pg <span class="number">2.0</span> on osd.<span class="number">0</span> to repair</span><br></pre></td></tr></table></figure></p>
+<p>修复完成后检查集群状态和对象，到这里可以恢复正常了</p>
+<h3 id="方法二：通过rsync拷贝数据方式恢复">方法二：通过rsync拷贝数据方式恢复</h3><p>跟上面一样这里首先能确定是主本损坏了，那么先把主本的对象进行一个备份，然后移除<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># systemctl stop ceph-osd@0</span></span><br><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># cp -ra 100.00000000__head_C5265AB3__2 ../../</span></span><br></pre></td></tr></table></figure></p>
+<p>移除对象<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># mv 100.00000000__head_C5265AB3__2 ../</span></span><br></pre></td></tr></table></figure></p>
+<p>在副本的机器上执行rsync命令，这里我们直接从副本拷贝对象过来，注意下不能直接使用scp会掉扩展属性<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab72 <span class="number">2.0</span>_head]<span class="comment"># rsync  -avXH  /var/lib/ceph/osd/ceph-1/current/2.0_head/100.00000000__head_C5265AB3__2 20.20.20.71:/var/lib/ceph/osd/ceph-0/current/2.0_head/100.00000000__head_C5265AB3__2</span></span><br></pre></td></tr></table></figure></p>
+<p>在主本机器检查扩展属性<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># getfattr 100.00000000__head_C5265AB3__2 </span></span><br><span class="line"><span class="comment"># file: 100.00000000__head_C5265AB3__2</span></span><br><span class="line">user.ceph._</span><br><span class="line">user.ceph._@<span class="number">1</span></span><br><span class="line">user.ceph.snapset</span><br><span class="line">user.cephos.spill_out</span><br></pre></td></tr></table></figure></p>
+<p>重启osd<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># systemctl restart ceph-osd@0</span></span><br></pre></td></tr></table></figure></p>
+<p>检查对象的扩展属性<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># rados -p metadata listomapvals 100.00000000</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="方法三：通过删除PG的方式恢复">方法三：通过删除PG的方式恢复</h3><p>这个方式是删除PG，然后重新启动的方式<br>这种方式操作比较危险，所以提前备份好pg的数据，最好主备pg都备份下，万一出了问题或者数据不对，可以根据需要再导入<br>备份PG<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph-objectstore-tool --pgid <span class="number">2.0</span> --op <span class="built_in">export</span> --data-path /var/lib/ceph/osd/ceph-<span class="number">0</span>/ --journal-path   /var/lib/ceph/osd/ceph-<span class="number">0</span>/journal --file /root/<span class="number">2.0</span></span><br></pre></td></tr></table></figure></p>
+<p>删除PG的操作<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 current]<span class="comment"># ceph-objectstore-tool --pgid 2.0  --op remove --data-path /var/lib/ceph/osd/ceph-0/ --journal-path /var/lib/ceph/osd/ceph-0/journal</span></span><br><span class="line">SG_IO: bad/missing sense data, sb[]:  <span class="number">70</span> <span class="number">00</span> <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">0</span>a <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> <span class="number">00</span> <span class="number">00</span> c0 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line">SG_IO: bad/missing sense data, sb[]:  <span class="number">70</span> <span class="number">00</span> <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">0</span>a <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> <span class="number">00</span> <span class="number">00</span> c0 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line"> marking collection <span class="keyword">for</span> removal</span><br><span class="line">setting <span class="string">'_remove'</span> omap key</span><br><span class="line">finish_remove_pgs <span class="number">2.0</span>_head removing <span class="number">2.0</span></span><br><span class="line">Remove successful</span><br></pre></td></tr></table></figure></p>
+<p>重启osd<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 current]<span class="comment"># systemctl restart ceph-osd@0</span></span><br></pre></td></tr></table></figure></p>
+<p>等待回复即可</p>
+<p>本方法里面还可以衍生一种就是，通过导出的副本的PG数据,在主本删除了相应的PG以后,进行导入的方法，这样就不会产生迁移<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 current]<span class="comment">#  ceph-objectstore-tool --pgid 2.0  --op import --data-path /var/lib/ceph/osd/ceph-0/ --journal-path /var/lib/ceph/osd/ceph-0/journal --file /root/2.0</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="总结">总结</h2><p>上面用三种方法来实现了副本向主本同步的操作，判断主本是否有问题的方法就是主动的把主本所在的OSD停掉，然后检查请求是否可达，在确定主本已经坏掉的情况下，就可以做将副本同步到主本的操作，可以根据PG的对象的多少来选择需要做哪种操作</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2018-01-02</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/01/05/Kernel-RBD-QOS/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Kernel RBD的QOS配置方案
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/12/04/mds-use-too-more-cpu/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">mds的cpu占用问题分析以及解决办法</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'Ceph对象主本损坏的修复方法',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

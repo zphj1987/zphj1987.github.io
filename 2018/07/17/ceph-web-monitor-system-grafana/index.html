@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>快速构建ceph可视化监控系统 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言ceph的可视化方案很多，本篇介绍的是比较简单的一种方式，并且对包都进行了二次封装，所以能够在极短的时间内构建出一个可视化的监控系统
+本系统组件如下：
+
+ceph-jewel版本
+ceph_exporter的jewel版本
+prometheus的2.3.2版本
+grafana的grafana-5.2.1版本
+Ceph grafana的插件- Clusterby Cristian Calin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速构建ceph可视化监控系统">
+<meta property="og:url" content="http://www.zphj1987.com/2018/07/17/ceph-web-monitor-system-grafana/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言ceph的可视化方案很多，本篇介绍的是比较简单的一种方式，并且对包都进行了二次封装，所以能够在极短的时间内构建出一个可视化的监控系统
+本系统组件如下：
+
+ceph-jewel版本
+ceph_exporter的jewel版本
+prometheus的2.3.2版本
+grafana的grafana-5.2.1版本
+Ceph grafana的插件- Clusterby Cristian Calin">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/488o6i5pn327d8udgrcpoilx/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/g84qk6x6qye3zjtlninfwrwm/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/cr0jun59v0gwbhee1mq3ixmw/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/c3czhtv5l7mml4hb6c4ztkvd/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/kdunzb3s3hz7u0tkri3ntzzw/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/p2oec87wp1fszlldq1lrdkri/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/4gxwmkfkmr2do4g9v58x1kve/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/iah7t9cud3bnponoddq3iv9q/image.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/488o6i5pn327d8udgrcpoilx/image.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="快速构建ceph可视化监控系统">
+<meta name="twitter:description" content="前言ceph的可视化方案很多，本篇介绍的是比较简单的一种方式，并且对包都进行了二次封装，所以能够在极短的时间内构建出一个可视化的监控系统
+本系统组件如下：
+
+ceph-jewel版本
+ceph_exporter的jewel版本
+prometheus的2.3.2版本
+grafana的grafana-5.2.1版本
+Ceph grafana的插件- Clusterby Cristian Calin">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ceph-web-monitor-system-grafana" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/07/17/ceph-web-monitor-system-grafana/" class="article-date">
+  	<time datetime="2018-07-17T10:50:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      快速构建ceph可视化监控系统
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://static.zybuluo.com/zphj1987/488o6i5pn327d8udgrcpoilx/image.png" alt="granfa"><br></center>
+
+<h2 id="前言">前言</h2><p>ceph的可视化方案很多，本篇介绍的是比较简单的一种方式，并且对包都进行了二次封装，所以能够在极短的时间内构建出一个可视化的监控系统</p>
+<p>本系统组件如下：</p>
+<ul>
+<li>ceph-jewel版本</li>
+<li>ceph_exporter的jewel版本</li>
+<li>prometheus的2.3.2版本</li>
+<li>grafana的grafana-5.2.1版本</li>
+<li>Ceph grafana的插件- Clusterby Cristian Calin</li>
+</ul>
+<p>适配的系统为centos7</p>
+<p>资源如下：</p>
+<blockquote>
+<p><a href="http://static.zybuluo.com/zphj1987/jiwx305b8q1hwc5uulo0z7ft/ceph_exporter-2.0.0-1.x86_64.rpm" target="_blank" rel="external">http://static.zybuluo.com/zphj1987/jiwx305b8q1hwc5uulo0z7ft/ceph_exporter-2.0.0-1.x86_64.rpm</a><br><a href="http://static.zybuluo.com/zphj1987/1nu2k4cpcery94q2re3u6s1t/ceph-cluster_rev1.json" target="_blank" rel="external">http://static.zybuluo.com/zphj1987/1nu2k4cpcery94q2re3u6s1t/ceph-cluster_rev1.json</a><br><a href="http://static.zybuluo.com/zphj1987/7ro7up6r03kx52rkwy1qjuwm/prometheus-2.3.2-1.x86_64.rpm" target="_blank" rel="external">http://static.zybuluo.com/zphj1987/7ro7up6r03kx52rkwy1qjuwm/prometheus-2.3.2-1.x86_64.rpm</a><br><a href="http://mysrc.cn-bj.ufileos.com/grafana-5.2.1-1.x86_64.rpm" target="_blank" rel="external">http://mysrc.cn-bj.ufileos.com/grafana-5.2.1-1.x86_64.rpm</a></p>
+</blockquote>
+<p>以上资源均可以直接用wget进行下载，然后直接安装</p>
+<a id="more"></a>
+<h2 id="监控的架构介绍">监控的架构介绍</h2><p>通过ceph_exporter抓取的ceph相关的数据并且在本地监听端口9128端口</p>
+<p>prometheus抓取ceph_exporter的9128的端口的数据存储在本地的/var/lib/prometheus/目录下面</p>
+<p>grafana抓取prometheus的数据进行渲染成web页面</p>
+<p>页面的模板就是使用的grafana的ceph模板插件</p>
+<p>那么我们就根据上面的架构去一步步的把系统配置起来</p>
+<h2 id="配置监控系统">配置监控系统</h2><h3 id="安装ceph_exporter">安装ceph_exporter</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 install]<span class="comment"># wget http://static.zybuluo.com/zphj1987/jiwx305b8q1hwc5uulo0z7ft/ceph_exporter-2.0.0-1.x86_64.rpm</span></span><br><span class="line">[root@lab101 install]<span class="comment"># rpm -qpl ceph_exporter-2.0.0-1.x86_64.rpm </span></span><br><span class="line">/usr/bin/ceph_exporter</span><br><span class="line">/usr/lib/systemd/system/ceph_exporter.service</span><br><span class="line">[root@lab101 install]<span class="comment"># rpm -ivh ceph_exporter-2.0.0-1.x86_64.rpm </span></span><br><span class="line">Preparing...                          <span class="comment">################################# [100%]</span></span><br><span class="line">Updating / installing...</span><br><span class="line">   <span class="number">1</span>:ceph_exporter-<span class="number">2</span>:<span class="number">2.0</span>.<span class="number">0</span>-<span class="number">1</span>          <span class="comment">################################# [100%]</span></span><br><span class="line">[root@lab101 install]<span class="comment"># systemctl start ceph_exporter</span></span><br><span class="line">[root@lab101 install]<span class="comment"># systemctl enable ceph_exporter</span></span><br><span class="line">[root@lab101 install]<span class="comment"># netstat -tunlp|grep 9128</span></span><br><span class="line">tcp6       <span class="number">0</span>      <span class="number">0</span> :::<span class="number">9128</span>                 :::*                    LISTEN      <span class="number">35853</span>/ceph_exporter</span><br></pre></td></tr></table></figure>
+<p>可以看到端口起来了就是安装成功了，这个ceph_exporter建议是安装在管理节点上，也就是能够执行出ceph -s的节点上面的</p>
+<h3 id="安装prometheus">安装prometheus</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 install]<span class="comment">#  wget http://static.zybuluo.com/zphj1987/7ro7up6r03kx52rkwy1qjuwm/prometheus-2.3.2-1.x86_64.rpm</span></span><br><span class="line">[root@lab101 install]<span class="comment"># rpm -qpl prometheus-2.3.2-1.x86_64.rpm </span></span><br><span class="line">/etc/ceph/prometheus.yml</span><br><span class="line">/usr/bin/prometheus</span><br><span class="line">/usr/lib/systemd/system/prometheus.service</span><br><span class="line">[root@lab101 install]<span class="comment"># rpm -ivh prometheus-2.3.2-1.x86_64.rpm </span></span><br><span class="line">Preparing...                          <span class="comment">################################# [100%]</span></span><br><span class="line">Updating / installing...</span><br><span class="line">   <span class="number">1</span>:prometheus-<span class="number">2</span>:<span class="number">2.3</span>.<span class="number">2</span>-<span class="number">1</span>             <span class="comment">################################# [100%]</span></span><br><span class="line">[root@lab101 install]<span class="comment"># systemctl start prometheus</span></span><br><span class="line">[root@lab101 install]<span class="comment"># netstat -tunlp|grep 9090</span></span><br><span class="line">tcp6       <span class="number">0</span>      <span class="number">0</span> :::<span class="number">9090</span>                 :::*                    LISTEN      <span class="number">36163</span>/prometheus</span><br></pre></td></tr></table></figure>
+<p>这个地方默认是认为prometheus和ceph_exporter在一台机器上面，所以配置文件的/etc/ceph/prometheus.yml里面的targets写的是127.0.0.1，根据需要修改成ceph_exporter的ip地址即可</p>
+<p>prometheus的默认监听端口为9090，到这个时候直接去web 上面就可以看到prometheus的抓取的数据了</p>
+<p><img src="http://static.zybuluo.com/zphj1987/g84qk6x6qye3zjtlninfwrwm/image.png" alt="prometheus"></p>
+<p>到这里是数据到prometheus的已经完成了，下面就去做跟grafana相关的配置了</p>
+<h3 id="安装grafana">安装grafana</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 install]<span class="comment"># wget http://mysrc.cn-bj.ufileos.com/grafana-5.2.1-1.x86_64.rpm</span></span><br><span class="line">[root@lab101 install]<span class="comment"># yum localinstall grafana-5.2.1-1.x86_64.rpm</span></span><br><span class="line">[root@lab101 install]<span class="comment"># systemctl start grafana-server.service</span></span><br><span class="line">[root@lab101 install]<span class="comment"># netstat -tunlp|grep gra</span></span><br><span class="line">Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    </span><br><span class="line">tcp6       <span class="number">0</span>      <span class="number">0</span> :::<span class="number">3000</span>                 :::*                    LISTEN      <span class="number">36730</span>/grafana-serve</span><br></pre></td></tr></table></figure>
+<p>grafana默认监听的3000的端口</p>
+<p><img src="http://static.zybuluo.com/zphj1987/cr0jun59v0gwbhee1mq3ixmw/image.png" alt="grafanalogin"><br>默认登陆的用户名密码为admin admin,登陆成功后会强制修改密码</p>
+<h3 id="配置grafana">配置grafana</h3><p><img src="http://static.zybuluo.com/zphj1987/c3czhtv5l7mml4hb6c4ztkvd/image.png" alt="add sour"><br>首先增加数据源<br><img src="http://static.zybuluo.com/zphj1987/kdunzb3s3hz7u0tkri3ntzzw/image.png" alt="配置9090"><br><img src="http://static.zybuluo.com/zphj1987/p2oec87wp1fszlldq1lrdkri/image.png" alt="import"></p>
+<p><img src="http://static.zybuluo.com/zphj1987/4gxwmkfkmr2do4g9v58x1kve/image.png" alt="image.png-97.2kB"></p>
+<p><img src="http://static.zybuluo.com/zphj1987/iah7t9cud3bnponoddq3iv9q/image.png" alt="image.png-96.2kB"></p>
+<p>这里如果能上网就直接输入id 917 ，如果不能上网就把上面的ceph-cluster_rev1.json文件弄到本地去，导入进去即可</p>
+<p><img src="http://static.zybuluo.com/zphj1987/488o6i5pn327d8udgrcpoilx/image.png" alt="granfa"></p>
+<p>到这里就完成了配置了</p>
+<h2 id="总结">总结</h2><p>以上为了方便都把相关的软件做成了rpm包，从安装方便角度来看，grafana，ceph_exporter，还有prometheus都采用的是单二进制文件的方式，稍微组合一下大大的降低了部署难度，比如那个ceph_exporter需要用go进行编译，封好包以后就不需要这个过程，并且接口因为有版本的限制，所以这样直接对应版本安装也避免了出错</p>
+<p>本篇的环境所述均为jewel适配版本</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2018-07-17</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/08/19/show-useage-for-cephfs-pool/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          cephfs根据存储池显示df容量
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/27/use-s3-test-to-ceph-compatibility-tests/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">利用s3-test进行ceph的接口兼容性测试</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '快速构建ceph可视化监控系统',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

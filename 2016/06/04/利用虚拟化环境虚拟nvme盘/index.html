@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>利用虚拟化环境虚拟nvme盘 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前情介绍SPDKSPDK的全称为Storage Performance Development Kit ，是Intel发起的一个开源驱动项目，这个是一个开发套件，可以让应用程序在用户态去访问存储资源，具体做能做什么可以去官网看一下 SPDK官网
+NVMENVMe其实与AHCI一样都是逻辑设备接口标准，NVMe全称Non-Volatile Memory Express，非易失性存储器标准，是使用PC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用虚拟化环境虚拟nvme盘">
+<meta property="og:url" content="http://www.zphj1987.com/2016/06/04/利用虚拟化环境虚拟nvme盘/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前情介绍SPDKSPDK的全称为Storage Performance Development Kit ，是Intel发起的一个开源驱动项目，这个是一个开发套件，可以让应用程序在用户态去访问存储资源，具体做能做什么可以去官网看一下 SPDK官网
+NVMENVMe其实与AHCI一样都是逻辑设备接口标准，NVMe全称Non-Volatile Memory Express，非易失性存储器标准，是使用PC">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/nc79igpyb1hgxny09d5w9nk0/nvmedisk.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/8klt54xfe4w05mdkr41rspwk/lspci.png">
+<meta property="og:image" content="http://static.zybuluo.com/zphj1987/fi2557g55ucsdpyblopyfudl/newpay.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用虚拟化环境虚拟nvme盘">
+<meta name="twitter:description" content="前情介绍SPDKSPDK的全称为Storage Performance Development Kit ，是Intel发起的一个开源驱动项目，这个是一个开发套件，可以让应用程序在用户态去访问存储资源，具体做能做什么可以去官网看一下 SPDK官网
+NVMENVMe其实与AHCI一样都是逻辑设备接口标准，NVMe全称Non-Volatile Memory Express，非易失性存储器标准，是使用PC">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-利用虚拟化环境虚拟nvme盘" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/04/利用虚拟化环境虚拟nvme盘/" class="article-date">
+  	<time datetime="2016-06-03T16:02:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-04</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      利用虚拟化环境虚拟nvme盘
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前情介绍">前情介绍</h2><h3 id="SPDK">SPDK</h3><p>SPDK的全称为Storage Performance Development Kit ，是Intel发起的一个开源驱动项目，这个是一个开发套件，可以让应用程序在用户态去访问存储资源，具体做能做什么可以去官网看一下 <a href="https://software.intel.com/en-us/articles/introduction-to-the-storage-performance-development-kit-spdk" target="_blank" rel="external">SPDK官网</a></p>
+<h3 id="NVME">NVME</h3><p>NVMe其实与AHCI一样都是逻辑设备接口标准，NVMe全称Non-Volatile Memory Express，非易失性存储器标准，是使用PCI-E通道的SSD一种规范，NVMe的设计之初就有充分利用到PCI-E SSD的低延时以及并行性，还有当代处理器、平台与应用的并行性。SSD的并行性可以充分被主机的硬件与软件充分利用，相比与现在的AHCI标准，NVMe标准可以带来多方面的性能提升。</p>
+<h3 id="Bluestore">Bluestore</h3><p>BlueStore 是用来存储ceph的数据的地方，提供了一种在块设备上直接写入方式的存储。这个是因为之前ceph社区尝试做了一个kvstore，但是性能达不到想要的效果，然后基于rocksdb的原型，重新开发了一套存储系统，BlueStore直接消耗原始分区。还有一个分区是存储元数据的，实际上就是一个RocksDB键/值数据库存储，这个比之前的filestore最大的优势就是去掉了journal，从而提供了更平滑的IO</p>
+<a id="more"></a>
+<h3 id="SPDK+NVME+Bluestore能产生什么化学反应">SPDK+NVME+Bluestore能产生什么化学反应</h3><p>目前这一块走的比较前沿的就是xsky了，这块的最初的推动力量是Intel，NVME的硬件的推出，需要一个很好的催化剂，传统的内核中断式的访问磁盘的方式，已经不能最大化发挥NVME的性能了，因此推出了SPDK的套件，可以在用户态的去访问磁盘数据，Bluestore按照这个标准就可以去以最大化的跑出磁盘的性能了，从而给上层提供一个非常强悍的IO性能，目前来说这几项都是很新的东西，如果没有特别强的技术，或者找Intel做技术支持话，用好还是需要再等一段时间</p>
+<h2 id="开篇">开篇</h2><h3 id="本篇文章做什么">本篇文章做什么</h3><p>之前有篇文章已经实现了bluestore的配置，这个配置并不难，并且用普通的硬盘就能实现，这里是讲怎么弄出来NVME磁盘，因为NVME的磁盘很贵，并不是每个人都能有环境的，这里是用虚拟化的方式虚拟出nvme，以供以后进行相关的功能验证</p>
+<h3 id="准备工作">准备工作</h3><p>准备好kvm虚拟化的环境，这个地方就不在这里赘述了，本环境采用的是ubuntu的宿主机，如果是centos需要另做改动，如果有需要欢迎留言</p>
+<h3 id="安装操作系统">安装操作系统</h3><h4 id="创建两个磁盘">创建两个磁盘</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">qemu-img create <span class="operator">-f</span> raw /mnt/localdisk.raw  <span class="number">40</span>G</span><br><span class="line">qemu-img create <span class="operator">-f</span> raw  /mnt/nvme.raw <span class="number">50</span>G</span><br></pre></td></tr></table></figure>
+<h4 id="执行安装操作系统">执行安装操作系统</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">virt-install --name nvmetest --ram <span class="number">4096</span> --vcpus=<span class="number">2</span> --disk path=/mnt/localdisk.raw --network bridge=br0 --cdrom /mnt/CentOS-<span class="number">7</span>-x86_64-DVD-<span class="number">1503</span>-<span class="number">01</span>.iso --vnclisten=<span class="number">192.168</span>.<span class="number">8.107</span> --vncport=<span class="number">7000</span> --vnc --autostart</span><br></pre></td></tr></table></figure>
+<p>上面的iso文件需要提前准备，vnclisten就用宿主机的IP即可</p>
+<p>都安装好了以后，先停止虚拟机，需要对配置文件做一些改动，因为virsh管理的时候有一些参数是不支持的，这个需要自己做一个  qemu:commandline 的改动</p>
+<h4 id="停止掉虚拟机">停止掉虚拟机</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">virsh destroy nvmetest</span><br></pre></td></tr></table></figure>
+<h4 id="编辑配置文件">编辑配置文件</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">virsh edit nvmetest</span><br></pre></td></tr></table></figure>
+<p>内容如下：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&lt;domain <span class="built_in">type</span>=<span class="string">'kvm'</span>&gt;</span><br><span class="line">····</span><br><span class="line">&lt;/domain&gt;</span><br></pre></td></tr></table></figure></p>
+<p>修改为：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&lt;domain <span class="built_in">type</span>=<span class="string">'kvm'</span> xmlns:qemu=<span class="string">'http://libvirt.org/schemas/domain/qemu/1.0'</span>&gt;</span><br><span class="line">····</span><br><span class="line">  &lt;qemu:commandline&gt;</span><br><span class="line">    &lt;qemu:arg value=<span class="string">'-drive'</span>/&gt;</span><br><span class="line">    &lt;qemu:arg value=<span class="string">'file=/mnt/nvme.raw,if=none,id=D22,format=raw'</span>/&gt;</span><br><span class="line">    &lt;qemu:arg value=<span class="string">'-device'</span>/&gt;</span><br><span class="line">    &lt;qemu:arg value=<span class="string">'nvme,drive=D22,serial=1235'</span>/&gt;</span><br><span class="line">  &lt;/qemu:commandline&gt;</span><br><span class="line">&lt;/domain&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>这个地方一定要注意加入的这个固定格式一定要写到最后的位置，否则不生效</p>
+</blockquote>
+<h3 id="检查虚拟机的磁盘是否生成">检查虚拟机的磁盘是否生成</h3><h4 id="启动测试的虚拟机">启动测试的虚拟机</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">virsh destroy nvmetest</span><br></pre></td></tr></table></figure>
+<p>使用vnc连接登陆刚刚的那个vnc的端口<br>登陆上机器后就可以fdisk -l,<br><img src="http://static.zybuluo.com/zphj1987/nc79igpyb1hgxny09d5w9nk0/nvmedisk.png" alt="nvme"><br>lspci看到的如下<br><img src="http://static.zybuluo.com/zphj1987/8klt54xfe4w05mdkr41rspwk/lspci.png" alt="lspci.png-1.5kB"></p>
+<h4 id="结束">结束</h4><p>本次实践当中还有一部分是对spdk的代码进行编译的，编译没有问题，并且可以根据测试脚本加载驱动，将nvme磁盘排它性的从内核态移出，但是无法找到如何使用这个用户态的磁盘，在ceph的代码分支中已经包含了spdk部分的代码，在ceph中应该默认可以直接使用这个驱动，使用的方式是 spdk：sdasdasdasd (disk SN) ，但是配置当中如何使用还是无从得知，这一块如果资料会第一时间分析，目前xsky应该能够配置出环境来，本篇涉及的几个东西都是比较新的一些东西，在未来将会极大的提高性能的，目前这个阶段还处于开发阶段</p>
+<h4 id="异常处理">异常处理</h4><p>执行virsh start nvmetest的时候会提示nvme.raw的磁盘没有访问权限，这个地方卡了很久，不清楚在ubuntu下面居然还有个apparmor的权限问题，是调看系统日志才发现的，下面是处理办法:<br>执行下面的命令为libvirt禁用 apparmor:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ln <span class="operator">-s</span> /etc/apparmor.d/usr.sbin.libvirtd  /etc/apparmor.d/<span class="built_in">disable</span>/</span><br><span class="line">ln <span class="operator">-s</span> /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper  /etc/apparmor.d/<span class="built_in">disable</span>/</span><br><span class="line">apparmor_parser -R  /etc/apparmor.d/usr.sbin.libvirtd</span><br><span class="line">apparmor_parser -R  /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper</span><br></pre></td></tr></table></figure></p>
+<p>/etc/libvirt/qemu.conf去掉认证的,修改为：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">security_driver = <span class="string">"none"</span></span><br></pre></td></tr></table></figure></p>
+<p>重启libvirt服务<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/etc/init.d/libvirt-bin restart</span><br></pre></td></tr></table></figure></p>
+<h3 id="打赏通道">打赏通道</h3><center><br><img src="http://static.zybuluo.com/zphj1987/fi2557g55ucsdpyblopyfudl/newpay.png" alt="打赏" title="打赏"><br></center>
+
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/06/07/rbd无法map-rbd-feature-disable/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          rbd无法map(rbd feature disable)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/05/26/mon到底能坏几个/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">mon到底能坏几个</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '利用虚拟化环境虚拟nvme盘',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

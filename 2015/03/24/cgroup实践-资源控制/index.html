@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>cgroup实践-资源控制 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1、Cgroup安装
+安装Cgroups需要libcap-devel和libcgroup两个相关的包	yum install gcc libcap-devel ```	2、Cgroup挂载配置```raw	Cgroup对应服务名称为cgconfig，cgconfig默认采用“多挂载点”挂载。经过实际测试，发现在CentOS环境中应采用“单挂载点”进行挂载，因此应当卸载原有cgroup文件系统，并禁">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cgroup实践-资源控制">
+<meta property="og:url" content="http://www.zphj1987.com/2015/03/24/cgroup实践-资源控制/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="1、Cgroup安装
+安装Cgroups需要libcap-devel和libcgroup两个相关的包	yum install gcc libcap-devel ```	2、Cgroup挂载配置```raw	Cgroup对应服务名称为cgconfig，cgconfig默认采用“多挂载点”挂载。经过实际测试，发现在CentOS环境中应采用“单挂载点”进行挂载，因此应当卸载原有cgroup文件系统，并禁">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cgroup实践-资源控制">
+<meta name="twitter:description" content="1、Cgroup安装
+安装Cgroups需要libcap-devel和libcgroup两个相关的包	yum install gcc libcap-devel ```	2、Cgroup挂载配置```raw	Cgroup对应服务名称为cgconfig，cgconfig默认采用“多挂载点”挂载。经过实际测试，发现在CentOS环境中应采用“单挂载点”进行挂载，因此应当卸载原有cgroup文件系统，并禁">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-cgroup实践-资源控制" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/24/cgroup实践-资源控制/" class="article-date">
+  	<time datetime="2015-03-24T05:32:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      cgroup实践-资源控制
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1、Cgroup安装</p>
+<p>安装Cgroups需要libcap-devel和libcgroup两个相关的包<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">	yum install gcc libcap-devel </span><br><span class="line">```	</span><br><span class="line"><span class="number">2</span>、Cgroup挂载配置</span><br><span class="line">```raw</span><br><span class="line">	Cgroup对应服务名称为cgconfig，cgconfig默认采用“多挂载点”挂载。经过实际测试，发现在CentOS环境中应采用“单挂载点”进行挂载，因此应当卸载原有cgroup文件系统，并禁用cgconfig。</span><br><span class="line">	cgclear或者sudo service cgconfig stop <span class="comment"># 停止cgconfig，卸载cgroup目录</span></span><br><span class="line">	sudo chkconfig cgconfig off          <span class="comment"># 禁用cgconfig服务，避免其开机启动</span></span><br><span class="line">	然后采用“单挂载点”方式重新挂载cgroup。</span><br><span class="line">	可以直接手动挂载，这样仅当次挂载成功。</span><br><span class="line">	mount -t cgroup none /cgroup</span><br><span class="line">	然后编辑/etc/fstab/，输入下列内容。这样每次开机后都会自动挂载。</span><br><span class="line">	none   /cgroup  cgroup  defaults   <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>3、常用的Cgroup相关命令和配置文件<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#9;service cgconfig status|start|stop|restart    #&#26597;&#30475;&#24050;&#23384;&#22312;&#23376;&#31995;&#32479;&#10;&#9;lssubsys &#8211;am    #&#26597;&#30475;&#24050;&#23384;&#22312;&#23376;&#31995;&#32479;&#10;&#9;cgclear   # &#28165;&#38500;&#25152;&#26377;&#25346;&#36733;&#28857;&#20869;&#37096;&#25991;&#20214;&#65292;&#30456;&#24403;&#20110;service  cgconfig stop&#10;&#9;cgconfigparser -l /etc/cgconfig.conf    #&#37325;&#26032;&#25346;&#36733;&#10;&#9;&#10;&#9;Cgroup&#40664;&#35748;&#25346;&#36733;&#28857;&#65288;CentOS&#65289;&#65306;/cgroup&#10;&#9;cgconfig&#37197;&#32622;&#25991;&#20214;&#65306;/etc/cgconfig.conf&#10;```&#9;&#10;4&#12289;libcgroup Man Page&#31616;&#20171;&#10;```raw&#10;&#9;man 1 cgclassify -- cgclassify&#21629;&#20196;&#26159;&#29992;&#26469;&#23558;&#36816;&#34892;&#30340;&#20219;&#21153;&#31227;&#21160;&#21040;&#19968;&#20010;&#25110;&#32773;&#22810;&#20010;cgroup&#12290;&#10;&#9;man 1 cgclear -- cgclear &#21629;&#20196;&#26159;&#29992;&#26469;&#21024;&#38500;&#23618;&#32423;&#20013;&#30340;&#25152;&#26377;cgroup&#12290;&#10;&#9;man 5 cgconfig.conf -- &#22312;cgconfig.conf&#25991;&#20214;&#20013;&#23450;&#20041;cgroup&#12290;&#10;&#9;man 8 cgconfigparser -- cgconfigparser&#21629;&#20196;&#35299;&#26512;cgconfig.conf&#25991;&#20214;&#21644;&#24182;&#25346;&#36733;&#23618;&#32423;&#12290;&#10;&#9;&#10;&#9;man 1 cgcreate -- cgcreate&#22312;&#23618;&#32423;&#20013;&#21019;&#24314;&#26032;cgroup&#12290;&#10;&#9;man 1 cgdelete -- cgdelete&#21629;&#20196;&#21024;&#38500;&#25351;&#23450;&#30340;cgroup&#12290;&#10;&#9;man 1 cgexec -- cgexec&#21629;&#20196;&#22312;&#25351;&#23450;&#30340;cgroup&#20013;&#36816;&#34892;&#20219;&#21153;&#12290;&#10;&#9;man 1 cgget -- cgget&#21629;&#20196;&#26174;&#31034;cgroup&#21442;&#25968;&#12290;&#10;&#9;man 5 cgred.conf -- cgred.conf&#26159;cgred&#26381;&#21153;&#30340;&#37197;&#32622;&#25991;&#20214;&#12290;&#10;&#9;man 5 cgrules.conf -- cgrules.conf &#21253;&#21547;&#29992;&#26469;&#20915;&#23450;&#20309;&#26102;&#20219;&#21153;&#26415;&#35821;&#26576;&#20123;  cgroup&#30340;&#35268;&#21017;&#12290;&#10;&#9;&#10;&#9;man 8 cgrulesengd -- cgrulesengd &#22312;  cgroup &#20013;&#21457;&#24067;&#20219;&#21153;&#12290;&#10;&#9;man 1 cgset -- cgset &#21629;&#20196;&#20026;  cgroup &#35774;&#23450;&#21442;&#25968;&#12290;&#10;&#9;man 1 lscgroup -- lscgroup &#21629;&#20196;&#21015;&#20986;&#23618;&#32423;&#20013;&#30340;  cgroup&#12290;&#10;&#9;man 1 lssubsys -- lssubsys &#21629;&#20196;&#21015;&#20986;&#21253;&#21547;&#25351;&#23450;&#23376;&#31995;&#32479;&#30340;&#23618;&#32423;&#12290;</span><br></pre></td></tr></table></figure></p>
+<h3 id="测试一：限制cpu的资源">测试一：限制cpu的资源</h3><p>测试后验证了可以做到：</p>
+<ul>
+<li>限制进程的cpu占用百分比</li>
+<li>限制多个进程组的之间的cpu使用权重</li>
+<li>指定进程的使用的cpu和内存组（绑定cpu）</li>
+</ul>
+<p>跑一个耗cpu的脚本<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">x=<span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> [ True ];<span class="keyword">do</span></span><br><span class="line">    x=<span class="variable">$x</span>+<span class="number">1</span></span><br><span class="line"><span class="keyword">done</span>;</span><br></pre></td></tr></table></figure></p>
+<p>top可以看到这个脚本基本占了100%的cpu资源<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">top - 15:30:01 up  1:03,  5 users,  load average: 0.30, 0.50, 0.39&#10;Tasks: 210 total,   2 running, 208 sleeping,   0 stopped,   0 zombie&#10;Cpu(s):  6.3%us,  0.1%sy,  0.0%ni, 93.5%id,  0.2%wa,  0.0%hi,  0.0%si,  0.0%st&#10;Mem:  49461228k total, 13412644k used, 36048584k free,    75384k buffers&#10;Swap:  2097148k total,        0k used,  2097148k free, 12498636k cached&#10;&#10;  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND&#10;11605 root      20   0  104m 1528 1016 R 99.7  0.0   2:30.48 sh&#10;105 root      20   0     0    0    0 S  0.3  0.0   0:00.11 kworker/8:1</span><br></pre></td></tr></table></figure></p>
+<p>创建一个控制组控制这个进程的cpu资源<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir -p /cgroup/cpu/foo	     <span class="comment">#新建一个控制组foo</span></span><br><span class="line"><span class="built_in">echo</span> <span class="number">50000</span> &gt; /cgroup/cpu/foo/cpu.cfs_quota_us  <span class="comment">#将cpu.cfs_quota_us设为50000，相对于cpu.cfs_period_us的100000是50%</span></span><br><span class="line"><span class="built_in">echo</span> <span class="number">11605</span> &gt; /cgroup/cpu/foo/tasks</span><br></pre></td></tr></table></figure></p>
+<p>然后top的实时统计数据如下，cpu占用率将近50%，看来cgroups关于cpu的控制起了效果<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">top - 15:32:48 up  1:06,  5 users,  load average: 0.80, 0.68, 0.48&#10;Tasks: 210 total,   2 running, 208 sleeping,   0 stopped,   0 zombie&#10;Cpu(s):  3.2%us,  0.0%sy,  0.0%ni, 96.8%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st&#10;Mem:  49461228k total, 13412276k used, 36048952k free,    75400k buffers&#10;Swap:  2097148k total,        0k used,  2097148k free, 12498652k cached&#10;&#10;PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND&#10;11605 root      20   0  104m 1724 1016 R 50.2  0.0   5:09.97 sh&#10;11639 root      20   0 15200 1200  820 R  0.3  0.0   0:00.03 top</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，进程的 cpu 占用已经被成功地限制到了 50% 。这里，测试的虚拟机只有一个核心。在多核情况下，看到的值会不一样。另外，cfs_quota_us 也是可以大于 cfs_period_us 的，这主要是对于多核情况。有 n 个核时，一个控制组中的进程自然最多就能用到 n 倍的 cpu 时间。</p>
+<p>这两个值在 cgroups 层次中是有限制的，下层的资源不能超过上层。具体的说，就是下层的 cpu.cfs_period_us 值不能小于上层的值，cpu.cfs_quota_us 值不能大于上层的值。</p>
+<p>另外的一组 cpu.rt_period_us、cpu.rt_runtime_us 对应的是实时进程的限制，平时可能不会有机会用到。</p>
+<p>在 cpu 子系统中，cpu.stat 就是用前面那种方法做的资源限制的统计了。nr_periods、nr_throttled 就是总共经过的周期，和其中受限制的周期。throttled_time 就是总共被控制组掐掉的 cpu 使用时间。</p>
+<p>还有个 cpu.shares， 它也是用来限制 cpu 使用的。但是与 cpu.cfs_quota_us、cpu.cfs_period_us 有挺大区别。cpu.shares 不是限制进程能使用的绝对的 cpu 时间，而是控制各个组之间的配额。比如<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">/cpu/cpu.shares : 1024&#10;/cpu/foo/cpu.shares : 2048</span><br></pre></td></tr></table></figure></p>
+<p>那么当两个组中的进程都满负荷运行时，/foo 中的进程所能占用的 cpu 就是 / 中的进程的两倍。如果再建一个 /foo/bar 的 cpu.shares 也是 1024，且也有满负荷运行的进程，那 /、/foo、/foo/bar 的 cpu 占用比就是 1:2:1 。前面说的是各自都跑满的情况。如果其他控制组中的进程闲着，那某一个组的进程完全可以用满全部 cpu。可见通常情况下，这种方式在保证公平的情况下能更充分利用资源。</p>
+<p>此外，还可以限定进程可以使用哪些 cpu 核心。cpuset 子系统就是处理进程可以使用的 cpu 核心和内存节点，以及其他一些相关配置。这部分的很多配置都和 NUMA 有关。其中 cpuset.cpus、cpuset.mems 就是用来限制进程可以使用的 cpu 核心和内存节点的。这两个参数中 cpu 核心、内存节点都用 id 表示，之间用 “,” 分隔。比如 0,1,2 。也可以用 “-” 表示范围，如 0-3 。两者可以结合起来用。如“0-2,6,7”。在添加进程前，cpuset.cpus、cpuset.mems 必须同时设置，而且必须是兼容的，否则会出错。例如<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># echo 0 &gt;/sys/fs/cgroup/cpuset/foo/cpuset.cpus</span></span><br><span class="line"><span class="comment"># echo 0 &gt;/sys/fs/cgroup/cpuset/foo/cpuset.mems</span></span><br><span class="line">这样， /foo 中的进程只能使用 cpu0 和内存节点<span class="number">0</span>。用</span><br><span class="line"></span><br><span class="line"><span class="comment"># cat /proc/&lt;pid&gt;/status|grep '_allowed_list'</span></span><br></pre></td></tr></table></figure></p>
+<p>cgroups 除了用来限制资源使用外，还有资源统计的功能。做云计算的计费就可以用到它。有一个 cpuacct 子系统专门用来做 cpu 资源统计。cpuacct.stat 统计了该控制组中进程用户态和内核态的 cpu 使用量，单位是 USER_HZ，也就是 jiffies、cpu 滴答数。每秒的滴答数可以用 getconf CLK_TCK 来获取，通常是 100。将看到的值除以这个值就可以换算成秒。</p>
+<h3 id="测试二：限制进程的内存资源">测试二：限制进程的内存资源</h3><p>测试后验证了：</p>
+<ul>
+<li>限制了资源的占用，达到内存以后，进程直接杀掉</li>
+</ul>
+<p>测试方法：</p>
+<p>跑一个耗内存的脚本，内存不断增长<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">x=<span class="string">"a"</span></span><br><span class="line"><span class="keyword">while</span> [ True ];<span class="keyword">do</span></span><br><span class="line">    x=<span class="variable">$x</span><span class="variable">$x</span></span><br><span class="line"><span class="keyword">done</span>;</span><br></pre></td></tr></table></figure></p>
+<p>top看内存占用稳步上升<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line"> PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND&#10;       30215 root      20   0  871m 501m 1036 R 99.8 26.7   0:38.69 sh  &#10;30215 root      20   0 1639m 721m 1036 R 98.7 38.4   1:03.99 sh &#10;30215 root      20   0 1639m 929m 1036 R 98.6 49.5   1:13.73 sh</span><br></pre></td></tr></table></figure></p>
+<p>下面用cgroups控制这个进程的内存资源<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir -p /cgroup/memory/foo</span><br><span class="line"><span class="built_in">echo</span> <span class="number">1048576</span> &gt;  /cgroup/memory/foo/memory.limit_<span class="keyword">in</span>_bytes   <span class="comment">#分配1MB的内存给这个控制组</span></span><br><span class="line"><span class="built_in">echo</span> <span class="number">30215</span> &gt; /cgroup/memory/foo/tasks</span><br></pre></td></tr></table></figure></p>
+<p>发现之前的脚本被kill掉<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># sh /home/test.sh </span></span><br><span class="line">已杀死</span><br></pre></td></tr></table></figure></p>
+<p>因为这是强硬的限制内存，当进程试图占用的内存超过了cgroups的限制，会触发out of memory，导致进程被kill掉。</p>
+<p>实际情况中对进程的内存使用会有一个预估，然后会给这个进程的限制超配50%比如，除非发生内存泄露等异常情况，才会因为cgroups的限制被kill掉。</p>
+<p>也可以通过配置关掉cgroups oom kill进程，通过memory.oom_control来实现（oom_kill_disable 1），但是尽管进程不会被直接杀死，但进程也进入了休眠状态，无法继续执行，仍让无法服务。</p>
+<p>关于内存的控制，还有以下配置文件，关于虚拟内存的控制，以及权值比重式的内存控制等<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">[root@localhost /]# ls /cgroup/memory/foo/&#10;cgroup.event_control  memory.force_empty         memory.memsw.failcnt             &#10;memory.memsw.usage_in_bytes      memory.soft_limit_in_bytes  memory.usage_in_bytes  tasks&#10;cgroup.procs          memory.limit_in_bytes      memory.memsw.limit_in_bytes      &#10;memory.move_charge_at_immigrate  memory.stat                 memory.use_hierarchy&#10;memory.failcnt        memory.max_usage_in_bytes  memory.memsw.max_usage_in_bytes  &#10;memory.oom_control               memory.swappiness           notify_on_release</span><br></pre></td></tr></table></figure></p>
+<h3 id="测试三：限制进程的IO资源">测试三：限制进程的IO资源</h3><p>测试验证了：</p>
+<ul>
+<li>能够控制io设备的读写速度</li>
+</ul>
+<p>跑一个耗io的脚本</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#9; dd if=/dev/sda of=/dev/null &#10;&#10;&#9;&#36890;&#36807;iotop&#30475;io&#21344;&#29992;&#24773;&#20917;&#65292;&#30913;&#30424;&#36895;&#24230;&#21040;&#20102;284M/s&#10;&#10;&#10;&#9;30252 be/4 root      284.71 M/s    0.00 B/s  0.00 %  0.00 % dd if=/dev/sda of=/dev/null&#10;``` &#10;&#19979;&#38754;&#29992;cgroups&#25511;&#21046;&#36825;&#20010;&#36827;&#31243;&#30340;io&#36164;&#28304;&#10;```bash&#10;&#9;mkdir -p /cgroup/blkio/foo&#10;&#9;&#10;&#9;echo &#39;8:0   1048576&#39; &#62;  /cgroup/blkio/foo/blkio.throttle.read_bps_device&#10;&#9;#8:0&#23545;&#24212;&#20027;&#35774;&#22791;&#21495;&#21644;&#21103;&#35774;&#22791;&#21495;&#65292;&#21487;&#20197;&#36890;&#36807;ls -l /dev/sda&#26597;&#30475;&#10;&#9;echo 30252 &#62; /cgroup/blkio/foo/tasks</span><br></pre></td></tr></table></figure>
+<p>再通过iotop看，确实将读速度降到了1M/s<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">30252 be/4 root      993.36 K/s    0.00 B/s  0.00 %  0.00 % dd if=/dev/sda of=/dev/null</span><br></pre></td></tr></table></figure></p>
+<p>对于io还有很多其他可以控制层面和方式，如下<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ls /cgroup/blkio/foo/</span></span><br><span class="line">blkio.io_merged         blkio.io_serviced      blkio.reset_stats                </span><br><span class="line">blkio.throttle.io_serviced       blkio.throttle.write_bps_device   blkio.weight          cgroup.procs</span><br><span class="line">blkio.io_queued         blkio.io_service_time  blkio.sectors                    </span><br><span class="line">blkio.throttle.read_bps_device   blkio.throttle.write_iops_device  blkio.weight_device   notify_on_release</span><br><span class="line">blkio.io_service_bytes  blkio.io_<span class="built_in">wait</span>_time     blkio.throttle.io_service_bytes  </span><br><span class="line">blkio.throttle.read_iops_device  blkio.time                        cgroup.event_control  tasks</span><br></pre></td></tr></table></figure></p>
+<p>blkio 子系统里东西很多。不过大部分都是只读的状态报告，可写的参数就只有下面这几个：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">blkio.throttle.read_bps_device&#10;blkio.throttle.read_iops_device&#10;blkio.throttle.write_bps_device&#10;blkio.throttle.write_iops_device&#10;blkio.weight&#10;blkio.weight_device&#10;&#10;&#36825;&#20123;&#37117;&#26159;&#29992;&#26469;&#25511;&#21046;&#36827;&#31243;&#30340;&#30913;&#30424; io &#30340;&#12290;&#24456;&#26126;&#26174;&#22320;&#20998;&#25104;&#20004;&#31867;&#65292;&#20854;&#20013;&#24102;&#8220;throttle&#8221;&#30340;&#65292;&#39038;&#21517;&#24605;&#20041;&#23601;&#26159;&#33410;&#27969;&#38400;&#65292;&#23558;&#27969;&#37327;&#38480;&#21046;&#22312;&#26576;&#20010;&#20540;&#19979;&#12290;&#32780;&#8220;weight&#8221;&#23601;&#26159;&#20998;&#37197; io &#30340;&#26435;&#37325;&#12290;&#10;&#20877;&#30475;&#30475; blkio.weight &#12290;blkio &#30340; throttle &#21644; weight &#26041;&#24335;&#21644; cpu &#23376;&#31995;&#32479;&#30340; quota &#21644; shares &#26377;&#28857;&#20687;&#65292;&#37117;&#26159;&#19968;&#31181;&#26159;&#32477;&#23545;&#38480;&#21046;&#65292;&#21478;&#19968;&#31181;&#26159;&#30456;&#23545;&#38480;&#21046;&#65292;&#24182;&#19988;&#22312;&#19981;&#32321;&#24537;&#30340;&#26102;&#20505;&#21487;&#20197;&#20805;&#20998;&#21033;&#29992;&#36164;&#28304;&#65292;&#26435;&#37325;&#20540;&#30340;&#33539;&#22260;&#22312; 10 &#8211; 1000 &#20043;&#38388;&#12290;</span><br></pre></td></tr></table></figure></p>
+<p>测试权重方式要麻烦一点。因为不是绝对限制，所以会受到文件系统缓存的影响。如在虚拟机中测试，要关闭虚机如我用的 VirtualBox 在宿主机上的缓存。如要测试读 io 的效果，先生成两个几个 G 的大文件 /tmp/file_1，/tmp/file_2 ，可以用 dd 搞。然后设置两个权重<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># echo 500 &gt;/sys/fs/cgroup/blkio/foo/blkio.weight</span></span><br><span class="line"><span class="comment"># echo 100 &gt;/sys/fs/cgroup/blkio/bar/blkio.weight</span></span><br></pre></td></tr></table></figure></p>
+<p>测试前清空文件系统缓存，以免干扰测试结果<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync</span><br><span class="line"><span class="built_in">echo</span> <span class="number">3</span> &gt;/proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure></p>
+<p>在这两个控制组中用 dd 产生 io 测试效果。<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># cgexec -g "blkio:foo" dd if=/tmp/file_1 of=/dev/null &amp;</span></span><br><span class="line">[<span class="number">1</span>] <span class="number">1838</span></span><br><span class="line"><span class="comment"># cgexec -g "blkio:bar" dd if=/tmp/file_2 of=/dev/null &amp;</span></span><br><span class="line">[<span class="number">2</span>] <span class="number">1839</span></span><br></pre></td></tr></table></figure></p>
+<p>还是用 iotop 看看效果<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line"> TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&#62;    COMMAND&#10;1839 be/4 root       48.14 M/s    0.00 B/s  0.00 % 99.21 % dd if=/tmp/file_2 of=/dev/null&#10;1838 be/4 root      223.59 M/s    0.00 B/s  0.00 % 16.44 % dd if=/tmp/file_1 of=/dev/null</span><br></pre></td></tr></table></figure></p>
+<p>两个进程每秒读的字节数虽然会不断变动，但是大致趋势还是维持在 1:5 左右，和设定的 weight 比例一致。blkio.weight_device 是分设备的。写入时，前面再加上设备号即可。</p>
+<h2 id="实践记录">实践记录</h2><p>1、假如已经配置好一个资源组，现在想让一个服务按这个组的资源分配来运行服务，而不需要去找到进程号再写入到tasks中<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8105 ~]<span class="comment"># cgexec -g cpu:daemons/ftp top</span></span><br></pre></td></tr></table></figure></p>
+<p>这个运行以后有会自动将top进程号写入到tasks当中去</p>
+<p>2、查询一个组里面设置的资源的限制<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#35774;&#32622;&#30340;&#20540;&#20250;&#26174;&#31034;&#20986;&#26469;&#65292;&#27809;&#26377;&#35774;&#32622;&#30340;&#23601;&#20250;&#25552;&#31034;&#27809;&#26377;&#25214;&#25171;&#10;&#10;[root@lab8105 ~]# cgget  daemons/ftp&#10;daemons/ftp:&#10;cgget: cannot find controller &#39;cpuset&#39; in group &#39;daemons/ftp&#39;&#10;cpu.rt_period_us: 1000000&#10;cpu.rt_runtime_us: 0&#10;cpu.stat: nr_periods 0&#10;&#9;nr_throttled 0&#10;&#9;throttled_time 0&#10;cpu.cfs_period_us: 5000&#10;cpu.cfs_quota_us: -1&#10;cpu.shares: 1000&#10;cgget: cannot find controller &#39;cpuacct&#39; in group &#39;daemons/ftp&#39;&#10;cgget: cannot find controller &#39;memory&#39; in group &#39;daemons/ftp&#39;&#10;cgget: cannot find controller &#39;devices&#39; in group &#39;daemons/ftp&#39;&#10;cgget: cannot find controller &#39;freezer&#39; in group &#39;daemons/ftp&#39;&#10;cgget: cannot find controller &#39;net_cls&#39; in group &#39;daemons/ftp&#39;&#10;cgget: cannot find controller &#39;blkio&#39; in group &#39;daemons/ftp&#39;</span><br></pre></td></tr></table></figure></p>
+<p>3、需要用两个限制条件对进程进行限制<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8105 ~]<span class="comment"># cgexec -g cpu:daemons/ftp -g memory:daemons/ftp top</span></span><br></pre></td></tr></table></figure></p>
+<p>4、默认情况下是一个大根，然后分了几个资源系统，还支持做一个子系统组，即单独组建一个资源组，然后对这个资源组里面进行配置，具体方法如下：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">mount &#123;&#10;        cpu     = /cgroup/cpu_and_mem;&#10;        memory  = /cgroup/cpu_and_mem;&#10;&#125;&#10;&#9;&#10;group daemons/ftp &#123;&#10;                     cpu &#123;&#10;                             cpu.shares = &#34;1000&#34;;&#10;                             cpu.cfs_period_us = &#34;5000&#34;;&#10;                     &#125;&#10;                     memory &#123;&#10;                                memory.swappiness = &#34;20&#34;;&#10;                     &#125;&#10;              &#125;</span><br></pre></td></tr></table></figure></p>
+<p>5、需要创建控制组群，如上的daemons/ftp，想通过命令行的方式创建<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8105 ~]<span class="comment"># cgcreate -g cpu:/zp -g memory:/zp	</span></span><br><span class="line">如上命令使用后会在/cgroup/cpu/中多了zp目录，并且里面是继承的上级的cpu里面的参数，这样就创建了一个zp的组群</span><br><span class="line"></span><br><span class="line">删除组群的方式如下（删除cgroup时，其所有任务都移动到了父组群当中）：</span><br><span class="line">[root@lab8105 ~]<span class="comment"># cgdelete cpu:/zp memory:/zp</span></span><br></pre></td></tr></table></figure></p>
+<p>6、设置里面的配置参数<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#38656;&#35201;&#35774;&#32622;&#10; /cgroup/cpu/daemons/ftp/cpu.shares&#10;&#25191;&#34892;&#10;[root@lab8105 ~]# cgset -r cpu.shares=500 daemons/ftp&#10;daemons/ftp&#36335;&#24452;&#26159;&#30456;&#23545;&#20110;&#26681;&#30340;&#65292;&#22914;&#26524;&#24819;&#35774;&#32622;&#26681;&#30340;&#36825;&#20010;&#21442;&#25968;&#37027;&#20040;&#23601;&#25191;&#34892;&#10;[root@lab8105 ~]# gset -r cpuacct.usage=0 /&#10;&#9;&#36825;&#37324;&#38656;&#35201;&#27880;&#24847;&#65292;&#21482;&#26377;&#26576;&#20123;&#21442;&#25968;&#26159;&#21487;&#20197;&#20462;&#25913;&#30340;&#65292;&#26576;&#20123;&#21442;&#25968;&#26159;&#19981;&#33021;&#20462;&#25913;&#30340;&#10;&#20063;&#21487;&#20197;&#30452;&#25509;echo&#30340;&#26041;&#24335;&#36827;&#34892;&#21442;&#25968;&#30340;&#35774;&#32622;</span><br></pre></td></tr></table></figure></p>
+<p>7，移动某个进程到控制组群当中（动态的进行资源的调配）<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#31227;&#21160;&#25351;&#23450;&#36827;&#31243;&#21040;&#25351;&#23450;&#30340;&#25511;&#21046;&#32452;&#24403;&#20013;&#65292;&#21019;&#24314;&#20004;&#20010;&#36164;&#28304;&#32452;&#65292;&#20351;&#29992;&#19978;&#38754;&#30340;cpu&#30340;&#33050;&#26412;&#65292;&#28982;&#21518;&#36816;&#34892;&#21518;&#65292;&#20351;&#29992;top&#36827;&#34892;&#30417;&#25511;&#10;group half &#123;&#10;                     cpu &#123;&#10;                                 cpu.cfs_period_us=&#34;100000&#34;;&#10;                                 cpu.cfs_quota_us=&#34;50000&#34;;&#10;                     &#125;&#10;                     memory &#123;&#10;                                memory.swappiness = &#34;50&#34;;&#10;                     &#125;&#10;              &#125;&#10;&#10;group eighty &#123;&#10;                     cpu &#123;&#10;                              cpu.cfs_period_us = &#34;100000&#34;;&#10;                              cpu.cfs_quota_us=&#34;50000&#34;;&#10;                     &#125;&#10;                     memory &#123;&#10;                                memory.swappiness = &#34;80&#34;;&#10;                     &#125;&#10;              &#125;&#10;[root@lab8105 ~]# cgclassify -g cpu:half 14245&#10;top&#30417;&#25511;&#30475;&#21040;cpu&#30340;&#21344;&#29992;&#20026;50%&#10;[root@lab8105 ~]# cgclassify -g cpu:eighty 14245&#10;top&#30417;&#25511;&#30475;&#21040;cpu&#30340;&#21344;&#29992;&#20026;80%&#10;&#27880;&#24847;&#25903;&#25345;&#22810;&#36827;&#31243;&#65292;&#22810;&#36164;&#28304;&#32452;&#21516;&#26102;&#31227;&#21160;&#10;[root@lab8105 ~]# cgclassify -g cpu,memory:eighty 14245 14565&#10;&#22791;&#29992;&#26041;&#27861;&#23601;&#26159;&#30452;&#25509;echo</span><br></pre></td></tr></table></figure></p>
+<p>8、通过规则对指定的进程进行控制</p>
+<p>我们还可以通过设置规则来让 cgred（cgroup 规则引擎后台程序）自动将进程分配给特定组。cgred 后台程序根据 /etc/cgrules.conf 文件中的设置将任务移到 cgroup 中<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8105 ~]<span class="comment"># vim /etc/cgrules.conf </span></span><br><span class="line">[root@lab8105 ~]<span class="comment"># man cgrules.conf       </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># /etc/cgrules.conf</span></span><br><span class="line"><span class="comment">#The format of this file is described in cgrules.conf(5)</span></span><br><span class="line"><span class="comment">#manual page.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Example:</span></span><br><span class="line"><span class="comment">#&lt;user&gt;         &lt;controllers&gt;   &lt;destination&gt;</span></span><br><span class="line"><span class="comment">#@student       cpu,memory      usergroup/student/</span></span><br><span class="line"><span class="comment">#peter          cpu             test1/</span></span><br><span class="line"><span class="comment">#%              memory          test2/</span></span><br><span class="line"><span class="comment"># End of file</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">root:cpu.sh           cpu             half/</span><br><span class="line">root                  cpu             half/</span><br><span class="line"></span><br><span class="line">启动监控进程服务</span><br><span class="line">[root@lab8105 ~]<span class="comment"># /etc/init.d/cgred</span></span><br></pre></td></tr></table></figure></p>
+<p>效果如下，运行相同的命令，所占用的cpu的资源按指定的比例进行占用</p>
+<pre><code class="bash">[root@lab8105 ~]<span class="comment"># top</span>
+top - <span class="number">16</span>:<span class="number">00</span>:<span class="number">40</span> up <span class="number">1</span> day,  <span class="number">1</span>:<span class="number">34</span>,  <span class="number">5</span> users,  load average: <span class="number">1.57</span>, <span class="number">1.13</span>, <span class="number">0.90</span>
+Tasks: <span class="number">216</span> total,   <span class="number">3</span> running, <span class="number">213</span> sleeping,   <span class="number">0</span> stopped,   <span class="number">0</span> zombie
+Cpu(s):  <span class="number">6.9</span>%us,  <span class="number">0.0</span>%sy,  <span class="number">0.0</span>%ni, <span class="number">93.1</span>%id,  <span class="number">0.0</span>%wa,  <span class="number">0.0</span>%hi,  <span class="number">0.0</span>%si,  <span class="number">0.0</span>%st
+Mem:  <span class="number">49461228</span>k total, <span class="number">49346312</span>k used,   <span class="number">114916</span>k free, <span class="number">47374260</span>k buffers
+Swap:  <span class="number">2097148</span>k total,        <span class="number">0</span>k used,  <span class="number">2097148</span>k free,    <span class="number">33116</span>k cached
+
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                                               
+<span class="number">14648</span> root      <span class="number">20</span>   <span class="number">0</span>  <span class="number">104</span>m <span class="number">1716</span> <span class="number">1012</span> R <span class="number">99.7</span>  <span class="number">0.0</span>   <span class="number">4</span>:<span class="number">58.38</span> cpu1.sh                                                
+<span class="number">14565</span> root      <span class="number">20</span>   <span class="number">0</span>  <span class="number">104</span>m <span class="number">1704</span> <span class="number">1012</span> R <span class="number">10.0</span>  <span class="number">0.0</span>   <span class="number">4</span>:<span class="number">30.53</span> cpu.sh
+</code></pre>
+<p>如上所述，指定用户，可以指定进程进行控制，也可以指定用户的所有进程进行控制，后台的做的操作就是把进行的号移动到了指定的资源组的task当中去了</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/03/24/mdtest测试工具/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          mdtest测试工具
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/03/24/linux绑定盘符/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">linux绑定盘符</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'cgroup实践-资源控制',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

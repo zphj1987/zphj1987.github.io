@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>mdtest测试工具 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="软件介绍
+ mdstest是软件的元数据操作基准测试工具，用来模拟对文件或者目录的open、stat、close操作，然后报告性能
+下载软件压缩包：yum install openmpi openmpi-devel -y在/root/.bashrc中添加（注意也要添加mdtest的路径）export PATH=$PATH:/usr/lib64/openmpi/bin/source /root/.b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mdtest测试工具">
+<meta property="og:url" content="http://www.zphj1987.com/2015/03/24/mdtest测试工具/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="软件介绍
+ mdstest是软件的元数据操作基准测试工具，用来模拟对文件或者目录的open、stat、close操作，然后报告性能
+下载软件压缩包：yum install openmpi openmpi-devel -y在/root/.bashrc中添加（注意也要添加mdtest的路径）export PATH=$PATH:/usr/lib64/openmpi/bin/source /root/.b">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mdtest测试工具">
+<meta name="twitter:description" content="软件介绍
+ mdstest是软件的元数据操作基准测试工具，用来模拟对文件或者目录的open、stat、close操作，然后报告性能
+下载软件压缩包：yum install openmpi openmpi-devel -y在/root/.bashrc中添加（注意也要添加mdtest的路径）export PATH=$PATH:/usr/lib64/openmpi/bin/source /root/.b">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-mdtest测试工具" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/24/mdtest测试工具/" class="article-date">
+  	<time datetime="2015-03-24T05:33:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      mdtest测试工具
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/测试工具/">测试工具</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>软件介绍</p>
+<p> mdstest是软件的元数据操作基准测试工具，用来模拟对文件或者目录的open、stat、close操作，然后报告性能</p>
+<p>下载软件压缩包：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install openmpi openmpi-devel -y</span><br><span class="line">在/root/.bashrc中添加（注意也要添加mdtest的路径）</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/lib64/openmpi/bin/</span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> /root/.bashrc</span><br><span class="line">下载</span><br><span class="line">[root@lab8105 ~]<span class="comment"># wget http://sourceforge.net/projects/mdtest/files/latest/download</span></span><br><span class="line">解压</span><br><span class="line">[root@lab8105 ~]<span class="comment"># tar -xvf mdtest-1.9.3.tgz</span></span><br><span class="line">修改makefile：</span><br><span class="line">mdtest: mdtest.c</span><br><span class="line">       mpicc -Wall -D $(OS) $(LARGE_FILE) $(MDTEST_FLAGS) -g -o mdtest mdtest.c -lm</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>参数如下：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">Usage:  mdtest [-b #] [-B] [-c] [-C] [-d testdir] [-D] [-e] [-E] [-f first] [-F]&#10;               [-h] [-i iterations] [-I #] [-l last] [-L] [-n #] [-N #] [-p seconds]&#10;               [-r] [-R[#]] [-s #] [-S] [-t] [-T] [-u] [-v] [-V #] [-w #] [-y]&#10;               [-z #]&#10;&#10;    -b: branching factor of hierarchical directory structure&#10;&#9;&#9;&#30446;&#24405;&#26641;&#30340;&#20998;&#25903;&#21442;&#25968;&#10;    -B: no barriers between phases (create/stat/remove)&#10;&#9;&#9; &#19981;&#21516;&#30340;&#38454;&#27573;&#27809;&#26377;&#38548;&#31163; (create/stat/remove)&#65307;&#10;    -c: collective creates: task 0 does all creates and deletes&#10;&#9;&#9;&#20849;&#21516;&#21019;&#24314;: task 0 &#23436;&#25104;&#25152;&#26377;&#30340;&#21019;&#24314;&#21644;&#21024;&#38500;&#24037;&#20316;&#65307;&#10;    -C: only create files/dirs&#10;&#9;&#9;&#21482;&#21019;&#24314;&#25991;&#20214;&#25110;&#30446;&#24405;&#65292;&#19981;&#20316;&#21024;&#38500;&#65307;&#10;    -d: the directory in which the tests will run&#10;&#9;&#9;&#25351;&#20986;&#27979;&#35797;&#36816;&#34892;&#30340;&#30446;&#24405;&#65288;&#33509;&#19981;&#25351;&#23450;&#65292;&#21017;&#40664;&#35748;&#24403;&#21069;&#30446;&#24405;&#65289;&#65307;&#10;    -D: perform test on directories only (no files)&#10;&#9;&#9;&#21482;&#23545;&#30446;&#24405;&#25805;&#20316;&#36827;&#34892;&#27979;&#35797;&#65288;&#19981;&#21253;&#25324;&#25991;&#20214;&#65289;&#65307;&#10;    -e: number of bytes to read from each file&#10;&#9;&#9;&#20174;&#27599;&#20010;&#25991;&#20214;&#35835;&#20986;&#30340;&#25991;&#20214;&#22823;&#23567;&#10;    -E: only read files&#10;&#9;&#9;&#21482;&#35835;&#21462;&#25991;&#20214;&#10;    -f: first number of tasks on which the test will run&#10;&#9;&#9;&#39318;&#20808;&#36816;&#34892;&#30340;&#20219;&#21153;&#21495;&#65307;&#10;    -F: perform test on files only (no directories)&#10;&#9;&#9;&#21482;&#21019;&#24314;&#25991;&#20214;&#65292;&#27809;&#26377;&#30446;&#24405;&#65307;&#10;    -h: prints help message&#10;&#9;&#9;&#36755;&#20986;&#24110;&#21161;&#20449;&#24687;&#10;    -i: number of iterations the test will run&#10;&#9;&#9;&#27979;&#35797;&#36845;&#20195;&#24490;&#29615;&#27425;&#25968;&#65307;&#10;    -I: number of items per tree node&#10;&#9;&#9;&#27599;&#20010;&#26641;&#33410;&#28857;&#21253;&#21547;&#30340;&#39033;&#30446;&#10;    -l: last number of tasks on which the test will run&#10;&#9;&#9;&#26368;&#21518;&#36816;&#34892;&#30340;&#20219;&#21153;&#21495;&#10;    -L: files/dirs created only at leaf level&#10;&#9;&#9;&#21482;&#22312;&#30446;&#24405;&#26641;&#30340;&#8220;&#21494;&#23376;&#8221;&#23618;&#21019;&#24314;&#25991;&#20214;/&#30446;&#24405;&#65307;&#10;    -n: every task will create/stat/remove # files/dirs per tree&#10;&#9;&#9;&#27599;&#20010;&#20219;&#21153;&#38656;&#35201;&#20877;&#27599;&#26869;&#26641;&#20013;create/stat/remove&#30340;&#25991;&#20214;/&#30446;&#24405;&#25968;&#65307;&#10;    -N: stride # between neighbor tasks for file/dir stat (local=0)&#10;&#9;&#9;&#36941;&#21382;&#26102;&#25351;&#23450;&#21644;&#30456;&#37051;&#20219;&#21153;&#30340;&#36328;&#24230;&#10;    -p: pre-iteration delay (in seconds)&#10;&#9;&#9;&#27599;&#27425;&#36845;&#20195;&#20043;&#38388;&#24310;&#26102;&#65288;&#20197;&#31186;&#35745;&#31639;&#65289;&#10;    -r: only remove files/dirs&#10;&#9;&#9; &#21024;&#38500;&#25991;&#20214;/&#30446;&#24405;&#10;    -R: randomly stat files/dirs (optional seed can be provided)&#10;&#9;&#9;&#38543;&#26426;&#36941;&#21382;&#25991;&#20214;/&#30446;&#24405; &#65307;&#10;    -s: stride between the number of tasks for each test&#10;&#9;&#9;&#27599;&#27425;&#27979;&#35797;&#30340;&#20219;&#21153;&#25968;&#30340;&#36328;&#24230;&#10;    -S: shared file access (file only, no directories)&#10;&#9;&#9;&#20849;&#20139;&#25991;&#20214;&#35775;&#38382;&#65288;&#21482;&#38024;&#23545;&#25991;&#20214;&#25805;&#20316;&#65289;&#65307;&#10;    -t: time unique working directory overhead&#10;&#9;&#9;&#35760;&#24405;&#29305;&#23450;&#30446;&#24405;&#30340;&#26102;&#38388;&#24320;&#38144;&#10;    -T: only stat files/dirs&#10;&#9;&#9;&#10;    -u: unique working directory for each task&#10;&#9;&#9;&#20026;&#27599;&#20010;&#20219;&#21153;&#25351;&#23450;&#24037;&#20316;&#30446;&#24405;&#65307;&#10;    -v: verbosity (each instance of option increments by one)&#10;&#9;&#9;&#10;    -V: verbosity value&#10;    -w: number of bytes to write to each file&#10;&#9;&#9; &#20889;&#21040;&#27599;&#20010;&#25991;&#20214;&#30340;&#23383;&#33410;&#25968;&#10;    -y: sync file after write completion&#10;&#9;&#9; &#20877;&#20889;&#25191;&#34892;&#23436;&#21518;&#21516;&#27493;&#25991;&#20214;&#21040;&#30913;&#30424;&#65288;&#21516;&#27493;&#20889;&#65289;&#10;    -z: depth of hierarchical directory structure&#10;&#9;&#9;&#30446;&#24405;&#26641;&#30340;&#28145;&#24230;&#65307;&#10;&#10;NOTES:&#10; * -N allows a &#34;read-your-neighbor&#34; approach by setting stride to&#10;    tasks-per-node. Do not use it with -B, as it creates race conditions.&#10;&#9;&#20801;&#35768;&#34;read-your-neighbor&#34; &#26041;&#27861;&#10; * -d allows multiple paths for the form &#39;-d fullpath1@fullpath2@fullpath3&#39;&#10;      &#21487;&#20197;&#25351;&#23450;&#22810;&#20010;&#27979;&#35797;&#36335;&#24452;&#65292;&#39;-d fullpath1@fullpath2@fullpath3&#39;&#10; * -B allows each task to time itself. The aggregate results reflect this&#10;    change.&#10;&#9;&#20801;&#35768;&#27599;&#20010;&#20219;&#21153;&#23545;&#33258;&#24049;&#36827;&#34892;&#35745;&#26102;&#65307;&#10; * -n and -I cannot be used together.  -I specifies the number of files/dirs&#10;   created per tree node, whereas the -n specifies the total number of&#10;   files/dirs created over an entire tree.  When using -n, integer division is&#10;   used to determine the number of files/dirs per tree node.  (E.g. if -n is&#10;   10 and there are 4 tree nodes (z=1 and b=3), there will be 2 files/dirs per&#10;   tree node.)&#10;&#9;&#10;&#9; * -R and -T can be used separately.  -R merely indicates that if files/dirs&#10;   are going to be stat&#39;ed, then they will be stat&#39;ed randomly.&#10;   &#19981;&#33021;&#21516;&#26102;&#20351;&#29992;&#65292;&#22240;&#20026;&#25351;&#23450;&#20102;&#27599;&#20010;&#26641;&#33410;&#28857;&#30340;&#25991;&#20214;/&#30446;&#24405;&#25968;&#37327;&#65292;&#32780;-I&#25351;&#23450;&#30340;&#26159;&#25972;&#26869;&#26641;&#30340;&#25991;&#20214;/&#30446;&#24405;&#25968;&#37327;&#12290;&#10;&#10;Illustration of terminology:&#10;&#10;                     Hierarchical directory structure (tree)&#10;&#10;                                   =======&#10;                                  |       |  (tree node)&#10;                                   =======&#10;                                  /   |   \&#10;                            ------    |    ------&#10;                           /          |          \&#10;                       =======     =======     =======&#10;                      |       |   |       |   |       |    (leaf level)&#10;                       =======     =======     =======&#10;&#10;    In this example, the tree has a depth of one (z=1) and branching factor of&#10;    three (b=3).  The node at the top of the tree is the root node.  The level&#10;    of nodes furthest from the root is the leaf level.  All trees created by&#10;    mdtest are balanced.&#10;&#9;&#36825;&#20010;&#20363;&#23376;&#20013;&#65292;&#30446;&#24405;&#26641;&#28145;&#24230;&#20026;1&#65288;z=1&#65289;,&#27599;&#20010;&#33410;&#28857;&#20998;&#25903;&#20026;3&#65288;b=3&#65289;.&#26368;&#19978;&#38754;&#30340;&#33410;&#28857;&#20026;&#26681;&#33410;&#28857;&#65292;</span><br></pre></td></tr></table></figure></p>
+<p>关于openmpi的软件的使用</p>
+<p>openmpi是并行的运行程序，配置的时候需要注意下<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#22686;&#21152;&#24182;&#34892;&#30340;&#36816;&#34892;&#33410;&#28857;&#10;[root@lab8105 ~]# vim /etc/openmpi-x86_64/openmpi-default-hostfile&#10;&#28155;&#21152;&#10;lab8105 slots=1&#10;lab8106 slots=1&#10;&#29305;&#21035;&#27880;&#24847;&#21152;slots &#36825;&#20010;&#26159;&#37197;&#32622;&#26435;&#37325;&#30340;&#65292;&#22914;&#26524;&#19981;&#37197;&#32622;&#65292;&#31532;&#19968;&#26465;&#26377;&#40664;&#35748;&#26435;&#37325;&#65292;&#23601;&#26080;&#27861;&#22312;&#25968;&#30446;&#23567;&#26102;&#36827;&#34892;&#22343;&#34913;&#25805;&#20316;&#10;&#26816;&#26597;&#26159;&#21542;&#37197;&#32622;&#25104;&#21151;&#65292;np&#20026;&#25805;&#20316;&#32447;&#31243;&#25968;&#10;[root@lab8105 ~]# mpirun  --allow-run-as-root -np 2 hostname&#10;lab8105&#10;lab8106&#10;&#22914;&#26524;&#24819;&#21333;&#26426;&#25191;&#34892;&#22810;&#36827;&#31243;&#65292;&#21487;&#20197;&#29992;-host&#25351;&#23450;&#20027;&#26426;&#10;[root@lab8105 ~]# mpirun -host lab8105  --allow-run-as-root -np 2 hostname</span><br></pre></td></tr></table></figure></p>
+<h3 id="单机下多进程测试">单机下多进程测试</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">2 task on 1 node&#10;[root@lab8105 ~]# mpirun -host lab8105  --allow-run-as-root -np 2 mdtest -I 10  -z 5 -b 2 -d /mnt/zptest/ -t -c 2&#10;-- started at 01/27/2015 21:06:23 --&#10;&#10;mdtest-1.9.3 was launched with 2 total task(s) on 1 node(s)&#10;Command line used: mdtest -I 10 -z 5 -b 2 -d /mnt/zptest/ -t -c 2&#10;Path: /mnt/zptest&#10;FS: 6.5 TiB   Used FS: 59.2%   Inodes: 0.6 Mi   Used Inodes: 100.0%&#10;&#10;2 tasks, 1260 files/directories&#10;&#10;SUMMARY: (of 1 iterations)&#10;   Operation                      Max            Min           Mean        Std Dev&#10;   ---------                      ---            ---           ----        -------&#10;   Directory creation:        312.088        312.088        312.088          0.000&#10;   Directory stat    :      73447.245      73447.245      73447.245          0.000&#10;   Directory removal :        255.755        255.755        255.755          0.000&#10;   File creation     :        638.824        638.824        638.824          0.000&#10;   File stat         :      86747.366      86747.366      86747.366          0.000&#10;   File read         :      84434.232      84434.232      84434.232          0.000&#10;   File removal      :        207.545        207.545        207.545          0.000&#10;   Tree creation     :         39.062         39.062         39.062          0.000&#10;   Tree removal      :         46.971         46.971         46.971          0.000&#10;&#10;-- finished at 01/27/2015 21:06:43 --</span><br></pre></td></tr></table></figure>
+<h3 id="多机并发测试">多机并发测试</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&#22914;&#19979;&#26174;&#31034;&#30340;2 task on 2 node&#10;&#10;[root@lab8105 ~]#  mpirun  --allow-run-as-root -np 2 mdtest -I 10  -z 5 -b 2 -d /mnt/zptest/ -t -c 2&#10;-- started at 01/27/2015 21:04:35 --&#10;&#10;mdtest-1.9.3 was launched with 2 total task(s) on 2 node(s)&#10;Command line used: mdtest -I 10 -z 5 -b 2 -d /mnt/zptest/ -t -c 2&#10;Path: /mnt/zptest&#10;FS: 6.5 TiB   Used FS: 59.2%   Inodes: 0.6 Mi   Used Inodes: 100.0%&#10;&#10;2 tasks, 1260 files/directories&#10;&#10;SUMMARY: (of 1 iterations)&#10;   Operation                      Max            Min           Mean        Std Dev&#10;   ---------                      ---            ---           ----        -------&#10;   Directory creation:        312.355        312.355        312.355          0.000&#10;   Directory stat    :       1611.000       1611.000       1611.000          0.000&#10;   Directory removal :        127.333        127.333        127.333          0.000&#10;   File creation     :        309.295        309.295        309.295          0.000&#10;   File stat         :     113257.534     113257.534     113257.534          0.000&#10;   File read         :     203458.057     203458.057     203458.057          0.000&#10;   File removal      :         98.523         98.523         98.523          0.000&#10;   Tree creation     :         36.566         36.566         36.566          0.000&#10;   Tree removal      :         20.191         20.191         20.191          0.000&#10;&#10;-- finished at 01/27/2015 21:05:12 --</span><br></pre></td></tr></table></figure>
+<p>关于目录生成的问题：<br>这个是 -z 2 -b 3<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 mnt]<span class="comment"># ls mdtest2/#test-dir.0/mdtest_tree.0/</span></span><br><span class="line">mdtest_tree.<span class="number">1</span>  mdtest_tree.<span class="number">2</span>  mdtest_tree.<span class="number">3</span></span><br><span class="line">[root@lab8106 mnt]<span class="comment"># ls mdtest2/#test-dir.0/mdtest_tree.0/mdtest_tree.1/</span></span><br><span class="line">mdtest_tree.<span class="number">4</span>  mdtest_tree.<span class="number">5</span>  mdtest_tree.<span class="number">6</span></span><br></pre></td></tr></table></figure></p>
+<p>这个是以这个目录开始的<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 mnt]<span class="comment"># ls mdtest2/#test-dir.0/mdtest_tree.0/</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/03/24/ubuntu配置简单的DNS服务器/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ubuntu配置简单的DNS服务器
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/03/24/cgroup实践-资源控制/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">cgroup实践-资源控制</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'mdtest测试工具',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

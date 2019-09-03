@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ceph的书 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="以下是最新的一本ceph英文书的目录，我会学习里面的内容，并且翻译成中文的读书笔记，接触ceph也有几年了，还记得那个夏天毕业的时候辞掉了一份实施的工作，转而换了一份测试工程师的工作，然后就接触了现在非常火的ceph现在在接触的越多的相关知识后，越发发现自己还需要学的东西很多，只有掌握的越多，越能对你所做的事情能后有确定的信心，所以抓住一切能成长的机会，在技术上，我是很喜欢遇到问题的，遇到的问题越">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph的书">
+<meta property="og:url" content="http://www.zphj1987.com/2016/03/12/ceph的书/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="以下是最新的一本ceph英文书的目录，我会学习里面的内容，并且翻译成中文的读书笔记，接触ceph也有几年了，还记得那个夏天毕业的时候辞掉了一份实施的工作，转而换了一份测试工程师的工作，然后就接触了现在非常火的ceph现在在接触的越多的相关知识后，越发发现自己还需要学的东西很多，只有掌握的越多，越能对你所做的事情能后有确定的信心，所以抓住一切能成长的机会，在技术上，我是很喜欢遇到问题的，遇到的问题越">
+<meta property="og:image" content="http://mypic.cn-bj.ufileos.com/payforzp.png">
+<meta property="og:image" content="http://zphj1987.cn-bj.ufileos.com/qqqun2.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ceph的书">
+<meta name="twitter:description" content="以下是最新的一本ceph英文书的目录，我会学习里面的内容，并且翻译成中文的读书笔记，接触ceph也有几年了，还记得那个夏天毕业的时候辞掉了一份实施的工作，转而换了一份测试工程师的工作，然后就接触了现在非常火的ceph现在在接触的越多的相关知识后，越发发现自己还需要学的东西很多，只有掌握的越多，越能对你所做的事情能后有确定的信心，所以抓住一切能成长的机会，在技术上，我是很喜欢遇到问题的，遇到的问题越">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ceph的书" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/12/ceph的书/" class="article-date">
+  	<time datetime="2016-03-12T15:50:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ceph的书
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>以下是最新的一本ceph英文书的目录，我会学习里面的内容，并且翻译成中文的读书笔记，接触ceph也有几年了，还记得那个夏天毕业的时候辞掉了一份实施的工作，转而换了一份测试工程师的工作，然后就接触了现在非常火的ceph<br>现在在接触的越多的相关知识后，越发发现自己还需要学的东西很多，只有掌握的越多，越能对你所做的事情能后有确定的信心，所以抓住一切能成长的机会，在技术上，我是很喜欢遇到问题的，遇到的问题越多，能够学到的东西越多，所以在ceph的中国社区里面，在一段时间内，我都尽力去回答每一个我知道的问题，但是我们毕竟是一家商业的公司，自己的技术不是都能够去无私的告诉别人，所以在某些时候，还是需要有所保留的。在公司没有涉及的领域，技术方面是可以共同学习成长的，这个也能够认识一些技术圈的朋友，之前有录过几段小的视频教程，之所以停止下来，发现那个太耗时间了，并且能够之前传递的知识面比较小，在这里感谢之前支持的朋友<br>在ceph这套系统里面，在跟一些朋友有过技术的交流后，发现真的是不知者不惧，在没有深入了解运行机制的情况下，做着一些非常危险的操作，很多操作可能会直接弄崩掉集群，我们应该对未知的东西充满敬畏之心，小心小心再小心<br>在任何情况下，如果有条件允许，ceph的集群一定要部署两套，一个作为备份，这个是我一直坚持的观点，因为系统级别的故障是你永远无法预料的，副本只能解决系统内的故障，你的修复能力也只能将损失降到最低</p>
+<p>好吧那么开始下面的学习之旅了！<br><a id="more"></a></p>
+<p><br></p>
+<h3 id="样张：">样张：</h3><center><embed src="http://www.zphj1987.com/assets/book.pdf" width="850" height="700"></center>
+
+
+<h4 id="ceph_cookbook">ceph cookbook</h4><h4 id="参与人员(完成)">参与人员(完成)</h4><h4 id="前言（完成）">前言（完成）</h4><h4 id="关于作者（完成）">关于作者（完成）</h4><h4 id="关于审稿（完成）">关于审稿（完成）</h4><h4 id="序言（完成）">序言（完成）</h4><ul>
+<li>你需要为这本书准备什么（完成）</li>
+<li>这本书为谁写的（完成）</li>
+<li>章节结构（完成）</li>
+<li>约定（完成）</li>
+<li>读者反馈（完成）</li>
+<li>客户支持（完成）<h3 id="1-ceph-介绍以及其它">1.ceph-介绍以及其它</h3></li>
+<li>ceph-一个新的时代开启（完成）</li>
+<li>RAID-一个时代的结束(完成)</li>
+<li>ceph-架构的概述</li>
+<li>ceph的部署的规划</li>
+<li>创建一个虚拟的环境</li>
+<li>安装和配置ceph</li>
+<li>扩展你的集群</li>
+<li>集群操作的实践<h3 id="2-Ceph_Block_Device_相关">2.Ceph Block Device 相关</h3></li>
+<li>ceph Block Device 相关</li>
+<li>配置ceph客户端</li>
+<li>创建 ceph block device</li>
+<li>映射 ceph block Device</li>
+<li>调整 ceph rbd 大小</li>
+<li>RBD 快照相关</li>
+<li>RBD 克隆相关</li>
+<li>快速浏览一下openstack</li>
+<li>ceph-openstack 的最佳组合</li>
+<li>配置 openstack</li>
+<li>配置 glance 的ceph 后端</li>
+<li>配置 cinder 的ceph 后端</li>
+<li>配置 nova 连接ceph RBD</li>
+<li>配置 nova 从ceph rbd启动实例<h3 id="3-ceph_对象存储相关">3.ceph 对象存储相关</h3></li>
+<li>理解 ceph 对象存储</li>
+<li>RADOS网关的标准设置,安装和配置</li>
+<li>创建一个 radosgw 用户</li>
+<li>使用 s3 API 访问ceph对象存储</li>
+<li>使用 swift 访问 ceph对象存储</li>
+<li>RADOS 网关与 openstack keystone的整合</li>
+<li>ceph 联合网关配置</li>
+<li>测试 ceph 联合网关配置</li>
+<li>基于RGW构建文件同步和共享服务<h3 id="4-ceph_文件系统相关">4.ceph 文件系统相关</h3></li>
+<li>理解 ceph 文件系统 和 MDS</li>
+<li>部署 ceph MDS</li>
+<li>使用内核驱动访问cephfs</li>
+<li>使用 fuse 客户端访问cephfs</li>
+<li>使用nfs作为cephfs的接口</li>
+<li>cephfs的windows客户端 ceph-dokan</li>
+<li>cephfs 直接替代 hdfs<h3 id="5-使用_calamari_监控ceph_集群">5.使用 calamari 监控ceph 集群</h3></li>
+<li>ceph 集群的监控-经典方法</li>
+<li>监控ceph集群</li>
+<li>介绍 ceph calamari</li>
+<li>打包 calamari server </li>
+<li>打包 calamari client </li>
+<li>配置 calamari master 服务器</li>
+<li>添加 ceph 节点到 calamari</li>
+<li>通过calamari 图形界面监控ceph集群</li>
+<li>calamari 故障排查<h3 id="6-操作和管理_ceph_集群">6.操作和管理 ceph 集群</h3></li>
+<li>理解 ceph 服务管理</li>
+<li>管理 集群的配置文件</li>
+<li>使用 SYSvinit 运行ceph</li>
+<li>使用 service 运行ceph</li>
+<li>横向扩展 与纵向扩展</li>
+<li>横向扩展你的集群</li>
+<li>横向缩小你的集群</li>
+<li>替换集群一个损坏的盘</li>
+<li>升级你的集群</li>
+<li>维护一个集群<h3 id="7-ceph的内部运作">7.ceph的内部运作</h3></li>
+<li>ceph 可扩展性和高可用性</li>
+<li>理解crush 的运行机制</li>
+<li>crush map 内部</li>
+<li>ceph 的 cluster map</li>
+<li>minitors的高可用</li>
+<li>ceph 认证和授权</li>
+<li>ceph 集群动态管理</li>
+<li>ceph placement group</li>
+<li>placement group 状态</li>
+<li>在指定osd上创建存储池<h3 id="8-生产环境的规划和性能调优">8.生产环境的规划和性能调优</h3></li>
+<li>容量、性能、以及成本的动态变化</li>
+<li>选择ceph的硬件和软件组件</li>
+<li>ceph 建议和性能调优</li>
+<li>ceph 纠删码</li>
+<li>创建一个纠删码存储池</li>
+<li>ceph 的cache tiering</li>
+<li>创建cache tiering的存储池</li>
+<li>创建cache tiering</li>
+<li>配置cache tier</li>
+<li>测试cache tier<h3 id="9-ceph的virtual_storage_manager（intel的vsm）">9.ceph的virtual storage manager（intel的vsm）</h3></li>
+<li>理解 vsm 的架构</li>
+<li>配置 vsm 的环境</li>
+<li>vsm的准备工作</li>
+<li>安装vsm</li>
+<li>使用vsm创建一个集群</li>
+<li>探索 vsm 的图形界面</li>
+<li>使用 vsm 升级一个集群</li>
+<li>vsm 的roadmap</li>
+<li>vsm 的资源<h3 id="10-更多关于ceph">10.更多关于ceph</h3></li>
+<li>ceph 集群的基准测试</li>
+<li>磁盘性能基准</li>
+<li>网络性能的基准</li>
+<li>ceph 的rados bench</li>
+<li>rados load-gen 负载生成</li>
+<li>ceph block device的基准测试</li>
+<li>使用fio做rbd的基准测试</li>
+<li>ceph 的admin socket</li>
+<li>使用ceph tell 命令</li>
+<li>ceph rest api</li>
+<li>分析 ceph 内存</li>
+<li>使用 ansible 部署集群</li>
+<li>ceph-objectstore 工具</li>
+</ul>
+<hr>
+<p>更新时间：2016-07-15</p>
+<ul>
+<li>继续</li>
+</ul>
+<p>更新时间：2016-03-15</p>
+<ul>
+<li>序言章节完成</li>
+<li>需要补充gfio测试rbd内容</li>
+</ul>
+<p>更新时间：2016-03-14</p>
+<ul>
+<li>使用fio做rbd的基准测试章节完成，会根据从中挑选出部分先写</li>
+</ul>
+<p>更新时间：2016-03-13</p>
+<ul>
+<li>完成参与人员章节翻译与评论</li>
+</ul>
+<p>更新时间：2016-03-12</p>
+<ul>
+<li>创建book的目录</li>
+</ul>
+<hr>
+<p><a href="https://zphj1987.gitbooks.io/calamaribook/content/" title="我之前的calamari书" target="_blank" rel="external">我之前的calamari书</a></p>
+<p>可能由于是出版书的原因，作者不会在某一个点上讲的太深，让人意犹未尽，这个作者只是一个引子，关键还是靠自己摸索，欢迎讨论相关技术</p>
+<p>会创建一个读者群用于交流本书</p>
+<p><strong>如果觉得我的文章对您有用，请联系我（qq:199383004）。您的支持将鼓励我继续创作！</strong></p>
+<p><div style="text-align:center"><br><img src="http://mypic.cn-bj.ufileos.com/payforzp.png" alt="支付宝" title="支付宝扫一扫"></div></p>
+<div style="text-align:center">
+
+
+<hr>
+<p>关于本书的讨论群：</p>
+<p><img src="http://zphj1987.cn-bj.ufileos.com/qqqun2.png" alt=""></p>
+<p>感谢支持人员：<br>运维-北京-struggle<br>研发-北京-solar<br>运维-北京-小白<br>研发-北京-猪呆呆</p>
+</div>
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/03/24/ceph查询rbd的使用容量（快速）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ceph查询rbd的使用容量（快速）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/03/丢了ceph-mon-kerying解决办法/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">丢了ceph.mon.keying解决办法</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'ceph的书',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ceph根据Crush位置读取数据 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言在ceph研发群里面看到一个cepher在问关于怎么读取ceph的副本的问题，这个功能应该在2012年的时候,我们公司的研发就修改了代码去实现这个功能，只是当时的硬件条件所限，以及本身的稳定性问题，后来没有在生产当中使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph根据Crush位置读取数据">
+<meta property="og:url" content="http://www.zphj1987.com/2017/04/27/Ceph-depend-Crush-read-data/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="前言在ceph研发群里面看到一个cepher在问关于怎么读取ceph的副本的问题，这个功能应该在2012年的时候,我们公司的研发就修改了代码去实现这个功能，只是当时的硬件条件所限，以及本身的稳定性问题，后来没有在生产当中使用">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/read.gif?imageMogr2/thumbnail/!75p">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ceph根据Crush位置读取数据">
+<meta name="twitter:description" content="前言在ceph研发群里面看到一个cepher在问关于怎么读取ceph的副本的问题，这个功能应该在2012年的时候,我们公司的研发就修改了代码去实现这个功能，只是当时的硬件条件所限，以及本身的稳定性问题，后来没有在生产当中使用">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Ceph-depend-Crush-read-data" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/04/27/Ceph-depend-Crush-read-data/" class="article-date">
+  	<time datetime="2017-04-27T08:47:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ceph根据Crush位置读取数据
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/read.gif?imageMogr2/thumbnail/!75p" alt=""><br></center>
+
+<h2 id="前言">前言</h2><p>在ceph研发群里面看到一个cepher在问关于怎么读取ceph的副本的问题，这个功能应该在2012年的时候,我们公司的研发就修改了代码去实现这个功能，只是当时的硬件条件所限，以及本身的稳定性问题，后来没有在生产当中使用<br><a id="more"></a><br>我们都知道ceph在写数据的时候，是先写主本，然后去写副本，而读取的时候，实际上只有主本能够提供服务，这对于磁盘的整体带宽来说，并没有充分的发挥其性能，所以能够读取副本当然是会有很大好处的，特别是对于读场景比较多的情况</p>
+<p>那么在ceph当中是不是有这个功能呢？其实是有的，这个地方ceph更往上走了一层，是基于crush定义的地址去进行文件的读取，这样在读取的客户端眼里，就没有什么主副之分，他会按自己想要的区域去尽量读取，当然这个区域没有的时候就按正常读取就可以了<br><!--more--></p>
+<h2 id="实践">实践</h2><p>如果你看过关于ceph hadoop的相关配置文档，应该会看到这么一个配置</p>
+<blockquote>
+<p>ceph.localize.reads<br>Allow reading from file replica objects<br>Default value: true</p>
+</blockquote>
+<p>显示的是可以从非主本去读取对象，这个对于hadoop场景肯定是越近越好的，可以在ceph的代码里面搜索下 localize-reads<br><a href="https://github.com/ceph/ceph/blob/master/src/ceph_fuse.cc" target="_blank" rel="external">https://github.com/ceph/ceph/blob/master/src/ceph_fuse.cc</a><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (std::vector&lt;const char*&gt;::iterator i = args.begin(); i != args.end(); ) &#123;</span><br><span class="line">  <span class="keyword">if</span> (ceph_argparse_double_dash(args, i)) &#123;</span><br><span class="line">    <span class="built_in">break</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ceph_argparse_flag(args, i, <span class="string">"--localize-reads"</span>, (char*)NULL)) &#123;</span><br><span class="line">    cerr &lt;&lt; <span class="string">"setting CEPH_OSD_FLAG_LOCALIZE_READS"</span> &lt;&lt; std::endl;</span><br><span class="line">    filer_flags |= CEPH_OSD_FLAG_LOCALIZE_READS;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ceph_argparse_flag(args, i, <span class="string">"-h"</span>, <span class="string">"--help"</span>, (char*)NULL)) &#123;</span><br><span class="line">    usage();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    ++i;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到在ceph-fuse的情况下，是有这个隐藏的一个参数的，本篇就是用这个隐藏的参数来进行实践</p>
+<h3 id="配置一个两节点集群">配置一个两节点集群</h3><p>配置完成了以后ceph的目录树如下,mon部署在lab8106上面<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8107 ~]<span class="comment"># ceph osd tree</span></span><br><span class="line">ID WEIGHT  TYPE NAME        UP/DOWN REWEIGHT PRIMARY-AFFINITY </span><br><span class="line">-<span class="number">1</span> <span class="number">1.07336</span> root default                                       </span><br><span class="line">-<span class="number">2</span> <span class="number">0.53778</span>     host lab8106                                   </span><br><span class="line"> <span class="number">1</span> <span class="number">0.26779</span>         osd.<span class="number">1</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"> <span class="number">0</span> <span class="number">0.26999</span>         osd.<span class="number">0</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line">-<span class="number">3</span> <span class="number">0.53558</span>     host lab8107                                   </span><br><span class="line"> <span class="number">2</span> <span class="number">0.26779</span>         osd.<span class="number">2</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span> </span><br><span class="line"> <span class="number">3</span> <span class="number">0.26779</span>         osd.<span class="number">3</span>         up  <span class="number">1.00000</span>          <span class="number">1.00000</span></span><br><span class="line">[root@lab8107 ~]<span class="comment"># ceph -s|grep mon</span></span><br><span class="line">monmap e1: <span class="number">1</span> mons at &#123;lab8106=<span class="number">192.168</span>.<span class="number">8.106</span>:<span class="number">6789</span>/<span class="number">0</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="在lab8107上挂载客户端">在lab8107上挂载客户端</h3><p>在/etc/ceph/ceph.conf中增加一个配置<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[client]</span><br><span class="line">crush_location = <span class="string">"host=lab8107 root=default"</span></span><br></pre></td></tr></table></figure></p>
+<p>这个配置的作用是告诉这个客户端尽量去读取lab8107上面的对象<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8107 ~]<span class="comment"># ceph-fuse -m lab8106:6789 /mnt  --localize-reads</span></span><br></pre></td></tr></table></figure></p>
+<p>写入一个大文件<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8107 ~]<span class="comment"># dd if=/dev/zero of=a bs=4M count=4000</span></span><br></pre></td></tr></table></figure></p>
+<p>在lab8106和lab8107上监控磁盘<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8107 ~]<span class="comment"># iostat -dm 1</span></span><br></pre></td></tr></table></figure></p>
+<p>读取数据<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8107 ~]<span class="comment"># dd if=a of=/dev/null</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到只有lab8107上有磁盘的读取，也就是读取的数据里面肯定也有副本，都是从lab8107上面读取了</p>
+<p>如果需要多次测试，需要清除下缓存<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sync; <span class="built_in">echo</span> <span class="number">3</span> &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure></p>
+<p>并且重新挂载客户端，这个读取crush的位置的操作是在mount的时候读取的</p>
+<h2 id="使用场景">使用场景</h2><p>上面的配置是可以指定多个平级的位置的<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[client]</span><br><span class="line">crush_location = <span class="string">"host=lab8106 host=lab8107 root=default"</span></span><br></pre></td></tr></table></figure></p>
+<p>这样，在一些读请求很多的场景下，可以把整个后端按逻辑上划分为一个个的区域，然后前面的客户端就可以平级分配到这些区域当中，这样就可以比较大的限度去把副本的读取也调动起来的</p>
+<p>目前在ceph-fuse上已经实现，rbd里面也有类似的一些处理，这个是一个很不错的功能</p>
+<h2 id="总结">总结</h2><p>ceph里面有很多可配置的东西，怎么用好它，最大限度的去适配使用场景，还是有很大的可调的空间的，所谓学无止境，我也在学习python coding了，有很多想法等着去实现</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2017-04-27</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/03/mutimds-to-single-mds/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          多MDS变成单MDS的方法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/27/about-backfill-conf/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于backfill参数建议</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: 'Ceph根据Crush位置读取数据',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

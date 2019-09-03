@@ -192,71 +192,6 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
-    <article id="post-Ceph用户邮件列表Vol45-Issue3" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/08/Ceph用户邮件列表Vol45-Issue3/" class="article-date">
-  	<time datetime="2016-11-08T09:26:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-11-08</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/08/Ceph用户邮件列表Vol45-Issue3/">Ceph用户邮件列表Vol45-Issue3</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mysrc.cn-bj.ufileos.com/number/daythree.png" alt=""><br></center>
-
-<h2 id="ceph_Vol_45_Issue_3">ceph Vol 45 Issue 3</h2><h3 id="1-Crash_in_ceph_readdir-">1.Crash in ceph_readdir.</h3><blockquote>
-<p>Hello, </p>
-<p>I’ve been investigating the following crash with cephfs:<br>···<br>According to the state of the ceph_inoide_info this means that<br>ceph_dir_is_complete_ordered would return true and the second condition<br>should also be true since ptr_pos is held in r12 and the dir size is 26496.<br>So the dentry being passed should be the 2953 % 512 = 393 in the<br>cache_ctl.dentries array.<br>Unfortunately my crashdump excldues the page cache pages and I cannot really see<br>what are the contents of the dentries array. </p>
-</blockquote>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/11/08/Ceph用户邮件列表Vol45-Issue3/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
     <article id="post-Ceph用户邮件列表Vol45-Issue2" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -817,6 +752,70 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/10/19/Ceph中PG和PGP的区别/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
+    <article id="post-配置Ceph的IPV6集群" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/17/配置Ceph的IPV6集群/" class="article-date">
+  	<time datetime="2016-10-17T08:19:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-10-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/17/配置Ceph的IPV6集群/">配置Ceph的IPV6集群</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/ceph/ipv6.jpeg" alt="ipv6"><br></center><br>一、前言<br>对于IPV6实在是非常的陌生，所以本篇开始会讲一下最基本的网络配置，首先让网络能通起来，最开始就是因为不熟悉IPV6,而直接使用了link local地址，造成了mon部署的时候进程无法绑定到IP，从而端口没有启动，这个是在ceph社区群友 <code>ceph-长沙-柠檬</code> 同学的帮助下才发现问题的</p>
+<p>IPV6是会有个link local地址的，在一个接口可以配置很多IPv6地址，所以学习路由就有可能出现很多下一跳。所以出现Link Local地址唯一标识一个节点。在本地链路看到下一跳都是对端的Link Local地址。这个地址一般是以fe80开头的，子网掩码为64，这个地方需要给机器配置一个唯一的全局单播地址</p>
+<blockquote>
+<p>However, with IPv6, all (IPv6) interfaces will have a link local address. This address is intended to allow communications over the attached links and so is defined to be usable only on that link.</p>
+</blockquote>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/10/17/配置Ceph的IPV6集群/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

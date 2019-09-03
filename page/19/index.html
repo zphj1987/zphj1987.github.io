@@ -192,67 +192,6 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
-    <article id="post-批量下载instagram图片" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/09/28/批量下载instagram图片/" class="article-date">
-  	<time datetime="2015-09-28T05:54:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-09-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/28/批量下载instagram图片/">批量下载instagram图片</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="下载图片：">下载图片：</h3><p>通过下面的网址可以批量下载图片，需要翻墙</p>
-<p><a href="http://instrport.me/" target="_blank" rel="external">http://instrport.me/</a></p>
-<h3 id="处理图片到blog可用">处理图片到blog可用</h3><p>使用脚本运行<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="shebang">#! /bin/sh</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> `ls ./ins`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">year=`<span class="built_in">echo</span> <span class="variable">$file</span>|cut <span class="operator">-f</span> <span class="number">1</span> <span class="operator">-d</span> -`</span><br><span class="line">mouth=`<span class="built_in">echo</span> <span class="variable">$file</span>|cut <span class="operator">-f</span> <span class="number">2</span> <span class="operator">-d</span> -`</span><br><span class="line">	</span><br><span class="line"><span class="built_in">echo</span> <span class="operator">-e</span> <span class="string">"&#123;\"src\":\"https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/<span class="variable">$file</span>\",\"text\":\"\",\"y\":<span class="variable">$year</span>,\"m\":<span class="variable">$mouth</span>&#125;,\c"</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
-<p>替换instagram中的相应字段即可</p>
-<p>本地修改：themes\yilia\source\js</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/instagram/">instagram</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
     <article id="post-删除ceph集群mds" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -820,6 +759,70 @@ daovoice('update');
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/脚本/">脚本</a></li></ul>
 	</div>
 
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
+    <article id="post-history命令的优化" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/31/history命令的优化/" class="article-date">
+  	<time datetime="2015-03-31T08:53:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-31</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/31/history命令的优化/">history命令的优化</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>现在在项目中遇到这个情况比较多，在执行了一系列的命令后，想去翻历史记录的时候，翻不到历史记录，不同终端的命令，没有汇总，也不清楚那条命令是什么时候执行的，所以需要对默认的命令进行下面两个优化：</p>
+<ul>
+<li>让历史记录里面带有时间</li>
+<li>让所有终端命令都记录到history当中去</li>
+</ul>
+<h3 id="添加日期">添加日期</h3><p>在 /etc/bashrc 末尾添加：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">HISTTIMEFORMAT=&#34;%F %T &#34;&#10;export HISTTIMEFORMAT</span><br></pre></td></tr></table></figure></p>
+<p>然后执行:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/bashrc</span><br></pre></td></tr></table></figure></p>
+<p>新开终端，history就已经带有日期</p>
+<h3 id="汇总命令，并且不同的终端可以通过上翻查询到命令">汇总命令，并且不同的终端可以通过上翻查询到命令</h3><p>在 /etc/bashrc 末尾添加：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line"># Avoid duplicates&#10;export HISTCONTROL=ignoredups:erasedups&#10;# When the shell exits, append to the history file instead of overwriting it&#10;shopt -s histappend&#10;&#10;# After each command, append to the history file and reread it&#10;export PROMPT_COMMAND=&#34;$&#123;PROMPT_COMMAND:+$PROMPT_COMMAND$&#39;\n&#39;&#125;history -a; history -c; history -r&#34;</span><br></pre></td></tr></table></figure></p>
+<p>然后执行:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> /etc/bashrc</span><br></pre></td></tr></table></figure></p>
+<h3 id="调整大小，增加到10000条">调整大小，增加到10000条</h3><p>在 /etc/bashrc 末尾添加：<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">export HISTSIZE=10000</span><br></pre></td></tr></table></figure></p>
+<p>然后执行:<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">source /etc/bashrc</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
       
 
       

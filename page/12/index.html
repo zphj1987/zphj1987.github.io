@@ -192,69 +192,6 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
-    <article id="post-替换OSD操作的优化与分析" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/09/19/替换OSD操作的优化与分析/" class="article-date">
-  	<time datetime="2016-09-19T02:56:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/19/替换OSD操作的优化与分析/">替换OSD操作的优化与分析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/reolaceosd/terminal.png" alt="replaceosd"><br></center></p>
-<h2 id="前言">前言</h2><p>之前有写过一篇<a href="http://www.zphj1987.com/2016/01/12/%E5%88%A0%E9%99%A4osd%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%96%B9%E5%BC%8F/">删除OSD的正确方式</a>，里面只是简单的讲了下删除的方式怎样能减少迁移量，本篇属于一个扩展，讲述了 Ceph 运维当中经常出现的坏盘提换盘的步骤的优化</p>
-<p>基础环境两台主机每台主机8个 OSD，一共 16 个 OSD，副本设置为2，PG 数设置为800，计算下来平均每个 OSD 上的 P G数目为100个，本篇将通过数据来分析不同的处理方法的差别</p>
-<p>开始测试前先把环境设置为 <code>noout</code>，然后通过停止 OSD 来模拟 OSD 出现了异常，之后进行不同处理方法<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/09/19/替换OSD操作的优化与分析/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
     <article id="post-Centos7下Jewel版本radosgw服务启动" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -819,6 +756,70 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/07/26/如何替换Ceph的Journal/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
+    <article id="post-modprobe-FATAL-Module-ceph-not-found解决办法" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/07/24/modprobe-FATAL-Module-ceph-not-found解决办法/" class="article-date">
+  	<time datetime="2016-07-24T14:48:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-07-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/24/modprobe-FATAL-Module-ceph-not-found解决办法/">modprobe: FATAL: Module ceph not found解决办法</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、问题">一、问题</h3><p>有可能你在进行 Ceph 文件系统挂载的时候出现下面的提示：</p>
+<blockquote>
+<p>modprobe: FATAL: Module ceph not found.<br>mount.ceph: modprobe failed, exit status 1<br>mount error: ceph filesystem not supported by the system</p>
+</blockquote>
+<p>这个是因为你的内核当中没有cephfs的相关模块，这个 centos6 下面比较常见，因为 centos6 的内核是 2.6.32,这个版本的内核中还没有集成cephfs的内核模块，而在 centos7 默认内核 3.10中已经默认集成了这个模块，我们看下集成的模块是怎样的显示</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/07/24/modprobe-FATAL-Module-ceph-not-found解决办法/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

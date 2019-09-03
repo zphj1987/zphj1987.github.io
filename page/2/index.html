@@ -192,69 +192,6 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
-    <article id="post-use-s3-test-to-ceph-compatibility-tests" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/06/27/use-s3-test-to-ceph-compatibility-tests/" class="article-date">
-  	<time datetime="2018-06-27T09:16:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-27</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/06/27/use-s3-test-to-ceph-compatibility-tests/">利用s3-test进行ceph的接口兼容性测试</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mypic.cn-bj.ufileos.com/s3.jpg" alt="s3"><br></center>
-
-<h2 id="前言">前言</h2><p>ceph的rgw能够提供一个兼容性的s3的接口，既然是兼容性，当然不可能是所有接口都会兼容，那么我们需要有一个工具来进行接口的验证以及测试，这个在其他测试工具里面有类似的posix接口验证工具，这类的工具就是跑测试用例，来输出通过或者不通过的列表</p>
-<p>用此类的工具有个好的地方就是，能够对接口进行验证，来避免版本的更新带来的接口破坏<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2018/06/27/use-s3-test-to-ceph-compatibility-tests/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
     <article id="post-ceph-erasure-default-min-size" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -827,6 +764,69 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2018/01/05/Kernel-RBD-QOS/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
+    <article id="post-ceph-primary-object-damage-recover" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/01/02/ceph-primary-object-damage-recover/" class="article-date">
+  	<time datetime="2018-01-02T14:21:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/02/ceph-primary-object-damage-recover/">Ceph对象主本损坏的修复方法</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/dog.jpg" alt="dog"><br></center>
+
+<h2 id="前言">前言</h2><p>问题的触发是在进行一个目录的查询的时候，osd就会挂掉，开始以为是osd操作超时了，后来发现每次访问这个对象都有问题<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">log</span> [WRN] ： slow request <span class="number">60.793196</span> seconds old, received at osd_op(mds.<span class="number">0.188</span>:<span class="number">728345234100006</span>c6ddc.<span class="number">00000000</span> [o map-get-header <span class="number">0</span>-<span class="number">0</span>,omap-get-vals <span class="number">0</span>~<span class="number">16</span>,getxattr parent] snapc <span class="number">0</span>=[] ack+<span class="built_in">read</span>+known_<span class="keyword">if</span>_redirected+full_force e218901) currently started</span><br><span class="line">heartbeat_map is_healthy  ··· osd_op_tp thread ··· had timed out after <span class="number">60</span></span><br></pre></td></tr></table></figure></p>
+<p>这个对象是元数据的一个空对象，保留数据在扩展属性当中<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2018/01/02/ceph-primary-object-damage-recover/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

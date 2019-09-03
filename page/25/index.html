@@ -192,67 +192,6 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
-    <article id="post-debian修改crontab默认编辑器为vim" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/22/debian修改crontab默认编辑器为vim/" class="article-date">
-  	<time datetime="2015-03-22T08:46:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/22/debian修改crontab默认编辑器为vim/">debian修改crontab默认编辑器为vim</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>debian终端下默认编辑器为nano,比如crontab -e就会打开nano,这个编辑器用起来很不习惯,想修改为vim,当然,你的debian系统必须先安装vim.如果已经安装vim,请输入如下命令:<br>输入命令:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">update-alternatives --config editor</span><br></pre></td></tr></table></figure>
-<p>然后选择/usr/vim/vim.basic就OK了</p>
-<p>vim.tiny与vim.basic的区别是vim.basic为完全的vim,而vim.tiny为简化版,功能上有所区别,如不支持高亮等等.</p>
-<p>写于: 2012年5月04日<br>更新于: 2015年03月22日</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
     <article id="post-正确用DD测试磁盘读写速度" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -754,6 +693,65 @@ daovoice('update');
 
       
 
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
+    <article id="post-卸载python安装的软件" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/22/卸载python安装的软件/" class="article-date">
+  	<time datetime="2015-03-22T07:26:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/22/卸载python安装的软件/">卸载python安装的软件</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>python源码安装的软件是无法通过命令卸载的,这个可以通过记录安装过程的形式来卸载安装的软件</p>
+<p>以 python2.7.2 为例,在这个目录中有一个 setup.py 的文件,很显然这是安装程序,还是python写的,用 python 写 python 到安装程序,大开眼界了。在这里,需要写一个 shell 脚本,把在重新安装中提到的安装位置全部删除,就实现了卸载到目的了</p>
+<h3 id="一、创建del-sh脚本内容(在源码目录):">一、创建del.sh脚本内容(在源码目录):</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">#!/bin/bash  &#10;for i in $(less files.txt)  &#10;do  rm -rf $i  &#10;done</span><br></pre></td></tr></table></figure>
+<p>脚本说明: files.txt 是需要事先在目录下创建的文件,目的是记录安装过程中提到到路径。脚本很简单,详细的就不说了,学过 shell 编程到肯定没问题,没学过到有其他语言编程基础的,仔细看看也可以看懂。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/03/22/卸载python安装的软件/#more">more >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>

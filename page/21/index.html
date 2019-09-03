@@ -192,70 +192,6 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
-    <article id="post-custom-ubuntu-server-iso" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/24/custom-ubuntu-server-iso/" class="article-date">
-  	<time datetime="2015-03-24T00:58:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-24</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/24/custom-ubuntu-server-iso/">custom-ubuntu-server-iso</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Remastering the Ubuntu Desktop ISO is easy considering the existing graphical tools but did you ever wanted to build your custom Ubuntu Server Edition ISO ?</p>
-<p>Preparing the Environment<br>You’ll need a clean copy of the Ubuntu Server ISO that you want to customize. Since 10.04 is the latest Ubuntu version I will write down my examples using it but everything should work pretty much unchanged for older or newer versions.</p>
-<p>After you have you have the original iso image downloaded, make a copy it’s contents so we can later apply our patching there.</p>
-<p>cd /home/rgavril/Work</p>
-<p>mkdir original-iso custom-iso<br>mount -o loop ./ubuntu-10.04-server-i386.iso ./original-iso</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/03/24/custom-ubuntu-server-iso/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
     <article id="post-定制ubuntu的时候修改proseed" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -786,6 +722,69 @@ daovoice('update');
 
       
 
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
+    <article id="post-fio的配置使用" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/24/fio的配置使用/" class="article-date">
+  	<time datetime="2015-03-23T23:45:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/24/fio的配置使用/">fio的配置使用</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>将fio-2.1.10.tar.gz拷贝到linux服务器的/usr/src/下</p>
+<p>解压源码包:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@grandocean:/usr/src<span class="comment"># tar xvf fio-2.1.10.tar.gz </span></span><br><span class="line">root@grandocean:/usr/src<span class="comment"># cd fio-2.1.10/</span></span><br></pre></td></tr></table></figure></p>
+<p>安装依赖包:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@grandocean:/usr/src/fio-<span class="number">2.1</span>.<span class="number">10</span><span class="comment"># apt-get install pkg-config gtk+-2.0 libaio-dev</span></span><br></pre></td></tr></table></figure></p>
+<p>开启gfio:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@grandocean:/usr/src/fio-<span class="number">2.1</span>.<span class="number">10</span><span class="comment"># ./configure --enable-gfio</span></span><br></pre></td></tr></table></figure></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/测试工具/">测试工具</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/03/24/fio的配置使用/#more">more >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>

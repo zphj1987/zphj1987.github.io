@@ -4,7 +4,7 @@
   <subtitle><![CDATA[止于至善]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.zphj1987.com/"/>
-  <updated>2019-09-04T03:40:31.484Z</updated>
+  <updated>2019-09-04T03:44:55.693Z</updated>
   <id>http://www.zphj1987.com/</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[bluestore的osd的自启动]]></title>
+    <title><![CDATA[bluestore的osd自启动]]></title>
     <link href="http://www.zphj1987.com/2019/09/04/bluestore-osd-auto-start/"/>
     <id>http://www.zphj1987.com/2019/09/04/bluestore-osd-auto-start/</id>
     <published>2019-09-04T02:29:38.000Z</published>
-    <updated>2019-09-04T03:40:31.484Z</updated>
+    <updated>2019-09-04T03:44:55.693Z</updated>
     <content type="html"><![CDATA[<h2 id="前言">前言</h2><p>自启动相关的文章很多，有分析的很详细的文章，这里就不做赘述，本篇讲述的是什么情况下用，怎么用的问题</p>
 <h2 id="使用场景">使用场景</h2><p>一台机器的系统盘坏了，需要重装系统，相关的一些信息没有了，但是上面的数据盘还是在的，所以需要保留</p>
 <p>某个磁盘需要换台机器进行启动，但是那台机器上没有相关的信息<br><a id="more"></a></p>

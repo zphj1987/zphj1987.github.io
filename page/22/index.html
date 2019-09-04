@@ -192,6 +192,69 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-fio的配置使用" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/24/fio的配置使用/" class="article-date">
+  	<time datetime="2015-03-23T23:45:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/24/fio的配置使用/">fio的配置使用</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>将fio-2.1.10.tar.gz拷贝到linux服务器的/usr/src/下</p>
+<p>解压源码包:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@grandocean:/usr/src<span class="comment"># tar xvf fio-2.1.10.tar.gz </span></span><br><span class="line">root@grandocean:/usr/src<span class="comment"># cd fio-2.1.10/</span></span><br></pre></td></tr></table></figure></p>
+<p>安装依赖包:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@grandocean:/usr/src/fio-<span class="number">2.1</span>.<span class="number">10</span><span class="comment"># apt-get install pkg-config gtk+-2.0 libaio-dev</span></span><br></pre></td></tr></table></figure></p>
+<p>开启gfio:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@grandocean:/usr/src/fio-<span class="number">2.1</span>.<span class="number">10</span><span class="comment"># ./configure --enable-gfio</span></span><br></pre></td></tr></table></figure></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/测试工具/">测试工具</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/03/24/fio的配置使用/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-持续运行一个命令，并且将结果输出到文本" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -720,64 +783,6 @@ daovoice('update');
         <p class="article-more-link">
           <a  href="/2015/03/23/expect循环的写法/#more">more >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-linux系统启动的时候用脚本生成ssh密钥对（免输入enter）" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/22/linux系统启动的时候用脚本生成ssh密钥对（免输入enter）/" class="article-date">
-  	<time datetime="2015-03-22T15:07:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/22/linux系统启动的时候用脚本生成ssh密钥对（免输入enter）/">linux系统启动的时候用脚本生成ssh密钥对（免输入enter）</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>默认执行ssh-keygen的时候会需要连续输入enter,脚本里面不能有交互,所以去掉enter的操作,脚本如下,脚本执行完成以后的效果是自己对自己免登陆,需要免登陆其他服务器就把自己本机的id_rsa.pub拷贝到其他机器的authorized_keys当中就可以了<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="shebang">#! /bin/sh</span></span><br><span class="line">ssh-keygen -t rsa <span class="operator">-f</span> /root/.ssh/id_rsa -q -N <span class="string">""</span></span><br><span class="line">cat /root/.ssh/id_rsa.pub &gt;&gt; /root/.ssh/authorized_keys</span><br></pre></td></tr></table></figure></p>
-<p>写于: 2013年08月07日<br>更新于: 2015年03月22日</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/脚本/">脚本</a></li></ul>
-	</div>
-
-      
-
       
       <div class="clearfix"></div>
     </div>

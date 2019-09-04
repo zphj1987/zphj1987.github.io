@@ -192,6 +192,67 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-关于开始写教程的事" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/12/关于开始写教程的事/" class="article-date">
+  	<time datetime="2015-12-11T16:37:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-12-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/12/关于开始写教程的事/">关于开始写教程的事</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在加入到ceph社区的群里以后，尝试着去回答一些有关ceph的问题，发现很多问题其实自己都遇到过，而且很多问题是反复的会被人提起，对于新手来说，由于资源太多，可能就无法比较系统的去学习这个东西，网上的文档也很多，到底从哪里开始，怎么去做，遇到的问题到底是什么造成的，这些都很难一下找到解决办法</p>
+<p>有一天想到了是不是自己也可以尝试着去做一下这个事情，网上也会有相关的教程，但是这个实在太少太少，一来专业的讲师可能不会非常的熟悉集群，二来非常熟悉集群的人，也不一定有精力去完成这个事情，而我也不确定能不能很好的去做这个事情，但是总算是起步了</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/12/关于开始写教程的事/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-ceph集群的安装和配置教程" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -754,67 +815,6 @@ daovoice('update');
         <p class="article-more-link">
           <a  href="/2015/09/28/rbd的数据在哪里/#more">more >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-批量下载instagram图片" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/09/28/批量下载instagram图片/" class="article-date">
-  	<time datetime="2015-09-28T05:54:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-09-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/28/批量下载instagram图片/">批量下载instagram图片</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="下载图片：">下载图片：</h3><p>通过下面的网址可以批量下载图片，需要翻墙</p>
-<p><a href="http://instrport.me/" target="_blank" rel="external">http://instrport.me/</a></p>
-<h3 id="处理图片到blog可用">处理图片到blog可用</h3><p>使用脚本运行<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="shebang">#! /bin/sh</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> `ls ./ins`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">year=`<span class="built_in">echo</span> <span class="variable">$file</span>|cut <span class="operator">-f</span> <span class="number">1</span> <span class="operator">-d</span> -`</span><br><span class="line">mouth=`<span class="built_in">echo</span> <span class="variable">$file</span>|cut <span class="operator">-f</span> <span class="number">2</span> <span class="operator">-d</span> -`</span><br><span class="line">	</span><br><span class="line"><span class="built_in">echo</span> <span class="operator">-e</span> <span class="string">"&#123;\"src\":\"https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e15/<span class="variable">$file</span>\",\"text\":\"\",\"y\":<span class="variable">$year</span>,\"m\":<span class="variable">$mouth</span>&#125;,\c"</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
-<p>替换instagram中的相应字段即可</p>
-<p>本地修改：themes\yilia\source\js</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/instagram/">instagram</a></li></ul>
-	</div>
-
-      
-
       
       <div class="clearfix"></div>
     </div>

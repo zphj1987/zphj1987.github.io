@@ -192,6 +192,68 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-查询Ceph的OSD占用内存" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/08/查询Ceph的OSD占用内存/" class="article-date">
+  	<time datetime="2016-12-08T14:15:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-08</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/08/查询Ceph的OSD占用内存/">查询Ceph的OSD占用内存</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/Memory.png" alt=""><br></center>
+
+<h2 id="前言">前言</h2><p>之前写过一篇关于查询OSD的运行的CPU的情况的分享，本篇是讲的获取内存占用的，代码包括两种输出，一种是直接的表格，一种是可以方便解析的json<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/12/08/查询Ceph的OSD占用内存/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-基于发行版本内核打造自己的内核" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -744,71 +806,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/11/09/Ceph用户邮件列表Vol45-Issue4/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-Ceph用户邮件列表Vol45-Issue3" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/08/Ceph用户邮件列表Vol45-Issue3/" class="article-date">
-  	<time datetime="2016-11-08T09:26:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-11-08</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/08/Ceph用户邮件列表Vol45-Issue3/">Ceph用户邮件列表Vol45-Issue3</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mysrc.cn-bj.ufileos.com/number/daythree.png" alt=""><br></center>
-
-<h2 id="ceph_Vol_45_Issue_3">ceph Vol 45 Issue 3</h2><h3 id="1-Crash_in_ceph_readdir-">1.Crash in ceph_readdir.</h3><blockquote>
-<p>Hello, </p>
-<p>I’ve been investigating the following crash with cephfs:<br>···<br>According to the state of the ceph_inoide_info this means that<br>ceph_dir_is_complete_ordered would return true and the second condition<br>should also be true since ptr_pos is held in r12 and the dir size is 26496.<br>So the dentry being passed should be the 2953 % 512 = 393 in the<br>cache_ctl.dentries array.<br>Unfortunately my crashdump excldues the page cache pages and I cannot really see<br>what are the contents of the dentries array. </p>
-</blockquote>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/11/08/Ceph用户邮件列表Vol45-Issue3/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

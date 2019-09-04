@@ -4,7 +4,7 @@
   <subtitle><![CDATA[止于至善]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.zphj1987.com/"/>
-  <updated>2019-09-03T07:45:58.765Z</updated>
+  <updated>2019-09-04T03:40:31.484Z</updated>
   <id>http://www.zphj1987.com/</id>
   
   <author>
@@ -13,6 +13,55 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[bluestore的osd的自启动]]></title>
+    <link href="http://www.zphj1987.com/2019/09/04/bluestore-osd-auto-start/"/>
+    <id>http://www.zphj1987.com/2019/09/04/bluestore-osd-auto-start/</id>
+    <published>2019-09-04T02:29:38.000Z</published>
+    <updated>2019-09-04T03:40:31.484Z</updated>
+    <content type="html"><![CDATA[<h2 id="前言">前言</h2><p>自启动相关的文章很多，有分析的很详细的文章，这里就不做赘述，本篇讲述的是什么情况下用，怎么用的问题</p>
+<h2 id="使用场景">使用场景</h2><p>一台机器的系统盘坏了，需要重装系统，相关的一些信息没有了，但是上面的数据盘还是在的，所以需要保留</p>
+<p>某个磁盘需要换台机器进行启动，但是那台机器上没有相关的信息<br><a id="more"></a></p>
+<h2 id="处理过程">处理过程</h2><h3 id="自启动的相关处理">自启动的相关处理</h3><p>先扫描下lvm<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vgscan</span><br><span class="line">pvscan</span><br><span class="line">lvscan</span><br></pre></td></tr></table></figure></p>
+<p>本篇的场景是lvm没有损坏的情况，如果lvm本身损坏了，那么就是去恢复lvm的问题，本篇的基础是有一个完整的osd的数据盘，也就是磁盘本身是没问题的</p>
+<h3 id="查询osd相关的磁盘信息">查询osd相关的磁盘信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">lvdisplay |grep <span class="string">"LV Path"</span>|grep ceph</span><br><span class="line"> LV Path                /dev/ceph-b748833c-b646-<span class="number">4</span>b1c<span class="operator">-a</span>2ef<span class="operator">-f</span>50576b0a165/osd-block-<span class="number">38657557</span>-<span class="number">5</span>ce3-<span class="number">43</span>a1-<span class="number">861</span>a<span class="operator">-e</span>690c880ddf6</span><br><span class="line"> LV Path                /dev/ceph-aa2304f1<span class="operator">-a</span>098-<span class="number">4990</span>-<span class="number">8</span>f3a-<span class="number">46</span>f176d4cece/osd-block<span class="operator">-f</span>8a30c38-<span class="number">48</span>fd-<span class="number">465</span>c-<span class="number">9982</span>-<span class="number">14</span><span class="built_in">cd</span>22d00d21</span><br><span class="line"> LV Path                /dev/ceph-<span class="number">8</span>b987af1<span class="operator">-f</span>10a-<span class="number">4</span>c9a<span class="operator">-a</span>096-<span class="number">352</span>e63c7ef83/osd-block-<span class="number">07</span>d1c423-<span class="number">8777</span>-<span class="number">4</span>eea-<span class="number">8</span>a1d-<span class="number">34</span>dc06f840ae</span><br><span class="line"> LV Path                /dev/ceph<span class="operator">-f</span>39ac1da-<span class="number">2811</span>-<span class="number">4486</span>-<span class="number">8690</span>-<span class="number">4</span>ccfb1e45e18/osd-block-<span class="number">0</span>cb9186e-<span class="number">6512</span>-<span class="number">4582</span><span class="operator">-a</span>30d-<span class="number">9</span>fb4cf03c964</span><br><span class="line"> LV Path                /dev/ceph-<span class="number">6167</span>d452<span class="operator">-a</span>121-<span class="number">4602</span>-<span class="number">836</span>a-ab378cf6eccc/osd-block-<span class="number">2</span>e77e3b5-<span class="number">9</span>d5c-<span class="number">4</span>d5f-bf18-c33ddf0bbc0a</span><br></pre></td></tr></table></figure>
+<p>注意osd-block后面的字段，这个信息是会记录在osd dump输出信息的，我们查询下osd-block-38657557-5ce3-43a1-861a-e690c880ddf6这个的信息<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]<span class="comment"># ceph osd dump|grep 38657557-5ce3-43a1-861a-e690c880ddf6</span></span><br><span class="line">osd.<span class="number">31</span> down <span class="keyword">in</span>  weight <span class="number">1</span> up_from <span class="number">395</span> up_thru <span class="number">395</span> down_at <span class="number">399</span> last_clean_interval [<span class="number">391</span>,<span class="number">392</span>) <span class="number">66.66</span>.<span class="number">66.60</span>:<span class="number">6830</span>/<span class="number">10392</span> <span class="number">66.66</span>.<span class="number">66.60</span>:<span class="number">6847</span>/<span class="number">10392</span> <span class="number">66.66</span>.<span class="number">66.60</span>:<span class="number">6875</span></span><br><span class="line">/<span class="number">10392</span> <span class="number">66.66</span>.<span class="number">66.60</span>:<span class="number">6882</span>/<span class="number">10392</span> exists <span class="number">38657557</span>-<span class="number">5</span>ce3-<span class="number">43</span>a1-<span class="number">861</span>a<span class="operator">-e</span>690c880ddf6</span><br></pre></td></tr></table></figure></p>
+<h3 id="做自动挂载">做自动挂载</h3><p>可以得到如下信息，osd.31的lvm标记为38657557-5ce3-43a1-861a-e690c880ddf6<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl start ceph-volume@lvm-<span class="number">31</span>-<span class="number">38657557</span>-<span class="number">5</span>ce3-<span class="number">43</span>a1-<span class="number">861</span>a<span class="operator">-e</span>690c880ddf6</span><br><span class="line">systemctl <span class="built_in">enable</span> ceph-volume@lvm-<span class="number">31</span>-<span class="number">38657557</span>-<span class="number">5</span>ce3-<span class="number">43</span>a1-<span class="number">861</span>a<span class="operator">-e</span>690c880ddf6</span><br></pre></td></tr></table></figure></p>
+<p>检查下挂载<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]<span class="comment"># df -h|grep osd|grep 31</span></span><br><span class="line">tmpfs                     <span class="number">48</span>G   <span class="number">24</span>K   <span class="number">48</span>G   <span class="number">1</span>% /var/lib/ceph/osd/ceph-<span class="number">31</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到挂载的操作是通过下面这个命令进行挂载的，然后enable下就是自启动了<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl start ceph-volume@lvm-osdid-osdfsid</span><br></pre></td></tr></table></figure></p>
+<h3 id="做自启动osd">做自启动osd</h3><p>启动osd<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]<span class="comment"># systemctl start ceph-osd@31</span></span><br><span class="line">[root@node1 ~]<span class="comment"># systemctl enable ceph-osd@31</span></span><br><span class="line">Created symlink from /etc/systemd/system/ceph-osd.target.wants/ceph-osd@<span class="number">31</span>.service to /usr/lib/systemd/system/ceph-osd@.service.</span><br></pre></td></tr></table></figure></p>
+<h3 id="检查启动情况">检查启动情况</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@node1 ~]<span class="comment"># ps -ef|grep osd|grep 31</span></span><br><span class="line">ceph       <span class="number">31177</span>       <span class="number">1</span>  <span class="number">1</span> <span class="number">10</span>:<span class="number">42</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">02</span> /usr/bin/ceph-osd <span class="operator">-f</span> --cluster ceph --id <span class="number">31</span> --setuser ceph --setgroup ceph</span><br></pre></td></tr></table></figure>
+<p>那么自挂载，自启动的过程就是上面的操作</p>
+<h2 id="脚本处理整机的osd">脚本处理整机的osd</h2><p>如果觉得一个个去查询太麻烦了，那就准备脚本就好了<br>创建startosd.sh脚本写入下面的内容<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="shebang">#! /usr/bin/bash</span></span><br><span class="line"><span class="comment"># @Author:momo</span></span><br><span class="line"><span class="comment"># @Time: 2019/9/4 11:05</span></span><br><span class="line">vgscan</span><br><span class="line">pvscan</span><br><span class="line">lvscan</span><br><span class="line">osddump=`ceph osd dump`</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> osdfsid <span class="keyword">in</span> `lvdisplay |grep <span class="string">"LV Path"</span>|grep ceph|awk <span class="string">'&#123;print $3&#125;'</span>|cut <span class="operator">-d</span> <span class="string">"/"</span> <span class="operator">-f</span> <span class="number">4</span>|cut <span class="operator">-d</span> - <span class="operator">-f</span> <span class="number">3</span>-<span class="number">7</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    osdid=`<span class="built_in">echo</span> <span class="string">"<span class="variable">$&#123;osddump&#125;</span>"</span>|grep <span class="variable">$osdfsid</span>|awk <span class="string">'&#123;print $1&#125;'</span>|cut <span class="operator">-d</span> . <span class="operator">-f</span> <span class="number">2</span>`</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"start <span class="variable">$osdid</span>  with fsid <span class="variable">$osdfsid</span>"</span></span><br><span class="line">    <span class="comment"># auto mount</span></span><br><span class="line">    systemctl start ceph-volume@lvm-<span class="variable">$osdid</span>-<span class="variable">$osdfsid</span></span><br><span class="line">    systemctl <span class="built_in">enable</span> ceph-volume@lvm-<span class="variable">$osdid</span>-<span class="variable">$osdfsid</span></span><br><span class="line">    <span class="comment"># auto start </span></span><br><span class="line">    systemctl start ceph-osd@<span class="variable">$osdid</span></span><br><span class="line">    systemctl <span class="built_in">enable</span> ceph-osd@<span class="variable">$osdid</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="总结">总结</h2><p>本篇是因为做对比测试，不想重搭集群，把36盘位的磁盘全部换一个平台测试，想直接启动起来测试，然后就有了这篇文章记录，在filestore下面的处理逻辑比较简单，可以用fstab，可以用trigger，可以用mount tmp检查后手动挂载，方式很多，从Jewel版本开始启动相关的都慢慢集成到数据本身，用服务去控制了</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2018-09-04</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="前言">前言</h2><p>自启动相关的文章很多，有分析的很详细的文章，这里就不做赘述，本篇讲述的是什么情况下用，怎么用的问题</p>
+<h2 id="使用场景">使用场景</h2><p>一台机器的系统盘坏了，需要重装系统，相关的一些信息没有了，但是上面的数据盘还是在的，所以需要保留</p>
+<p>某个磁盘需要换台机器进行启动，但是那台机器上没有相关的信息<br>]]>
+    
+    </summary>
+    
+      <category term="ceph" scheme="http://www.zphj1987.com/tags/ceph/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[ceph luminous版本限制osd的内存使用]]></title>
@@ -1580,69 +1629,6 @@
 <h2 id="前言">前言</h2><p>关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入</p>
 <p>cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以通过ceph内部来实现qos，但是有现成的解决方案的时候，可以减少很多开发周期，以及测试的成本</p>
 <p>本篇将介绍的是kernel rbd的qos方案<br>]]>
-    
-    </summary>
-    
-      <category term="ceph" scheme="http://www.zphj1987.com/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Ceph对象主本损坏的修复方法]]></title>
-    <link href="http://www.zphj1987.com/2018/01/02/ceph-primary-object-damage-recover/"/>
-    <id>http://www.zphj1987.com/2018/01/02/ceph-primary-object-damage-recover/</id>
-    <published>2018-01-02T14:21:23.000Z</published>
-    <updated>2018-12-13T07:15:55.000Z</updated>
-    <content type="html"><![CDATA[<center><br><img src="http://mysrc.cn-bj.ufileos.com/dog.jpg" alt="dog"><br></center>
-
-<h2 id="前言">前言</h2><p>问题的触发是在进行一个目录的查询的时候，osd就会挂掉，开始以为是osd操作超时了，后来发现每次访问这个对象都有问题<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">log</span> [WRN] ： slow request <span class="number">60.793196</span> seconds old, received at osd_op(mds.<span class="number">0.188</span>:<span class="number">728345234100006</span>c6ddc.<span class="number">00000000</span> [o map-get-header <span class="number">0</span>-<span class="number">0</span>,omap-get-vals <span class="number">0</span>~<span class="number">16</span>,getxattr parent] snapc <span class="number">0</span>=[] ack+<span class="built_in">read</span>+known_<span class="keyword">if</span>_redirected+full_force e218901) currently started</span><br><span class="line">heartbeat_map is_healthy  ··· osd_op_tp thread ··· had timed out after <span class="number">60</span></span><br></pre></td></tr></table></figure></p>
-<p>这个对象是元数据的一个空对象，保留数据在扩展属性当中<br><a id="more"></a><br>然后做了一个操作判断是对象损坏了:</p>
-<p>直接列取omapkeys</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rados -p metadata listomapvals <span class="number">100006</span>c6ddc.<span class="number">00000000</span></span><br></pre></td></tr></table></figure>
-<p>发现会卡住，然后关闭这个osd再次做操作，就可以了，启动后还是不行，这里可以判断是主本的对象已经有问题了，本篇将讲述多种方法来解决这个问题</p>
-<h2 id="处理办法">处理办法</h2><p>本章将会根据操作粒度的不同来讲述三种方法的恢复，根据自己的实际情况，和风险的判断来选择自己的操作</p>
-<h3 id="方法一：通过repair修复">方法一：通过repair修复</h3><p>首先能确定是主本损坏了，那么先把主本的对象进行一个备份，然后移除<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># systemctl stop ceph-osd@0</span></span><br><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># cp -ra 100.00000000__head_C5265AB3__2 ../../</span></span><br></pre></td></tr></table></figure></p>
-<p>通过ceph-object-tool进行移除的时候有bug,无法移除metadata的对象，已经提了一个<a href="http://tracker.ceph.com/issues/22553" target="_blank" rel="external">bug</a><br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># mv 100.00000000__head_C5265AB3__2 ../</span></span><br></pre></td></tr></table></figure></p>
-<p>注意一下在老版本的时候，对对象进行删除以后，可能元数据里面记录了对象信息，而对象又不在的时候可能会引起osd无法启动，这个在10.2.10是没有这个问题</p>
-<p>重启osd<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># systemctl restart ceph-osd@0</span></span><br></pre></td></tr></table></figure></p>
-<p>对pg做scrub<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># ceph pg scrub 2.0</span></span><br><span class="line">instructing pg <span class="number">2.0</span> on osd.<span class="number">0</span> to scrub</span><br></pre></td></tr></table></figure></p>
-<p>这种方法就是需要做scrub的操作，如果对象特别多，并且是线上环境，可能不太好去做scrub的操作<br>检查状态<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster <span class="number">03580</span>f14-<span class="number">9906</span>-<span class="number">4257</span>-<span class="number">9182</span>-<span class="number">65</span>c886e7f5a7</span><br><span class="line">     health HEALTH_ERR</span><br><span class="line">            <span class="number">1</span> pgs inconsistent</span><br><span class="line">            <span class="number">1</span> scrub errors</span><br><span class="line">            too few PGs per OSD (<span class="number">3</span> &lt; min <span class="number">30</span>)</span><br><span class="line">     monmap e1: <span class="number">1</span> mons at &#123;lab71=<span class="number">20.20</span>.<span class="number">20.71</span>:<span class="number">6789</span>/<span class="number">0</span>&#125;</span><br><span class="line">            election epoch <span class="number">4</span>, quorum <span class="number">0</span> lab71</span><br><span class="line">      fsmap e30: <span class="number">1</span>/<span class="number">1</span>/<span class="number">1</span> up &#123;<span class="number">0</span>=lab71=up:active&#125;</span><br><span class="line">     osdmap e101: <span class="number">2</span> osds: <span class="number">2</span> up, <span class="number">2</span> <span class="keyword">in</span></span><br><span class="line">            flags sortbitwise,require_jewel_osds</span><br><span class="line">      pgmap v377: <span class="number">3</span> pgs, <span class="number">3</span> pools, <span class="number">100814</span> bytes data, <span class="number">41</span> objects</span><br><span class="line">            <span class="number">70196</span> kB used, <span class="number">189</span> GB / <span class="number">189</span> GB avail</span><br><span class="line">                   <span class="number">2</span> active+clean</span><br><span class="line">                   <span class="number">1</span> active+clean+inconsistent</span><br></pre></td></tr></table></figure></p>
-<p>发起修复请求<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># ceph pg repair 2.0</span></span><br><span class="line">instructing pg <span class="number">2.0</span> on osd.<span class="number">0</span> to repair</span><br></pre></td></tr></table></figure></p>
-<p>修复完成后检查集群状态和对象，到这里可以恢复正常了</p>
-<h3 id="方法二：通过rsync拷贝数据方式恢复">方法二：通过rsync拷贝数据方式恢复</h3><p>跟上面一样这里首先能确定是主本损坏了，那么先把主本的对象进行一个备份，然后移除<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># systemctl stop ceph-osd@0</span></span><br><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># cp -ra 100.00000000__head_C5265AB3__2 ../../</span></span><br></pre></td></tr></table></figure></p>
-<p>移除对象<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># mv 100.00000000__head_C5265AB3__2 ../</span></span><br></pre></td></tr></table></figure></p>
-<p>在副本的机器上执行rsync命令，这里我们直接从副本拷贝对象过来，注意下不能直接使用scp会掉扩展属性<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab72 <span class="number">2.0</span>_head]<span class="comment"># rsync  -avXH  /var/lib/ceph/osd/ceph-1/current/2.0_head/100.00000000__head_C5265AB3__2 20.20.20.71:/var/lib/ceph/osd/ceph-0/current/2.0_head/100.00000000__head_C5265AB3__2</span></span><br></pre></td></tr></table></figure></p>
-<p>在主本机器检查扩展属性<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># getfattr 100.00000000__head_C5265AB3__2 </span></span><br><span class="line"><span class="comment"># file: 100.00000000__head_C5265AB3__2</span></span><br><span class="line">user.ceph._</span><br><span class="line">user.ceph._@<span class="number">1</span></span><br><span class="line">user.ceph.snapset</span><br><span class="line">user.cephos.spill_out</span><br></pre></td></tr></table></figure></p>
-<p>重启osd<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># systemctl restart ceph-osd@0</span></span><br></pre></td></tr></table></figure></p>
-<p>检查对象的扩展属性<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 <span class="number">2.0</span>_head]<span class="comment"># rados -p metadata listomapvals 100.00000000</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="方法三：通过删除PG的方式恢复">方法三：通过删除PG的方式恢复</h3><p>这个方式是删除PG，然后重新启动的方式<br>这种方式操作比较危险，所以提前备份好pg的数据，最好主备pg都备份下，万一出了问题或者数据不对，可以根据需要再导入<br>备份PG<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ceph-objectstore-tool --pgid <span class="number">2.0</span> --op <span class="built_in">export</span> --data-path /var/lib/ceph/osd/ceph-<span class="number">0</span>/ --journal-path   /var/lib/ceph/osd/ceph-<span class="number">0</span>/journal --file /root/<span class="number">2.0</span></span><br></pre></td></tr></table></figure></p>
-<p>删除PG的操作<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 current]<span class="comment"># ceph-objectstore-tool --pgid 2.0  --op remove --data-path /var/lib/ceph/osd/ceph-0/ --journal-path /var/lib/ceph/osd/ceph-0/journal</span></span><br><span class="line">SG_IO: bad/missing sense data, sb[]:  <span class="number">70</span> <span class="number">00</span> <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">0</span>a <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> <span class="number">00</span> <span class="number">00</span> c0 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line">SG_IO: bad/missing sense data, sb[]:  <span class="number">70</span> <span class="number">00</span> <span class="number">05</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">0</span>a <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">20</span> <span class="number">00</span> <span class="number">00</span> c0 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span></span><br><span class="line"> marking collection <span class="keyword">for</span> removal</span><br><span class="line">setting <span class="string">'_remove'</span> omap key</span><br><span class="line">finish_remove_pgs <span class="number">2.0</span>_head removing <span class="number">2.0</span></span><br><span class="line">Remove successful</span><br></pre></td></tr></table></figure></p>
-<p>重启osd<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 current]<span class="comment"># systemctl restart ceph-osd@0</span></span><br></pre></td></tr></table></figure></p>
-<p>等待回复即可</p>
-<p>本方法里面还可以衍生一种就是，通过导出的副本的PG数据,在主本删除了相应的PG以后,进行导入的方法，这样就不会产生迁移<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab71 current]<span class="comment">#  ceph-objectstore-tool --pgid 2.0  --op import --data-path /var/lib/ceph/osd/ceph-0/ --journal-path /var/lib/ceph/osd/ceph-0/journal --file /root/2.0</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="总结">总结</h2><p>上面用三种方法来实现了副本向主本同步的操作，判断主本是否有问题的方法就是主动的把主本所在的OSD停掉，然后检查请求是否可达，在确定主本已经坏掉的情况下，就可以做将副本同步到主本的操作，可以根据PG的对象的多少来选择需要做哪种操作</p>
-<h2 id="变更记录">变更记录</h2><table>
-<thead>
-<tr>
-<th style="text-align:center">Why</th>
-<th style="text-align:center">Who</th>
-<th style="text-align:center">When</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">创建</td>
-<td style="text-align:center">武汉-运维-磨渣</td>
-<td style="text-align:center">2018-01-02</td>
-</tr>
-</tbody>
-</table>
-]]></content>
-    <summary type="html">
-    <![CDATA[<center><br><img src="http://mysrc.cn-bj.ufileos.com/dog.jpg" alt="dog"><br></center>
-
-<h2 id="前言">前言</h2><p>问题的触发是在进行一个目录的查询的时候，osd就会挂掉，开始以为是osd操作超时了，后来发现每次访问这个对象都有问题<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">log</span> [WRN] ： slow request <span class="number">60.793196</span> seconds old, received at osd_op(mds.<span class="number">0.188</span>:<span class="number">728345234100006</span>c6ddc.<span class="number">00000000</span> [o map-get-header <span class="number">0</span>-<span class="number">0</span>,omap-get-vals <span class="number">0</span>~<span class="number">16</span>,getxattr parent] snapc <span class="number">0</span>=[] ack+<span class="built_in">read</span>+known_<span class="keyword">if</span>_redirected+full_force e218901) currently started</span><br><span class="line">heartbeat_map is_healthy  ··· osd_op_tp thread ··· had timed out after <span class="number">60</span></span><br></pre></td></tr></table></figure></p>
-<p>这个对象是元数据的一个空对象，保留数据在扩展属性当中<br>]]>
     
     </summary>
     

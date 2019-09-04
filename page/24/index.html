@@ -192,6 +192,68 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Ubuntu12-10-设置默认命令行启动" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/22/Ubuntu12-10-设置默认命令行启动/" class="article-date">
+  	<time datetime="2015-03-22T14:00:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/22/Ubuntu12-10-设置默认命令行启动/">Ubuntu12.10 设置默认命令行启动</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在虚拟机当中安装ubuntu12.10的时候默认把图形界面给装上了,由于不需要使用桌面,所以为了省去每次进入到图形界面然后再用ctrl+F1的方式切换到命令行的步骤,希望能够默认进入的是命令行模式,那么设置的方法如下:<br>终端执行:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/default/grub</span><br></pre></td></tr></table></figure></p>
+<p>将 GRUB_CMDLINE_LINUX_DEFAULT=”quiet splash” 改为:<br>GRUB_CMDLINE_LINUX_DEFAULT=”quiet splash text”</p>
+<p>然后执行:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">update-grub</span><br></pre></td></tr></table></figure></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/03/22/Ubuntu12-10-设置默认命令行启动/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-Ubuntu-12-10设置root用户登录图形界面" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -702,67 +764,6 @@ daovoice('update');
     <div class="article-info article-info-index">
       
       
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-debian修改crontab默认编辑器为vim" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/22/debian修改crontab默认编辑器为vim/" class="article-date">
-  	<time datetime="2015-03-22T08:46:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/22/debian修改crontab默认编辑器为vim/">debian修改crontab默认编辑器为vim</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>debian终端下默认编辑器为nano,比如crontab -e就会打开nano,这个编辑器用起来很不习惯,想修改为vim,当然,你的debian系统必须先安装vim.如果已经安装vim,请输入如下命令:<br>输入命令:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">update-alternatives --config editor</span><br></pre></td></tr></table></figure>
-<p>然后选择/usr/vim/vim.basic就OK了</p>
-<p>vim.tiny与vim.basic的区别是vim.basic为完全的vim,而vim.tiny为简化版,功能上有所区别,如不支持高亮等等.</p>
-<p>写于: 2012年5月04日<br>更新于: 2015年03月22日</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-	</div>
-
       
 
       

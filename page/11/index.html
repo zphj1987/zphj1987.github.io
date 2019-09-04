@@ -192,6 +192,70 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-配置Ceph的IPV6集群" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/17/配置Ceph的IPV6集群/" class="article-date">
+  	<time datetime="2016-10-17T08:19:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-10-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/17/配置Ceph的IPV6集群/">配置Ceph的IPV6集群</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/ceph/ipv6.jpeg" alt="ipv6"><br></center><br>一、前言<br>对于IPV6实在是非常的陌生，所以本篇开始会讲一下最基本的网络配置，首先让网络能通起来，最开始就是因为不熟悉IPV6,而直接使用了link local地址，造成了mon部署的时候进程无法绑定到IP，从而端口没有启动，这个是在ceph社区群友 <code>ceph-长沙-柠檬</code> 同学的帮助下才发现问题的</p>
+<p>IPV6是会有个link local地址的，在一个接口可以配置很多IPv6地址，所以学习路由就有可能出现很多下一跳。所以出现Link Local地址唯一标识一个节点。在本地链路看到下一跳都是对端的Link Local地址。这个地址一般是以fe80开头的，子网掩码为64，这个地方需要给机器配置一个唯一的全局单播地址</p>
+<blockquote>
+<p>However, with IPv6, all (IPv6) interfaces will have a link local address. This address is intended to allow communications over the attached links and so is defined to be usable only on that link.</p>
+</blockquote>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/10/17/配置Ceph的IPV6集群/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-Ceph技能树" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -732,69 +796,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/09/20/Ceph的Mon数据重新构建工具/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-替换OSD操作的优化与分析" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/09/19/替换OSD操作的优化与分析/" class="article-date">
-  	<time datetime="2016-09-19T02:56:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/19/替换OSD操作的优化与分析/">替换OSD操作的优化与分析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/reolaceosd/terminal.png" alt="replaceosd"><br></center></p>
-<h2 id="前言">前言</h2><p>之前有写过一篇<a href="http://www.zphj1987.com/2016/01/12/%E5%88%A0%E9%99%A4osd%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%96%B9%E5%BC%8F/">删除OSD的正确方式</a>，里面只是简单的讲了下删除的方式怎样能减少迁移量，本篇属于一个扩展，讲述了 Ceph 运维当中经常出现的坏盘提换盘的步骤的优化</p>
-<p>基础环境两台主机每台主机8个 OSD，一共 16 个 OSD，副本设置为2，PG 数设置为800，计算下来平均每个 OSD 上的 P G数目为100个，本篇将通过数据来分析不同的处理方法的差别</p>
-<p>开始测试前先把环境设置为 <code>noout</code>，然后通过停止 OSD 来模拟 OSD 出现了异常，之后进行不同处理方法<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/09/19/替换OSD操作的优化与分析/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

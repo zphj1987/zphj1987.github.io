@@ -192,6 +192,74 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-calamari-node-info" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/09/calamari-node-info/" class="article-date">
+  	<time datetime="2017-01-09T07:06:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/09/calamari-node-info/">解决calamari无法获取节点信息的bug</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/saltstack.png" alt="salt-stack"><br></center>
+
+<h2 id="前言">前言</h2><p>一直在做calamari的相关的一些打包和安装的工作，都是业余弄的东西，所以并没有仔细的进行功能点的验证测试，正好ceph社区群里面有人问了个问题</p>
+<blockquote>
+<p>calamari上是不是能看到ceph的version?</p>
+</blockquote>
+<p>对于这个问题，好像确实没有见到过，而之前正好有个页面看到是空的，当时还不清楚这个是什么用的</p>
+<p><img src="http://static.zybuluo.com/zphj1987/mjyvzkd7q9x6eplb538o7ltc/image_1b611hfic17lj15ej1jp1pb31m979.png" alt="origin"></p>
+<p>而另外一位群友贴出了这个地方的是有值的，这个地方是有BUG的，在咨询了相关的问题描述以后，我们来看下，可以如何解决这个问题<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2017/01/09/calamari-node-info/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-Ceph-compile-speedup" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -747,68 +815,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/12/13/Cephfs的快照功能/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-查询Ceph的OSD占用内存" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/12/08/查询Ceph的OSD占用内存/" class="article-date">
-  	<time datetime="2016-12-08T14:15:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-08</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/08/查询Ceph的OSD占用内存/">查询Ceph的OSD占用内存</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mysrc.cn-bj.ufileos.com/Memory.png" alt=""><br></center>
-
-<h2 id="前言">前言</h2><p>之前写过一篇关于查询OSD的运行的CPU的情况的分享，本篇是讲的获取内存占用的，代码包括两种输出，一种是直接的表格，一种是可以方便解析的json<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/12/08/查询Ceph的OSD占用内存/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

@@ -192,6 +192,70 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-modprobe-FATAL-Module-ceph-not-found解决办法" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/07/24/modprobe-FATAL-Module-ceph-not-found解决办法/" class="article-date">
+  	<time datetime="2016-07-24T14:48:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-07-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/24/modprobe-FATAL-Module-ceph-not-found解决办法/">modprobe: FATAL: Module ceph not found解决办法</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、问题">一、问题</h3><p>有可能你在进行 Ceph 文件系统挂载的时候出现下面的提示：</p>
+<blockquote>
+<p>modprobe: FATAL: Module ceph not found.<br>mount.ceph: modprobe failed, exit status 1<br>mount error: ceph filesystem not supported by the system</p>
+</blockquote>
+<p>这个是因为你的内核当中没有cephfs的相关模块，这个 centos6 下面比较常见，因为 centos6 的内核是 2.6.32,这个版本的内核中还没有集成cephfs的内核模块，而在 centos7 默认内核 3.10中已经默认集成了这个模块，我们看下集成的模块是怎样的显示</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/07/24/modprobe-FATAL-Module-ceph-not-found解决办法/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-解决自动安装Freebsd系统盘符无法确定问题" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -743,68 +807,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/06/13/推荐一本性能相关的书/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-加速OSD的启动" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/06/07/加速OSD的启动/" class="article-date">
-  	<time datetime="2016-06-07T14:50:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-07</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/07/加速OSD的启动/">加速OSD的启动</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>ceph是目前开源分布式存储里面最好的一个，但是在高负载下会有很多异常的情况会发生，有些问题无法完全避免，但是可以进行一定的控制，比如：在虚拟化场景下，重启osd会让虚拟机挂起的情况</p>
-<p>重新启动osd会给这个osd进程所在的磁盘带来额外的负载，随着前面业务的需求的增长，会增加对存储的I/O的需求，虽然这个对于整个业务系统来说是好事，但是在某些情况下，会越来越接近存储吞吐量的极限，通常情况下没有异常发生的时候，都是正常的，一旦发生异常，集群超过了临界值，性能会变得剧烈的抖动</p>
-<p>对于这种情况，一般会升级硬件来避免集群从一个高负载的集群变成一个过载的集群。本章节的重点在重启osd进程这个问题<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/06/07/加速OSD的启动/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

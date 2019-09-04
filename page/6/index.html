@@ -192,6 +192,69 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-where-is-cephfs-data-store" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/04/20/where-is-cephfs-data-store/" class="article-date">
+  	<time datetime="2017-04-20T02:22:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/20/where-is-cephfs-data-store/">Cephfs的文件存到哪里了</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/file.png" alt="file"><br></center>
+
+<h2 id="前言">前言</h2><p>在ceph里面使用rbd接口的时候，存储的数据在后台是以固定的prifix的对象存在的，这样就能根据相同的前缀对象去对image文件进行拼接或者修复</p>
+<p>在文件系统里面这一块就要复杂一些，本篇就写的关于这个，文件和对象的对应关系是怎样的，用系统命令怎么定位，又是怎么得到这个路径的<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2017/04/20/where-is-cephfs-data-store/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-why-rm-object-can-get" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -729,69 +792,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2017/03/16/base-on-docker-ui-deploy-ceph/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-base-on-docker-deploy-ceph" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/03/15/base-on-docker-deploy-ceph/" class="article-date">
-  	<time datetime="2017-03-15T04:05:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/15/base-on-docker-deploy-ceph/">基于docker部署ceph以及修改docker image</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mysrc.cn-bj.ufileos.com/docker.png" alt="docker"><br></center>
-
-<h2 id="前言">前言</h2><p>容器和ceph的结合已经在一些生产环境当中做了尝试，容器的好处就是对运行环境的一个封装，传统的方式是集成为ISO，这个需要一定的维护量，而容器的相关操作会简单很多，也就有了一些尝试，个人觉得如果玩的转容器可以考虑，当然得懂ceph，不然两套系统在一起，问题都不知道是哪个的，就比较麻烦了</p>
-<p>本篇是基于之前我的填坑群里面的牛鹏举的一个问题，他的环境出现了创建osd的时候权限问题，我这边没遇到，现在实践了一遍，感觉应该是之前目录提前创建了的问题<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2017/03/15/base-on-docker-deploy-ceph/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

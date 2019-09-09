@@ -192,6 +192,67 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-calamari不支持ceph的jewel版本" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/07/calamari不支持ceph的jewel版本/" class="article-date">
+  	<time datetime="2016-05-07T09:51:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-05-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/07/calamari不支持ceph的jewel版本/">calamari不支持ceph的jewel版本</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前已经在0.94.x系列下进行了calamari的相关的打包和测试，基本没有太多问题，最近看到ceph发布了jewel的版本，想尝试下是否兼容，测试的结果是不兼容的</p>
+<p>从调试的信息来看，ceph在jewel版本下对输出做了很大的改动，其中第一条，配置完成后，面板都无法显示，这个里面是因为ceph把原来的mdsmap这个字段在输出的时候改成了fsmap，造成里面的接口识别不到，这个改动以后，又发现restapi接口里面的osd地方又报错了</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/05/07/calamari不支持ceph的jewel版本/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-性能数据的可视化" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -768,63 +829,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/03/30/rbd-mirror新功能/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-Ceph-Bluestore首测" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/03/24/Ceph-Bluestore首测/" class="article-date">
-  	<time datetime="2016-03-24T14:07:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-24</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/24/Ceph-Bluestore首测/">Ceph Bluestore首测</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Bluestore 作为 Ceph Jewel 版本推出的一个重大的更新，提供了一种之前没有的存储形式，一直以来ceph的存储方式一直是以filestore的方式存储的，也就是对象是以文件方式存储在osd的磁盘上的，pg是以目录的方式存在于osd的磁盘上的<br>在发展过程中，中间出现了kvstore，这个还是存储在文件系统之上，以leveldb或者rocksdb的方式存储对象数据，这个也没有推广开来，性能上没有太大的改观，在某些情况下性能还低于filestore<br>最终在sage的大力支持下，ceph社区准备撸一个新的文件系统，这个系统类似于rocksdb，但是数据是可以直接存储到裸设备上去的，也就是存储对象数据的地方是没有传统意义上的文件系统的，并且解决了一种被抱怨的写双份数据的问题，在filestore中，数据需要先写入journal再入磁盘，对于磁盘来说实际就是双份写了</p>
-<p>在这里不做过多的探讨技术上的细节，bluestore处于开发阶段，在最新的版本的ceph中，发现已经集成了这个，虽然还是实验阶段，但是还是体现出其未来巨大的价值</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/03/24/Ceph-Bluestore首测/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

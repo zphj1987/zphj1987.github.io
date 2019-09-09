@@ -192,6 +192,82 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-ceph-web-monitor-system-grafana" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/07/17/ceph-web-monitor-system-grafana/" class="article-date">
+  	<time datetime="2018-07-17T10:50:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-07-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/17/ceph-web-monitor-system-grafana/">快速构建ceph可视化监控系统</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://static.zybuluo.com/zphj1987/488o6i5pn327d8udgrcpoilx/image.png" alt="granfa"><br></center>
+
+<h2 id="前言">前言</h2><p>ceph的可视化方案很多，本篇介绍的是比较简单的一种方式，并且对包都进行了二次封装，所以能够在极短的时间内构建出一个可视化的监控系统</p>
+<p>本系统组件如下：</p>
+<ul>
+<li>ceph-jewel版本</li>
+<li>ceph_exporter的jewel版本</li>
+<li>prometheus的2.3.2版本</li>
+<li>grafana的grafana-5.2.1版本</li>
+<li>Ceph grafana的插件- Clusterby Cristian Calin</li>
+</ul>
+<p>适配的系统为centos7</p>
+<p>资源如下：</p>
+<blockquote>
+<p><a href="http://static.zybuluo.com/zphj1987/jiwx305b8q1hwc5uulo0z7ft/ceph_exporter-2.0.0-1.x86_64.rpm">http://static.zybuluo.com/zphj1987/jiwx305b8q1hwc5uulo0z7ft/ceph_exporter-2.0.0-1.x86_64.rpm</a><br><a href="http://static.zybuluo.com/zphj1987/1nu2k4cpcery94q2re3u6s1t/ceph-cluster_rev1.json">http://static.zybuluo.com/zphj1987/1nu2k4cpcery94q2re3u6s1t/ceph-cluster_rev1.json</a><br><a href="http://static.zybuluo.com/zphj1987/7ro7up6r03kx52rkwy1qjuwm/prometheus-2.3.2-1.x86_64.rpm">http://static.zybuluo.com/zphj1987/7ro7up6r03kx52rkwy1qjuwm/prometheus-2.3.2-1.x86_64.rpm</a><br><a href="http://mysrc.cn-bj.ufileos.com/grafana-5.2.1-1.x86_64.rpm">http://mysrc.cn-bj.ufileos.com/grafana-5.2.1-1.x86_64.rpm</a></p>
+</blockquote>
+<p>以上资源均可以直接用wget进行下载，然后直接安装</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2018/07/17/ceph-web-monitor-system-grafana/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-use-s3-test-to-ceph-compatibility-tests" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -763,70 +839,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2018/01/06/CTDB-use-rados-object-as-lock-file/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-Kernel-RBD-QOS" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/01/05/Kernel-RBD-QOS/" class="article-date">
-  	<time datetime="2018-01-05T07:23:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-05</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/05/Kernel-RBD-QOS/">Kernel RBD的QOS配置方案</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mysrc.cn-bj.ufileos.com/io.png" alt="io"><br></center>
-
-<h2 id="前言">前言</h2><p>关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入</p>
-<p>cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以通过ceph内部来实现qos，但是有现成的解决方案的时候，可以减少很多开发周期，以及测试的成本</p>
-<p>本篇将介绍的是kernel rbd的qos方案<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2018/01/05/Kernel-RBD-QOS/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

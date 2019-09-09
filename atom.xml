@@ -4,7 +4,7 @@
   <subtitle><![CDATA[止于至善]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.zphj1987.com/"/>
-  <updated>2019-09-04T03:44:55.693Z</updated>
+  <updated>2019-09-09T09:10:38.591Z</updated>
   <id>http://www.zphj1987.com/</id>
   
   <author>
@@ -13,6 +13,421 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[高性能arm运行ceph存储基准测试]]></title>
+    <link href="http://www.zphj1987.com/2019/09/09/a-new-high-performance-arm64-running-ceph/"/>
+    <id>http://www.zphj1987.com/2019/09/09/a-new-high-performance-arm64-running-ceph/</id>
+    <published>2019-09-09T03:13:22.000Z</published>
+    <updated>2019-09-09T09:10:38.591Z</updated>
+    <content type="html"><![CDATA[<center><br><img src="http://mysrc.cn-bj.ufileos.com/arm.png" alt="armlogo"><br></center>
+
+<h2 id="关于arm">关于arm</h2><p>之前wdlab对外发布过一次约500个节点的arm的ceph集群，那个采用的是微集群的结构，使用的是双核的cortex-a9 ARM处理器，运行速度为1.3 GHz，内存为1 GB，直接焊接到驱动器的PCB上，选项包括2 GB内存和ECC保护</p>
+<p>这个在国内也有类似的实现，深圳瑞驰商用Arm存储NxCells</p>
+<center><br><img src="http://mysrc.cn-bj.ufileos.com/smallarm.png" alt="small-arm"><br></center>
+
+<p>这个采用的是微集群的架构，能够比较好的应对一些冷存场景，但是今天要说的不是这种架构，而是一个比较新的平台，采用的是高性能的arm的架构，也就是类似X86的大主板结构<br><a id="more"></a><br>很多人了解的arm的特点是小，功耗低，主频低，这个是以前的arm想发力的场景，类似于intel做的一款atom，在很早期的时候，我在的公司也尝试过基于atom主板做过1U的ceph存储，但是后来各种原因没有继续下去</p>
+<p>实际上arm也在发力高性能的场景，但是这个比较新，并不是每个人都能接触的到，在这里，我把我们的硬件设备的测试数据发一部分出来，也许能改变你对arm的印象，在未来硬件选型的时候，也许就多了一层选择</p>
+<h2 id="高性能arm设备说明">高性能arm设备说明</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">System Information</span><br><span class="line">  PROCESSOR:          Ampere eMAG ARMv8 @ <span class="number">3.00</span>GHz</span><br><span class="line">    Core Count:       <span class="number">32</span>                        </span><br><span class="line">    Scaling Driver:   cppc_cpufreq conservative </span><br><span class="line"></span><br><span class="line">  GRAPHICS:           ASPEED</span><br><span class="line">    Screen:           <span class="number">1024</span>x768         </span><br><span class="line"></span><br><span class="line">  MOTHERBOARD:        MiTAC RAPTOR</span><br><span class="line">    BIOS Version:     <span class="number">0.11</span>                                               </span><br><span class="line">    Chipset:          Ampere Computing LLC Skylark                       </span><br><span class="line">    Network:          <span class="number">2</span> x Intel <span class="number">82599</span>ES <span class="number">10</span>-Gigabit SFI/SFP+ + Intel I210 </span><br><span class="line"></span><br><span class="line">  MEMORY:             <span class="number">2</span> x <span class="number">32</span> GB DDR4-<span class="number">2667</span>MT/s Samsung M393A4K40BB2-CTD</span><br><span class="line"></span><br><span class="line">  DISK:               FORESEE <span class="number">256</span>GB SS + <span class="number">6001</span>GB Seagate ST6000NM0115-<span class="number">1</span>YZ</span><br><span class="line">    File-System:      xfs                               </span><br><span class="line">    Mount Options:    attr2 inode64 noquota relatime rw </span><br><span class="line">    Disk Scheduler:   DEADLINE                          </span><br><span class="line"></span><br><span class="line">  OPERATING SYSTEM:   CentOS Linux <span class="number">7</span></span><br><span class="line">    Kernel:           <span class="number">4.14</span>.<span class="number">0</span>-<span class="number">115</span>.el7a.<span class="number">0.1</span>.aarch64 (aarch64) <span class="number">20181125</span>          </span><br><span class="line">    Compiler:         GCC <span class="number">4.8</span>.<span class="number">5</span> <span class="number">20150623</span>                                      </span><br><span class="line">    Security:         meltdown: Mitigation of PTI                             </span><br><span class="line">                      + spec_store_bypass: Not affected                       </span><br><span class="line">                      + spectre_v1: Mitigation of __user pointer sanitization </span><br><span class="line">                      + spectre_v2: Vulnerable</span><br></pre></td></tr></table></figure>
+<p>机器采用的是ampere的最新的平台RAPTOR平台进行的测试，这里只是做了最小环境的测试，因为测试设备被占用了，就利用有限的资源进行测试即可,机器上面的插口都没有什么限制，支持pcie插槽，能够自己扩展到多盘位机器，也支持万兆网卡，本次测试采用的就是36盘位的机器，对于36盘位的机器来说，底层的磁盘的总资源肯定是大于网络带宽的，这样也有个好处就是磁盘在前端业务满载的时候，不会那么忙</p>
+<h2 id="测试环境">测试环境</h2><p>测试环境说明</p>
+<p>环境为单机36盘位的ceph12版本，配置的12.2.10版本的ceph，使用的是bluestore，设置的副本1，然后用一台X86机器作为客户端，客户端和服务器之间通过万兆相连，对比测试的机器同样为36盘位的机器，为了保证环境的一致性，测试过程中集群没有重搭，直接把盘换了一个平台进行了启动后进行测试</p>
+<p>磁盘有36块6T的sata盘</p>
+<p>本次测试测试了两组数据</p>
+<ul>
+<li>机器的主机带宽（vdbench测试arm的）</li>
+<li>机器带上ceph以后的输出带宽</li>
+</ul>
+<p>本次测试只在现有的环境下对比，测试模型很多，同样的X86选型都可以选出各种各样的，这里我只拿我现有的机器进行的测试，X86和arm的都为32 processor的服务器，内存一致</p>
+<h3 id="主机带宽">主机带宽</h3><p>主机vdbench测试</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">测试项目</th>
+<th style="text-align:center">测试时长</th>
+<th style="text-align:center">IOPS</th>
+<th style="text-align:center">response</th>
+<th style="text-align:center">带宽</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">4K随机写</td>
+<td style="text-align:center">600s</td>
+<td style="text-align:center">13123.1</td>
+<td style="text-align:center">5.400</td>
+<td style="text-align:center">51.26M/s</td>
+</tr>
+<tr>
+<td style="text-align:center">4K随机读</td>
+<td style="text-align:center">600s</td>
+<td style="text-align:center">3463.0</td>
+<td style="text-align:center">20.782</td>
+<td style="text-align:center">13.53M/s</td>
+</tr>
+<tr>
+<td style="text-align:center">1M顺序写</td>
+<td style="text-align:center">600s</td>
+<td style="text-align:center">3661.6</td>
+<td style="text-align:center">19.360</td>
+<td style="text-align:center">3661.63M/s</td>
+</tr>
+<tr>
+<td style="text-align:center">1M顺序读</td>
+<td style="text-align:center">600s</td>
+<td style="text-align:center">3857.8</td>
+<td style="text-align:center">18.657</td>
+<td style="text-align:center">3857.82M/s</td>
+</tr>
+</tbody>
+</table>
+<p>这个是vdbench 对主机带宽进行的测试，为什么需要这个测试，很久以前看过一篇博客，是讲fio测试的，博主提出了一个概念，你如果只是测试一个磁盘的数据，然后相加，这个数据可能跟实际偏离很多，还有个情况就是cpu的处理io的并发能力同样会影响最终输出，也就是你的写入越接近最终的并发写入，越能反应最终的可能的最大输出带宽，所以这个地方通过fio或者vdbench都能测出主机带宽，在知道可能存在这个问题以后，每次都会测一测，到目前为止已经发现了两次问题</p>
+<p>第一次是前面的硬盘的面板带宽的，之前有次测试的数据24个盘不管怎么样都是1.9G，在到了19个盘之后的数据就不再上升，磁盘utils一直都是100%，后来查出来是面板驱动问题，找硬件厂商刷了下驱动后，带宽就恢复正常</p>
+<p>一次是本次测试同样36盘一直跑出来发现只有2G/s,排查以后发现是内部的lsi的卡到面板只用了一根线，虽然看到的是36个盘，但是受限于线的带宽，只有2G/s，把线换成2根以后，性能就到了上面的3.6G/s了，这个如果不跑下整机带宽，也许没发现，或者后续会怀疑是不是本身软件处理慢了</p>
+<p>本次测试主要是sata的盘的，也就是跑的带宽模式，大IO的场景，需要小io的场景的需要ssd的环境了，不在本篇讨论范围内</p>
+<h3 id="集群的测试数据">集群的测试数据</h3><p>arm和X86测试数据对比<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rados -p rbd -t <span class="number">32</span> -b <span class="number">64</span>K bench  <span class="number">300</span> write --no-cleanup --run-name <span class="number">64</span>kt32</span><br><span class="line">rados -p rbd -t <span class="number">8</span> -b <span class="number">4096</span>K bench  <span class="number">300</span> write --no-cleanup --run-name <span class="number">4</span>Mt8</span><br></pre></td></tr></table></figure></p>
+<p>命令的例子，根据不同的用例进行调整参数</p>
+<h4 id="64K块大小性能">64K块大小性能</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">读/写</th>
+<th style="text-align:center">块大小/并发数</th>
+<th style="text-align:center">Bandwidth(MB/s)</th>
+<th style="text-align:center">Average IOPS</th>
+<th style="text-align:center">Average Latency(ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">64K/32</td>
+<td style="text-align:center">39.8914</td>
+<td style="text-align:center">638</td>
+<td style="text-align:center">0.0501339</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">64K/32</td>
+<td style="text-align:center">39.3184</td>
+<td style="text-align:center">629</td>
+<td style="text-align:center">0.0508632</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">64K/64</td>
+<td style="text-align:center">67.283</td>
+<td style="text-align:center">1076</td>
+<td style="text-align:center">0.0594479</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">64K/64</td>
+<td style="text-align:center">66.0471</td>
+<td style="text-align:center">1056</td>
+<td style="text-align:center">0.0605586</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">64K/128</td>
+<td style="text-align:center">110.14</td>
+<td style="text-align:center">1762</td>
+<td style="text-align:center">0.0726323</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">64K/128</td>
+<td style="text-align:center">108.525</td>
+<td style="text-align:center">1736</td>
+<td style="text-align:center">0.0737129</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">64K/256</td>
+<td style="text-align:center">177.103</td>
+<td style="text-align:center">2833</td>
+<td style="text-align:center">0.0903411</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">64K/256</td>
+<td style="text-align:center">190.263</td>
+<td style="text-align:center">3044</td>
+<td style="text-align:center">0.0840909</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">64K/512</td>
+<td style="text-align:center">260.715</td>
+<td style="text-align:center">4171</td>
+<td style="text-align:center">0.122732</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">64K/512</td>
+<td style="text-align:center">261.358</td>
+<td style="text-align:center">4181</td>
+<td style="text-align:center">0.122422</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">64K/32</td>
+<td style="text-align:center">1060.96</td>
+<td style="text-align:center">16975</td>
+<td style="text-align:center">0.00186769</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">64K/32</td>
+<td style="text-align:center">958.661</td>
+<td style="text-align:center">15338</td>
+<td style="text-align:center">0.00206133</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">64K/64</td>
+<td style="text-align:center">1026.75</td>
+<td style="text-align:center">16428</td>
+<td style="text-align:center">0.00387973</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">64K/64</td>
+<td style="text-align:center">946.426</td>
+<td style="text-align:center">15142</td>
+<td style="text-align:center">0.00419585</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">64K/128</td>
+<td style="text-align:center">1082.39</td>
+<td style="text-align:center">17318</td>
+<td style="text-align:center">0.007375</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">64K/128</td>
+<td style="text-align:center">931.589</td>
+<td style="text-align:center">14905</td>
+<td style="text-align:center">0.00855418</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">64K/256</td>
+<td style="text-align:center">1116.87</td>
+<td style="text-align:center">17869</td>
+<td style="text-align:center">0.0143076</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">64K/256</td>
+<td style="text-align:center">1001.93</td>
+<td style="text-align:center">16030</td>
+<td style="text-align:center">0.0159373</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">64K/512</td>
+<td style="text-align:center">1116.81</td>
+<td style="text-align:center">17868</td>
+<td style="text-align:center">0.0286263</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">64K/512</td>
+<td style="text-align:center">1008.51</td>
+<td style="text-align:center">16136</td>
+<td style="text-align:center">0.0316968</td>
+</tr>
+</tbody>
+</table>
+<h4 id="4M块大小性能">4M块大小性能</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">读/写</th>
+<th style="text-align:center">块大小/并发数</th>
+<th style="text-align:center">Bandwidth(MB/s)</th>
+<th style="text-align:center">Average IOPS</th>
+<th style="text-align:center">Average Latency(ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">4M/8</td>
+<td style="text-align:center">377.74</td>
+<td style="text-align:center">94</td>
+<td style="text-align:center">0.0847078</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">4M/8</td>
+<td style="text-align:center">377.604</td>
+<td style="text-align:center">94</td>
+<td style="text-align:center">0.0847369</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">4M/16</td>
+<td style="text-align:center">676.168</td>
+<td style="text-align:center">169</td>
+<td style="text-align:center">0.094649</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">4M/16</td>
+<td style="text-align:center">670.021</td>
+<td style="text-align:center">167</td>
+<td style="text-align:center">0.0955143</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">4M/32</td>
+<td style="text-align:center">900.391</td>
+<td style="text-align:center">225</td>
+<td style="text-align:center">0.142123</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">4M/32</td>
+<td style="text-align:center">902.573</td>
+<td style="text-align:center">225</td>
+<td style="text-align:center">0.1418</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">4M/64</td>
+<td style="text-align:center">901.906</td>
+<td style="text-align:center">225</td>
+<td style="text-align:center">0.283723</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">4M/64</td>
+<td style="text-align:center">902.953</td>
+<td style="text-align:center">225</td>
+<td style="text-align:center">0.28335</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">4M/128</td>
+<td style="text-align:center">903.476</td>
+<td style="text-align:center">225</td>
+<td style="text-align:center">0.566172</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">4M/128</td>
+<td style="text-align:center">904.942</td>
+<td style="text-align:center">226</td>
+<td style="text-align:center">0.56528</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">4M/8</td>
+<td style="text-align:center">906.495</td>
+<td style="text-align:center">226</td>
+<td style="text-align:center">0.0347298</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">4M/8</td>
+<td style="text-align:center">784.499</td>
+<td style="text-align:center">196</td>
+<td style="text-align:center">0.0395726</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">4M/16</td>
+<td style="text-align:center">968.325</td>
+<td style="text-align:center">242</td>
+<td style="text-align:center">0.0655441</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">4M/16</td>
+<td style="text-align:center">1091.42</td>
+<td style="text-align:center">272</td>
+<td style="text-align:center">0.0570873</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">4M/32</td>
+<td style="text-align:center">1074.49</td>
+<td style="text-align:center">268</td>
+<td style="text-align:center">0.118411</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">4M/32</td>
+<td style="text-align:center">1108.76</td>
+<td style="text-align:center">277</td>
+<td style="text-align:center">0.113665</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">4M/64</td>
+<td style="text-align:center">1053.77</td>
+<td style="text-align:center">263</td>
+<td style="text-align:center">0.242012</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">4M/64</td>
+<td style="text-align:center">1116.84</td>
+<td style="text-align:center">279</td>
+<td style="text-align:center">0.227442</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">4M/128</td>
+<td style="text-align:center">1121.86</td>
+<td style="text-align:center">280</td>
+<td style="text-align:center">0.4553</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">4M/128</td>
+<td style="text-align:center">1102.44</td>
+<td style="text-align:center">275</td>
+<td style="text-align:center">0.462227</td>
+</tr>
+</tbody>
+</table>
+<p>从上面的两大组数据可以看到，在这个测试模型下面，这个arm的机器的性能并不差，两款硬件在同样的测试压力，和同等磁盘的情况下，基本维持了跟X86一致的水平</p>
+<p>这个如果硬要说哪款好，我觉得那也不是一下两下说的清楚的，只能说给出一个测试模型，然后两个同样的压力同样环境去做比较，这样就太多场景了，并且也还会考虑成本的问题，兼容性的问题，如果在各方面都差不多的情况下，这个不失为一种选择</p>
+<p>硬盘还分为sata，sas，ssd，高铁也有普通列车，和谐号，复兴号的差别，这个看怎么去定位硬件本身的输出能力了，这里从测试数据来看，还是一款不错的高性能arm硬件，当然需要到更多的环境下面去适应和磨合了</p>
+<h2 id="总结">总结</h2><p>在安培的arm高性能机器下，也能跑出跟X86下的差不多的性能了，虽然还不能说绝对能去完全替换X86，但是目前看性能还是很不错的，值得一试，如果价格合适，又满足需求，还是可行的</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2018-09-09</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    <summary type="html">
+    <![CDATA[<center><br><img src="http://mysrc.cn-bj.ufileos.com/arm.png" alt="armlogo"><br></center>
+
+<h2 id="关于arm">关于arm</h2><p>之前wdlab对外发布过一次约500个节点的arm的ceph集群，那个采用的是微集群的结构，使用的是双核的cortex-a9 ARM处理器，运行速度为1.3 GHz，内存为1 GB，直接焊接到驱动器的PCB上，选项包括2 GB内存和ECC保护</p>
+<p>这个在国内也有类似的实现，深圳瑞驰商用Arm存储NxCells</p>
+<center><br><img src="http://mysrc.cn-bj.ufileos.com/smallarm.png" alt="small-arm"><br></center>
+
+<p>这个采用的是微集群的架构，能够比较好的应对一些冷存场景，但是今天要说的不是这种架构，而是一个比较新的平台，采用的是高性能的arm的架构，也就是类似X86的大主板结构<br>]]>
+    
+    </summary>
+    
+      <category term="ceph" scheme="http://www.zphj1987.com/tags/ceph/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[bluestore的osd自启动]]></title>
@@ -1572,63 +1987,6 @@
 <p>之前CTDB的模式是需要有一个共享文件系统，并且在这个共享文件系统里面所有的节点都去访问同一个文件，会有一个Master会获得这个文件的锁</p>
 <p>在cephfs的使用场景中可以用cephfs的目录作为这个锁文件的路径，这个有个问题就是一旦有一个节点down掉的时候，可能客户端也会卡住目录，这个目录访问会被卡住，文件锁在其他机器无法获取到，需要等到这个锁超时以后，其它节点才能获得到锁，这个切换的周期就会长一点了</p>
 <p>CTDB在最近的版本当中加入了cluster mutex helper using Ceph RADOS的支持，本篇将介绍这个方式锁文件配置方式<br>]]>
-    
-    </summary>
-    
-      <category term="ceph" scheme="http://www.zphj1987.com/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Kernel RBD的QOS配置方案]]></title>
-    <link href="http://www.zphj1987.com/2018/01/05/Kernel-RBD-QOS/"/>
-    <id>http://www.zphj1987.com/2018/01/05/Kernel-RBD-QOS/</id>
-    <published>2018-01-05T07:23:30.000Z</published>
-    <updated>2018-12-13T07:15:55.000Z</updated>
-    <content type="html"><![CDATA[<center><br><img src="http://mysrc.cn-bj.ufileos.com/io.png" alt="io"><br></center>
-
-<h2 id="前言">前言</h2><p>关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入</p>
-<p>cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以通过ceph内部来实现qos，但是有现成的解决方案的时候，可以减少很多开发周期，以及测试的成本</p>
-<p>本篇将介绍的是kernel rbd的qos方案<br><a id="more"></a></p>
-<h2 id="时间过长">时间过长</h2><p>首先介绍下几个测试qos相关的命令，用来比较设置前后的效果<br>验证写入IOPS命令<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fio -filename=/dev/rbd0 -direct=<span class="number">1</span> -iodepth <span class="number">1</span> -thread -rw=write -ioengine=libaio -bs=<span class="number">4</span>K -size=<span class="number">1</span>G -numjobs=<span class="number">1</span> -runtime=<span class="number">60</span> -group_reporting -name=mytest</span><br></pre></td></tr></table></figure></p>
-<p>验证写入带宽的命令<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fio -filename=/dev/rbd0 -direct=<span class="number">1</span> -iodepth <span class="number">1</span> -thread -rw=write -ioengine=libaio -bs=<span class="number">4</span>M -size=<span class="number">1</span>G -numjobs=<span class="number">1</span> -runtime=<span class="number">60</span> -group_reporting -name=mytest</span><br></pre></td></tr></table></figure></p>
-<p>验证读取IOPS命令<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fio -filename=/dev/rbd0 -direct=<span class="number">1</span> -iodepth <span class="number">1</span> -thread -rw=<span class="built_in">read</span> -ioengine=libaio -bs=<span class="number">4</span>K -size=<span class="number">1</span>G -numjobs=<span class="number">1</span> -runtime=<span class="number">60</span> -group_reporting -name=mytest</span><br></pre></td></tr></table></figure></p>
-<p>验证读取带宽命令<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">fio -filename=/dev/rbd0 -direct=<span class="number">1</span> -iodepth <span class="number">1</span> -thread -rw=<span class="built_in">read</span> -ioengine=libaio -bs=<span class="number">4</span>M -size=<span class="number">1</span>G -numjobs=<span class="number">1</span> -runtime=<span class="number">60</span> -group_reporting -name=mytest</span><br></pre></td></tr></table></figure></p>
-<p>上面为什么会设置不同的块大小，这个是因为测试的存储是会受到带宽和iops的共同制约的，当测试小io的时候，这个时候的峰值是受到iops的限制的，测试大io的时候，受到的是带宽限制，所以在做测试的时候，需要测试iops是否被限制住的时候就使用小的bs=4K，需要测试大的带宽的限制的时候就采用bs=4M来测试</p>
-<p>测试的时候都是，开始不用做qos来进行测试得到一个当前不配置qos的性能数值，然后根据需要进行qos设置后通过上面的fio去测试是否能限制住</p>
-<p>启用cgroup的blkio模块<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir -p  /cgroup/blkio/</span><br><span class="line">mount -t cgroup -o blkio blkio /cgroup/blkio/</span><br></pre></td></tr></table></figure></p>
-<p>获取rbd磁盘的major/minor numbers<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab211 ~]<span class="comment"># lsblk </span></span><br><span class="line">NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT</span><br><span class="line">rbd0   <span class="number">252</span>:<span class="number">0</span>    <span class="number">0</span>  <span class="number">19.5</span>G  <span class="number">0</span> disk </span><br><span class="line">sda      <span class="number">8</span>:<span class="number">0</span>    <span class="number">1</span> <span class="number">238.4</span>G  <span class="number">0</span> disk </span><br><span class="line">├─sda4   <span class="number">8</span>:<span class="number">4</span>    <span class="number">1</span>     <span class="number">1</span>K  <span class="number">0</span> part </span><br><span class="line">├─sda2   <span class="number">8</span>:<span class="number">2</span>    <span class="number">1</span>  <span class="number">99.9</span>G  <span class="number">0</span> part </span><br><span class="line">├─sda5   <span class="number">8</span>:<span class="number">5</span>    <span class="number">1</span>     <span class="number">8</span>G  <span class="number">0</span> part [SWAP]</span><br><span class="line">├─sda3   <span class="number">8</span>:<span class="number">3</span>    <span class="number">1</span>     <span class="number">1</span>G  <span class="number">0</span> part /boot</span><br><span class="line">├─sda1   <span class="number">8</span>:<span class="number">1</span>    <span class="number">1</span>   <span class="number">100</span>M  <span class="number">0</span> part </span><br><span class="line">└─sda6   <span class="number">8</span>:<span class="number">6</span>    <span class="number">1</span> <span class="number">129.4</span>G  <span class="number">0</span> part /</span><br></pre></td></tr></table></figure></p>
-<p>通过lsblk命令可以获取到磁盘对应的major number和minor number,这里可以看到rbd0对应的编号为252:0</p>
-<p>设置rbd0的iops的qos为10<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"252:0 10"</span> &gt; /cgroup/blkio/blkio.throttle.write_iops_device</span><br></pre></td></tr></table></figure></p>
-<p>如果想清理这个规则,把后面的数值设置为0就清理了，后面几个配置也是相同的方法<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"252:0 0"</span> &gt; /cgroup/blkio/blkio.throttle.write_iops_device</span><br></pre></td></tr></table></figure></p>
-<p>限制写入的带宽为10MB/s<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"252:0 10485760"</span> &gt; /cgroup/blkio/blkio.throttle.write_bps_device</span><br></pre></td></tr></table></figure></p>
-<p>限制读取的qos为10<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"252:0 10"</span> &gt; /cgroup/blkio/blkio.throttle.read_iops_device</span><br></pre></td></tr></table></figure></p>
-<p>限制读取的带宽为10MB/s<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"252:0 10485760"</span> &gt; /cgroup/blkio/blkio.throttle.read_bps_device</span><br></pre></td></tr></table></figure></p>
-<p>以上简单的设置就完成了kernel rbd的qos设置了，我测试了下，确实是生效了的</p>
-<h2 id="总结">总结</h2><p>这个知识点很久前就看到了，一直没总结，现在记录下，个人观点是能快速，有效，稳定的实现功能是最好的，所以使用这个在kernel rbd方式下可以不用再进行qos的开发了</p>
-<h2 id="变更记录">变更记录</h2><table>
-<thead>
-<tr>
-<th style="text-align:center">Why</th>
-<th style="text-align:center">Who</th>
-<th style="text-align:center">When</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">创建</td>
-<td style="text-align:center">武汉-运维-磨渣</td>
-<td style="text-align:center">2018-01-05</td>
-</tr>
-</tbody>
-</table>
-]]></content>
-    <summary type="html">
-    <![CDATA[<center><br><img src="http://mysrc.cn-bj.ufileos.com/io.png" alt="io"><br></center>
-
-<h2 id="前言">前言</h2><p>关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入</p>
-<p>cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以通过ceph内部来实现qos，但是有现成的解决方案的时候，可以减少很多开发周期，以及测试的成本</p>
-<p>本篇将介绍的是kernel rbd的qos方案<br>]]>
     
     </summary>
     

@@ -192,6 +192,68 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-如何在所有的mon的损坏情况下将数据恢复如初" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/13/如何在所有的mon的损坏情况下将数据恢复如初/" class="article-date">
+  	<time datetime="2015-12-13T11:26:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-12-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/13/如何在所有的mon的损坏情况下将数据恢复如初/">如何在所有的mon的损坏情况下将数据恢复如初</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="本篇主题：">本篇主题：</h2><p>在mon无法启动，或者所有的mon的数据盘都损坏的情况下，如何把所有的数据恢复如初</p>
+<h2 id="写本章的缘由">写本章的缘由</h2><p>在ceph中国的群里有看到一个技术人员有提到，在一次意外机房掉电后，三台mon的系统盘同时损坏了，这个对于熟悉ceph的人都知道这意味着什么，所有的集群数据将无法访问，关于这个的解决办法目前没有在哪里有看到，这个对于大多数人是用不上的，但是一旦出现了，这个损失将是无法估量的，当然谁都不希望这个情况的发生<br>所以在研究了下ceph的一些操作后，自己尝试去找了一些关于集群的故障修复的，目前看到了一个是关于单个rbd镜像的恢复的文章，那个需要将数据映射本地的loop设备后重新读取，这个我曾经验证过一遍，确实可以实现，在周末的时候我尝试了另外一个办法，实现了在mon完全失效的情况下全集群的完整数据的恢复，并且保留了原来的数据结构和数据信息，当然这中间需要进行一定的操作去完成它，这个我准备写成一个标准的操作流程，并用视频的方式来记录这个恢复的流程</p>
+<h2 id="本篇资源:">本篇资源:</h2><p>包括了视频，操作文档</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/13/如何在所有的mon的损坏情况下将数据恢复如初/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-关于开始写教程的事" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -751,69 +813,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2015/10/04/查询osd上的pg数/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-rbd的数据在哪里" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/09/28/rbd的数据在哪里/" class="article-date">
-  	<time datetime="2015-09-28T08:06:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-09-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/28/rbd的数据在哪里/">rbd的数据在哪里</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="创建一个rbd">创建一个rbd</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@mytest ~]<span class="comment"># rbd create test1 --size 4000</span></span><br></pre></td></tr></table></figure>
-<h3 id="查看rbd信息">查看rbd信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@mytest ~]<span class="comment"># rbd info test1</span></span><br><span class="line">rbd image <span class="string">'test1'</span>:</span><br><span class="line">	size <span class="number">4000</span> MB <span class="keyword">in</span> <span class="number">1000</span> objects</span><br><span class="line">	order <span class="number">22</span> (<span class="number">4096</span> kB objects)</span><br><span class="line">	block_name_prefix: rb.<span class="number">0</span>.fa6c.<span class="number">6</span>b8b4567</span><br><span class="line">	format: <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>可以看出是没写入真实数据的<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@mytest ~]<span class="comment"># ceph df|grep rbd</span></span><br><span class="line">    rbd          <span class="number">0</span>       <span class="number">133</span>         <span class="number">0</span>        <span class="number">30627</span>M           <span class="number">2</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="查询rbd池里面的对象信息">查询rbd池里面的对象信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@mytest ~]<span class="comment"># rados ls -p rbd</span></span><br><span class="line"><span class="built_in">test</span>1.rbd</span><br><span class="line">rbd_directory</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/09/28/rbd的数据在哪里/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

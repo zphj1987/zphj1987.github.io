@@ -192,6 +192,74 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Ceph中PG和PGP的区别" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/19/Ceph中PG和PGP的区别/" class="article-date">
+  	<time datetime="2016-10-19T07:26:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-10-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/19/Ceph中PG和PGP的区别/">Ceph中PG和PGP的区别</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/ceph/pgnew.png" alt="pg"><br></center></p>
+<h2 id="一、前言">一、前言</h2><p>首先来一段英文关于PG和PGP区别的解释：</p>
+<blockquote>
+<p>PG = Placement Group<br>PGP = Placement Group for Placement purpose </p>
+<p>pg_num = number of placement groups mapped to an OSD</p>
+<p>When pg_num is increased for any pool, every PG of this pool splits into half, but they all remain mapped to their parent OSD. </p>
+<p>Until this time, Ceph does not start rebalancing. Now, when you increase the pgp_num value for the same pool, PGs start to migrate from the parent to some other OSD, and cluster rebalancing starts. This is how PGP plays an important role.<br>By Karan Singh </p>
+</blockquote>
+<p>以上是来自邮件列表的 <code>Karan Singh</code> 的PG和PGP的相关解释，他也是 <code>Learning Ceph</code> 和 <code>Ceph Cookbook</code> 的作者，以上的解释没有问题，我们来看下具体在集群里面具体作用<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/10/19/Ceph中PG和PGP的区别/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-配置Ceph的IPV6集群" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -735,67 +803,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/09/24/不小心清空了Ceph的OSD的分区表如何恢复/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-Ceph的Mon数据重新构建工具" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/09/20/Ceph的Mon数据重新构建工具/" class="article-date">
-  	<time datetime="2016-09-20T08:09:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-20</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/20/Ceph的Mon数据重新构建工具/">Ceph的Mon数据重新构建工具</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/rebuild/rebuild-shot.png" alt="rebuild"><br></center><br>关于mon的数据的问题，一般正常情况下都是配置的3个mon的，但是还是有人会担心 Mon 万一三个同时都挂掉了怎么办，那么集群所有的数据是不是都丢了，关于后台真实数据恢复，有去后台取对象，然后一个个拼接起来的方案，这个是确定可以成功的，但是这个方法对于生产的集群耗时巨大，并且需要导出数据，然后又配置新的集群，工程比较耗大，考虑到这个问题，Ceph 的中国（Redhat）的一位开发者 <a href="https://github.com/tchaikov">tchaikov</a> 就写了一个新的工具，来对损坏的MON的数据进行原集群的重构，这个比起其他方案要好很多，本篇将讲述怎么使用这个工具，代码已经合并到 Ceph 的master分支当中去了</p>
-<p>关于这个工具相关的<a href="http://tracker.ceph.com/issues/17292">issue</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/09/20/Ceph的Mon数据重新构建工具/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

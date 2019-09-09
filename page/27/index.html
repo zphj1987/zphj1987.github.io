@@ -192,6 +192,67 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-symbol-lookup-error-usr-lib-x86-64-linux-gnu-libstdc-so-6错误的解决办法" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/22/symbol-lookup-error-usr-lib-x86-64-linux-gnu-libstdc-so-6错误的解决办法/" class="article-date">
+  	<time datetime="2015-03-22T04:46:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/22/symbol-lookup-error-usr-lib-x86-64-linux-gnu-libstdc-so-6错误的解决办法/">symbol lookup error: /usr/lib/x86_64-linux-gnu/libstdc++.so.6错误的解决办法</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>当出现<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ apt-get: symbol lookup error: /usr/lib/x86_64-linux-gnu/libstdc++.so.<span class="number">6</span>: undefined symbol: _ZNSt8messagesIcE2idE, version GLIBCXX_3.<span class="number">4</span>的时候</span><br></pre></td></tr></table></figure></p>
+<p>需要重新配置下一个包</p>
+<p>Fixed by manually downloading testing version of libc6 from here<br><a href="http://packages.debian.org/wheezy/libc6" target="_blank" rel="external">http://packages.debian.org/wheezy/libc6</a> and installed it</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ dpkg -i --auto-deconfigure libc6_2.<span class="number">13</span>-<span class="number">16</span>_amd64.deb</span><br></pre></td></tr></table></figure>
+<p>重新配置下libc6_2.13-16_amd64.deb就可以了</p>
+<pre><code class="bash">strings /usr/lib/libstdc++.so.<span class="number">6</span>| grep GLIBC
+</code></pre>
+<p>查看版本,然后安装 libstdc++6 即可</p>
+<p>写于: 2011年12月31日<br>更新于: 2015年03月22日</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-error-while-loading-shared-libraries的解決方法" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">

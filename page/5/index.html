@@ -192,6 +192,71 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-different-change-pg" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/06/14/different-change-pg/" class="article-date">
+  	<time datetime="2017-06-14T05:39:26.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-06-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/14/different-change-pg/">调整PG分多次调整和一次到位的迁移差别分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/diff.png" alt="different"><br></center>
+
+<h2 id="前言">前言</h2><p>这个问题来源于我们研发的一个问题，在进行pg调整的时候，是一次调整到位好，还是分多次调整比较好，分多次调整的时候会不会出现某个pg反复挪动的问题，造成整体迁移量大于一次调整的</p>
+<p>最近自己的项目上也有pg调整的需求，这个需求一般来源于pg规划好了，后期出现节点扩容的情况，需要对pg进行增加的调整</p>
+<p>本篇用具体的数据来分析两种方式的差别</p>
+<p>因为本篇的篇幅较长，直接先把结论拿出来<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2017/06/14/different-change-pg/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-use-graylog-get-Ceph-status" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -740,68 +805,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2017/04/27/mds-journal-cc-2929-FAILED-assert/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-rados-put-strip-debug" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/04/26/rados-put-strip-debug/" class="article-date">
-  	<time datetime="2017-04-26T08:00:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-26</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/26/rados-put-strip-debug/">rados put striper功能的调试</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mysrc.cn-bj.ufileos.com/strip.jpg" alt="strip"><br></center>
-
-<h2 id="前言">前言</h2><p>之前对于striper这个地方的功能并没研究太多，只是知道这个里面可以以条带方式并行的去写对象，从而加大并发性来提高性能，而默认的条带数目为1，也就是以对象大小去写，并没有条带，所以不是很好感觉到差别，今天就尝试下用rados命令来看下这个条带是怎么回事<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2017/04/26/rados-put-strip-debug/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

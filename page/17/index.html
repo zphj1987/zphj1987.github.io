@@ -192,6 +192,68 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-ubuntu安装软件自动交互" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/27/ubuntu安装软件自动交互/" class="article-date">
+  	<time datetime="2016-01-27T08:26:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/27/ubuntu安装软件自动交互/">ubuntu安装软件自动交互</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在ubuntu下安装软件过程中可能会出现需要你输入密码或者其他的一些交互类的操作，这样在脚本安装的时候就可能出现阻断，这个在ubuntu里面已经考虑到了这个情况，以前我在安装这个的时候，通过的是脚本传递参数的方式，这里介绍的是原生的控制方式，这个方式更好</p>
+<p>以安装mariadb-server-5.5为例</p>
+<h3 id="1、查询需要应答的问题">1、查询需要应答的问题</h3><p>首先通过命令查询这个软件需要问答什么问题<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@mytest:/var/cache/apt/archives<span class="comment"># debconf-show mariadb-server-5.5 </span></span><br><span class="line">* mysql-server/root_password: (password omitted)</span><br><span class="line">* mysql-server/root_password_again: (password omitted)</span><br><span class="line">  mysql-server/password_mismatch:</span><br><span class="line">  mysql-server/error_setting_password:</span><br><span class="line">* mariadb-server/oneway_migration: <span class="literal">true</span></span><br><span class="line">  mysql-server-<span class="number">5.5</span>/nis_warning:</span><br><span class="line">  mysql-server-<span class="number">5.5</span>/postrm_remove_databases: <span class="literal">false</span></span><br><span class="line">  mariadb-server-<span class="number">5.5</span>/really_downgrade: <span class="literal">false</span></span><br><span class="line">  mysql-server/no_upgrade_when_using_ndb:</span><br></pre></td></tr></table></figure></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/01/27/ubuntu安装软件自动交互/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-磨磨谈-ceph-users-邮件列表之Vol-1-Issue-1" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -774,68 +836,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2015/12/16/xenserver使用ceph的rbd的方法/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-如何在所有的mon的损坏情况下将数据恢复如初" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/13/如何在所有的mon的损坏情况下将数据恢复如初/" class="article-date">
-  	<time datetime="2015-12-13T11:26:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-12-13</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/13/如何在所有的mon的损坏情况下将数据恢复如初/">如何在所有的mon的损坏情况下将数据恢复如初</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="本篇主题：">本篇主题：</h2><p>在mon无法启动，或者所有的mon的数据盘都损坏的情况下，如何把所有的数据恢复如初</p>
-<h2 id="写本章的缘由">写本章的缘由</h2><p>在ceph中国的群里有看到一个技术人员有提到，在一次意外机房掉电后，三台mon的系统盘同时损坏了，这个对于熟悉ceph的人都知道这意味着什么，所有的集群数据将无法访问，关于这个的解决办法目前没有在哪里有看到，这个对于大多数人是用不上的，但是一旦出现了，这个损失将是无法估量的，当然谁都不希望这个情况的发生<br>所以在研究了下ceph的一些操作后，自己尝试去找了一些关于集群的故障修复的，目前看到了一个是关于单个rbd镜像的恢复的文章，那个需要将数据映射本地的loop设备后重新读取，这个我曾经验证过一遍，确实可以实现，在周末的时候我尝试了另外一个办法，实现了在mon完全失效的情况下全集群的完整数据的恢复，并且保留了原来的数据结构和数据信息，当然这中间需要进行一定的操作去完成它，这个我准备写成一个标准的操作流程，并用视频的方式来记录这个恢复的流程</p>
-<h2 id="本篇资源:">本篇资源:</h2><p>包括了视频，操作文档</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/12/13/如何在所有的mon的损坏情况下将数据恢复如初/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

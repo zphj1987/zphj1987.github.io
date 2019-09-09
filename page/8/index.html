@@ -192,6 +192,69 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-sortbitwise-mean" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/12/sortbitwise-mean/" class="article-date">
+  	<time datetime="2017-01-12T04:39:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/12/sortbitwise-mean/">&#39;sortbitwise&#39;是什么意思</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/techie.jpg" alt=""><br></center>
+
+<h2 id="问题">问题</h2><p>flag sortbitwise 在ceph中是什么意思,在Jewel版本下可以看到多了这个flags</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 current]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster ffe7a8db-c671-<span class="number">4</span>b45<span class="operator">-a</span>784-ddb41e633905</span><br><span class="line">     health HEALTH_OK</span><br><span class="line">     monmap e1: <span class="number">1</span> mons at &#123;lab8106=<span class="number">192.168</span>.<span class="number">8.106</span>:<span class="number">6789</span>/<span class="number">0</span>&#125;</span><br><span class="line">            election epoch <span class="number">4</span>, quorum <span class="number">0</span> lab8106</span><br><span class="line">      fsmap e4: <span class="number">1</span>/<span class="number">1</span>/<span class="number">1</span> up &#123;<span class="number">0</span>=lab8106=up:active&#125;</span><br><span class="line">     osdmap e132: <span class="number">8</span> osds: <span class="number">8</span> up, <span class="number">8</span> <span class="keyword">in</span></span><br><span class="line">            flags sortbitwise</span><br><span class="line">      pgmap v206294: <span class="number">201</span> pgs, <span class="number">5</span> pools, <span class="number">4684</span> MB data, <span class="number">1214</span> objects</span><br><span class="line">            <span class="number">9669</span> MB used, <span class="number">2216</span> GB / <span class="number">2226</span> GB avail</span><br><span class="line">                 <span class="number">201</span> active+clean</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2017/01/12/sortbitwise-mean/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-calamari-node-info" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -753,68 +816,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/12/14/rbd的image快照与Pool快照/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-Cephfs的快照功能" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/12/13/Cephfs的快照功能/" class="article-date">
-  	<time datetime="2016-12-13T08:26:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-13</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/13/Cephfs的快照功能/">Cephfs的快照功能</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mysrc.cn-bj.ufileos.com/snapshot.jpg" alt=""><br></center>
-
-<h2 id="前言">前言</h2><p>Cephfs的快照功能在官网都很少提及，因为即使开发了很多年，但是由于cephfs的复杂性，功能一直没能达到稳定，这里，只是介绍一下这个功能，怎么使用，并且建议不要在生产中使用，因为搞不好是会丢数据的</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/12/13/Cephfs的快照功能/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

@@ -192,6 +192,67 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Ceph的Mon数据重新构建工具" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/20/Ceph的Mon数据重新构建工具/" class="article-date">
+  	<time datetime="2016-09-20T08:09:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/20/Ceph的Mon数据重新构建工具/">Ceph的Mon数据重新构建工具</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/rebuild/rebuild-shot.png" alt="rebuild"><br></center><br>关于mon的数据的问题，一般正常情况下都是配置的3个mon的，但是还是有人会担心 Mon 万一三个同时都挂掉了怎么办，那么集群所有的数据是不是都丢了，关于后台真实数据恢复，有去后台取对象，然后一个个拼接起来的方案，这个是确定可以成功的，但是这个方法对于生产的集群耗时巨大，并且需要导出数据，然后又配置新的集群，工程比较耗大，考虑到这个问题，Ceph 的中国（Redhat）的一位开发者 <a href="https://github.com/tchaikov">tchaikov</a> 就写了一个新的工具，来对损坏的MON的数据进行原集群的重构，这个比起其他方案要好很多，本篇将讲述怎么使用这个工具，代码已经合并到 Ceph 的master分支当中去了</p>
+<p>关于这个工具相关的<a href="http://tracker.ceph.com/issues/17292">issue</a></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/09/20/Ceph的Mon数据重新构建工具/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-替换OSD操作的优化与分析" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -745,80 +806,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/07/27/Ceph-状态报警告-pool-rbd-has-many-more-objects-per-pg-than-average-too-few-pgs/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-如何替换Ceph的Journal" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/07/26/如何替换Ceph的Journal/" class="article-date">
-  	<time datetime="2016-07-26T14:32:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-07-26</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/26/如何替换Ceph的Journal/">如何替换Ceph的Journal</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mysrc.cn-bj.ufileos.com/movejournal/fixjournal.png" alt=""><br></center>
-
-<p>很多人会提出这样的问题：</p>
-<ul>
-<li>能不能够将 Ceph journal 分区从一个磁盘替换到另一个磁盘？</li>
-<li>怎样替换 Ceph 的 journal 分区？</li>
-</ul>
-<p>有两种方法来修改Ceph的journal：</p>
-<ul>
-<li>创建一个journal分区，在上面创建一个新的journal</li>
-<li>转移已经存在的journal分区到新的分区上，这个适合整盘替换</li>
-</ul>
-<blockquote>
-<p>Ceph 的journal是基于事务的日志，所以正确的下刷journal数据，然后重新创建journal并不会引起数据丢失，因为在下刷journal的数据的时候，osd是停止的，一旦数据下刷后，这个journal是不会再有新的脏数据进来的</p>
-</blockquote>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/07/26/如何替换Ceph的Journal/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

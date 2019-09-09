@@ -192,6 +192,69 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-rbd的数据在哪里" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/09/28/rbd的数据在哪里/" class="article-date">
+  	<time datetime="2015-09-28T08:06:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-09-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/28/rbd的数据在哪里/">rbd的数据在哪里</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="创建一个rbd">创建一个rbd</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@mytest ~]<span class="comment"># rbd create test1 --size 4000</span></span><br></pre></td></tr></table></figure>
+<h3 id="查看rbd信息">查看rbd信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@mytest ~]<span class="comment"># rbd info test1</span></span><br><span class="line">rbd image <span class="string">'test1'</span>:</span><br><span class="line">	size <span class="number">4000</span> MB <span class="keyword">in</span> <span class="number">1000</span> objects</span><br><span class="line">	order <span class="number">22</span> (<span class="number">4096</span> kB objects)</span><br><span class="line">	block_name_prefix: rb.<span class="number">0</span>.fa6c.<span class="number">6</span>b8b4567</span><br><span class="line">	format: <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>可以看出是没写入真实数据的<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@mytest ~]<span class="comment"># ceph df|grep rbd</span></span><br><span class="line">    rbd          <span class="number">0</span>       <span class="number">133</span>         <span class="number">0</span>        <span class="number">30627</span>M           <span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="查询rbd池里面的对象信息">查询rbd池里面的对象信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@mytest ~]<span class="comment"># rados ls -p rbd</span></span><br><span class="line"><span class="built_in">test</span>1.rbd</span><br><span class="line">rbd_directory</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/09/28/rbd的数据在哪里/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-批量下载instagram图片" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -761,63 +824,6 @@ daovoice('update');
       
 	<div class="article-tag tagcloud">
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/windows/">windows</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-shell脚本的自动交互" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/04/02/shell脚本的自动交互/" class="article-date">
-  	<time datetime="2015-04-02T09:22:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-04-02</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/04/02/shell脚本的自动交互/">shell脚本的自动交互</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>使用expect来自动应答shell的交互</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/expect&#10;spawn openssl req -new -key server.key -out server1.csr&#10;expect &#34;Country Name&#34;&#10;send &#34;\n&#34;&#10;expect &#34;State or Province Name&#34;&#10;send &#34;\n&#34;&#10;interact</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/脚本/">脚本</a></li></ul>
 	</div>
 
       

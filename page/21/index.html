@@ -192,6 +192,69 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-ubuntu使用iso作为本地源" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/24/ubuntu使用iso作为本地源/" class="article-date">
+  	<time datetime="2015-03-24T04:52:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/24/ubuntu使用iso作为本地源/">ubuntu使用iso作为本地源</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>方式一(路径不要改):<br>挂载光驱到到本地的指定目录<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mount /dev/cdrom /media/cdrom</span><br></pre></td></tr></table></figure></p>
+<p>然后执行:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-cdrom -m <span class="operator">-d</span> /media/cdrom add</span><br></pre></td></tr></table></figure></p>
+<p>会写配置文件<br>然后执行:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br></pre></td></tr></table></figure></p>
+<p>就可以使用</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/03/24/ubuntu使用iso作为本地源/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-custom-ubuntu-server-iso" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -721,71 +784,6 @@ daovoice('update');
         <p class="article-more-link">
           <a  href="/2015/03/24/重置ubuntu13-04-密码/#more">more >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-xenserver中linux虚拟机修改启动顺序" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/24/xenserver中linux虚拟机修改启动顺序/" class="article-date">
-  	<time datetime="2015-03-23T23:49:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-24</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/24/xenserver中linux虚拟机修改启动顺序/">xenserver中linux虚拟机修改启动顺序</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>xenserver是思杰的一款类似于vmware ESXI的虚拟化平台,或者说虚拟化操作系统,上面可以安装许多虚拟机,但是当你装完linux虚拟机，你会发现一个问题,不能像windows vm那样直接通过xencenter的虚拟机属性去修改。</p>
-<p>windows的启动属性,很容易修改,</p>
-<p>而linux的启动属性,没有这些</p>
-<p>下面我们介绍一些啊，怎么可以把linux的启动属性,通过命令行解决掉。</p>
-<p>选择xenserver主机的console端,找到linux虚拟机的uuid。</p>
-<p>执行:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xe vm-list name-lable=xx(虚拟机名称) 就会显示虚拟机的uuid</span><br></pre></td></tr></table></figure></p>
-<p>然后执行:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xe vm-param-set uuid=xx(上面获取到的) HVM-boot-policy=BIOS\ order</span><br><span class="line">xe vm-param-set uuid=xx(上面获取到的) HVM-boot-params:order=<span class="string">"dc"</span></span><br></pre></td></tr></table></figure></p>
-<p>执行完,你就可以通过XenCenter打开Linux虚拟机的属性查看,和windows一样,可以修改启动顺序了</p>
-<p>写于: 2014年06月19日<br>更新于: 2015年03月24日</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-	</div>
-
-      
-
       
       <div class="clearfix"></div>
     </div>

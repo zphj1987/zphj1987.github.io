@@ -192,6 +192,64 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-更新租约和检测数据完整性脚本" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/22/更新租约和检测数据完整性脚本/" class="article-date">
+  	<time datetime="2015-03-22T07:37:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/22/更新租约和检测数据完整性脚本/">更新租约和检测数据完整性脚本</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这个是针对tahoe这个文件系统做的一个更新租约和检查数据完整性的脚本,并且把结果保存下来,先要把所有的caps保存到一个文本当中<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">#! /bin/sh&#10;   a=$(cat /home/cap-list.txt |wc -l)&#10;   c=`date`&#10;   echo $a&#10;   for((i=1;i&#60;=a;i++))&#10;   do&#10;       b=$( head -$i /home/cap-list.txt |tail -1)&#10;       echo $b &#62;&#62; /home/checktime.txt&#10;       echo &#34;start time:&#34; &#62;&#62; /home/checktime.txt&#10;       echo `date` &#62;&#62; /home/checktime.txt&#10;       tahoe deep-check --add-lease --repair --dir-cap=$b &#62;&#62; /home/checktime.txt&#10;       echo &#34;end time:&#34; &#62;&#62; /home/checktime.txt&#10;       echo `date` &#62;&#62; /home/checktime.txt&#10;   done&#10;   d=`date`&#10;   echo $c &#62;&#62; /home/checktime.txt&#10;   echo $d &#62;&#62; /home/checktime.txt</span><br></pre></td></tr></table></figure></p>
+<p>写于: 2012年4月14日<br>更新于: 2015年03月22日</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/脚本/">脚本</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-卸载python安装的软件" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -702,67 +760,6 @@ daovoice('update');
       
         <p>安装时出现需要Microsoft Visual C++ 2005 Redistributble对话框,<br>里面说Command line option syntax error . Type Command/?for Help<br>先解压 先脱一层,得到 VCREDI~3.EXE 这么个exe文件,执行安装。<br>使用WINRAR打开这个exe文件,得到vcredis1.cab 和 vcredist.msi 这两个安装程序,现在安装起来没有问题了</p>
 <p>写于: 2012年01月13日<br>更新于: 2015年03月22日</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-symbol-lookup-error-usr-lib-x86-64-linux-gnu-libstdc-so-6错误的解决办法" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/22/symbol-lookup-error-usr-lib-x86-64-linux-gnu-libstdc-so-6错误的解决办法/" class="article-date">
-  	<time datetime="2015-03-22T04:46:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/22/symbol-lookup-error-usr-lib-x86-64-linux-gnu-libstdc-so-6错误的解决办法/">symbol lookup error: /usr/lib/x86_64-linux-gnu/libstdc++.so.6错误的解决办法</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>当出现<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ apt-get: symbol lookup error: /usr/lib/x86_64-linux-gnu/libstdc++.so.<span class="number">6</span>: undefined symbol: _ZNSt8messagesIcE2idE, version GLIBCXX_3.<span class="number">4</span>的时候</span><br></pre></td></tr></table></figure></p>
-<p>需要重新配置下一个包</p>
-<p>Fixed by manually downloading testing version of libc6 from here<br><a href="http://packages.debian.org/wheezy/libc6" target="_blank" rel="external">http://packages.debian.org/wheezy/libc6</a> and installed it</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ dpkg -i --auto-deconfigure libc6_2.<span class="number">13</span>-<span class="number">16</span>_amd64.deb</span><br></pre></td></tr></table></figure>
-<p>重新配置下libc6_2.13-16_amd64.deb就可以了</p>
-<pre><code class="bash">strings /usr/lib/libstdc++.so.<span class="number">6</span>| grep GLIBC
-</code></pre>
-<p>查看版本,然后安装 libstdc++6 即可</p>
-<p>写于: 2011年12月31日<br>更新于: 2015年03月22日</p>
 
       
     </div>

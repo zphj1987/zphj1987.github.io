@@ -192,6 +192,63 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Ceph-Bluestore首测" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/24/Ceph-Bluestore首测/" class="article-date">
+  	<time datetime="2016-03-24T14:07:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/24/Ceph-Bluestore首测/">Ceph Bluestore首测</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Bluestore 作为 Ceph Jewel 版本推出的一个重大的更新，提供了一种之前没有的存储形式，一直以来ceph的存储方式一直是以filestore的方式存储的，也就是对象是以文件方式存储在osd的磁盘上的，pg是以目录的方式存在于osd的磁盘上的<br>在发展过程中，中间出现了kvstore，这个还是存储在文件系统之上，以leveldb或者rocksdb的方式存储对象数据，这个也没有推广开来，性能上没有太大的改观，在某些情况下性能还低于filestore<br>最终在sage的大力支持下，ceph社区准备撸一个新的文件系统，这个系统类似于rocksdb，但是数据是可以直接存储到裸设备上去的，也就是存储对象数据的地方是没有传统意义上的文件系统的，并且解决了一种被抱怨的写双份数据的问题，在filestore中，数据需要先写入journal再入磁盘，对于磁盘来说实际就是双份写了</p>
+<p>在这里不做过多的探讨技术上的细节，bluestore处于开发阶段，在最新的版本的ceph中，发现已经集成了这个，虽然还是实验阶段，但是还是体现出其未来巨大的价值</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/03/24/Ceph-Bluestore首测/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-ceph查询rbd的使用容量（快速）" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -744,68 +801,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/02/21/diamond收集插件的自定义/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-ubuntu安装软件自动交互" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/27/ubuntu安装软件自动交互/" class="article-date">
-  	<time datetime="2016-01-27T08:26:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-27</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/27/ubuntu安装软件自动交互/">ubuntu安装软件自动交互</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在ubuntu下安装软件过程中可能会出现需要你输入密码或者其他的一些交互类的操作，这样在脚本安装的时候就可能出现阻断，这个在ubuntu里面已经考虑到了这个情况，以前我在安装这个的时候，通过的是脚本传递参数的方式，这里介绍的是原生的控制方式，这个方式更好</p>
-<p>以安装mariadb-server-5.5为例</p>
-<h3 id="1、查询需要应答的问题">1、查询需要应答的问题</h3><p>首先通过命令查询这个软件需要问答什么问题<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@mytest:/var/cache/apt/archives<span class="comment"># debconf-show mariadb-server-5.5 </span></span><br><span class="line">* mysql-server/root_password: (password omitted)</span><br><span class="line">* mysql-server/root_password_again: (password omitted)</span><br><span class="line">  mysql-server/password_mismatch:</span><br><span class="line">  mysql-server/error_setting_password:</span><br><span class="line">* mariadb-server/oneway_migration: <span class="literal">true</span></span><br><span class="line">  mysql-server-<span class="number">5.5</span>/nis_warning:</span><br><span class="line">  mysql-server-<span class="number">5.5</span>/postrm_remove_databases: <span class="literal">false</span></span><br><span class="line">  mariadb-server-<span class="number">5.5</span>/really_downgrade: <span class="literal">false</span></span><br><span class="line">  mysql-server/no_upgrade_when_using_ndb:</span><br></pre></td></tr></table></figure></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/01/27/ubuntu安装软件自动交互/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

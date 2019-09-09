@@ -192,6 +192,73 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-samba配置独立访问配置方法" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/22/samba配置独立访问配置方法/" class="article-date">
+  	<time datetime="2015-03-22T14:07:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/22/samba配置独立访问配置方法/">samba配置独立访问配置方法</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="配置目的:">配置目的:</h3><p>为了给指定用户一个独立访问目录</p>
+<p>首先在samba服务器安装samba软件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ apt-get install samba</span><br></pre></td></tr></table></figure>
+<p>然后配置独立访问用户<br>配置samba用户前提需要是linux的用户,所以要创建linux用户</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ useradd    zp</span><br><span class="line">$ passwd     zp</span><br></pre></td></tr></table></figure>
+<p>用户创建完了以后<br>需要创建samba用户</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ smbpasswd <span class="operator">-a</span>  zp</span><br></pre></td></tr></table></figure>
+<p>然后输入密码,记住密码,这个是客户端访问samba的密码<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/samba/">samba</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/03/22/samba配置独立访问配置方法/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-Ubuntu12-10-设置默认命令行启动" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -711,61 +778,6 @@ daovoice('update');
         <p class="article-more-link">
           <a  href="/2015/03/22/用rsync备份一台linux服务器上的数据/#more">more >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-修改ssh的默认22端口，并使用scp的方法" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/22/修改ssh的默认22端口，并使用scp的方法/" class="article-date">
-  	<time datetime="2015-03-22T08:49:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/22/修改ssh的默认22端口，并使用scp的方法/">修改ssh的默认22端口，并使用scp的方法</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>修改默认的22的ssh端口只需要修改 /etc/ssh/sshd_config 中的 port 字段为你想要的端口就可以了<br>以后用其他机器ssh登录这台机器只需要:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -p (port)  (ip)</span><br></pre></td></tr></table></figure></p>
-<p>使用scp 就是:<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scp -P (port) /usr/myfile   IP:/tmp</span><br></pre></td></tr></table></figure></p>
-<p>写于: 2012年05月05日<br>更新于: 2015年03月02日</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
       
       <div class="clearfix"></div>
     </div>

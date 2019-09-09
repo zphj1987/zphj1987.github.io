@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>高性能arm运行ceph存储基准测试 | zphj1987&#39;Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="关于arm之前wdlab对外发布过一次约500个节点的arm的ceph集群，那个采用的是微集群的结构，使用的是双核的cortex-a9 ARM处理器，运行速度为1.3 GHz，内存为1 GB，直接焊接到驱动器的PCB上，选项包括2 GB内存和ECC保护
+这个在国内也有类似的实现，深圳瑞驰商用Arm存储NxCells
+
+
+这个采用的是微集群的架构，能够比较好的应对一些冷存场景，但是今天要说的不是这种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高性能arm运行ceph存储基准测试">
+<meta property="og:url" content="http://www.zphj1987.com/2019/09/09/a-new-high-performance-arm64-running-ceph/index.html">
+<meta property="og:site_name" content="zphj1987'Blog">
+<meta property="og:description" content="关于arm之前wdlab对外发布过一次约500个节点的arm的ceph集群，那个采用的是微集群的结构，使用的是双核的cortex-a9 ARM处理器，运行速度为1.3 GHz，内存为1 GB，直接焊接到驱动器的PCB上，选项包括2 GB内存和ECC保护
+这个在国内也有类似的实现，深圳瑞驰商用Arm存储NxCells
+
+
+这个采用的是微集群的架构，能够比较好的应对一些冷存场景，但是今天要说的不是这种">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/arm.png">
+<meta property="og:image" content="http://mysrc.cn-bj.ufileos.com/smallarm.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高性能arm运行ceph存储基准测试">
+<meta name="twitter:description" content="关于arm之前wdlab对外发布过一次约500个节点的arm的ceph集群，那个采用的是微集群的结构，使用的是双核的cortex-a9 ARM处理器，运行速度为1.3 GHz，内存为1 GB，直接焊接到驱动器的PCB上，选项包括2 GB内存和ECC保护
+这个在国内也有类似的实现，深圳瑞驰商用Arm存储NxCells
+
+
+这个采用的是微集群的架构，能够比较好的应对一些冷存场景，但是今天要说的不是这种">
+  
+    <link rel="alternative" href="/atom.xml" title="zphj1987&#39;Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://mysrc.cn-bj.ufileos.com/logo/favicon.png">
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/style.css" type="text/css">
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.css" type="text/css">
+   
+   
+<script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/e7696690.js","daovoice")
+daovoice('init', {
+  app_id: "e7696690"
+});
+daovoice('update');
+</script>  
+ 
+   
+   <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/gitment.css">
+   <script src="http://mysrc.cn-bj.ufileos.com/gitment.js"></script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zphj1987</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">止于至善</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/instagram">图片</a></li>
+				        
+							<li><a href="/payforask">有偿服务</a></li>
+				        
+							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+					        
+								<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+					        
+
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/ceph/" style="font-size: 20px;">ceph</a><a href="/tags/freebsd/" style="font-size: 10px;">freebsd</a><a href="/tags/instagram/" style="font-size: 10px;">instagram</a><a href="/tags/iptables/" style="font-size: 10px;">iptables</a><a href="/tags/linux/" style="font-size: 18.57px;">linux</a><a href="/tags/momotan/" style="font-size: 10px;">momotan</a><a href="/tags/nginx/" style="font-size: 12.86px;">nginx</a><a href="/tags/samba/" style="font-size: 10px;">samba</a><a href="/tags/ubuntu/" style="font-size: 17.14px;">ubuntu</a><a href="/tags/windows/" style="font-size: 10px;">windows</a><a href="/tags/zabbix/" style="font-size: 10px;">zabbix</a><a href="/tags/其他/" style="font-size: 10px;">其他</a><a href="/tags/内核/" style="font-size: 12.86px;">内核</a><a href="/tags/操作系统/" style="font-size: 11.43px;">操作系统</a><a href="/tags/杂七杂八/" style="font-size: 14.29px;">杂七杂八</a><a href="/tags/注册码/" style="font-size: 10px;">注册码</a><a href="/tags/测试工具/" style="font-size: 11.43px;">测试工具</a><a href="/tags/监控/" style="font-size: 10px;">监控</a><a href="/tags/网卡/" style="font-size: 12.86px;">网卡</a><a href="/tags/脚本/" style="font-size: 15.71px;">脚本</a><a href="/tags/高可用/" style="font-size: 10px;">高可用</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">1987 武汉 存储行业 QQ:199383004 MAIL:zphj1987@gmail.com</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">zphj1987</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://mysrc.cn-bj.ufileos.com/logo/favicon.png" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">zphj1987</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">止于至善</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/instagram">图片</a></li>
+		        
+					<li><a href="/payforask">有偿服务</a></li>
+		        
+					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/zphj1987" title="github">github</a>
+			        
+						<a class="rss" target="_blank" href="http://www.zphj1987.com/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-a-new-high-performance-arm64-running-ceph" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/09/09/a-new-high-performance-arm64-running-ceph/" class="article-date">
+  	<time datetime="2019-09-09T03:13:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      高性能arm运行ceph存储基准测试
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/arm.png" alt="armlogo"><br></center>
+
+<h2 id="关于arm">关于arm</h2><p>之前wdlab对外发布过一次约500个节点的arm的ceph集群，那个采用的是微集群的结构，使用的是双核的cortex-a9 ARM处理器，运行速度为1.3 GHz，内存为1 GB，直接焊接到驱动器的PCB上，选项包括2 GB内存和ECC保护</p>
+<p>这个在国内也有类似的实现，深圳瑞驰商用Arm存储NxCells</p>
+<center><br><img src="http://mysrc.cn-bj.ufileos.com/smallarm.png" alt="small-arm"><br></center>
+
+<p>这个采用的是微集群的架构，能够比较好的应对一些冷存场景，但是今天要说的不是这种架构，而是一个比较新的平台，采用的是高性能的arm的架构，也就是类似X86的大主板结构<br><a id="more"></a><br>很多人了解的arm的特点是小，功耗低，主频低，这个是以前的arm想发力的场景，类似于intel做的一款atom，在很早期的时候，我在的公司也尝试过基于atom主板做过1U的ceph存储，但是后来各种原因没有继续下去</p>
+<p>实际上arm也在发力高性能的场景，但是这个比较新，并不是每个人都能接触的到，在这里，我把我们的硬件设备的测试数据发一部分出来，也许能改变你对arm的印象，在未来硬件选型的时候，也许就多了一层选择</p>
+<h2 id="高性能arm设备说明">高性能arm设备说明</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">System Information</span><br><span class="line">  PROCESSOR:          Ampere eMAG ARMv8 @ <span class="number">3.00</span>GHz</span><br><span class="line">    Core Count:       <span class="number">32</span>                        </span><br><span class="line">    Scaling Driver:   cppc_cpufreq conservative </span><br><span class="line"></span><br><span class="line">  GRAPHICS:           ASPEED</span><br><span class="line">    Screen:           <span class="number">1024</span>x768         </span><br><span class="line"></span><br><span class="line">  MOTHERBOARD:        MiTAC RAPTOR</span><br><span class="line">    BIOS Version:     <span class="number">0.11</span>                                               </span><br><span class="line">    Chipset:          Ampere Computing LLC Skylark                       </span><br><span class="line">    Network:          <span class="number">2</span> x Intel <span class="number">82599</span>ES <span class="number">10</span>-Gigabit SFI/SFP+ + Intel I210 </span><br><span class="line"></span><br><span class="line">  MEMORY:             <span class="number">2</span> x <span class="number">32</span> GB DDR4-<span class="number">2667</span>MT/s Samsung M393A4K40BB2-CTD</span><br><span class="line"></span><br><span class="line">  DISK:               FORESEE <span class="number">256</span>GB SS + <span class="number">6001</span>GB Seagate ST6000NM0115-<span class="number">1</span>YZ</span><br><span class="line">    File-System:      xfs                               </span><br><span class="line">    Mount Options:    attr2 inode64 noquota relatime rw </span><br><span class="line">    Disk Scheduler:   DEADLINE                          </span><br><span class="line"></span><br><span class="line">  OPERATING SYSTEM:   CentOS Linux <span class="number">7</span></span><br><span class="line">    Kernel:           <span class="number">4.14</span>.<span class="number">0</span>-<span class="number">115</span>.el7a.<span class="number">0.1</span>.aarch64 (aarch64) <span class="number">20181125</span>          </span><br><span class="line">    Compiler:         GCC <span class="number">4.8</span>.<span class="number">5</span> <span class="number">20150623</span>                                      </span><br><span class="line">    Security:         meltdown: Mitigation of PTI                             </span><br><span class="line">                      + spec_store_bypass: Not affected                       </span><br><span class="line">                      + spectre_v1: Mitigation of __user pointer sanitization </span><br><span class="line">                      + spectre_v2: Vulnerable</span><br></pre></td></tr></table></figure>
+<p>机器采用的是ampere的最新的平台RAPTOR平台进行的测试，这里只是做了最小环境的测试，因为测试设备被占用了，就利用有限的资源进行测试即可,机器上面的插口都没有什么限制，支持pcie插槽，能够自己扩展到多盘位机器，也支持万兆网卡，本次测试采用的就是36盘位的机器，对于36盘位的机器来说，底层的磁盘的总资源肯定是大于网络带宽的，这样也有个好处就是磁盘在前端业务满载的时候，不会那么忙</p>
+<h2 id="测试环境">测试环境</h2><p>测试环境说明</p>
+<p>环境为单机36盘位的ceph12版本，配置的12.2.10版本的ceph，使用的是bluestore，设置的副本1，然后用一台X86机器作为客户端，客户端和服务器之间通过万兆相连，对比测试的机器同样为36盘位的机器，为了保证环境的一致性，测试过程中集群没有重搭，直接把盘换了一个平台进行了启动后进行测试</p>
+<p>磁盘有36块6T的sata盘</p>
+<p>本次测试测试了两组数据</p>
+<ul>
+<li>机器的主机带宽（vdbench测试arm的）</li>
+<li>机器带上ceph以后的输出带宽</li>
+</ul>
+<p>本次测试只在现有的环境下对比，测试模型很多，同样的X86选型都可以选出各种各样的，这里我只拿我现有的机器进行的测试，X86和arm的都为32 processor的服务器，内存一致</p>
+<h3 id="主机带宽">主机带宽</h3><p>主机vdbench测试</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">测试项目</th>
+<th style="text-align:center">测试时长</th>
+<th style="text-align:center">IOPS</th>
+<th style="text-align:center">response</th>
+<th style="text-align:center">带宽</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">4K随机写</td>
+<td style="text-align:center">600s</td>
+<td style="text-align:center">13123.1</td>
+<td style="text-align:center">5.400</td>
+<td style="text-align:center">51.26M/s</td>
+</tr>
+<tr>
+<td style="text-align:center">4K随机读</td>
+<td style="text-align:center">600s</td>
+<td style="text-align:center">3463.0</td>
+<td style="text-align:center">20.782</td>
+<td style="text-align:center">13.53M/s</td>
+</tr>
+<tr>
+<td style="text-align:center">1M顺序写</td>
+<td style="text-align:center">600s</td>
+<td style="text-align:center">3661.6</td>
+<td style="text-align:center">19.360</td>
+<td style="text-align:center">3661.63M/s</td>
+</tr>
+<tr>
+<td style="text-align:center">1M顺序读</td>
+<td style="text-align:center">600s</td>
+<td style="text-align:center">3857.8</td>
+<td style="text-align:center">18.657</td>
+<td style="text-align:center">3857.82M/s</td>
+</tr>
+</tbody>
+</table>
+<p>这个是vdbench 对主机带宽进行的测试，为什么需要这个测试，很久以前看过一篇博客，是讲fio测试的，博主提出了一个概念，你如果只是测试一个磁盘的数据，然后相加，这个数据可能跟实际偏离很多，还有个情况就是cpu的处理io的并发能力同样会影响最终输出，也就是你的写入越接近最终的并发写入，越能反应最终的可能的最大输出带宽，所以这个地方通过fio或者vdbench都能测出主机带宽，在知道可能存在这个问题以后，每次都会测一测，到目前为止已经发现了两次问题</p>
+<p>第一次是前面的硬盘的面板带宽的，之前有次测试的数据24个盘不管怎么样都是1.9G，在到了19个盘之后的数据就不再上升，磁盘utils一直都是100%，后来查出来是面板驱动问题，找硬件厂商刷了下驱动后，带宽就恢复正常</p>
+<p>一次是本次测试同样36盘一直跑出来发现只有2G/s,排查以后发现是内部的lsi的卡到面板只用了一根线，虽然看到的是36个盘，但是受限于线的带宽，只有2G/s，把线换成2根以后，性能就到了上面的3.6G/s了，这个如果不跑下整机带宽，也许没发现，或者后续会怀疑是不是本身软件处理慢了</p>
+<p>本次测试主要是sata的盘的，也就是跑的带宽模式，大IO的场景，需要小io的场景的需要ssd的环境了，不在本篇讨论范围内</p>
+<h3 id="集群的测试数据">集群的测试数据</h3><p>arm和X86测试数据对比<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rados -p rbd -t <span class="number">32</span> -b <span class="number">64</span>K bench  <span class="number">300</span> write --no-cleanup --run-name <span class="number">64</span>kt32</span><br><span class="line">rados -p rbd -t <span class="number">8</span> -b <span class="number">4096</span>K bench  <span class="number">300</span> write --no-cleanup --run-name <span class="number">4</span>Mt8</span><br></pre></td></tr></table></figure></p>
+<p>命令的例子，根据不同的用例进行调整参数</p>
+<h4 id="64K块大小性能">64K块大小性能</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">读/写</th>
+<th style="text-align:center">块大小/并发数</th>
+<th style="text-align:center">Bandwidth(MB/s)</th>
+<th style="text-align:center">Average IOPS</th>
+<th style="text-align:center">Average Latency(ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">64K/32</td>
+<td style="text-align:center">39.8914</td>
+<td style="text-align:center">638</td>
+<td style="text-align:center">0.0501339</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">64K/32</td>
+<td style="text-align:center">39.3184</td>
+<td style="text-align:center">629</td>
+<td style="text-align:center">0.0508632</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">64K/64</td>
+<td style="text-align:center">67.283</td>
+<td style="text-align:center">1076</td>
+<td style="text-align:center">0.0594479</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">64K/64</td>
+<td style="text-align:center">66.0471</td>
+<td style="text-align:center">1056</td>
+<td style="text-align:center">0.0605586</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">64K/128</td>
+<td style="text-align:center">110.14</td>
+<td style="text-align:center">1762</td>
+<td style="text-align:center">0.0726323</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">64K/128</td>
+<td style="text-align:center">108.525</td>
+<td style="text-align:center">1736</td>
+<td style="text-align:center">0.0737129</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">64K/256</td>
+<td style="text-align:center">177.103</td>
+<td style="text-align:center">2833</td>
+<td style="text-align:center">0.0903411</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">64K/256</td>
+<td style="text-align:center">190.263</td>
+<td style="text-align:center">3044</td>
+<td style="text-align:center">0.0840909</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">64K/512</td>
+<td style="text-align:center">260.715</td>
+<td style="text-align:center">4171</td>
+<td style="text-align:center">0.122732</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">64K/512</td>
+<td style="text-align:center">261.358</td>
+<td style="text-align:center">4181</td>
+<td style="text-align:center">0.122422</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">64K/32</td>
+<td style="text-align:center">1060.96</td>
+<td style="text-align:center">16975</td>
+<td style="text-align:center">0.00186769</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">64K/32</td>
+<td style="text-align:center">958.661</td>
+<td style="text-align:center">15338</td>
+<td style="text-align:center">0.00206133</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">64K/64</td>
+<td style="text-align:center">1026.75</td>
+<td style="text-align:center">16428</td>
+<td style="text-align:center">0.00387973</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">64K/64</td>
+<td style="text-align:center">946.426</td>
+<td style="text-align:center">15142</td>
+<td style="text-align:center">0.00419585</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">64K/128</td>
+<td style="text-align:center">1082.39</td>
+<td style="text-align:center">17318</td>
+<td style="text-align:center">0.007375</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">64K/128</td>
+<td style="text-align:center">931.589</td>
+<td style="text-align:center">14905</td>
+<td style="text-align:center">0.00855418</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">64K/256</td>
+<td style="text-align:center">1116.87</td>
+<td style="text-align:center">17869</td>
+<td style="text-align:center">0.0143076</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">64K/256</td>
+<td style="text-align:center">1001.93</td>
+<td style="text-align:center">16030</td>
+<td style="text-align:center">0.0159373</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">64K/512</td>
+<td style="text-align:center">1116.81</td>
+<td style="text-align:center">17868</td>
+<td style="text-align:center">0.0286263</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">64K/512</td>
+<td style="text-align:center">1008.51</td>
+<td style="text-align:center">16136</td>
+<td style="text-align:center">0.0316968</td>
+</tr>
+</tbody>
+</table>
+<h4 id="4M块大小性能">4M块大小性能</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">读/写</th>
+<th style="text-align:center">块大小/并发数</th>
+<th style="text-align:center">Bandwidth(MB/s)</th>
+<th style="text-align:center">Average IOPS</th>
+<th style="text-align:center">Average Latency(ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">4M/8</td>
+<td style="text-align:center">377.74</td>
+<td style="text-align:center">94</td>
+<td style="text-align:center">0.0847078</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">4M/8</td>
+<td style="text-align:center">377.604</td>
+<td style="text-align:center">94</td>
+<td style="text-align:center">0.0847369</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">4M/16</td>
+<td style="text-align:center">676.168</td>
+<td style="text-align:center">169</td>
+<td style="text-align:center">0.094649</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">4M/16</td>
+<td style="text-align:center">670.021</td>
+<td style="text-align:center">167</td>
+<td style="text-align:center">0.0955143</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">4M/32</td>
+<td style="text-align:center">900.391</td>
+<td style="text-align:center">225</td>
+<td style="text-align:center">0.142123</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">4M/32</td>
+<td style="text-align:center">902.573</td>
+<td style="text-align:center">225</td>
+<td style="text-align:center">0.1418</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">4M/64</td>
+<td style="text-align:center">901.906</td>
+<td style="text-align:center">225</td>
+<td style="text-align:center">0.283723</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">4M/64</td>
+<td style="text-align:center">902.953</td>
+<td style="text-align:center">225</td>
+<td style="text-align:center">0.28335</td>
+</tr>
+<tr>
+<td style="text-align:center">arm写</td>
+<td style="text-align:center">4M/128</td>
+<td style="text-align:center">903.476</td>
+<td style="text-align:center">225</td>
+<td style="text-align:center">0.566172</td>
+</tr>
+<tr>
+<td style="text-align:center">X86写</td>
+<td style="text-align:center">4M/128</td>
+<td style="text-align:center">904.942</td>
+<td style="text-align:center">226</td>
+<td style="text-align:center">0.56528</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">4M/8</td>
+<td style="text-align:center">906.495</td>
+<td style="text-align:center">226</td>
+<td style="text-align:center">0.0347298</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">4M/8</td>
+<td style="text-align:center">784.499</td>
+<td style="text-align:center">196</td>
+<td style="text-align:center">0.0395726</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">4M/16</td>
+<td style="text-align:center">968.325</td>
+<td style="text-align:center">242</td>
+<td style="text-align:center">0.0655441</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">4M/16</td>
+<td style="text-align:center">1091.42</td>
+<td style="text-align:center">272</td>
+<td style="text-align:center">0.0570873</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">4M/32</td>
+<td style="text-align:center">1074.49</td>
+<td style="text-align:center">268</td>
+<td style="text-align:center">0.118411</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">4M/32</td>
+<td style="text-align:center">1108.76</td>
+<td style="text-align:center">277</td>
+<td style="text-align:center">0.113665</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">4M/64</td>
+<td style="text-align:center">1053.77</td>
+<td style="text-align:center">263</td>
+<td style="text-align:center">0.242012</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">4M/64</td>
+<td style="text-align:center">1116.84</td>
+<td style="text-align:center">279</td>
+<td style="text-align:center">0.227442</td>
+</tr>
+<tr>
+<td style="text-align:center">arm读</td>
+<td style="text-align:center">4M/128</td>
+<td style="text-align:center">1121.86</td>
+<td style="text-align:center">280</td>
+<td style="text-align:center">0.4553</td>
+</tr>
+<tr>
+<td style="text-align:center">X86读</td>
+<td style="text-align:center">4M/128</td>
+<td style="text-align:center">1102.44</td>
+<td style="text-align:center">275</td>
+<td style="text-align:center">0.462227</td>
+</tr>
+</tbody>
+</table>
+<p>从上面的两大组数据可以看到，在这个测试模型下面，这个arm的机器的性能并不差，两款硬件在同样的测试压力，和同等磁盘的情况下，基本维持了跟X86一致的水平</p>
+<p>这个如果硬要说哪款好，我觉得那也不是一下两下说的清楚的，只能说给出一个测试模型，然后两个同样的压力同样环境去做比较，这样就太多场景了，并且也还会考虑成本的问题，兼容性的问题，如果在各方面都差不多的情况下，这个不失为一种选择</p>
+<p>硬盘还分为sata，sas，ssd，高铁也有普通列车，和谐号，复兴号的差别，这个看怎么去定位硬件本身的输出能力了，这里从测试数据来看，还是一款不错的高性能arm硬件，当然需要到更多的环境下面去适应和磨合了</p>
+<h2 id="总结">总结</h2><p>在安培的arm高性能机器下，也能跑出跟X86下的差不多的性能了，虽然还不能说绝对能去完全替换X86，但是目前看性能还是很不错的，值得一试，如果价格合适，又满足需求，还是可行的</p>
+<h2 id="变更记录">变更记录</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">Why</th>
+<th style="text-align:center">Who</th>
+<th style="text-align:center">When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">创建</td>
+<td style="text-align:center">武汉-运维-磨渣</td>
+<td style="text-align:center">2018-09-09</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/09/04/bluestore-osd-auto-start/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">bluestore的osd自启动</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+<script>
+var gitment = new Gitment({
+  id: '高性能arm运行ceph存储基准测试',
+  owner: 'zphj1987',
+  repo: 'zphj1987.github.io',
+  oauth: {
+    client_id: '49c219308dda9f350a13',
+    client_secret: 'a4702b56d1d9a6720d1d34b835a692d60724b577',
+  },
+})
+gitment.render('gitment')
+</script>
+ 
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 zphj1987   <SPAN id=span_dt_dt></SPAN>
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+
+<SCRIPT language=javascript>
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("3/19/2015 22:54:59");//这个日期是可以修改的
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());//其实仅仅改了这里
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=Math.floor(e_hrsold);
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=Math.floor((e_hrsold-hrsold)*60);
+seconds=Math.floor((e_minsold-minsold)*60);
+span_dt_dt.innerHTML="博客已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+show_date_time();
+</SCRIPT>
+    </div>
+    
+  <link rel="stylesheet" href="http://mysrc.cn-bj.ufileos.com/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: undefined,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true
+	}
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?252ba55374ee0e63b03196973bb9b776";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<script src="http://mysrc.cn-bj.ufileos.com/js/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/js/main.js" type="text/javascript"></script>
+<script src="http://mysrc.cn-bj.ufileos.com/asciinema/asciinema-player.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

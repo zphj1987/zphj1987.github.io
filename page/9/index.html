@@ -192,6 +192,68 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Cephfs的快照功能" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/13/Cephfs的快照功能/" class="article-date">
+  	<time datetime="2016-12-13T08:26:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-12-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/13/Cephfs的快照功能/">Cephfs的快照功能</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/snapshot.jpg" alt=""><br></center>
+
+<h2 id="前言">前言</h2><p>Cephfs的快照功能在官网都很少提及，因为即使开发了很多年，但是由于cephfs的复杂性，功能一直没能达到稳定，这里，只是介绍一下这个功能，怎么使用，并且建议不要在生产中使用，因为搞不好是会丢数据的</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/12/13/Cephfs的快照功能/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-查询Ceph的OSD占用内存" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -735,77 +797,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/11/10/预估Ceph集群恢复时间/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-Ceph用户邮件列表Vol45-Issue4" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/09/Ceph用户邮件列表Vol45-Issue4/" class="article-date">
-  	<time datetime="2016-11-09T03:37:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-11-09</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/09/Ceph用户邮件列表Vol45-Issue4/">Ceph用户邮件列表Vol45-Issue4</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mysrc.cn-bj.ufileos.com/number/dayfour.jpg" alt=""><br></center>
-
-<h2 id="ceph_Vol_45_Issue_4">ceph Vol 45 Issue 4</h2><h3 id="1-upgrade_from_v0-94-6_or_lower_and_‘failed_to_encode_map_X_with_expected_crc’">1.upgrade from v0.94.6 or lower and ‘failed to encode map X with expected crc’</h3><blockquote>
-<p>f user upgrades the cluster from a prior release to v0.94.7 or up by<br>following the steps:</p>
-<ol>
-<li>upgrade the monitors first,</li>
-<li>and then the OSDs.</li>
-</ol>
-<p>It is expected that the cluster log will be flooded with messages like:</p>
-<p>2016-07-12 08:42:42.1234567 osd.1234 [WRN] failed to encode map e4321<br>with expected crc</p>
-</blockquote>
-<p>这个是开发者kefu chai发出来的邮件，是提醒用户注意一个升级的问题的，先介绍下这个问题<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/11/09/Ceph用户邮件列表Vol45-Issue4/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

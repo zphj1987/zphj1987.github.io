@@ -192,6 +192,77 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Ceph用户邮件列表Vol45-Issue4" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/09/Ceph用户邮件列表Vol45-Issue4/" class="article-date">
+  	<time datetime="2016-11-09T03:37:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-11-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/09/Ceph用户邮件列表Vol45-Issue4/">Ceph用户邮件列表Vol45-Issue4</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/number/dayfour.jpg" alt=""><br></center>
+
+<h2 id="ceph_Vol_45_Issue_4">ceph Vol 45 Issue 4</h2><h3 id="1-upgrade_from_v0-94-6_or_lower_and_‘failed_to_encode_map_X_with_expected_crc’">1.upgrade from v0.94.6 or lower and ‘failed to encode map X with expected crc’</h3><blockquote>
+<p>f user upgrades the cluster from a prior release to v0.94.7 or up by<br>following the steps:</p>
+<ol>
+<li>upgrade the monitors first,</li>
+<li>and then the OSDs.</li>
+</ol>
+<p>It is expected that the cluster log will be flooded with messages like:</p>
+<p>2016-07-12 08:42:42.1234567 osd.1234 [WRN] failed to encode map e4321<br>with expected crc</p>
+</blockquote>
+<p>这个是开发者kefu chai发出来的邮件，是提醒用户注意一个升级的问题的，先介绍下这个问题<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/11/09/Ceph用户邮件列表Vol45-Issue4/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-Ceph用户邮件列表Vol45-Issue3" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -749,74 +820,6 @@ daovoice('update');
       
         <p class="article-more-link">
           <a  href="/2016/10/19/Docker与Ceph的分与合/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
-    <article id="post-Ceph中PG和PGP的区别" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/19/Ceph中PG和PGP的区别/" class="article-date">
-  	<time datetime="2016-10-19T07:26:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-10-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/19/Ceph中PG和PGP的区别/">Ceph中PG和PGP的区别</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/ceph/pgnew.png" alt="pg"><br></center></p>
-<h2 id="一、前言">一、前言</h2><p>首先来一段英文关于PG和PGP区别的解释：</p>
-<blockquote>
-<p>PG = Placement Group<br>PGP = Placement Group for Placement purpose </p>
-<p>pg_num = number of placement groups mapped to an OSD</p>
-<p>When pg_num is increased for any pool, every PG of this pool splits into half, but they all remain mapped to their parent OSD. </p>
-<p>Until this time, Ceph does not start rebalancing. Now, when you increase the pgp_num value for the same pool, PGs start to migrate from the parent to some other OSD, and cluster rebalancing starts. This is how PGP plays an important role.<br>By Karan Singh </p>
-</blockquote>
-<p>以上是来自邮件列表的 <code>Karan Singh</code> 的PG和PGP的相关解释，他也是 <code>Learning Ceph</code> 和 <code>Ceph Cookbook</code> 的作者，以上的解释没有问题，我们来看下具体在集群里面具体作用<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/10/19/Ceph中PG和PGP的区别/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

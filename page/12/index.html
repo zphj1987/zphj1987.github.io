@@ -192,6 +192,67 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-不小心清空了Ceph的OSD的分区表如何恢复" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/24/不小心清空了Ceph的OSD的分区表如何恢复/" class="article-date">
+  	<time datetime="2016-09-23T16:56:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/24/不小心清空了Ceph的OSD的分区表如何恢复/">不小心清空了Ceph的OSD的分区表如何恢复</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/recovery/recuvaicon.png" alt="disk"><br></center></p>
+<h2 id="前言">前言</h2><p>如果你是新手，应该出现过敲盘符的时候，敲错的情况，有些操作可能没什么问题，查询类的操作都没问题，但是写入的情况，就可能比较麻烦了，当然老手也可能有误操作，本篇将讲述在误操作把分区表给弄丢了的情况，来看看我们应该如何恢复<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/09/24/不小心清空了Ceph的OSD的分区表如何恢复/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-Ceph的Mon数据重新构建工具" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -760,73 +821,9 @@ daovoice('update');
 
 
   
-    <article id="post-Ceph-状态报警告-pool-rbd-has-many-more-objects-per-pg-than-average-too-few-pgs" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/07/27/Ceph-状态报警告-pool-rbd-has-many-more-objects-per-pg-than-average-too-few-pgs/" class="article-date">
-  	<time datetime="2016-07-27T13:42:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-07-27</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/27/Ceph-状态报警告-pool-rbd-has-many-more-objects-per-pg-than-average-too-few-pgs/">Ceph 状态报警告 pool rbd has many more objects per pg than average (too few pgs?)</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://mysrc.cn-bj.ufileos.com/ceph%E7%8A%B6%E6%80%81%E8%AD%A6%E5%91%8A/d-a.gif" alt=""><br></center>
-
-
-<h2 id="定位问题">定位问题</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster fa7ec1a1-<span class="number">662</span>a-<span class="number">4</span>ba3-b478-<span class="number">7</span>cb570482b62</span><br><span class="line">     health HEALTH_WARN</span><br><span class="line">            pool rbd has many more objects per pg than average (too few pgs?)</span><br><span class="line">     monmap e1: <span class="number">1</span> mons at &#123;lab8106=<span class="number">192.168</span>.<span class="number">8.106</span>:<span class="number">6789</span>/<span class="number">0</span>&#125;</span><br><span class="line">            election epoch <span class="number">30</span>, quorum <span class="number">0</span> lab8106</span><br><span class="line">     osdmap e157: <span class="number">2</span> osds: <span class="number">2</span> up, <span class="number">2</span> <span class="keyword">in</span></span><br><span class="line">            flags sortbitwise</span><br><span class="line">      pgmap v1023: <span class="number">417</span> pgs, <span class="number">13</span> pools, <span class="number">18519</span> MB data, <span class="number">15920</span> objects</span><br><span class="line">            <span class="number">18668</span> MB used, <span class="number">538</span> GB / <span class="number">556</span> GB avail</span><br><span class="line">                 <span class="number">417</span> active+clean</span><br></pre></td></tr></table></figure>
-<p>集群出现了这个警告，<code>pool rbd has many more objects per pg than average (too few pgs?)</code> 这个警告在hammer版本里面的提示是<code>pool rbd has too few pgs</code></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/07/27/Ceph-状态报警告-pool-rbd-has-many-more-objects-per-pg-than-average-too-few-pgs/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/11/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/13/">Next &raquo;</a>
     </nav>
   
 </div>

@@ -192,6 +192,75 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-rbd-mirror新功能" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/30/rbd-mirror新功能/" class="article-date">
+  	<time datetime="2016-03-30T15:55:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/30/rbd-mirror新功能/">rbd-mirror新功能</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>RBD 的 mirroring 功能将会在下一个稳定版本Jewel中实现，这个Jewel版本已经发布了第一个版本10.1.0,这个功能已经在这个发布的版本中实现了</p>
+<p>一、基本原理<br>我们试图解决的或者至少需要克服的问题是，ceph在内部是强一致性的，这个对于跨区域的情况数据同步是无法接受的，一个请求需要异地返回再确认完成，这个在性能上肯定是无法接受的，这就是为什么基本上无法部署跨区域的ceph集群</p>
+<p>因此我们需要有一种机制能够让我们在不同区域的集群之间复制块设备。这个能够帮助我们实现两个功能：</p>
+<ul>
+<li>灾难恢复</li>
+<li>全球块设备分布（跨地理位置）</li>
+</ul>
+<p>二、内部的实现</p>
+<p><img src="http://static.zybuluo.com/zphj1987/owvwxjz172f2aokh699fd008/%E7%94%BB%E5%9B%BE.png" alt="画图.png-34.8kB"></p>
+<p>从上图所示是进行的主备模式的备份，其实这个只是看怎么应用了，在里面是自动实现的主主的模式，双向同步的，只是在应用中需要注意不要去同时操作同一个image，这个功能是作为主备去使用的，以备真正有问题的时候去实现故障恢复，这个同步是异步的</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/03/30/rbd-mirror新功能/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-Ceph-Bluestore首测" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -752,76 +821,9 @@ daovoice('update');
 
 
   
-    <article id="post-diamond收集插件的自定义" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/02/21/diamond收集插件的自定义/" class="article-date">
-  	<time datetime="2016-02-21T11:23:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-02-21</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/02/21/diamond收集插件的自定义/">diamond收集插件的自定义</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>diamond是与graphite配合使用的一个数据收集的软件，关于这个配置的资料很多，使用起来也比较简单，详细的安装和配置会在后面的关于整套监控系统的文章里面写到，本篇是专门讲解怎么自定义这个数据收集的插件</p>
-<p>diamond的结构比较简单:</p>
-<ul>
-<li>Collector 数据采集的模块</li>
-<li>handlers 数据发送的模块</li>
-</ul>
-<p>这里主要讲解的是Collector部分的插件的编写，diamond自身带了非常丰富的插件，可以很方便的使用自带的插件进行监控，包括ceph和cephstats这两个可以用来监控ceph的插件，弄清楚怎么去写插件会方便很多，并且能扩展原来插件所没有的数据,calamari里面的数据的收集就是通过的diamond的</p>
-<p>本例将讲解怎么写一个监控ceph的健康状态的插件</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/02/21/diamond收集插件的自定义/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/15/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/17/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/15/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/17/">Next &raquo;</a>
     </nav>
   
 </div>

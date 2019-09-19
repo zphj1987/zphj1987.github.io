@@ -192,6 +192,71 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-编译一个Centos6-4下可用的内核rpm升级包-3-8-13内核rpm包" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/23/编译一个Centos6-4下可用的内核rpm升级包-3-8-13内核rpm包/" class="article-date">
+  	<time datetime="2015-03-22T23:59:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/23/编译一个Centos6-4下可用的内核rpm升级包-3-8-13内核rpm包/">编译一个Centos6.4下可用的内核rpm升级包-3.8.13内核rpm包</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在Centos6.4下进行内核升级,采用内核源码的升级方式比较简单，但是需要升级的机器多的情况下进行内核升级就比较麻烦,并且编译内核的速度依赖于机器的性能,一般需要20分钟,而通过rpm内核包的方式进行安装,就比较快,一般在几分钟之内就可以完成内核的安装,本文档以3.8.13内核源码为例子进行的操作。<br>  根据网上的指导教程编译的rpm包，编译完成后只会生成如下两个rpm包:</p>
+<ul>
+<li>kernel-3.8.13-1.x86_64.rpm</li>
+<li>kernel-headers-3.8.13-1.x86_64.rpm</li>
+</ul>
+<p>而实际进行内核升级的时候还需要kernel-firmwsare-3.8.13-1.x86_64.rpm这个包,这个包是包含内核固件相关文件的,而在进行rpm打包的时候,这个包会内嵌到kernel-3.8.13-1.x86_64.rpm这个包当中去,而安装的时候系统没有找到这个包，进行升级的时候就会报错。<br>所以需要对内核源码编译文件进行一定的修改，这个地方需要修改的文件为linux-3.8.13/scripts/package/mkspec路径下的这个文件,具体修改如下(新版内核解决了这个问题,可以不需要修改,根据生成包的情况来看是否修改):</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/内核/">内核</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/03/23/编译一个Centos6-4下可用的内核rpm升级包-3-8-13内核rpm包/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-expect循环的写法" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -741,68 +806,9 @@ daovoice('update');
 
 
   
-    <article id="post-如何配置谷歌框架与市场（解决google-play-闪退）" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/22/如何配置谷歌框架与市场（解决google-play-闪退）/" class="article-date">
-  	<time datetime="2015-03-22T14:18:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/22/如何配置谷歌框架与市场（解决google-play-闪退）/">如何配置谷歌框架与市场（解决google play 闪退）</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>没有谷歌电子市场。好多游戏都不能玩。像狂野之血,超凡蜘蛛侠。。。等等大型游戏。</p>
-<p>大家都知道国产机的ROM包把谷歌的GMS和谐掉了,所以直接装谷歌电子市场肯定会出现闪退,这样就又牵扯到另一个基础服务——谷歌框架,估计想玩大型游戏的机友对这个词都不陌生,但是可能大家按照许多热心机友说的最终还是没能把这个电子市场搞定,接下来大家按这个步骤,可以成功,亲测。</p>
-<p>步骤如下:<br>第一步:需要有root权限和RE管理器</p>
-<p>第二步:下载GoogleServiesFramework.apk(谷歌<br>服务框架,必需),将GoogleServiesFramework.apk复制到文件夹/system/app 下,然后点击安装,但是貌似不点安装也行,但是权限一定得改,然后修改权限——第一行,第一个、第二个打勾,第二行,第一个打勾,第三行,第一个打勾。(这个权限一定要搞好,有可能大家都是少了这步) </p>
-<p>第三步:下载谷歌电子市场，无论下载过来的电子市场文件名叫什么,都把它重命名为Vending.apk,像GoogleServiesFramework.apk一样移动到文件夹 /system/app 下,安装(这个必须安装)。然后修改权限,与GoogleServiesFramework.apk一样.</p>
-<p>第四步:重启手机<br>ok,联网,打开谷歌电子市场,就可以登录了。</p>
-<p>写于: 2013年05月16日<br>更新于: 2015年03月22日</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/22/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="page-number" href="/page/22/">22</a><span class="page-number current">23</span><a class="page-number" href="/page/24/">24</a><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/24/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/22/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="page-number" href="/page/22/">22</a><span class="page-number current">23</span><a class="page-number" href="/page/24/">24</a><a class="page-number" href="/page/25/">25</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/24/">Next &raquo;</a>
     </nav>
   
 </div>

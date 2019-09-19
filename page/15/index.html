@@ -192,6 +192,72 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-如何开启内网的外网访问" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/09/如何开启内网的外网访问/" class="article-date">
+  	<time datetime="2016-05-09T14:27:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-05-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/09/如何开启内网的外网访问/">如何开启内网的外网访问</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="为什么不要用QQ远程">为什么不要用QQ远程</h3><p>很多人在涉及到需要ssh远程的时候，第一印象应该就是QQ远程，这个是一般的普通用户都知道的方式，这个方式我为什么不推荐呢</p>
+<ul>
+<li>QQ是图形界面的远程，远程的操作在网络不好的时候很容易卡顿</li>
+<li>窗口大小无法自适应</li>
+<li>无法传递一些按键，比如需要Esc退出vim，变成了退出远程窗口的最大化</li>
+<li>QQ远程适合帮助家里人处理一些界面上或者操作上的小问题</li>
+</ul>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/05/09/如何开启内网的外网访问/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-calamari不支持ceph的jewel版本" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -778,78 +844,9 @@ daovoice('update');
 
 
   
-    <article id="post-rbd-mirror新功能" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/03/30/rbd-mirror新功能/" class="article-date">
-  	<time datetime="2016-03-30T15:55:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-30</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/30/rbd-mirror新功能/">rbd-mirror新功能</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>RBD 的 mirroring 功能将会在下一个稳定版本Jewel中实现，这个Jewel版本已经发布了第一个版本10.1.0,这个功能已经在这个发布的版本中实现了</p>
-<p>一、基本原理<br>我们试图解决的或者至少需要克服的问题是，ceph在内部是强一致性的，这个对于跨区域的情况数据同步是无法接受的，一个请求需要异地返回再确认完成，这个在性能上肯定是无法接受的，这就是为什么基本上无法部署跨区域的ceph集群</p>
-<p>因此我们需要有一种机制能够让我们在不同区域的集群之间复制块设备。这个能够帮助我们实现两个功能：</p>
-<ul>
-<li>灾难恢复</li>
-<li>全球块设备分布（跨地理位置）</li>
-</ul>
-<p>二、内部的实现</p>
-<p><img src="http://static.zybuluo.com/zphj1987/owvwxjz172f2aokh699fd008/%E7%94%BB%E5%9B%BE.png" alt="画图.png-34.8kB"></p>
-<p>从上图所示是进行的主备模式的备份，其实这个只是看怎么应用了，在里面是自动实现的主主的模式，双向同步的，只是在应用中需要注意不要去同时操作同一个image，这个功能是作为主备去使用的，以备真正有问题的时候去实现故障恢复，这个同步是异步的</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/03/30/rbd-mirror新功能/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/14/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/16/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/14/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/16/">Next &raquo;</a>
     </nav>
   
 </div>

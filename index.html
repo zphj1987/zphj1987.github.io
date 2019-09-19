@@ -192,6 +192,69 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-ceph-osd-tree-graphical" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/09/19/ceph-osd-tree-graphical/" class="article-date">
+  	<time datetime="2019-09-19T08:35:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/19/ceph-osd-tree-graphical/">ceph osd tree的可视化</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mypic.cn-bj.ufileos.com/stor_tree.png" alt=""><br></center>
+
+<h2 id="前言">前言</h2><p>很久没有处理很大的集群，在接触一个新集群的时候，如果集群足够大，需要比较长的时间才能去理解这个集群的结构，而直接去看ceph osd tree的结果，当然是可以的，这里是把osd tree的结构进行了一个结构化输出，也可以理解为画出一个简单的结构图，比较适合给其它人讲解你对crush做了哪些改变，这个如果指着文字来讲估计很多人会听的云里雾里，如果有比较方便的方式出图就比较好了</p>
+<p>为此写了一个小工具自己用，正好也可以看看我们对结构做简单调整后的效果</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2019/09/19/ceph-osd-tree-graphical/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-a-new-high-performance-arm64-running-ceph" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -762,74 +825,9 @@ daovoice('update');
 
 
   
-    <article id="post-show-useage-for-cephfs-pool" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/08/19/show-useage-for-cephfs-pool/" class="article-date">
-  	<time datetime="2018-08-19T03:29:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/19/show-useage-for-cephfs-pool/">cephfs根据存储池显示df容量</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><br><img src="http://static.zybuluo.com/zphj1987/x7qsgok0tlsl6cttnul0em0z/pool1.png" alt="pool.png-115.2kB"><br></center>
-
-<h2 id="前言">前言</h2><p>如果用cephfs比较多，应该都知道，在cephfs的客户端进行mount以后，看到的容量显示的是集群的总的容量，也就是你的总的磁盘空间是多少这个地方显示的就是多少</p>
-<p>这个一直都是这样显示的，我们之前在hammer版本的时候，阿茂和大黄一起在公司内部实现了这个功能，社区会慢慢的集成一些类似的面向面向商业用户的需求</p>
-<p>社区已经开发了一个版本，接口都做的差不多了，那么稍微改改，就能实现想要的需求的</p>
-<p>本篇内的改动是基于内核客户端代码的改动，改动很小，应该能够看的懂</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2018/08/19/show-useage-for-cephfs-pool/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 </div>

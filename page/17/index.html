@@ -192,6 +192,73 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-diamond收集插件的自定义" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/21/diamond收集插件的自定义/" class="article-date">
+  	<time datetime="2016-02-21T11:23:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-02-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/21/diamond收集插件的自定义/">diamond收集插件的自定义</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>diamond是与graphite配合使用的一个数据收集的软件，关于这个配置的资料很多，使用起来也比较简单，详细的安装和配置会在后面的关于整套监控系统的文章里面写到，本篇是专门讲解怎么自定义这个数据收集的插件</p>
+<p>diamond的结构比较简单:</p>
+<ul>
+<li>Collector 数据采集的模块</li>
+<li>handlers 数据发送的模块</li>
+</ul>
+<p>这里主要讲解的是Collector部分的插件的编写，diamond自身带了非常丰富的插件，可以很方便的使用自带的插件进行监控，包括ceph和cephstats这两个可以用来监控ceph的插件，弄清楚怎么去写插件会方便很多，并且能扩展原来插件所没有的数据,calamari里面的数据的收集就是通过的diamond的</p>
+<p>本例将讲解怎么写一个监控ceph的健康状态的插件</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控/">监控</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/02/21/diamond收集插件的自定义/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-ubuntu安装软件自动交互" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -792,71 +859,9 @@ daovoice('update');
 
 
   
-    <article id="post-xenserver使用ceph的rbd的方法" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/16/xenserver使用ceph的rbd的方法/" class="article-date">
-  	<time datetime="2015-12-16T06:08:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-12-16</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/16/xenserver使用ceph的rbd的方法/">xenserver使用ceph的rbd的方法</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>首先安装的xenserver6.5的环境，看到有地方有提到这个上面可以安装rbd的支持，网上有一种方式是libvirt+kvm方式，因为ceph对libviet是原生支持的，但是xenserver底层是xen的，这个就不去研究太多，这个用最简单的方式最好</p>
-<p><a href="https://github.com/mstarikov/rbdsr">https://github.com/mstarikov/rbdsr</a><br>这个是个第三方的插件，最近才出来的</p>
-<p>实现原理是ssh到ceph的机器上获取到可以使用的rbd信息，然后在xenserver的图形界面上通过配置iscsi的方式去配置rbd，里面套用了iscsi的界面，实际去xenserver机器后台同样做的是map的操作<br>这个试了下，界面的操作都可以实现，都可以获取到rbd的信息，但是在最后提交的一下的时候，后台会报错误的信息，这个有可能才出来，还有点问题<br>这个地方可以用其他的方式实现，xenserver在添加硬盘的时候本来就支持的命令行模式，下面为实现方式</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/12/16/xenserver使用ceph的rbd的方法/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/16/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/18/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/16/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/18/">Next &raquo;</a>
     </nav>
   
 </div>

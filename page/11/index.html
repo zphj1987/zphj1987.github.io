@@ -192,6 +192,69 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Docker与Ceph的分与合" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/19/Docker与Ceph的分与合/" class="article-date">
+  	<time datetime="2016-10-19T15:46:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-10-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/19/Docker与Ceph的分与合/">Docker与Ceph的分与合</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><center><br><img src="http://calamaribook.cn-bj.ufileos.com/ceph/cephdocker.png" alt="dockerceph"><br></center></p>
+<h2 id="一、前言">一、前言</h2><p>docker是一个管理工具，在操作系统之上提供了一个新的独立轻环境，好处是本地提供了一个基础镜像，然后基于镜像再运行环境，也可以把环境重新打包为镜像，管理起来类似于git，感觉非常的方便，并且能够做到一处提交，处处可以取到相同的环境，大大的减少了因为环境偏差造成的系统不稳定</p>
+<p>目前有不少生成环境已经把ceph和docker结合在一起运行了，这个有的是确实能够理解docker的好处，也能够有技术力量去进行维护，这个地方相当于两套系统了，并且关于技术的传递也增加了难度，特别是一套系统是docker+ceph的环境，并且又出现相关人员离职的情况，新来的人如果不是技术很熟，之前的技术文档没有记录很全的话，再去运维这一套系统还是比较有难度的</p>
+<p>本篇目的是记录一下docker与ceph的结合的方式，关于ceph和docker的分与合，只有做到能剥离的系统，才不会因为技术原因受限<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/10/19/Docker与Ceph的分与合/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-Ceph中PG和PGP的区别" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -760,70 +823,9 @@ daovoice('update');
 
 
   
-    <article id="post-不小心清空了Ceph的OSD的分区表如何恢复" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/09/24/不小心清空了Ceph的OSD的分区表如何恢复/" class="article-date">
-  	<time datetime="2016-09-23T16:56:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-09-24</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/24/不小心清空了Ceph的OSD的分区表如何恢复/">不小心清空了Ceph的OSD的分区表如何恢复</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><center><br><img src="http://mysrc.cn-bj.ufileos.com/recovery/recuvaicon.png" alt="disk"><br></center></p>
-<h2 id="前言">前言</h2><p>如果你是新手，应该出现过敲盘符的时候，敲错的情况，有些操作可能没什么问题，查询类的操作都没问题，但是写入的情况，就可能比较麻烦了，当然老手也可能有误操作，本篇将讲述在误操作把分区表给弄丢了的情况，来看看我们应该如何恢复<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/09/24/不小心清空了Ceph的OSD的分区表如何恢复/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
     </nav>
   
 </div>

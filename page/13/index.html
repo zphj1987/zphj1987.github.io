@@ -192,6 +192,70 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Ceph-状态报警告-pool-rbd-has-many-more-objects-per-pg-than-average-too-few-pgs" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/07/27/Ceph-状态报警告-pool-rbd-has-many-more-objects-per-pg-than-average-too-few-pgs/" class="article-date">
+  	<time datetime="2016-07-27T13:42:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-07-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/27/Ceph-状态报警告-pool-rbd-has-many-more-objects-per-pg-than-average-too-few-pgs/">Ceph 状态报警告 pool rbd has many more objects per pg than average (too few pgs?)</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><br><img src="http://mysrc.cn-bj.ufileos.com/ceph%E7%8A%B6%E6%80%81%E8%AD%A6%E5%91%8A/d-a.gif" alt=""><br></center>
+
+
+<h2 id="定位问题">定位问题</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab8106 ~]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster fa7ec1a1-<span class="number">662</span>a-<span class="number">4</span>ba3-b478-<span class="number">7</span>cb570482b62</span><br><span class="line">     health HEALTH_WARN</span><br><span class="line">            pool rbd has many more objects per pg than average (too few pgs?)</span><br><span class="line">     monmap e1: <span class="number">1</span> mons at &#123;lab8106=<span class="number">192.168</span>.<span class="number">8.106</span>:<span class="number">6789</span>/<span class="number">0</span>&#125;</span><br><span class="line">            election epoch <span class="number">30</span>, quorum <span class="number">0</span> lab8106</span><br><span class="line">     osdmap e157: <span class="number">2</span> osds: <span class="number">2</span> up, <span class="number">2</span> <span class="keyword">in</span></span><br><span class="line">            flags sortbitwise</span><br><span class="line">      pgmap v1023: <span class="number">417</span> pgs, <span class="number">13</span> pools, <span class="number">18519</span> MB data, <span class="number">15920</span> objects</span><br><span class="line">            <span class="number">18668</span> MB used, <span class="number">538</span> GB / <span class="number">556</span> GB avail</span><br><span class="line">                 <span class="number">417</span> active+clean</span><br></pre></td></tr></table></figure>
+<p>集群出现了这个警告，<code>pool rbd has many more objects per pg than average (too few pgs?)</code> 这个警告在hammer版本里面的提示是<code>pool rbd has too few pgs</code></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/07/27/Ceph-状态报警告-pool-rbd-has-many-more-objects-per-pg-than-average-too-few-pgs/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-如何替换Ceph的Journal" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -773,73 +837,9 @@ daovoice('update');
 
 
   
-    <article id="post-CPU相关的学习" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/06/13/CPU相关的学习/" class="article-date">
-  	<time datetime="2016-06-13T10:13:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-13</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/13/CPU相关的学习/">CPU相关的学习</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <center><img src="http://static.zybuluo.com/zphj1987/gky2uc8l9xww4ozupmjxocdt/socket.jpg" alt="socket.jpg-59.6kB"></center>
-
-<h3 id="我理解的CPU">我理解的CPU</h3><p>目前对cpu的了解停留在这个水平<br>查看CPU型号：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat /proc/cpuinfo |grep model |tail -n <span class="number">1</span></span><br><span class="line">model name	: Intel(R) Xeon(R) CPU E5-<span class="number">2620</span> v2 @ <span class="number">2.10</span>GHz</span><br></pre></td></tr></table></figure></p>
-<p>查看有多少processor：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat /proc/cpuinfo |grep processor|tail -n <span class="number">1</span></span><br><span class="line">processor	: <span class="number">23</span></span><br></pre></td></tr></table></figure></p>
-<p>然后对性能要求就是主频越高越好，processor越多越好，其它的知道的很少，由于需要做性能相关调优，所以对CPU这一块做一个系统的学习，如果参考网上的一些CEPH性能调优的资料，很多地方都是让关闭numa，以免影响性能，这个从来都是只有人给出答案，至于为什么，对不对，适合不适合你的环境，没有人给出来，没有数据支持的调优都是耍流氓<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/06/13/CPU相关的学习/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/12/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/14/">Next &raquo;</a>
     </nav>
   
 </div>

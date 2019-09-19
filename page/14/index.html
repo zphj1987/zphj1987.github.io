@@ -192,6 +192,70 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-CPU相关的学习" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/13/CPU相关的学习/" class="article-date">
+  	<time datetime="2016-06-13T10:13:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-06-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/13/CPU相关的学习/">CPU相关的学习</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <center><img src="http://static.zybuluo.com/zphj1987/gky2uc8l9xww4ozupmjxocdt/socket.jpg" alt="socket.jpg-59.6kB"></center>
+
+<h3 id="我理解的CPU">我理解的CPU</h3><p>目前对cpu的了解停留在这个水平<br>查看CPU型号：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat /proc/cpuinfo |grep model |tail -n <span class="number">1</span></span><br><span class="line">model name	: Intel(R) Xeon(R) CPU E5-<span class="number">2620</span> v2 @ <span class="number">2.10</span>GHz</span><br></pre></td></tr></table></figure></p>
+<p>查看有多少processor：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat /proc/cpuinfo |grep processor|tail -n <span class="number">1</span></span><br><span class="line">processor	: <span class="number">23</span></span><br></pre></td></tr></table></figure></p>
+<p>然后对性能要求就是主频越高越好，processor越多越好，其它的知道的很少，由于需要做性能相关调优，所以对CPU这一块做一个系统的学习，如果参考网上的一些CEPH性能调优的资料，很多地方都是让关闭numa，以免影响性能，这个从来都是只有人给出答案，至于为什么，对不对，适合不适合你的环境，没有人给出来，没有数据支持的调优都是耍流氓<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/06/13/CPU相关的学习/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-推荐一本性能相关的书" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -758,75 +822,9 @@ daovoice('update');
 
 
   
-    <article id="post-如何开启内网的外网访问" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/05/09/如何开启内网的外网访问/" class="article-date">
-  	<time datetime="2016-05-09T14:27:28.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-05-09</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/09/如何开启内网的外网访问/">如何开启内网的外网访问</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="为什么不要用QQ远程">为什么不要用QQ远程</h3><p>很多人在涉及到需要ssh远程的时候，第一印象应该就是QQ远程，这个是一般的普通用户都知道的方式，这个方式我为什么不推荐呢</p>
-<ul>
-<li>QQ是图形界面的远程，远程的操作在网络不好的时候很容易卡顿</li>
-<li>窗口大小无法自适应</li>
-<li>无法传递一些按键，比如需要Esc退出vim，变成了退出远程窗口的最大化</li>
-<li>QQ远程适合帮助家里人处理一些界面上或者操作上的小问题</li>
-</ul>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/05/09/如何开启内网的外网访问/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/13/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/15/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/13/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/15/">Next &raquo;</a>
     </nav>
   
 </div>

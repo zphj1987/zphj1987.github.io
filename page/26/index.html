@@ -192,6 +192,65 @@ daovoice('update');
 </nav>
       <div class="body-wrap">
   
+    <article id="post-系统运行后修改linux系统时区" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/03/22/系统运行后修改linux系统时区/" class="article-date">
+  	<time datetime="2015-03-22T07:43:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/22/系统运行后修改linux系统时区/">系统运行后修改linux系统时区</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在网上看了很多改时间的帖子,都没能最终解决问题。最后还是下面的博客最终解决的时间的问题,感谢原作者<br>安装系统过程时没有选对当前的时区,即CST,Asia/Shanghai,而是按默认的，EDT时区,这样跟我们的系统就都对不上,因此得改回CST,仔细琢磨一下,方法如下:</p>
+<p>更改/etc/timezone里面的内容为:Asia/Shanghai</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ mv /etc/localtime /etc/localtime-bk</span><br><span class="line">$ cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span><br></pre></td></tr></table></figure>
+<p>再用命令date看一下,就是我们要的CST。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/03/22/系统运行后修改linux系统时区/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+<div id="gitment"></div>
+<!-- 主页不要加载gitment -->
+
+
+  
     <article id="post-更新租约和检测数据完整性脚本" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -732,63 +791,9 @@ daovoice('update');
 
 
   
-    <article id="post-Microsoft-Visual-C-2005-SP1无法安装" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/03/22/Microsoft-Visual-C-2005-SP1无法安装/" class="article-date">
-  	<time datetime="2015-03-22T04:52:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-03-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/22/Microsoft-Visual-C-2005-SP1无法安装/">Microsoft Visual C++ 2005 SP1无法安装</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>安装时出现需要Microsoft Visual C++ 2005 Redistributble对话框,<br>里面说Command line option syntax error . Type Command/?for Help<br>先解压 先脱一层,得到 VCREDI~3.EXE 这么个exe文件,执行安装。<br>使用WINRAR打开这个exe文件,得到vcredis1.cab 和 vcredist.msi 这两个安装程序,现在安装起来没有问题了</p>
-<p>写于: 2012年01月13日<br>更新于: 2015年03月22日</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-<div id="gitment"></div>
-<!-- 主页不要加载gitment -->
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/25/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="page-number" href="/page/25/">25</a><span class="page-number current">26</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/27/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/25/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="page-number" href="/page/25/">25</a><span class="page-number current">26</span><a class="page-number" href="/page/27/">27</a><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/27/">Next &raquo;</a>
     </nav>
   
 </div>

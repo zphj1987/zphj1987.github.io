@@ -1,0 +1,32 @@
+.. moskillbook documentation master file, created by
+   sphinx-quickstart on Sun Oct 20 20:05:01 2019.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+moskillbook 的技能文档
+=======================================
+
+.. toctree::
+   :maxdepth: 1
+   :caption: 总览
+
+   关于/index.rst
+ 
+.. toctree::
+   :maxdepth: 2
+   :caption: 硬件层
+
+   硬件/index.rst
+
+.. toctree::
+   :maxdepth: 2
+   :caption: 软件层
+
+   软件层/index.rst
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`

@@ -111,7 +111,7 @@ daovoice('update');
 				        
 							<li><a href="/payforask">有偿服务</a></li>
 				        
-							<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+							<li><a href="/skilltree">Skill tree</a></li>
 				        
 						</ul>
 					</nav>
@@ -177,7 +177,7 @@ daovoice('update');
 		        
 					<li><a href="/payforask">有偿服务</a></li>
 		        
-					<li><a href="https://www.jianshu.com/u/e987efb26f72">无关CEPH</a></li>
+					<li><a href="/skilltree">Skill tree</a></li>
 		        
 		        <div class="clearfix"></div>
 				</ul>
@@ -236,7 +236,7 @@ daovoice('update');
 <h2 id="前言">前言</h2><p>在ceph的研发群里看到一个cepher提出一个问题，编译的ceph的二进制文件过大，因为我一直用的打包好的rpm包，没有关注这个问题，重新编译了一遍发现确实有这个问题</p>
 <p>本篇就是记录如何解决这个问题的<br><a id="more"></a></p>
 <h2 id="打rpm包的方式">打rpm包的方式</h2><p>用我自己的环境编译的时候发现一个问题，编译出来的rpm包还是很大，开始怀疑是机器的原因，换了一台发现二进制包就很小了，然后查询了很多资料以后，找到了问题所在</p>
-<p>在打rpm包的时候可以通过宏变量去控制是否打出一个的debug的包，这个包的作用就是把二进制文件当中包含的debug的相关的全部抽离出来形成一个新的rpm包，而我的环境不知道什么时候在/root/.rpmmacros添加进去了一个<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">d%ebug_package      %&#123;nil&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在打rpm包的时候可以通过宏变量去控制是否打出一个的debug的包，这个包的作用就是把二进制文件当中包含的debug的相关的全部抽离出来形成一个新的rpm包，而我的环境不知道什么时候在/root/.rpmmacros添加进去了一个<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">%debug_package      %&#123;nil&#125;</span><br></pre></td></tr></table></figure></p>
 <p>搜寻资料后确定就是这个的问题,这个变量添加了以后，在打包的时候就不会进行debug相关包的剥离，然后打出的包就是巨大的，可以这样检查自己的rpmbuild的宏变量信息<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@host1 ceph-<span class="number">10.2</span>.<span class="number">6</span>]<span class="comment">#  rpmbuild --showrc|grep debug_package</span></span><br><span class="line">    %&#123;!?__debug_package:</span><br><span class="line">    %&#123;?__debug_package:%&#123;__debug_install_post&#125;&#125;</span><br><span class="line">-<span class="number">14</span>: _<span class="built_in">enable</span>_debug_packages	<span class="number">1</span></span><br><span class="line">-<span class="number">14</span>: debug_package	</span><br><span class="line">%global __debug_package <span class="number">1</span></span><br><span class="line">-<span class="number">14</span>: install	%&#123;?_<span class="built_in">enable</span>_debug_packages:%&#123;?buildsubdir:%&#123;debug_package&#125;&#125;&#125;</span><br></pre></td></tr></table></figure></p>
 <p>如果开启了debug包抽离（默认就是开启的），那么rpmbuild在打包的过程中会有个调用<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/usr/lib/rpm/find-debuginfo.sh --strict-build-id -m --run-dwz --dwz-low-mem-die-limit <span class="number">10000000</span> --dwz-max-die-limit <span class="number">110000000</span> /root/rpmbuild/BUILD/ceph-<span class="number">10.2</span>.<span class="number">5</span></span><br></pre></td></tr></table></figure></p>
 <p>这个就是rpmbuild过程中，进行抽离debug信息的操作，也就是缩小二进制的过程，这个并不能直接执行命令，需要用rpmbuild -bb ceph.spec 打包的时候内部自动进行调用的</p>

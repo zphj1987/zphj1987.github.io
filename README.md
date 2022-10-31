@@ -13,3 +13,8 @@ docsify init ./docs
 ```bash
 docsify serve ./docs
 ```
+
+## 说明 
+相关文档托管到github
+并且以域名
+https://lustre.show进行访问

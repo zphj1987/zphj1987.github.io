@@ -15,6 +15,7 @@
  ** [mgs的创建](configure/mgscreate)
  ** [mds的创建](configure/mdscreate)
  ** [osd的创建](configure/osdcreate)
+ ** [客户端挂载](configure/clientcreate)
  ** [mds的删除](configure/mdsremove)
  ** [osd的删除](configure/osdremove)
  ** [mirror的配置](configure/mirrorconfig)

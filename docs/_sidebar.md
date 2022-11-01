@@ -9,4 +9,25 @@
  ** [lustre的版本的选择](install/lustreversion)
  ** [lustre的打包编译(lustre内核)](install/buildrpm)
  ** [lustre的打包编译(系统内核)](install/buildrpmoskernel)
+ ** [lustre的包安装](install/installrpm)
+
+* lustre的基本配置
+ ** [mgs的创建](configure/mgscreate)
+ ** [mds的创建](configure/mdscreate)
+ ** [osd的创建](configure/osdcreate)
+ ** [mds的删除](configure/mdsremove)
+ ** [osd的删除](configure/osdremove)
+ ** [mirror的配置](configure/mirrorconfig)
+
+* lustre的功能分析
+ ** [mirror功能的分析]()
+ ** [lustre写入的文件是如何分布的]()
+ ** [lustre如果做了mirror如何分布的]()
+ ** [lustre坏了osd后，如何保证继续使用]()
+
+* lustre的常规运维操作
+ ** [mirror损坏一个ost后如何处理]()
+ ** [lustre的zfs出现降级后如何处理]()
+ ** [mgs的备份恢复]()
+ ** [mds的备份恢复]()
 

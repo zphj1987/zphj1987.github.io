@@ -32,4 +32,47 @@ yum install kernel-4.18.0-372.9.1.el8_lustre.x86_64 kernel-devel-4.18.0-372.9.1.
 
 后面会修改一个版本支持默认系统内核(TODO)
 
+### 下载lustre源码
+```bash
+https://downloads.whamcloud.com/public/lustre/latest-release/el8.6/server/SRPMS/lustre-2.15.1-1.src.rpm
+rpm2cpio lustre-2.15.1-1.src.rpm |cpio -div
+yum -y groupinstall 'Development Tools'
+yum install dkms libmount-devel libnl3-devel libyaml-devel kernel-rpm-macros 	kernel-abi-whitelists
+yum install -y zfs libzfs5-devel zfs-dkms 
+yum install -y  python36 python36-devel
+```
 
+#### 解压源码
+```bash
+tar -xvf lustre-2.15.1.tar.gz
+```
+
+修改patch
+官方提供的修改patch
+> https://review.whamcloud.com/c/fs/lustre-release/+/48212#message-59246f9532c815a6c6838c5d0c80b9880a74999b
+
+改lustre-dkms_pre-build.sh这个的时候，增加
+```bash
+--without-spl
+```
+因为spl现在在zfs2.12版本已经集成进去了，不需要再单独引入源码编译了，直接禁用即可
+
+### 开始编译
+```bash
+sh ./autogen.sh
+./configure --disable-ldiskfs
+make rpms
+```
+这里disable-ldiskfs就是开启zfs了，后续如果需要版本支持ldiskfs，再开启即可，如果同时维护两套底层，整体会很复杂很多，这个可以先支持一种，后面再加入支持即可
+编译完成以后就会生成rpm包
+
+还有个zfs的包需要编译下
+```bash
+rpmbuild -bb --with zfs lustre-dkms.spec
+cp -ra  /root/rpmbuild/RPMS/noarch/lustre-zfs-dkms-2.15.1-1.el8.noarch.rpm /root/lustre-release/
+```
+上面的编译完成以后相关的包就生成了
+
+因为服务端的包，包含了客户端的包，所以目前测试我们都直接安装服务端的包即可，后面再说明不同的安装方式:
+- 客户端和服务端都安装
+- 只装客户端

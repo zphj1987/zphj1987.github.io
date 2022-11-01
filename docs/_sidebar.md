@@ -7,5 +7,6 @@
 * lustre的基本安装
  ** [lustre的操作系统的选择](install/os)
  ** [lustre的版本的选择](install/lustreversion)
- ** [lustre的打包编译](install/buildrpm)
+ ** [lustre的打包编译(lustre内核)](install/buildrpm)
+ ** [lustre的打包编译(系统内核)](install/buildrpmoskernel)
 

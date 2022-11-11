@@ -4,7 +4,7 @@
   <title><![CDATA[zphj1987]]></title>
   <link href="zphj1987.com/atom.xml" rel="self"/>
   <link href="zphj1987.com/"/>
-  <updated>2022-11-11T11:45:15+08:00</updated>
+  <updated>2022-11-11T11:54:23+08:00</updated>
   <id>zphj1987.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -26,8 +26,9 @@ root@uos-PC:~/rock5b/kernel# make menuconfig
 make savedefconfig
 cp defconfig arch/arm64/configs/rockchip_linux_defconfig  (这一步是拷贝过去让脚本编译的时候识别)
 </code></pre>
-<p>测试</p>
-<p>这个是工具<br />
+<p>测试<br />
+a<br />
+这个是工具<br />
 git clone -b debian <a href="https://github.com/radxa/build.git">https://github.com/radxa/build.git</a></p>
 
 ]]></content>

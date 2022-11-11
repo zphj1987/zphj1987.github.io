@@ -4,13 +4,34 @@
   <title><![CDATA[zphj1987]]></title>
   <link href="zphj1987.com/atom.xml" rel="self"/>
   <link href="zphj1987.com/"/>
-  <updated>2022-10-17T16:09:17+08:00</updated>
+  <updated>2022-11-11T11:45:15+08:00</updated>
   <id>zphj1987.com/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[编译rock5b的内核]]></title>
+    <link href="zphj1987.com/16660638257893.html"/>
+    <updated>2022-10-18T11:30:25+08:00</updated>
+    <id>zphj1987.com/16660638257893.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E4%B8%8B%E8%BD%BD%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>下载内核源码</h2>
+<pre><code class="language-bash">git clone -b stable-5.10-rock5 --single-branch --depth 1 https://github.com/radxa/kernel.git
+apt-get install flex bison libncurses-dev  u-boot-tools
+root@uos-PC:~/rock5b/kernel# make rockchip_linux_defconfig
+root@uos-PC:~/rock5b/kernel# make menuconfig
+make savedefconfig
+cp defconfig arch/arm64/configs/rockchip_linux_defconfig  (这一步是拷贝过去让脚本编译的时候识别)
+</code></pre>
+<p>测试</p>
+<p>这个是工具<br />
+git clone -b debian <a href="https://github.com/radxa/build.git">https://github.com/radxa/build.git</a></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[rock5b可以运行的UOS操作系统]]></title>

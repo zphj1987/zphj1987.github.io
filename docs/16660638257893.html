@@ -7,7 +7,7 @@
     <title>
     
        
-            windows相关技术 - zphj1987
+            编译rock5b的内核 - zphj1987
         
   
   </title>
@@ -98,70 +98,81 @@
        
 
  <script type="text/javascript">
-	$(function(){
-		$('#menu_item_index').addClass('is_active');
-	});
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
 </script>
 <div class="row">
-	<div class="large-8 medium-8 columns">
-		<div class="markdown-body home-categories">
-		
-			<div class="article">
-                <a class="clearlink" href="ju-yu-wang-nei-de-wen-jian-chu.html">
-                
-                  <h1>局域网内的文件传输</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2><a id="%E9%9C%80%E6%B1%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>需求</h2>
-<p>局域网内的文件传输，使用QQ或者其它网盘什么的，超大文件很容易传输失败，所以可以通过架设http传输服务器的方式进行处理</p>
-<p>同样的也可以在有公网IP的服务器上面搭建服务</p>
-<h2><a id="%E6%90%AD%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>搭建服务器</h2>
-<p>这个服务器可以在windows或者linux中转服务器都行</p>
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>编译rock5b的内核</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2022/10/18</span>
 
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="ju-yu-wang-nei-de-wen-jian-chu.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/08/23</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7.html'>软件使用技巧</a></span>
-          				   
-                    
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='rock5b%E7%9B%B8%E5%85%B3.html'>rock5b相关</a></span>
+           
+         
+          <span class="comments">
+            
 
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
+            
+          </span>
 
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-              
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <h2><a id="%E4%B8%8B%E8%BD%BD%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>下载内核源码</h2>
+<pre><code class="language-bash">git clone -b stable-5.10-rock5 --single-branch --depth 1 https://github.com/radxa/kernel.git
+apt-get install flex bison libncurses-dev  u-boot-tools
+root@uos-PC:~/rock5b/kernel# make rockchip_linux_defconfig
+root@uos-PC:~/rock5b/kernel# make menuconfig
+make savedefconfig
+cp defconfig arch/arm64/configs/rockchip_linux_defconfig  (这一步是拷贝过去让脚本编译的时候识别)
+</code></pre>
+<p>测试</p>
+<p>这个是工具<br />
+git clone -b debian <a href="https://github.com/radxa/build.git">https://github.com/radxa/build.git</a></p>
 
 
-			<div class="row">
-			  <div class="large-6 columns">
-			  <p class="text-left" style="padding-top:25px;">
-			   
-			  </p>
-			  </div>
-			  <div class="large-6 columns">
-			<p class="text-right" style="padding-top:25px;">
-			
-			</p>
-			  </div>
-			</div>
-		</div>
-	</div><!-- large 8 -->
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="rock5b-ke-yi-yun-xing-deuos-ca.html" 
+          title="Next Post: rock5b可以运行的UOS操作系统">rock5b可以运行的UOS操作系统 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
 
  <div class="large-4 medium-4 columns">
   <div class="hide-for-small">
@@ -307,6 +318,8 @@
 
 
 
+
+<script src="asset/prism.js"></script>
 
 
 <style type="text/css">

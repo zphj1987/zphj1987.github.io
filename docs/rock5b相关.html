@@ -107,6 +107,51 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
+                <a class="clearlink" href="16660638257893.html">
+                
+                  <h1>编译rock5b的内核</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="%E4%B8%8B%E8%BD%BD%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>下载内核源码</h2>
+<pre><code class="language-bash">git clone -b stable-5.10-rock5 --single-branch --depth 1 https://github.com/radxa/kernel.git
+apt-get install flex bison libncurses-dev  u-boot-tools
+root@uos-PC:~/rock5b/kernel# make rockchip_linux_defconfig
+root@uos-PC:~/rock5b/kernel# make menuconfig
+make savedefconfig
+cp defconfig arch/arm64/configs/rockchip_linux_defconfig  (这一步是拷贝过去让脚本编译的时候识别)
+</code></pre>
+<p>测试</p>
+<p>这个是工具<br />
+git clone -b debian <a href="https://github.com/radxa/build.git">https://github.com/radxa/build.git</a></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2022/10/18</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='rock5b%E7%9B%B8%E5%85%B3.html'>rock5b相关</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
                 <a class="clearlink" href="rock5b-ke-yi-yun-xing-deuos-ca.html">
                 
                   <h1>rock5b可以运行的UOS操作系统</h1>
@@ -220,6 +265,12 @@
 	      
 		      
 			      <li class="post">
+			        <a href="16660638257893.html">编译rock5b的内核</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="rock5b-ke-yi-yun-xing-deuos-ca.html">rock5b可以运行的UOS操作系统</a>
 			      </li>
 		     
@@ -243,10 +294,6 @@
 		     
 		  
 		      
-			      <li class="post">
-			        <a href="jiao-ben-jin-zhi-deng-lu-chang.html">脚本禁止登录尝试</a>
-			      </li>
-		     
 		  
 		      
 		  

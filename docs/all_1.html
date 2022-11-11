@@ -107,193 +107,15 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="rock5b-ke-yi-yun-xing-deuos-ca.html">
+                <a class="clearlink" href="ceph-bian-yi-da-bao-zhong-duan.html">
                 
-                  <h1>rock5b可以运行的UOS操作系统</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2><a id="%E5%89%8D%E8%A8%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>前言</h2>
-<p>uos是国产操作系统里面桌面做的顶尖的操作系统了，前身是deepin，基于的是debian，ubuntu系的做的桌面，国产操作系统的优势是会做一些办公工具相关的适配</p>
-<p>查了下资料，pro版本的试用期是90天，没有授权的话，只是不能使用应用商店，其它的使用没有区别</p>
-<h2><a id="%E7%9B%B8%E5%85%B3%E8%B5%84%E6%BA%90" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>相关资源</h2>
-<p>这个img为初始的版本，比较大，有12G的，看了下内部装完系统占用有7G左右，这个大小方面和使用后续会持续发布新的版本，内核相关的后面看下是否也更新替换下，目前采用的是官方提供的</p>
-<h2><a id="%E4%BD%BF%E7%94%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>使用</h2>
-<p>由于网盘的原因，采用的分卷压缩的，全部分卷下载完成后，使用360zip进行解压即可</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="rock5b-ke-yi-yun-xing-deuos-ca.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/10/17</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='rock5b%E7%9B%B8%E5%85%B3.html'>rock5b相关</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="opencloudos-aarch64ke-yi-shi-y.html">
-                
-                  <h1>opencloudos aarch64可以使用的vdbench</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2><a id="%E5%89%8D%E8%A8%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>前言</h2>
-<p>vdbench是一个I/O工作负载生成器，通常用于验证数据完整性和测试存储性能。它可以运行在windows、linux环境，可用于测试文件系统或块设备基准性能。很多大型的测试都是采用这个工具进行测试的，能过模拟很多不同的负载</p>
-<p>vdbench采用java编写的，能够比较好的支持跨平台，但是内部引用的库是会挑系统平台的，默认的zip包里面就没有带aarch64的库，需要自己获取源码，然后在aarch64上编译库文件，然后再放到zip包里面，本篇结尾的资源就是提供的这个包</p>
-<h2><a id="%E9%97%AE%E9%A2%98%E7%8E%B0%E8%B1%A1" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>问题现象</h2>
-<h3><a id="%E5%AE%89%E8%A3%85%E5%9F%BA%E6%9C%AC%E8%BD%AF%E4%BB%B6" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>安装基本软件</h3>
-<pre><code class="language-bash">yum install java-1.8.0-openjdk
-</code></pre>
-<h3><a id="%E8%A7%A3%E5%8E%8B" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>解压</h3>
-<pre><code class="language-bash">unzip vdbench50407.zip -d vdbench50407
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="opencloudos-aarch64ke-yi-shi-y.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/10/10</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3.html'>存储测试相关</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="vdbench-ce-shi-sheng-cheng-qi.html">
-                
-                  <h1>vdbench测试生成器</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2><a id="%E8%83%8C%E6%99%AF" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>背景</h2>
-<p>vdbench测试是根据配置文件进行测试的，有的时候我们需要循环的进行不同的测试用例进行测试，并且进行数据的大量填充，大小文件进行交错的填充来检测环境的稳定性</p>
-<h2><a id="%E5%88%86%E6%9E%90" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>分析</h2>
-<p>我们定义几组不同的配置文件，然后根据配置文件定义测试的次数，然后定义总次数，以及测试目录，然后生成配置文件，再使用脚本按顺序进行测试并记录结果</p>
-<h2><a id="%E5%AE%9E%E7%8E%B0" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>实现</h2>
-<h3><a id="%E5%86%99%E5%87%A0%E4%B8%AA%E6%A8%A1%E7%89%88%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>写几个模版配置文件</h3>
-<p>这个没有什么特殊的地方，根据自己的需要编写即可<br />
-测试的目录留空</p>
-<pre><code class="language-bash">anchor=
-</code></pre>
-<h3><a id="%E7%BC%96%E5%86%99run-ini%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>编写run.ini配置文件</h3>
-<p>安装解析ini的软件</p>
-<pre><code class="language-bash">yum install crudini
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="vdbench-ce-shi-sheng-cheng-qi.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/10/09</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3.html'>存储测试相关</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="opencloudos-rong-qi-jing-xiang.html">
-                
-                  <h1>opencloudos容器镜像优化</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2><a id="%E5%89%8D%E8%A8%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>前言</h2>
-<p>目前因为官方的容器也在移植阶段，并且系统是刚出来的，各方面的应该都会慢慢完善，因为之前也做了相关的移植，所以移植的作为备选的即可</p>
-<p>测试发现官方的容器目前还有一些需要处理一些东西，本篇就是简单的介绍怎么用官方的容器，以及存在的问题，最后提供下我自己移植好的容器</p>
-<h2><a id="%E5%AE%98%E6%96%B9%E5%AE%B9%E5%99%A8%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>官方容器使用方法</h2>
-<h3><a id="%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>拉取镜像</h3>
-<p>这个操作是使用容器的常规操作了，官方也都发布到了docker hub里面，直接拉取即可</p>
-<pre><code class="language-bash">[root@lab101 /]# docker pull opencloudos/opencloudos:8.6
-[root@lab101 /]# docker image ls
-docker.io/opencloudos/opencloudos   8.6                 85381566b97e        7 days ago               280 MB
-</code></pre>
-<p>可以看到官方的为280MB</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="opencloudos-rong-qi-jing-xiang.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/09/28</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3.html'>centos系统相关</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="jiao-ben-jin-zhi-deng-lu-chang.html">
-                
-                  <h1>脚本禁止登录尝试</h1>
+                  <h1>ceph编译打包中断继续</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
                         	<h2><a id="%E9%9C%80%E6%B1%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>需求</h2>
-<p>有ip不停的尝试登录，可以通过防火墙进行屏蔽</p>
+<p>使用rpmbuild打包的时候，如果编译了很久，中间突然出问题，需要从头来处理，这个地方如果有多个错误需要处理的话，每次从头开始就比较浪费时间，我们可以让rpmbuild打包不去删除编译好的包，直接继续</p>
 
                         
                       </div>
@@ -301,11 +123,11 @@ docker.io/opencloudos/opencloudos   8.6                 85381566b97e        7 da
                 </a>
                 <div class="read-more clearfix">
                   <div class="more-left left">
-                   <a href="jiao-ben-jin-zhi-deng-lu-chang.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/09/22</span>
+                   <a href="ceph-bian-yi-da-bao-zhong-duan.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2022/08/30</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3.html'>网络相关</a></span>
+          					    <span class="posted-in"><a href='%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E7%9B%B8%E5%85%B3.html'>编译打包相关</a></span>
           				   
                     
 
@@ -321,21 +143,99 @@ docker.io/opencloudos/opencloudos   8.6                 85381566b97e        7 da
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="gluster-fu-ben-san-pei-zhidown.html">
+                <a class="clearlink" href="vsphere-ying-jian-jia-suvaai-d.html">
                 
-                  <h1>gluster副本三配置down两个可写</h1>
+                  <h1>vsphere硬件加速VAAI的实现</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<h2><a id="%E9%9C%80%E6%B1%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>需求</h2>
-<p>默认做了控制，副本三down两个就阻止写了，这个可以通过参数控制</p>
-<h2><a id="%E5%8F%82%E6%95%B0%E8%B0%83%E6%95%B4" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>参数调整</h2>
-<p>副本三，关闭两个可写</p>
-<pre><code class="language-bash">gluster volume set testvolume cluster.quorum-type fixed
-gluster volume set testvolume cluster.quorum-count 1
-gluster volume set testvolume cluster.quorum-reads yes
-gluster volume set  testvolume network.ping-timeout 10
+                        	<h2><a id="tgtd%E7%9A%84%E6%94%AF%E6%8C%81%E6%83%85%E5%86%B5" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>tgtd的支持情况</h2>
+<h3><a id="librbd%E6%94%AF%E6%8C%81%E7%9A%84%E6%83%85%E5%86%B5" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>librbd支持的情况</h3>
+<p><img src="media/16613328956330/16613278210932.jpg" alt="" /></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="vsphere-ying-jian-jia-suvaai-d.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2022/08/24</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3.html'>iscsi服务相关</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="da-bao-yi-ge-zhi-chirbd-detgt.html">
+                
+                  <h1>打包一个支持rbd的tgt</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81%E5%8C%85" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>下载源码包</h2>
+<p>当前的最新版本到了1.0.84,本篇就以这个举例子</p>
+<pre><code class="language-bash">[root@lab103 tgtd]# wget https://github.com/fujita/tgt/archive/refs/tags/v1.0.84.tar.gz
+[root@lab103 tgtd]# tar -xvf v1.0.84.tar.gz
+[root@lab103 tgtd]# cd tgt-1.0.84/
+[root@lab103 tgt-1.0.84]# mv README.md README
+[root@lab103 scsi]# cd ../
+[root@lab103 scsi]# tar -czvf tgt-1.0.84.tar.gz tgt-1.0.84
+</code></pre>
+<p>上面有个打包的脚本没处理好，需要改下上面的文件名称,然后压缩成新的包</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="da-bao-yi-ge-zhi-chirbd-detgt.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2022/08/24</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3.html'>iscsi服务相关</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="iscsi-ke-hu-duan-chang-yong-ca.html">
+                
+                  <h1>iscsi客户端常用操作</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="%E8%AF%B4%E6%98%8E" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>说明</h2>
+<p>本篇主要记录iscsi的客户端的一些常用的一些操作</p>
+<h2><a id="iscsi%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>iscsi服务端常用操作</h2>
+<p>删除一个lun</p>
+<pre><code class="language-bash">tgtadm --lld iscsi --mode logicalunit --op delete  --tid 2  --lun 1
 </code></pre>
 
                         
@@ -344,11 +244,11 @@ gluster volume set  testvolume network.ping-timeout 10
                 </a>
                 <div class="read-more clearfix">
                   <div class="more-left left">
-                   <a href="gluster-fu-ben-san-pei-zhidown.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/09/22</span>
+                   <a href="iscsi-ke-hu-duan-chang-yong-ca.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2022/08/24</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='gluster%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF.html'>gluster相关技术</a></span>
+          					    <span class="posted-in"><a href='iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3.html'>iscsi服务相关</a></span>
           				   
                     
 
@@ -364,17 +264,19 @@ gluster volume set  testvolume network.ping-timeout 10
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="mac-m1ke-yi-yun-xing-deopenclo.html">
+                <a class="clearlink" href="linux-xia-san-zhong-pei-zhiisc.html">
                 
-                  <h1>MAC M1可以运行的opencloudos 8.6</h1>
+                  <h1>Linux下三种配置iscsi的方法</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<h2><a id="%E5%89%8D%E8%A8%80" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>前言</h2>
-<p>在centos7比较晚的版本，以及centos8的aarch64的版本里面，内核的pagesize已经默认改成了64K，而mac M1的操作系统底层最大支持的pagesize是16K的，所以启动系统的时候，安装就直接闪退</p>
-<p><img src="media/16633226856220/16633228021078.jpg" alt="" /></p>
-<p>显示是上面的效果，这个在centos系统里面都有这个问题，fedora里面就还是维持4k，没有问题</p>
+                        	<p>linux下面配置iscsi有多种方法，用户态的有tgt，内核态的有scst和lio，如果只是普通的使用来说，没有太大的区别，对于某些特殊的场景就存在区别了</p>
+<p>比如tgt不支持pacemaker里面的 Persistent (SCSI-3) Reservations，而scst支持<br />
+tgt不支持vmware的vaai的某些属性，而lio支持<br />
+比如scst还支持srpt的功能，而tgt也不支持</p>
+<p>所以在某些场景下，我们需要根据自己的需要来选择服务，总体上来说iscsi算是一个中间的组件，并不影响数据本身，只是一个对外的服务，满足需求即可</p>
+<h2><a id="tgt%E7%9A%84%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>tgt的配置</h2>
 
                         
                       </div>
@@ -382,11 +284,11 @@ gluster volume set  testvolume network.ping-timeout 10
                 </a>
                 <div class="read-more clearfix">
                   <div class="more-left left">
-                   <a href="mac-m1ke-yi-yun-xing-deopenclo.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/09/16</span>
+                   <a href="linux-xia-san-zhong-pei-zhiisc.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2022/08/24</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3.html'>centos系统相关</a></span>
+          					    <span class="posted-in"><a href='iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3.html'>iscsi服务相关</a></span>
           				   
                     
 
@@ -402,51 +304,18 @@ gluster volume set  testvolume network.ping-timeout 10
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="duan-kou-zhuan-fa-pei-zhi-xu-q.html">
+                <a class="clearlink" href="ju-yu-wang-nei-de-wen-jian-chu.html">
                 
-                  <h1>端口转发配置</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2><a id="%E9%9C%80%E6%B1%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>需求</h2>
-<p>有的时候机器有一台网关机器，需要做端口转发的工作，那么可以使用iptables或者使用firwalld进行配置，firewalld底层也是调用的跟iptables一样的内核模块的，只是命令的不同</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="duan-kou-zhuan-fa-pei-zhi-xu-q.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/09/16</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3.html'>网络相关</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="huo-qu-yi-duan-shi-jian-neicep.html">
-                
-                  <h1>获取一段时间内ceph osd的磁盘读写情况</h1>
+                  <h1>局域网内的文件传输</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
                         	<h2><a id="%E9%9C%80%E6%B1%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>需求</h2>
-<p>这个是统计一段时间内ceph的磁盘上的数据的读取和写入的数据量以及花费的时间</p>
+<p>局域网内的文件传输，使用QQ或者其它网盘什么的，超大文件很容易传输失败，所以可以通过架设http传输服务器的方式进行处理</p>
+<p>同样的也可以在有公网IP的服务器上面搭建服务</p>
+<h2><a id="%E6%90%AD%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>搭建服务器</h2>
+<p>这个服务器可以在windows或者linux中转服务器都行</p>
 
                         
                       </div>
@@ -454,11 +323,11 @@ gluster volume set  testvolume network.ping-timeout 10
                 </a>
                 <div class="read-more clearfix">
                   <div class="more-left left">
-                   <a href="huo-qu-yi-duan-shi-jian-neicep.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/09/09</span>
+                   <a href="ju-yu-wang-nei-de-wen-jian-chu.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2022/08/23</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF.html'>ceph统计信息</a></span>
+          					    <span class="posted-in"><a href='%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7.html'>软件使用技巧</a></span>
           				   
                     
 
@@ -474,15 +343,17 @@ gluster volume set  testvolume network.ping-timeout 10
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="ceph-de-she-bei-guan-xi-huo-qu.html">
+                <a class="clearlink" href="16608989078869.html">
                 
-                  <h1>ceph的设备关系获取</h1>
+                  <h1>如何获取cubefs的master的信息</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<h2><a id="%E9%9C%80%E6%B1%82" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>需求</h2>
-<p>因为ceph采用的是lvm管理，磁盘对应关系找起来没有以前方便，所以用一个脚本把当前机器的对应关系列出来</p>
+                        	<p>背景<br />
+最近关注到一套全新的分布式文件系统cubefs，这个之前的名称是chubaofs，看github上面应该有做切换了一段时间，但是不清楚什么原因,文档和包切换的还不是很彻底</p>
+<p>所以在使用过程中需要注意下，注意下版本选择，这个在后面的文档里面再单独的说下这个问题</p>
+<p>这个分布式文件系统跟ceph类似，也是采用了管理节点的角色，本篇就是讲如何获取这个管理节点的信息的，从官方的指导文档看，这块讲的还是不够详细</p>
 
                         
                       </div>
@@ -490,11 +361,11 @@ gluster volume set  testvolume network.ping-timeout 10
                 </a>
                 <div class="read-more clearfix">
                   <div class="more-left left">
-                   <a href="ceph-de-she-bei-guan-xi-huo-qu.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2022/09/09</span>
+                   <a href="16608989078869.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2022/07/06</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF.html'>ceph统计信息</a></span>
+          					    <span class="posted-in"><a href='cubefs%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF.html'>cubefs相关技术</a></span>
           				   
                     
 
@@ -515,12 +386,12 @@ gluster volume set  testvolume network.ping-timeout 10
 			<div class="row">
 			  <div class="large-6 columns">
 			  <p class="text-left" style="padding-top:25px;">
-			   
+			   <a href="all.html">&laquo; Prev Page</a>  
 			  </p>
 			  </div>
 			  <div class="large-6 columns">
 			<p class="text-right" style="padding-top:25px;">
-			 <a href="all_1.html">&raquo; Next Page</a> 
+			
 			</p>
 			  </div>
 			</div>

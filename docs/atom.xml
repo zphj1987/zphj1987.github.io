@@ -4,7 +4,7 @@
   <title><![CDATA[zphj1987]]></title>
   <link href="zphj1987.com/atom.xml" rel="self"/>
   <link href="zphj1987.com/"/>
-  <updated>2022-11-11T11:54:23+08:00</updated>
+  <updated>2022-11-11T11:57:46+08:00</updated>
   <id>zphj1987.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,9 +14,9 @@
   
   <entry>
     <title type="html"><![CDATA[编译rock5b的内核]]></title>
-    <link href="zphj1987.com/16660638257893.html"/>
+    <link href="zphj1987.com/bian-yirock5b-de-nei-he-xia-za.html"/>
     <updated>2022-10-18T11:30:25+08:00</updated>
-    <id>zphj1987.com/16660638257893.html</id>
+    <id>zphj1987.com/bian-yirock5b-de-nei-he-xia-za.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E4%B8%8B%E8%BD%BD%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81" class="anchor" aria-hidden="true"><span class="octicon octicon-link"></span></a>下载内核源码</h2>
 <pre><code class="language-bash">git clone -b stable-5.10-rock5 --single-branch --depth 1 https://github.com/radxa/kernel.git

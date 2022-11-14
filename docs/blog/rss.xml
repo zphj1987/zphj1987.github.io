@@ -7,14 +7,14 @@
         <lastBuildDate>Fri, 11 Nov 2022 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
-        <language>en</language>
+        <language>zh-Hans</language>
         <item>
             <title><![CDATA[第一篇博客]]></title>
             <link>https://www.zphj1987.com/blog/first-blog-post</link>
             <guid>first-blog-post</guid>
             <pubDate>Fri, 11 Nov 2022 00:00:00 GMT</pubDate>
             <description><![CDATA[开端]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorWithStickyNavbar_LWe7" id="开端">开端<a class="hash-link" href="#开端" title="Direct link to heading">​</a></h2><p>博客进行了转移</p>]]></content:encoded>
+            <content:encoded><![CDATA[<h2 class="anchor anchorWithStickyNavbar_LWe7" id="开端">开端<a class="hash-link" href="#开端" title="标题的直接链接">​</a></h2><p>博客进行了转移</p>]]></content:encoded>
             <category>no</category>
         </item>
     </channel>

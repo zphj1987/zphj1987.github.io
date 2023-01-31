@@ -19,25 +19,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="但行好事,莫问前程">
+    <meta name="description" content="storage 的文章">
 <meta property="og:type" content="website">
-<meta property="og:title" content="MoMo">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:title" content="storage">
+<meta property="og:url" content="http://example.com/docs/storage/index.html">
 <meta property="og:site_name" content="MoMo">
-<meta property="og:description" content="但行好事,莫问前程">
+<meta property="og:description" content="storage 的文章">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-31T10:30:14.000Z">
+<meta property="article:modified_time" content="2023-01-31T10:30:14.987Z">
 <meta property="article:author" content="zphj1987">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/docs/storage/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://example.com/docs/storage/index.html","path":"docs/storage/index.html","title":"storage"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>MoMo</title>
+<title>storage | MoMo
+</title>
   
 
 
@@ -72,7 +75,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">MoMo</h1>
+      <p class="site-title">MoMo</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -125,7 +128,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -138,6 +141,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF"><span class="nav-number">1.</span> <span class="nav-text">存储相关技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF"><span class="nav-number">1.1.</span> <span class="nav-text">ceph相关技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cubefs%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF"><span class="nav-number">1.2.</span> <span class="nav-text">cubefs相关技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gluster%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF"><span class="nav-number">1.3.</span> <span class="nav-text">gluster相关技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3"><span class="nav-number">1.4.</span> <span class="nav-text">存储测试相关</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -172,156 +176,59 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner page posts-expand">
+
 
     
+    
+    
+    <div class="post-block" lang="zh-CN"><header class="post-header">
 
+<h1 class="post-title" itemprop="name headline">storage
+</h1>
 
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/31/hexo%E7%9A%84index%E5%A4%84%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zphj1987">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="MoMo">
-      <meta itemprop="description" content="但行好事,莫问前程">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | MoMo">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/01/31/hexo%E7%9A%84index%E5%A4%84%E7%90%86/" class="post-title-link" itemprop="url">hexo的index处理</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2023-01-31 15:49:43 / 修改时间：17:56:58" itemprop="dateCreated datePublished" datetime="2023-01-31T15:49:43+08:00">2023-01-31</time>
-    </span>
-
-  
+<div class="post-meta-container">
+    <div class="post-description">storage 的文章</div>
+  <ul class="breadcrumb">
+            <li><a href="/docs/">文档</a></li>
+          <li>STORAGE</li>
+  </ul>
 </div>
 
-        </div>
-      </header>
+</header>
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>如果不在时间线写文章，通过docs进行分类处理的时候，子目录里面的目录不好处理，通过脚本扫描处理目录</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>准备两个脚本，一个脚本遍历，一个脚本进行执行更新</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/01/31/hexo%E7%9A%84index%E5%A4%84%E7%90%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+      
+      
+      <div class="post-body">
+          <h2 id="存储相关技术"><a href="#存储相关技术" class="headerlink" title="存储相关技术"></a>存储相关技术</h2><h3 id="ceph相关技术"><a href="#ceph相关技术" class="headerlink" title="ceph相关技术"></a>ceph相关技术</h3><ul>
+<li><a href="%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/ceph%E7%9A%84%E8%AE%BE%E5%A4%87%E5%85%B3%E7%B3%BB%E8%8E%B7%E5%8F%96.html">ceph的设备关系获取</a></li>
+<li><a href="%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/%E8%8E%B7%E5%8F%96%E4%B8%80%E6%AE%B5%E6%97%B6%E9%97%B4%E5%86%85ceph%E7%9A%84osd%E7%A3%81%E7%9B%98%E8%AF%BB%E5%86%99%E6%83%85%E5%86%B5.html">获取一段时间内ceph的osd磁盘读写情况</a></li>
+<li><a href="%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/s3%E7%9A%84v2%E8%AE%A4%E8%AF%81%E6%9E%84%E9%80%A0-lua.html">s3的v2认证构造-lua</a></li>
+<li><a href="%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E7%9B%B8%E5%85%B3/ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD.html">ceph编译打包中断继续</a></li>
+</ul>
+<h3 id="cubefs相关技术"><a href="#cubefs相关技术" class="headerlink" title="cubefs相关技术"></a>cubefs相关技术</h3><ul>
+<li><a href="%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/cubefs%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96cubefs%E7%9A%84master%E7%9A%84%E4%BF%A1%E6%81%AF.html">如何获取cubefs的master的信息</a></li>
+</ul>
+<h3 id="gluster相关技术"><a href="#gluster相关技术" class="headerlink" title="gluster相关技术"></a>gluster相关技术</h3><ul>
+<li><a href="%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E5%89%AF%E6%9C%AC%E4%B8%89%E9%85%8D%E7%BD%AEdown%E4%B8%A4%E4%B8%AA%E5%8F%AF%E5%86%99.html">gluster副本三配置down两个可写</a></li>
+</ul>
+<h3 id="存储测试相关"><a href="#存储测试相关" class="headerlink" title="存储测试相关"></a>存储测试相关</h3><ul>
+<li><a href="%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/opencloudos-aarch64%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E7%9A%84vdbench.html">opencloudos-aarch64可以使用的vdbench</a></li>
+<li><a href="%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/vdbench%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90%E5%99%A8.html">vdbench测试生成器</a></li>
+</ul>
+
+      </div>
+      
+      
       
     </div>
+  <ul class="breadcrumb">
+            <li><a href="/docs/">文档</a></li>
+          <li>STORAGE</li>
+  </ul>
 
     
     
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/31/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="zphj1987">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="MoMo">
-      <meta itemprop="description" content="但行好事,莫问前程">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | MoMo">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/01/31/hello-world/" class="post-title-link" itemprop="url">博客介绍</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-01-31 10:36:58" itemprop="dateCreated datePublished" datetime="2023-01-31T10:36:58+08:00">2023-01-31</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近的博客文章会放在主页里面,也就是未分类，基于时间线排列的文章，这些文章入口都在主页这个tab</p>
-<p>在一段时间以后，这些文章会被分类放到文档的栏目里面</p>
-<p>归档里面只能看到主页里面的时间线的文章</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
 
 </div>

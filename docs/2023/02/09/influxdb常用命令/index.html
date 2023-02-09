@@ -19,28 +19,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.14.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="最近的博客文章会放在主页里面,也就是未分类，基于时间线排列的文章，这些文章入口都在主页这个tab 在一段时间以后，这些文章会被分类放到文档的栏目里面 归档里面只能看到主页里面的时间线的文章">
+    <meta name="description" content="前言之前在研究lustreperfmon，发现软件采用的是collectd加上influxdb的软件架构，使用过程中涉及到一些命令记录下来，方便后续使用 相关命令查看数据库 12345[root@test201 influxdb]# influx  --execute &quot;show databases;&quot;name: databasesname----_internal">
 <meta property="og:type" content="article">
-<meta property="og:title" content="博客介绍">
-<meta property="og:url" content="http://example.com/2023/01/31/hello-world/index.html">
+<meta property="og:title" content="influxdb常用命令">
+<meta property="og:url" content="http://example.com/2023/02/09/influxdb%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/index.html">
 <meta property="og:site_name" content="MoMo">
-<meta property="og:description" content="最近的博客文章会放在主页里面,也就是未分类，基于时间线排列的文章，这些文章入口都在主页这个tab 在一段时间以后，这些文章会被分类放到文档的栏目里面 归档里面只能看到主页里面的时间线的文章">
+<meta property="og:description" content="前言之前在研究lustreperfmon，发现软件采用的是collectd加上influxdb的软件架构，使用过程中涉及到一些命令记录下来，方便后续使用 相关命令查看数据库 12345[root@test201 influxdb]# influx  --execute &quot;show databases;&quot;name: databasesname----_internal">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-01-31T02:36:58.988Z">
-<meta property="article:modified_time" content="2023-01-31T02:36:58.988Z">
+<meta property="article:published_time" content="2023-02-09T07:39:04.000Z">
+<meta property="article:modified_time" content="2023-02-09T07:50:27.921Z">
 <meta property="article:author" content="zphj1987">
-<meta property="article:tag" content="nothing">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/2023/01/31/hello-world/">
+<link rel="canonical" href="http://example.com/2023/02/09/influxdb%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2023/01/31/hello-world/","path":"2023/01/31/hello-world/","title":"博客介绍"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2023/02/09/influxdb%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/","path":"2023/02/09/influxdb常用命令/","title":"influxdb常用命令"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>博客介绍 | MoMo</title>
+<title>influxdb常用命令 | MoMo</title>
   
 
 
@@ -128,7 +127,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -141,6 +140,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">相关命令</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -186,7 +186,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/31/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/09/influxdb%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -199,12 +199,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="博客介绍 | MoMo">
+      <meta itemprop="name" content="influxdb常用命令 | MoMo">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          博客介绍
+          influxdb常用命令
         </h1>
 
         <div class="post-meta-container">
@@ -214,8 +214,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2023-01-31 10:36:58" itemprop="dateCreated datePublished" datetime="2023-01-31T10:36:58+08:00">2023-01-31</time>
+      <time title="创建时间：2023-02-09 15:39:04 / 修改时间：15:50:27" itemprop="dateCreated datePublished" datetime="2023-02-09T15:39:04+08:00">2023-02-09</time>
     </span>
 
   
@@ -228,9 +229,36 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>最近的博客文章会放在主页里面,也就是未分类，基于时间线排列的文章，这些文章入口都在主页这个tab</p>
-<p>在一段时间以后，这些文章会被分类放到文档的栏目里面</p>
-<p>归档里面只能看到主页里面的时间线的文章</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前在研究lustreperfmon，发现软件采用的是collectd加上influxdb的软件架构，使用过程中涉及到一些命令记录下来，方便后续使用</p>
+<h2 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h2><p>查看数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@test201 influxdb]<span class="comment"># influx  --execute &quot;show databases;&quot;</span></span><br><span class="line">name: databases</span><br><span class="line">name</span><br><span class="line">----</span><br><span class="line">_internal</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+<p>创建数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@test201 influxdb]<span class="comment"># influx  --execute &#x27;CREATE DATABASE esmon_database&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>删除数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@test201 influxdb]<span class="comment"># influx  --execute &#x27;DROP DATABASE esmon_database&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>创建cq查询</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@test201 influxdb]<span class="comment"># influx -database &#x27;esmon_database&#x27;  --execute &#x27;CREATE CONTINUOUS QUERY cq_ost_stats_bytes_fs_name_optype ON esmon_database BEGIN SELECT sum(value) / 3 INTO esmon_database.autogen.&quot;cqm_ost_stats_bytes-fs_name-optype&quot; FROM esmon_database.autogen.ost_stats_bytes GROUP BY time(6s), fs_name, optype END&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>删除cq查询</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@test201 influxdb]<span class="comment"># influx -database &#x27;esmon_database&#x27;  --execute &quot;DROP CONTINUOUS QUERY cq_ost_stats_bytes_fs_name_optype ON &quot;esmon_database&quot;;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>查询创建的cq查询</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@test201 influxdb]<span class="comment"># influx -database &#x27;esmon_database&#x27;  --execute &quot;SHOW CONTINUOUS QUERIES;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>查看创建的measurement</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@test201 /]<span class="comment"># influx -database &#x27;esmon_database&#x27;  --execute &quot;show measurements&quot;</span></span><br></pre></td></tr></table></figure>
+<p>删除measurement</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@test201 /]<span class="comment"># influx -database &#x27;esmon_database&#x27;  --execute &#x27;DROP measurement  &quot;cqm_ost_stats_bytes-fs_name-optype&quot;&#x27;;</span></span><br></pre></td></tr></table></figure>
+
+<p>查询数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@test201 /]<span class="comment"># influx -database &#x27;esmon_database&#x27;  --execute &#x27;SELECT * FROM &quot;md_stats&quot;&#x27;</span></span><br><span class="line">[root@test201 pyesmon]<span class="comment"># influx -database &#x27;esmon_database&#x27;  --execute &quot;SELECT &quot;sum&quot; FROM \&quot;cqm_md_stats-fs_name\&quot; WHERE fs_name = &#x27;lustrefs&#x27; AND  time &gt; now() - 1m&quot;</span></span><br><span class="line">[root@test201 pyesmon]<span class="comment"># influx -database &#x27;esmon_database&#x27;  --execute &quot;SELECT &quot;sum&quot; FROM \&quot;cqm_ost_stats_bytes-fs_name-optype\&quot; WHERE fs_name=&#x27;lustrefs&#x27; AND  time &gt; now() - 1m GROUP BY &quot;optype&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>如果查询内容有单引号也有双引号，那么外部包上双引号，内部保持单引号不变，然后对measurement进行双引号转义，命令行才需要这样处理</p>
+<ul>
+<li>group by是对查询可以分组</li>
+<li>time  &gt; now() - 1m 是可以在时间上选择一个范围</li>
+</ul>
 
     </div>
 
@@ -239,19 +267,16 @@
     
 
     <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/nothing/" rel="tag"># nothing</a>
-          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
+                <a href="/2023/02/02/%E6%B5%B7%E5%BA%B7%E5%A8%81%E8%A7%86AnalyzeDatasdk%E7%9A%84python%E8%B0%83%E7%94%A8%E6%96%B9%E6%B3%95/" rel="prev" title="海康威视AnalyzeDatasdk的python调用方法">
+                  <i class="fa fa-chevron-left"></i> 海康威视AnalyzeDatasdk的python调用方法
+                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/01/31/hexo%E7%9A%84index%E5%A4%84%E7%90%86/" rel="next" title="hexo的index处理">
-                  hexo的index处理 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>

@@ -150,7 +150,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -173,6 +173,85 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/24/%E5%B8%8C%E6%8D%B7%E7%A1%AC%E7%9B%98%E5%8D%87%E7%BA%A7%E5%9B%BA%E4%BB%B6%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zphj1987">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MoMo">
+      <meta itemprop="description" content="但行好事,莫问前程">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | MoMo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/02/24/%E5%B8%8C%E6%8D%B7%E7%A1%AC%E7%9B%98%E5%8D%87%E7%BA%A7%E5%9B%BA%E4%BB%B6%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">希捷硬盘升级固件方法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-02-24 11:35:39 / 修改时间：11:41:09" itemprop="dateCreated datePublished" datetime="2023-02-24T11:35:39+08:00">2023-02-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="固件升级"><a href="#固件升级" class="headerlink" title="固件升级"></a>固件升级</h2><p>一般情况下不需要升级，但是在测试磁盘能源管理的时候，发现部分硬盘无法休眠，通过固件升级后得到解决</p>
+<h2 id="升级步骤"><a href="#升级步骤" class="headerlink" title="升级步骤"></a>升级步骤</h2><h3 id="查询硬盘型号"><a href="#查询硬盘型号" class="headerlink" title="查询硬盘型号"></a>查询硬盘型号</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@node17 ~]<span class="comment"># smartctl -i /dev/sdb</span></span><br><span class="line">smartctl 6.5 2016-05-07 r4318 [x86_64-linux-4.14.113-1.el7.x86_64] (<span class="built_in">local</span> build)</span><br><span class="line">Copyright (C) 2002-16, Bruce Allen, Christian Franke, www.smartmontools.org</span><br><span class="line"></span><br><span class="line">=== START OF INFORMATION SECTION ===</span><br><span class="line">Device Model:     ST4000NM0035-1V4107</span><br><span class="line">Serial Number:    ZC13ZGZP</span><br><span class="line">LU WWN Device Id: 5 000c50 0a53981ae</span><br><span class="line">Firmware Version: TN04</span><br><span class="line">User Capacity:    4,000,787,030,016 bytes [4.00 TB]</span><br><span class="line">Sector Size:      512 bytes logical/physical</span><br><span class="line">Rotation Rate:    7200 rpm</span><br><span class="line">Form Factor:      3.5 inches</span><br><span class="line">Device is:        Not <span class="keyword">in</span> smartctl database [<span class="keyword">for</span> details use: -P showall]</span><br><span class="line">ATA Version is:   ACS-3 T13/2161-D revision 5</span><br><span class="line">SATA Version is:  SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)</span><br><span class="line">Local Time is:    Thu Feb 23 18:15:04 2023 CST</span><br><span class="line">SMART support is: Available - device has SMART capability.</span><br><span class="line">SMART support is: Enabled</span><br></pre></td></tr></table></figure>
+<p>通过smartctl查询硬盘的序列号，也就是上面的ZC13ZGZP</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/02/24/%E5%B8%8C%E6%8D%B7%E7%A1%AC%E7%9B%98%E5%8D%87%E7%BA%A7%E5%9B%BA%E4%BB%B6%E6%96%B9%E6%B3%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 

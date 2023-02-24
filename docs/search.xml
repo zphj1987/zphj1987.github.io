@@ -12,26 +12,6 @@
       </tags>
   </entry>
   <entry>
-    <title>hexo的index处理</title>
-    <url>/2023/01/31/hexo%E7%9A%84index%E5%A4%84%E7%90%86/</url>
-    <content><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>如果不在时间线写文章，通过docs进行分类处理的时候，子目录里面的目录不好处理，通过脚本扫描处理目录</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>准备两个脚本，一个脚本遍历，一个脚本进行执行更新</p>
-<span id="more"></span>
-
-<p>update.sh</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"><span class="comment">#获取当前的目录</span></span><br><span class="line">rootdir=`<span class="built_in">pwd</span>`</span><br><span class="line"><span class="comment">#遍历目录执行</span></span><br><span class="line"><span class="keyword">for</span> <span class="built_in">dir</span> <span class="keyword">in</span> `find . -<span class="built_in">type</span> d|grep -v <span class="string">&quot;assets\|file&quot;</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;正在更新: <span class="variable">$dir</span>&quot;</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$dir</span></span><br><span class="line"><span class="comment">#echo `pwd`</span></span><br><span class="line">mdnum=`find ./ -name <span class="string">&quot;*.md&quot;</span>|grep -v index.md|<span class="built_in">wc</span> -l`</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$mdnum</span> != 0 ];<span class="keyword">then</span></span><br><span class="line"><span class="comment">#echo $mdnum</span></span><br><span class="line">sh <span class="variable">$rootdir</span>/generatemenu.sh &gt; ./index.md</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment">#echo &quot;当前目录&quot;</span></span><br><span class="line"><span class="comment">#回到执行根目录</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$rootdir</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">mydate=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d %H:%M:%S&quot;</span>`</span><br><span class="line">mydir=`<span class="built_in">pwd</span> | awk -F <span class="string">&quot;/&quot;</span> <span class="string">&#x27;&#123;print $NF&#125;&#x27;</span>`</span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;---\n&quot;</span></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;title: <span class="variable">$mydir</span> \n&quot;</span></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;date: <span class="variable">$mydate</span> \n&quot;</span></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;description: <span class="variable">$mydir</span> 的文章\n&quot;</span></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;---\n&quot;</span></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;\n&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> mdfile <span class="keyword">in</span> `find . -name <span class="string">&quot;*.md&quot;</span>|grep -v index.md|<span class="built_in">sort</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="comment"># echo $mdfile</span></span><br><span class="line">mdfilename=`<span class="built_in">echo</span> <span class="variable">$mdfile</span>|rev|<span class="built_in">cut</span> -d /  -f 1 |rev`</span><br><span class="line">path=`<span class="built_in">echo</span> <span class="variable">$mdfile</span>|sed <span class="string">&#x27;s/.\&#123;2\&#125;//&#x27;</span>`</span><br><span class="line">pdir=`<span class="built_in">echo</span> <span class="variable">$path</span>|<span class="built_in">cut</span> -d / -f 1`</span><br><span class="line">p2dir=`<span class="built_in">echo</span> <span class="variable">$path</span>|<span class="built_in">cut</span> -d / -f 2`</span><br><span class="line"><span class="comment">#&amp;&amp; [[ -z $pdir ]]</span></span><br><span class="line"><span class="comment"># 一级目录如果含有md字段，就不做一级分类了</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$pdir</span> =~ <span class="string">&quot;md&quot;</span> ]] ;<span class="keyword">then</span></span><br><span class="line">    :</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$p1</span> =~ <span class="string">&quot;## <span class="variable">$pdir</span>&quot;</span> ]];<span class="keyword">then</span></span><br><span class="line">        :</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        p1=<span class="variable">$p1</span><span class="string">&quot;## &quot;</span><span class="variable">$pdir</span><span class="string">&quot;\n&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 二级目录如果含有md字段，就不做二级分类了</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$p2dir</span>&quot;</span> =~ <span class="string">&quot;.md&quot;</span> ]];<span class="keyword">then</span></span><br><span class="line">    :</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$p1</span> =~ <span class="string">&quot;## <span class="variable">$p2dir</span>&quot;</span> ]];<span class="keyword">then</span></span><br><span class="line">        :</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        p1=<span class="variable">$p1</span><span class="string">&quot;### &quot;</span><span class="variable">$p2dir</span><span class="string">&quot;\n&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;* [<span class="variable">$&#123;mdfilename%???&#125;</span>](<span class="variable">$&#123;path%???&#125;</span>)\n&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$p1</span></span><br></pre></td></tr></table></figure>
-
-<p>执行update.sh就可以遍历的更新子目录的index了</p>
-<h2 id="文章添加头部标记"><a href="#文章添加头部标记" class="headerlink" title="文章添加头部标记"></a>文章添加头部标记</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> `find . -name <span class="string">&quot;*.md&quot;</span>|grep -v index.md`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">mydate=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d %H:%M:%S&quot;</span>`</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$file</span>;</span><br><span class="line">docname=`<span class="built_in">echo</span> <span class="variable">$file</span>|rev|<span class="built_in">cut</span> -d /  -f 1 |rev|<span class="built_in">cut</span> -d <span class="string">&quot;.&quot;</span> -f 1`</span><br><span class="line">titlenum=`<span class="built_in">cat</span> <span class="variable">$file</span>|<span class="built_in">head</span> -n 5|grep title|<span class="built_in">wc</span> -l`</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$titlenum</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$titlenum</span> -eq 0 ];<span class="keyword">then</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;需要处理&quot;</span></span><br><span class="line">sed -i <span class="string">&#x27;&#x27;</span> <span class="string">&#x27;1 i \</span></span><br><span class="line"><span class="string">---</span></span><br><span class="line"><span class="string">&#x27;</span> <span class="variable">$file</span></span><br><span class="line">sed -i <span class="string">&#x27;&#x27;</span> <span class="string">&#x27;1 i \</span></span><br><span class="line"><span class="string">description: $docname</span></span><br><span class="line"><span class="string">&#x27;</span> <span class="variable">$file</span></span><br><span class="line">sed -i <span class="string">&#x27;&#x27;</span> <span class="string">&#x27;1 i \</span></span><br><span class="line"><span class="string">date: $mydate</span></span><br><span class="line"><span class="string">&#x27;</span> <span class="variable">$file</span></span><br><span class="line"></span><br><span class="line">sed -i <span class="string">&#x27;&#x27;</span> <span class="string">&#x27;1 i \</span></span><br><span class="line"><span class="string">echo title: $docname</span></span><br><span class="line"><span class="string">&#x27;</span> <span class="variable">$file</span></span><br><span class="line">sed -i <span class="string">&#x27;&#x27;</span> <span class="string">&#x27;1 i \</span></span><br><span class="line"><span class="string">---</span></span><br><span class="line"><span class="string">&#x27;</span> <span class="variable">$file</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>变量没更新的问题</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> `find . -name <span class="string">&quot;*.md&quot;</span>|grep -v index.md`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">mydate=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d %H:%M:%S&quot;</span>`</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$file</span>;</span><br><span class="line">docname=`<span class="built_in">echo</span> <span class="variable">$file</span>|rev|<span class="built_in">cut</span> -d /  -f 1 |rev|<span class="built_in">cut</span> -d <span class="string">&quot;.&quot;</span> -f 1`</span><br><span class="line">titlenum=`<span class="built_in">cat</span> <span class="variable">$file</span>|<span class="built_in">head</span> -n 5|grep title|<span class="built_in">wc</span> -l`</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$titlenum</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$titlenum</span> -eq 1 ];<span class="keyword">then</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;需要处理&quot;</span></span><br><span class="line">sed -i <span class="string">&quot;&quot;</span>  <span class="string">&quot;s/^description:.*/description: <span class="variable">$docname</span>/g&quot;</span> <span class="variable">$file</span></span><br><span class="line">sed -i <span class="string">&quot;&quot;</span>  <span class="string">&quot;s/^date:.*/date: <span class="variable">$mydate</span>/g&quot;</span> <span class="variable">$file</span></span><br><span class="line">sed -i <span class="string">&quot;&quot;</span>  <span class="string">&quot;s/^title:.*/title: <span class="variable">$docname</span>/g&quot;</span> <span class="variable">$file</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-<p>再跑一遍即可</p>
-]]></content>
-  </entry>
-  <entry>
     <title>influxdb常用命令</title>
     <url>/2023/02/09/influxdb%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前在研究lustreperfmon，发现软件采用的是collectd加上influxdb的软件架构，使用过程中涉及到一些命令记录下来，方便后续使用</p>
@@ -110,52 +90,29 @@
 ]]></content>
   </entry>
   <entry>
-    <title>docs</title>
-    <url>/docs/index.html</url>
-    <content><![CDATA[<h2 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h2><h3 id="网络相关"><a href="#网络相关" class="headerlink" title="网络相关"></a>网络相关</h3><ul>
-<li><a href="linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E9%85%8D%E7%BD%AE.html">端口转发配置</a></li>
-<li><a href="linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/%E8%84%9A%E6%9C%AC%E7%A6%81%E6%AD%A2%E7%99%BB%E5%BD%95%E5%B0%9D%E8%AF%95.html">脚本禁止登录尝试</a></li>
-</ul>
-<h3 id="操作系统相关"><a href="#操作系统相关" class="headerlink" title="操作系统相关"></a>操作系统相关</h3><ul>
-<li><a href="linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/MAC-M1%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84opencloudos-8.6.html">MAC-M1可以运行的opencloudos-8.6</a></li>
-<li><a href="linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos7yum%E6%BA%90%E9%85%8D%E7%BD%AE.html">centos7yum源配置</a></li>
-<li><a href="linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/opencloudos%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E4%BC%98%E5%8C%96.html">opencloudos容器镜像优化</a></li>
-</ul>
-<h3 id="系统服务相关"><a href="#系统服务相关" class="headerlink" title="系统服务相关"></a>系统服务相关</h3><ul>
-<li><a href="linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/Linux%E4%B8%8B%E4%B8%89%E7%A7%8D%E9%85%8D%E7%BD%AEiscsi%E7%9A%84%E6%96%B9%E6%B3%95.html">Linux下三种配置iscsi的方法</a></li>
-<li><a href="linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C.html">iscsi客户端常用操作</a></li>
-<li><a href="linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/vsphere%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9FVAAI%E7%9A%84%E5%AE%9E%E7%8E%B0.html">vsphere硬件加速VAAI的实现</a></li>
-<li><a href="linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81rbd%E7%9A%84tgt.html">打包一个支持rbd的tgt</a></li>
-</ul>
-<h3 id="软件使用技巧"><a href="#软件使用技巧" class="headerlink" title="软件使用技巧"></a>软件使用技巧</h3><ul>
-<li><a href="linux/%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85%E7%9A%84%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93.html">局域网内的文件传输</a></li>
-</ul>
-<h2 id="rk3588"><a href="#rk3588" class="headerlink" title="rk3588"></a>rk3588</h2><h3 id="硬件篇"><a href="#硬件篇" class="headerlink" title="硬件篇"></a>硬件篇</h3><ul>
-<li><a href="rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/AX210%E8%93%9D%E7%89%99%E8%AF%86%E5%88%AB%E5%8F%AF%E7%94%A8rock5b%E5%86%85%E6%A0%B8-armbian.html">AX210蓝牙识别可用rock5b内核-armbian</a></li>
-<li><a href="rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/AX210%E8%93%9D%E7%89%99%E8%AF%86%E5%88%AB%E5%8F%AF%E7%94%A8rock5b%E5%86%85%E6%A0%B8.html">AX210蓝牙识别可用rock5b内核</a></li>
-</ul>
-<h3 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h3><ul>
-<li><a href="rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/rockpi5b%E9%85%8D%E4%BB%B6.html">rockpi5b配件</a></li>
-<li><a href="rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/rockpi5b%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90.html">rockpi5b硬件组成</a></li>
-<li><a href="rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/rockpi5b%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F-microsd.html">rockpi5b安装系统-microsd</a></li>
-<li><a href="rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/ubuntu-server%E5%AE%89%E8%A3%85%E6%A1%8C%E9%9D%A2.html">ubuntu-server安装桌面</a></li>
-</ul>
-<h3 id="进阶篇"><a href="#进阶篇" class="headerlink" title="进阶篇"></a>进阶篇</h3><ul>
-<li><a href="rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/%E8%87%AA%E5%AE%9A%E4%B9%89rock5b%E5%86%85%E6%A0%B8.html">自定义rock5b内核</a></li>
-<li><a href="rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/rock5b%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84UOS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html">rock5b可以运行的UOS操作系统</a></li>
-<li><a href="rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/%E4%BD%BF%E7%94%A8%E4%B8%B2%E5%8F%A3%E8%BF%9E%E6%8E%A5%E6%9F%A5%E7%9C%8B%E5%90%AF%E5%8A%A8%E4%BF%A1%E6%81%AF.html">使用串口连接查看启动信息</a></li>
-</ul>
-<h2 id="storage"><a href="#storage" class="headerlink" title="storage"></a>storage</h2><h3 id="存储相关技术"><a href="#存储相关技术" class="headerlink" title="存储相关技术"></a>存储相关技术</h3><ul>
-<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/ceph%E7%9A%84%E8%AE%BE%E5%A4%87%E5%85%B3%E7%B3%BB%E8%8E%B7%E5%8F%96.html">ceph的设备关系获取</a></li>
-<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/%E8%8E%B7%E5%8F%96%E4%B8%80%E6%AE%B5%E6%97%B6%E9%97%B4%E5%86%85ceph%E7%9A%84osd%E7%A3%81%E7%9B%98%E8%AF%BB%E5%86%99%E6%83%85%E5%86%B5.html">获取一段时间内ceph的osd磁盘读写情况</a></li>
-<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/s3%E7%9A%84v2%E8%AE%A4%E8%AF%81%E6%9E%84%E9%80%A0-lua.html">s3的v2认证构造-lua</a></li>
-<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E7%9B%B8%E5%85%B3/ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD.html">ceph编译打包中断继续</a></li>
-<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/cubefs%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96cubefs%E7%9A%84master%E7%9A%84%E4%BF%A1%E6%81%AF.html">如何获取cubefs的master的信息</a></li>
-<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E5%89%AF%E6%9C%AC%E4%B8%89%E9%85%8D%E7%BD%AEdown%E4%B8%A4%E4%B8%AA%E5%8F%AF%E5%86%99.html">gluster副本三配置down两个可写</a></li>
-<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/opencloudos-aarch64%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E7%9A%84vdbench.html">opencloudos-aarch64可以使用的vdbench</a></li>
-<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/vdbench%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90%E5%99%A8.html">vdbench测试生成器</a></li>
-</ul>
+    <title>hexo的index处理</title>
+    <url>/2023/01/31/hexo%E7%9A%84index%E5%A4%84%E7%90%86/</url>
+    <content><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>如果不在时间线写文章，通过docs进行分类处理的时候，子目录里面的目录不好处理，通过脚本扫描处理目录</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>准备两个脚本，一个脚本遍历，一个脚本进行执行更新</p>
+<span id="more"></span>
+
+<p>update.sh</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"><span class="comment">#获取当前的目录</span></span><br><span class="line">rootdir=`<span class="built_in">pwd</span>`</span><br><span class="line"><span class="comment">#遍历目录执行</span></span><br><span class="line"><span class="keyword">for</span> <span class="built_in">dir</span> <span class="keyword">in</span> `find . -<span class="built_in">type</span> d|grep -v <span class="string">&quot;assets\|file&quot;</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;正在更新: <span class="variable">$dir</span>&quot;</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$dir</span></span><br><span class="line"><span class="comment">#echo `pwd`</span></span><br><span class="line">mdnum=`find ./ -name <span class="string">&quot;*.md&quot;</span>|grep -v index.md|<span class="built_in">wc</span> -l`</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$mdnum</span> != 0 ];<span class="keyword">then</span></span><br><span class="line"><span class="comment">#echo $mdnum</span></span><br><span class="line">sh <span class="variable">$rootdir</span>/generatemenu.sh &gt; ./index.md</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment">#echo &quot;当前目录&quot;</span></span><br><span class="line"><span class="comment">#回到执行根目录</span></span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$rootdir</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">mydate=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d %H:%M:%S&quot;</span>`</span><br><span class="line">mydir=`<span class="built_in">pwd</span> | awk -F <span class="string">&quot;/&quot;</span> <span class="string">&#x27;&#123;print $NF&#125;&#x27;</span>`</span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;---\n&quot;</span></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;title: <span class="variable">$mydir</span> \n&quot;</span></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;date: <span class="variable">$mydate</span> \n&quot;</span></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;description: <span class="variable">$mydir</span> 的文章\n&quot;</span></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;---\n&quot;</span></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;\n&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> mdfile <span class="keyword">in</span> `find . -name <span class="string">&quot;*.md&quot;</span>|grep -v index.md|<span class="built_in">sort</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="comment"># echo $mdfile</span></span><br><span class="line">mdfilename=`<span class="built_in">echo</span> <span class="variable">$mdfile</span>|rev|<span class="built_in">cut</span> -d /  -f 1 |rev`</span><br><span class="line">path=`<span class="built_in">echo</span> <span class="variable">$mdfile</span>|sed <span class="string">&#x27;s/.\&#123;2\&#125;//&#x27;</span>`</span><br><span class="line">pdir=`<span class="built_in">echo</span> <span class="variable">$path</span>|<span class="built_in">cut</span> -d / -f 1`</span><br><span class="line">p2dir=`<span class="built_in">echo</span> <span class="variable">$path</span>|<span class="built_in">cut</span> -d / -f 2`</span><br><span class="line"><span class="comment">#&amp;&amp; [[ -z $pdir ]]</span></span><br><span class="line"><span class="comment"># 一级目录如果含有md字段，就不做一级分类了</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$pdir</span> =~ <span class="string">&quot;md&quot;</span> ]] ;<span class="keyword">then</span></span><br><span class="line">    :</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$p1</span> =~ <span class="string">&quot;## <span class="variable">$pdir</span>&quot;</span> ]];<span class="keyword">then</span></span><br><span class="line">        :</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        p1=<span class="variable">$p1</span><span class="string">&quot;## &quot;</span><span class="variable">$pdir</span><span class="string">&quot;\n&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 二级目录如果含有md字段，就不做二级分类了</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$p2dir</span>&quot;</span> =~ <span class="string">&quot;.md&quot;</span> ]];<span class="keyword">then</span></span><br><span class="line">    :</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$p1</span> =~ <span class="string">&quot;## <span class="variable">$p2dir</span>&quot;</span> ]];<span class="keyword">then</span></span><br><span class="line">        :</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        p1=<span class="variable">$p1</span><span class="string">&quot;### &quot;</span><span class="variable">$p2dir</span><span class="string">&quot;\n&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">p1=<span class="variable">$p1</span><span class="string">&quot;* [<span class="variable">$&#123;mdfilename%???&#125;</span>](<span class="variable">$&#123;path%???&#125;</span>)\n&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$p1</span></span><br></pre></td></tr></table></figure>
+
+<p>执行update.sh就可以遍历的更新子目录的index了</p>
+<h2 id="文章添加头部标记"><a href="#文章添加头部标记" class="headerlink" title="文章添加头部标记"></a>文章添加头部标记</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> `find . -name <span class="string">&quot;*.md&quot;</span>|grep -v index.md`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">mydate=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d %H:%M:%S&quot;</span>`</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$file</span>;</span><br><span class="line">docname=`<span class="built_in">echo</span> <span class="variable">$file</span>|rev|<span class="built_in">cut</span> -d /  -f 1 |rev|<span class="built_in">cut</span> -d <span class="string">&quot;.&quot;</span> -f 1`</span><br><span class="line">titlenum=`<span class="built_in">cat</span> <span class="variable">$file</span>|<span class="built_in">head</span> -n 5|grep title|<span class="built_in">wc</span> -l`</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$titlenum</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$titlenum</span> -eq 0 ];<span class="keyword">then</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;需要处理&quot;</span></span><br><span class="line">sed -i <span class="string">&#x27;&#x27;</span> <span class="string">&#x27;1 i \</span></span><br><span class="line"><span class="string">---</span></span><br><span class="line"><span class="string">&#x27;</span> <span class="variable">$file</span></span><br><span class="line">sed -i <span class="string">&#x27;&#x27;</span> <span class="string">&#x27;1 i \</span></span><br><span class="line"><span class="string">description: $docname</span></span><br><span class="line"><span class="string">&#x27;</span> <span class="variable">$file</span></span><br><span class="line">sed -i <span class="string">&#x27;&#x27;</span> <span class="string">&#x27;1 i \</span></span><br><span class="line"><span class="string">date: $mydate</span></span><br><span class="line"><span class="string">&#x27;</span> <span class="variable">$file</span></span><br><span class="line"></span><br><span class="line">sed -i <span class="string">&#x27;&#x27;</span> <span class="string">&#x27;1 i \</span></span><br><span class="line"><span class="string">echo title: $docname</span></span><br><span class="line"><span class="string">&#x27;</span> <span class="variable">$file</span></span><br><span class="line">sed -i <span class="string">&#x27;&#x27;</span> <span class="string">&#x27;1 i \</span></span><br><span class="line"><span class="string">---</span></span><br><span class="line"><span class="string">&#x27;</span> <span class="variable">$file</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>变量没更新的问题</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> `find . -name <span class="string">&quot;*.md&quot;</span>|grep -v index.md`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">mydate=`<span class="built_in">date</span> <span class="string">&quot;+%Y-%m-%d %H:%M:%S&quot;</span>`</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$file</span>;</span><br><span class="line">docname=`<span class="built_in">echo</span> <span class="variable">$file</span>|rev|<span class="built_in">cut</span> -d /  -f 1 |rev|<span class="built_in">cut</span> -d <span class="string">&quot;.&quot;</span> -f 1`</span><br><span class="line">titlenum=`<span class="built_in">cat</span> <span class="variable">$file</span>|<span class="built_in">head</span> -n 5|grep title|<span class="built_in">wc</span> -l`</span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$titlenum</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$titlenum</span> -eq 1 ];<span class="keyword">then</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;需要处理&quot;</span></span><br><span class="line">sed -i <span class="string">&quot;&quot;</span>  <span class="string">&quot;s/^description:.*/description: <span class="variable">$docname</span>/g&quot;</span> <span class="variable">$file</span></span><br><span class="line">sed -i <span class="string">&quot;&quot;</span>  <span class="string">&quot;s/^date:.*/date: <span class="variable">$mydate</span>/g&quot;</span> <span class="variable">$file</span></span><br><span class="line">sed -i <span class="string">&quot;&quot;</span>  <span class="string">&quot;s/^title:.*/title: <span class="variable">$docname</span>/g&quot;</span> <span class="variable">$file</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>再跑一遍即可</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>tags</title>
+    <url>/tags/index.html</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>linux</title>
@@ -177,41 +134,6 @@
 </ul>
 <h2 id="软件使用技巧"><a href="#软件使用技巧" class="headerlink" title="软件使用技巧"></a>软件使用技巧</h2><ul>
 <li><a href="%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85%E7%9A%84%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93.html">局域网内的文件传输</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>tags</title>
-    <url>/tags/index.html</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>操作系统相关</title>
-    <url>/docs/linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/index.html</url>
-    <content><![CDATA[<h2 id="centos系统相关"><a href="#centos系统相关" class="headerlink" title="centos系统相关"></a>centos系统相关</h2><ul>
-<li><a href="centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/MAC-M1%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84opencloudos-8.6.html">MAC-M1可以运行的opencloudos-8.6</a></li>
-<li><a href="centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos7yum%E6%BA%90%E9%85%8D%E7%BD%AE.html">centos7yum源配置</a></li>
-<li><a href="centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/opencloudos%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E4%BC%98%E5%8C%96.html">opencloudos容器镜像优化</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>系统服务相关</title>
-    <url>/docs/linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/index.html</url>
-    <content><![CDATA[<h2 id="iscsi服务相关"><a href="#iscsi服务相关" class="headerlink" title="iscsi服务相关"></a>iscsi服务相关</h2><ul>
-<li><a href="iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/Linux%E4%B8%8B%E4%B8%89%E7%A7%8D%E9%85%8D%E7%BD%AEiscsi%E7%9A%84%E6%96%B9%E6%B3%95.html">Linux下三种配置iscsi的方法</a></li>
-<li><a href="iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C.html">iscsi客户端常用操作</a></li>
-<li><a href="iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/vsphere%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9FVAAI%E7%9A%84%E5%AE%9E%E7%8E%B0.html">vsphere硬件加速VAAI的实现</a></li>
-<li><a href="iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81rbd%E7%9A%84tgt.html">打包一个支持rbd的tgt</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>网络相关</title>
-    <url>/docs/linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/index.html</url>
-    <content><![CDATA[<ul>
-<li><a href="%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E9%85%8D%E7%BD%AE.html">端口转发配置</a></li>
-<li><a href="%E8%84%9A%E6%9C%AC%E7%A6%81%E6%AD%A2%E7%99%BB%E5%BD%95%E5%B0%9D%E8%AF%95.html">脚本禁止登录尝试</a></li>
 </ul>
 ]]></content>
   </entry>
@@ -261,6 +183,65 @@
 ]]></content>
   </entry>
   <entry>
+    <title>docs</title>
+    <url>/docs/index.html</url>
+    <content><![CDATA[<h2 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h2><h3 id="网络相关"><a href="#网络相关" class="headerlink" title="网络相关"></a>网络相关</h3><ul>
+<li><a href="linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E9%85%8D%E7%BD%AE.html">端口转发配置</a></li>
+<li><a href="linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/%E8%84%9A%E6%9C%AC%E7%A6%81%E6%AD%A2%E7%99%BB%E5%BD%95%E5%B0%9D%E8%AF%95.html">脚本禁止登录尝试</a></li>
+</ul>
+<h3 id="操作系统相关"><a href="#操作系统相关" class="headerlink" title="操作系统相关"></a>操作系统相关</h3><ul>
+<li><a href="linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/MAC-M1%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84opencloudos-8.6.html">MAC-M1可以运行的opencloudos-8.6</a></li>
+<li><a href="linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos7yum%E6%BA%90%E9%85%8D%E7%BD%AE.html">centos7yum源配置</a></li>
+<li><a href="linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/opencloudos%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E4%BC%98%E5%8C%96.html">opencloudos容器镜像优化</a></li>
+</ul>
+<h3 id="系统服务相关"><a href="#系统服务相关" class="headerlink" title="系统服务相关"></a>系统服务相关</h3><ul>
+<li><a href="linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/Linux%E4%B8%8B%E4%B8%89%E7%A7%8D%E9%85%8D%E7%BD%AEiscsi%E7%9A%84%E6%96%B9%E6%B3%95.html">Linux下三种配置iscsi的方法</a></li>
+<li><a href="linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C.html">iscsi客户端常用操作</a></li>
+<li><a href="linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/vsphere%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9FVAAI%E7%9A%84%E5%AE%9E%E7%8E%B0.html">vsphere硬件加速VAAI的实现</a></li>
+<li><a href="linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81rbd%E7%9A%84tgt.html">打包一个支持rbd的tgt</a></li>
+</ul>
+<h3 id="软件使用技巧"><a href="#软件使用技巧" class="headerlink" title="软件使用技巧"></a>软件使用技巧</h3><ul>
+<li><a href="linux/%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85%E7%9A%84%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93.html">局域网内的文件传输</a></li>
+</ul>
+<h2 id="rk3588"><a href="#rk3588" class="headerlink" title="rk3588"></a>rk3588</h2><h3 id="硬件篇"><a href="#硬件篇" class="headerlink" title="硬件篇"></a>硬件篇</h3><ul>
+<li><a href="rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/AX210%E8%93%9D%E7%89%99%E8%AF%86%E5%88%AB%E5%8F%AF%E7%94%A8rock5b%E5%86%85%E6%A0%B8-armbian.html">AX210蓝牙识别可用rock5b内核-armbian</a></li>
+<li><a href="rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/AX210%E8%93%9D%E7%89%99%E8%AF%86%E5%88%AB%E5%8F%AF%E7%94%A8rock5b%E5%86%85%E6%A0%B8.html">AX210蓝牙识别可用rock5b内核</a></li>
+</ul>
+<h3 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h3><ul>
+<li><a href="rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/rockpi5b%E9%85%8D%E4%BB%B6.html">rockpi5b配件</a></li>
+<li><a href="rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/rockpi5b%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90.html">rockpi5b硬件组成</a></li>
+<li><a href="rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/rockpi5b%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F-microsd.html">rockpi5b安装系统-microsd</a></li>
+<li><a href="rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/ubuntu-server%E5%AE%89%E8%A3%85%E6%A1%8C%E9%9D%A2.html">ubuntu-server安装桌面</a></li>
+</ul>
+<h3 id="进阶篇"><a href="#进阶篇" class="headerlink" title="进阶篇"></a>进阶篇</h3><ul>
+<li><a href="rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/%E8%87%AA%E5%AE%9A%E4%B9%89rock5b%E5%86%85%E6%A0%B8.html">自定义rock5b内核</a></li>
+<li><a href="rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/rock5b%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84UOS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html">rock5b可以运行的UOS操作系统</a></li>
+<li><a href="rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/%E4%BD%BF%E7%94%A8%E4%B8%B2%E5%8F%A3%E8%BF%9E%E6%8E%A5%E6%9F%A5%E7%9C%8B%E5%90%AF%E5%8A%A8%E4%BF%A1%E6%81%AF.html">使用串口连接查看启动信息</a></li>
+</ul>
+<h2 id="storage"><a href="#storage" class="headerlink" title="storage"></a>storage</h2><h3 id="存储相关技术"><a href="#存储相关技术" class="headerlink" title="存储相关技术"></a>存储相关技术</h3><ul>
+<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/ceph%E7%9A%84%E8%AE%BE%E5%A4%87%E5%85%B3%E7%B3%BB%E8%8E%B7%E5%8F%96.html">ceph的设备关系获取</a></li>
+<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/%E8%8E%B7%E5%8F%96%E4%B8%80%E6%AE%B5%E6%97%B6%E9%97%B4%E5%86%85ceph%E7%9A%84osd%E7%A3%81%E7%9B%98%E8%AF%BB%E5%86%99%E6%83%85%E5%86%B5.html">获取一段时间内ceph的osd磁盘读写情况</a></li>
+<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/s3%E7%9A%84v2%E8%AE%A4%E8%AF%81%E6%9E%84%E9%80%A0-lua.html">s3的v2认证构造-lua</a></li>
+<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E7%9B%B8%E5%85%B3/ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD.html">ceph编译打包中断继续</a></li>
+<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/cubefs%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96cubefs%E7%9A%84master%E7%9A%84%E4%BF%A1%E6%81%AF.html">如何获取cubefs的master的信息</a></li>
+<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E5%89%AF%E6%9C%AC%E4%B8%89%E9%85%8D%E7%BD%AEdown%E4%B8%A4%E4%B8%AA%E5%8F%AF%E5%86%99.html">gluster副本三配置down两个可写</a></li>
+<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/opencloudos-aarch64%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E7%9A%84vdbench.html">opencloudos-aarch64可以使用的vdbench</a></li>
+<li><a href="storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/vdbench%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90%E5%99%A8.html">vdbench测试生成器</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>脚本禁止登录尝试</title>
+    <url>/docs/linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/%E8%84%9A%E6%9C%AC%E7%A6%81%E6%AD%A2%E7%99%BB%E5%BD%95%E5%B0%9D%E8%AF%95.html</url>
+    <content><![CDATA[<h1 id="脚本禁止登录尝试"><a href="#脚本禁止登录尝试" class="headerlink" title="脚本禁止登录尝试"></a>脚本禁止登录尝试</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>有ip不停的尝试登录，可以通过防火墙进行屏蔽</p>
+<span id="more"></span>
+
+<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> /var/log/secure |grep failure|awk <span class="string">&#x27;&#123;for (i=1;i&lt;=NF;i++)&#123;if ($i ~/rhost/) &#123;print $i&#125;&#125;&#125;&#x27;</span>| <span class="built_in">sort</span> | <span class="built_in">uniq</span>|awk -F<span class="string">&quot;=&quot;</span> <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> &gt;&gt; black.list</span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> black.list|<span class="built_in">sort</span>|<span class="built_in">uniq</span> &gt; black.list.tmp</span><br><span class="line"><span class="built_in">rm</span> -rf black.list</span><br><span class="line"><span class="built_in">mv</span> black.list.tmp black.list</span><br><span class="line"></span><br><span class="line">firewall-cmd --list-rich-rules &gt; blackiprule.list</span><br><span class="line">all=`<span class="built_in">cat</span> blackiprule.list`</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ip <span class="keyword">in</span> `<span class="built_in">cat</span> black.list|<span class="built_in">sort</span>|<span class="built_in">uniq</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$all</span> =~ <span class="variable">$ip</span> ]]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">:</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;不包含&quot;</span></span><br><span class="line">	firewall-cmd --permanent --add-rich-rule=<span class="string">&quot;rule family=&#x27;ipv4&#x27; source address=&#x27;<span class="variable">$ip</span>&#x27; reject&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> blackiprule.list|<span class="built_in">wc</span> -l</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<p>定期执行脚本即可</p>
+]]></content>
+  </entry>
+  <entry>
     <title>端口转发配置</title>
     <url>/docs/linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E9%85%8D%E7%BD%AE.html</url>
     <content><![CDATA[<h1 id="端口转发配置"><a href="#端口转发配置" class="headerlink" title="端口转发配置"></a>端口转发配置</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>有的时候机器有一台网关机器，需要做端口转发的工作，那么可以使用iptables或者使用firwalld进行配置，firewalld底层也是调用的跟iptables一样的内核模块的，只是命令的不同</p>
@@ -296,14 +277,14 @@
 ]]></content>
   </entry>
   <entry>
-    <title>脚本禁止登录尝试</title>
-    <url>/docs/linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/%E8%84%9A%E6%9C%AC%E7%A6%81%E6%AD%A2%E7%99%BB%E5%BD%95%E5%B0%9D%E8%AF%95.html</url>
-    <content><![CDATA[<h1 id="脚本禁止登录尝试"><a href="#脚本禁止登录尝试" class="headerlink" title="脚本禁止登录尝试"></a>脚本禁止登录尝试</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>有ip不停的尝试登录，可以通过防火墙进行屏蔽</p>
-<span id="more"></span>
-
-<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> /var/log/secure |grep failure|awk <span class="string">&#x27;&#123;for (i=1;i&lt;=NF;i++)&#123;if ($i ~/rhost/) &#123;print $i&#125;&#125;&#125;&#x27;</span>| <span class="built_in">sort</span> | <span class="built_in">uniq</span>|awk -F<span class="string">&quot;=&quot;</span> <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> &gt;&gt; black.list</span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> black.list|<span class="built_in">sort</span>|<span class="built_in">uniq</span> &gt; black.list.tmp</span><br><span class="line"><span class="built_in">rm</span> -rf black.list</span><br><span class="line"><span class="built_in">mv</span> black.list.tmp black.list</span><br><span class="line"></span><br><span class="line">firewall-cmd --list-rich-rules &gt; blackiprule.list</span><br><span class="line">all=`<span class="built_in">cat</span> blackiprule.list`</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ip <span class="keyword">in</span> `<span class="built_in">cat</span> black.list|<span class="built_in">sort</span>|<span class="built_in">uniq</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$all</span> =~ <span class="variable">$ip</span> ]]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">:</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;不包含&quot;</span></span><br><span class="line">	firewall-cmd --permanent --add-rich-rule=<span class="string">&quot;rule family=&#x27;ipv4&#x27; source address=&#x27;<span class="variable">$ip</span>&#x27; reject&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> blackiprule.list|<span class="built_in">wc</span> -l</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
-
-<p>定期执行脚本即可</p>
+    <title>系统服务相关</title>
+    <url>/docs/linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/index.html</url>
+    <content><![CDATA[<h2 id="iscsi服务相关"><a href="#iscsi服务相关" class="headerlink" title="iscsi服务相关"></a>iscsi服务相关</h2><ul>
+<li><a href="iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/Linux%E4%B8%8B%E4%B8%89%E7%A7%8D%E9%85%8D%E7%BD%AEiscsi%E7%9A%84%E6%96%B9%E6%B3%95.html">Linux下三种配置iscsi的方法</a></li>
+<li><a href="iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C.html">iscsi客户端常用操作</a></li>
+<li><a href="iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/vsphere%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9FVAAI%E7%9A%84%E5%AE%9E%E7%8E%B0.html">vsphere硬件加速VAAI的实现</a></li>
+<li><a href="iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81rbd%E7%9A%84tgt.html">打包一个支持rbd的tgt</a></li>
+</ul>
 ]]></content>
   </entry>
   <entry>
@@ -311,6 +292,15 @@
     <url>/docs/linux/%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/index.html</url>
     <content><![CDATA[<ul>
 <li><a href="%E5%B1%80%E5%9F%9F%E7%BD%91%E5%86%85%E7%9A%84%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93.html">局域网内的文件传输</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>网络相关</title>
+    <url>/docs/linux/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/index.html</url>
+    <content><![CDATA[<ul>
+<li><a href="%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E9%85%8D%E7%BD%AE.html">端口转发配置</a></li>
+<li><a href="%E8%84%9A%E6%9C%AC%E7%A6%81%E6%AD%A2%E7%99%BB%E5%BD%95%E5%B0%9D%E8%AF%95.html">脚本禁止登录尝试</a></li>
 </ul>
 ]]></content>
   </entry>
@@ -328,19 +318,6 @@
 <p>这个在windows或者linux上面都行</p>
 <h2 id="访问服务"><a href="#访问服务" class="headerlink" title="访问服务"></a>访问服务</h2><p>通过手机或者另外的客户端直接访问上面的地址端口，然后上传文件即可</p>
 <p><img src="/media/16612402845294/16612405489519.jpg"></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>基础篇</title>
-    <url>/docs/rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/index.html</url>
-    <content><![CDATA[<ul>
-<li><a href="rockpi5b%E9%85%8D%E4%BB%B6.html">rockpi5b配件</a></li>
-<li><a href="rockpi5b%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90.html">rockpi5b硬件组成</a></li>
-</ul>
-<h2 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h2><ul>
-<li><a href="%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/rockpi5b%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F-microsd.html">rockpi5b安装系统-microsd</a></li>
-<li><a href="%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/ubuntu-server%E5%AE%89%E8%A3%85%E6%A1%8C%E9%9D%A2.html">ubuntu-server安装桌面</a></li>
-</ul>
 ]]></content>
   </entry>
   <entry>
@@ -432,16 +409,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>硬件篇</title>
-    <url>/docs/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/index.html</url>
-    <content><![CDATA[<ul>
-<li><a href="AX210%E8%93%9D%E7%89%99%E8%AF%86%E5%88%AB%E5%8F%AF%E7%94%A8rock5b%E5%86%85%E6%A0%B8-armbian.html">AX210蓝牙识别可用rock5b内核-armbian</a></li>
-<li><a href="AX210%E8%93%9D%E7%89%99%E8%AF%86%E5%88%AB%E5%8F%AF%E7%94%A8rock5b%E5%86%85%E6%A0%B8.html">AX210蓝牙识别可用rock5b内核</a></li>
-<li><a href="%E4%BD%BF%E7%94%A8%E4%B8%B2%E5%8F%A3%E8%BF%9E%E6%8E%A5%E6%9F%A5%E7%9C%8B%E5%90%AF%E5%8A%A8%E4%BF%A1%E6%81%AF.html">使用串口连接查看启动信息</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
     <title>存储相关技术</title>
     <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/index.html</url>
     <content><![CDATA[<h2 id="ceph相关技术"><a href="#ceph相关技术" class="headerlink" title="ceph相关技术"></a>ceph相关技术</h2><h3 id="ceph统计信息"><a href="#ceph统计信息" class="headerlink" title="ceph统计信息"></a>ceph统计信息</h3><ul>
@@ -461,17 +428,6 @@
 <h2 id="存储测试相关"><a href="#存储测试相关" class="headerlink" title="存储测试相关"></a>存储测试相关</h2><ul>
 <li><a href="%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/opencloudos-aarch64%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E7%9A%84vdbench.html">opencloudos-aarch64可以使用的vdbench</a></li>
 <li><a href="%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/vdbench%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90%E5%99%A8.html">vdbench测试生成器</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>进阶篇</title>
-    <url>/docs/rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/index.html</url>
-    <content><![CDATA[<h2 id="内核相关"><a href="#内核相关" class="headerlink" title="内核相关"></a>内核相关</h2><ul>
-<li><a href="%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/%E8%87%AA%E5%AE%9A%E4%B9%89rock5b%E5%86%85%E6%A0%B8.html">自定义rock5b内核</a></li>
-</ul>
-<h2 id="操作系统相关"><a href="#操作系统相关" class="headerlink" title="操作系统相关"></a>操作系统相关</h2><ul>
-<li><a href="%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/rock5b%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84UOS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html">rock5b可以运行的UOS操作系统</a></li>
 </ul>
 ]]></content>
   </entry>
@@ -559,22 +515,71 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://anduin.linuxfromscratch.org/sources/linux-firmware/intel/ibt-0041-0041.ddc -O /lib/firmware/intel/ibt-0041-0041.ddc</span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
-    <title>centos系统相关</title>
-    <url>/docs/linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/index.html</url>
+    <title>基础篇</title>
+    <url>/docs/rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/index.html</url>
     <content><![CDATA[<ul>
-<li><a href="MAC-M1%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84opencloudos-8.6.html">MAC-M1可以运行的opencloudos-8.6</a></li>
-<li><a href="centos7yum%E6%BA%90%E9%85%8D%E7%BD%AE.html">centos7yum源配置</a></li>
-<li><a href="opencloudos%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E4%BC%98%E5%8C%96.html">opencloudos容器镜像优化</a></li>
+<li><a href="rockpi5b%E9%85%8D%E4%BB%B6.html">rockpi5b配件</a></li>
+<li><a href="rockpi5b%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90.html">rockpi5b硬件组成</a></li>
+</ul>
+<h2 id="安装系统"><a href="#安装系统" class="headerlink" title="安装系统"></a>安装系统</h2><ul>
+<li><a href="%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/rockpi5b%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F-microsd.html">rockpi5b安装系统-microsd</a></li>
+<li><a href="%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/ubuntu-server%E5%AE%89%E8%A3%85%E6%A1%8C%E9%9D%A2.html">ubuntu-server安装桌面</a></li>
 </ul>
 ]]></content>
   </entry>
   <entry>
-    <title>centos7yum源配置</title>
-    <url>/docs/linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos7yum%E6%BA%90%E9%85%8D%E7%BD%AE.html</url>
-    <content><![CDATA[<h1 id="centos7yum源配置"><a href="#centos7yum源配置" class="headerlink" title="centos7yum源配置"></a>centos7yum源配置</h1><h2 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h2><p>默认的源可能是国外源，下载比较慢，所以替换下地址为国内源比较好</p>
-<h3 id="清华源"><a href="#清华源" class="headerlink" title="清华源"></a>清华源</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mv</span> /etc/yum.repos.d/* /opt/ </span><br><span class="line">vim /etc/yum.repos.d/my.repo</span><br></pre></td></tr></table></figure>
-<p>内容如下:<br>有四个源，默认开启base和epel，其它两个自行开启</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[centos7-base]</span><br><span class="line">name=centos7-base</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/7/os/x86_64/</span><br><span class="line">gpgcheck=0</span><br><span class="line"><span class="built_in">enable</span>=1</span><br><span class="line"></span><br><span class="line">[centos7-updates]</span><br><span class="line">name=centos7-updates</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/7/updates/x86_64/</span><br><span class="line">gpgcheck=0</span><br><span class="line"><span class="built_in">enable</span>=0</span><br><span class="line"></span><br><span class="line">[centos7-extras]</span><br><span class="line">name=centos7-extras</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/7/extras/x86_64/</span><br><span class="line">gpgcheck=0</span><br><span class="line"><span class="built_in">enable</span>=0</span><br><span class="line"></span><br><span class="line">[centos7-epel]</span><br><span class="line">name=centos7-epel</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/x86_64/</span><br><span class="line">gpgcheck=0</span><br><span class="line"><span class="built_in">enable</span>=1</span><br></pre></td></tr></table></figure>
+    <title>使用串口连接查看启动信息</title>
+    <url>/docs/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/%E4%BD%BF%E7%94%A8%E4%B8%B2%E5%8F%A3%E8%BF%9E%E6%8E%A5%E6%9F%A5%E7%9C%8B%E5%90%AF%E5%8A%A8%E4%BF%A1%E6%81%AF.html</url>
+    <content><![CDATA[<h1 id="使用串口连接查看启动信息"><a href="#使用串口连接查看启动信息" class="headerlink" title="使用串口连接查看启动信息"></a>使用串口连接查看启动信息</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>一般情况下通过屏幕连接就可以查看信息，但是有的时候，需要看下系统启动过程中的一些问题，所以就需要串口方式了</p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="连接设备"><a href="#连接设备" class="headerlink" title="连接设备"></a>连接设备</h3><p>把三根线插到板子的针脚下面，这个按规定的插上就行</p>
+<h3 id="windows电脑连接"><a href="#windows电脑连接" class="headerlink" title="windows电脑连接"></a>windows电脑连接</h3><p>使用xshell里面连接设置即可</p>
+<p><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/2022-11-25-16-37-37.png"></p>
+<p>在设备管理器里面找到编号，这个的属性里面可以不调整，里面也没有我们需要设置的速率，不动就行</p>
+<p><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/16693656453631.jpg"></p>
+<p>xshell设置配置</p>
+<p><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/16693656121943.jpg"></p>
+<p>设置好了以后重新上电即可</p>
+<h2 id="线材问题"><a href="#线材问题" class="headerlink" title="线材问题"></a>线材问题</h2><p>线材我使用的是：</p>
+<blockquote>
+<p>FT232RL USB转TTL模块串口线下载线刷机线FT232升级小板带壳</p>
+</blockquote>
+<p><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/16693658366133.jpg"></p>
+<p>这个线就可以支持的，其它的可以自己试试，速度支持1500000的就可以</p>
+<p>连接方式就是按这个顺序连<br><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/16693661267490.jpg"></p>
+<p>靠外面一排，从倒数第五个针脚开始，绿白黑连接，红色线不管</p>
+<p>连上以后就可以操作终端了</p>
+<p><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/16693662544154.jpg"></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>操作系统相关</title>
+    <url>/docs/linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/index.html</url>
+    <content><![CDATA[<h2 id="centos系统相关"><a href="#centos系统相关" class="headerlink" title="centos系统相关"></a>centos系统相关</h2><ul>
+<li><a href="centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/MAC-M1%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84opencloudos-8.6.html">MAC-M1可以运行的opencloudos-8.6</a></li>
+<li><a href="centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos7yum%E6%BA%90%E9%85%8D%E7%BD%AE.html">centos7yum源配置</a></li>
+<li><a href="centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/opencloudos%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E4%BC%98%E5%8C%96.html">opencloudos容器镜像优化</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>硬件篇</title>
+    <url>/docs/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/index.html</url>
+    <content><![CDATA[<ul>
+<li><a href="AX210%E8%93%9D%E7%89%99%E8%AF%86%E5%88%AB%E5%8F%AF%E7%94%A8rock5b%E5%86%85%E6%A0%B8-armbian.html">AX210蓝牙识别可用rock5b内核-armbian</a></li>
+<li><a href="AX210%E8%93%9D%E7%89%99%E8%AF%86%E5%88%AB%E5%8F%AF%E7%94%A8rock5b%E5%86%85%E6%A0%B8.html">AX210蓝牙识别可用rock5b内核</a></li>
+<li><a href="%E4%BD%BF%E7%94%A8%E4%B8%B2%E5%8F%A3%E8%BF%9E%E6%8E%A5%E6%9F%A5%E7%9C%8B%E5%90%AF%E5%8A%A8%E4%BF%A1%E6%81%AF.html">使用串口连接查看启动信息</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>进阶篇</title>
+    <url>/docs/rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/index.html</url>
+    <content><![CDATA[<h2 id="内核相关"><a href="#内核相关" class="headerlink" title="内核相关"></a>内核相关</h2><ul>
+<li><a href="%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/%E8%87%AA%E5%AE%9A%E4%B9%89rock5b%E5%86%85%E6%A0%B8.html">自定义rock5b内核</a></li>
+</ul>
+<h2 id="操作系统相关"><a href="#操作系统相关" class="headerlink" title="操作系统相关"></a>操作系统相关</h2><ul>
+<li><a href="%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/rock5b%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84UOS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html">rock5b可以运行的UOS操作系统</a></li>
+</ul>
 ]]></content>
   </entry>
   <entry>
@@ -653,45 +658,6 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab103 ~]<span class="comment"># systemctl start scst</span></span><br></pre></td></tr></table></figure>]]></content>
   </entry>
   <entry>
-    <title>opencloudos容器镜像优化</title>
-    <url>/docs/linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/opencloudos%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E4%BC%98%E5%8C%96.html</url>
-    <content><![CDATA[<h1 id="opencloudos容器镜像优化"><a href="#opencloudos容器镜像优化" class="headerlink" title="opencloudos容器镜像优化"></a>opencloudos容器镜像优化</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前因为官方的容器也在移植阶段，并且系统是刚出来的，各方面的应该都会慢慢完善，因为之前也做了相关的移植，所以移植的作为备选的即可</p>
-<p>测试发现官方的容器目前还有一些需要处理一些东西，本篇就是简单的介绍怎么用官方的容器，以及存在的问题，最后提供下我自己移植好的容器</p>
-<h2 id="官方容器使用方法"><a href="#官方容器使用方法" class="headerlink" title="官方容器使用方法"></a>官方容器使用方法</h2><h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><p>这个操作是使用容器的常规操作了，官方也都发布到了docker hub里面，直接拉取即可</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 /]<span class="comment"># docker pull opencloudos/opencloudos:8.6</span></span><br><span class="line">[root@lab101 /]<span class="comment"># docker image ls</span></span><br><span class="line">docker.io/opencloudos/opencloudos   8.6                 85381566b97e        7 days ago               280 MB</span><br></pre></td></tr></table></figure>
-<p>可以看到官方的为280MB</p>
-<span id="more"></span>
-
-<h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 /]<span class="comment"># docker run --name opencloudos  --net=host  --hostname=opencloudos  -dit   --privileged=true  opencloudos/opencloudos:8.6   /sbin/init</span></span><br><span class="line">bbe06493e7b2305b430c635c23b06b6eeca7d0df38ebfa6a9ab8428a39f1b11c</span><br></pre></td></tr></table></figure>
-
-<h3 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 /]<span class="comment"># docker exec -it opencloudos /bin/bash</span></span><br><span class="line">bash-4.4<span class="comment">#</span></span><br></pre></td></tr></table></figure>
-<p>可以看到进入容器是显示的bash-4.4不是主机名<br>可以看到</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash-4.4<span class="comment"># ls /root/</span></span><br></pre></td></tr></table></figure>
-<p>root下面是空的<br>应该是要有下面的</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@centos8 /]<span class="comment"># ls /root/.</span></span><br><span class="line">./             ../            .bash_history  .bash_logout   .bash_profile  .bashrc        .cshrc         .tcshrc</span><br></pre></td></tr></table></figure>
-
-<p>检查常用包</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash-4.4<span class="comment"># rpm -qa|grep hostname</span></span><br><span class="line">bash-4.4<span class="comment"># rpm -qa|grep vi</span></span><br><span class="line">device-mapper-1.02.181-3.oc8.x86_64</span><br><span class="line">device-mapper-libs-1.02.181-3.oc8.x86_64</span><br></pre></td></tr></table></figure>
-<p>发现vi和hostname命令都没加进去，这里基本的包还是保持比较好，这个在centos8的官方容器里面都做了保留</p>
-<p>上面的主机名的处理也可以自己修改&#x2F;root&#x2F;.下面做处理做恢复，相关的包也可以自己安装下即可</p>
-<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>基于官方容器的优化，这个实际上我是基于操作系统，然后按centos8的容器包的标准，以及根据centos8的裁剪力度，来做的容器包</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 /]<span class="comment"># docker pull zphj1987/opencloudos:8.6</span></span><br></pre></td></tr></table></figure>
-
-<p>使用上面的就可以拿到opencloudos的8.6的容器版本，容器大小做到了跟官方的centos8基本一致的大小</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 /]<span class="comment"># docker pull zphj1987/opencloudos:8.6</span></span><br><span class="line">Trying to pull repository docker.io/zphj1987/opencloudos ...</span><br><span class="line">8.6: Pulling from docker.io/zphj1987/opencloudos</span><br><span class="line">e6ad0a38566d: Downloading [&gt;                                                  ] 528.9 kB/87.57 MB</span><br></pre></td></tr></table></figure>
-<p>容器iamge大小</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@opencloud ~]<span class="comment"># docker image ls</span></span><br><span class="line">zphj1987/opencloudos   8.6              8779b4d2cd5c   5 hours ago     227MB</span><br></pre></td></tr></table></figure>
-<p>基本跟centos官方的 231 MB大小一致</p>
-<h3 id="做容器过程的一个经验"><a href="#做容器过程的一个经验" class="headerlink" title="做容器过程的一个经验"></a>做容器过程的一个经验</h3><p>如果改了容器，不要在原来的基础上面commit,直接export出来，然后创建成新的容器，这样是一个比较简单的控制容器大小的方法，一直commit会叠加容器的大小</p>
-<h2 id="对待问题的方法"><a href="#对待问题的方法" class="headerlink" title="对待问题的方法"></a>对待问题的方法</h2><ul>
-<li>发现问题</li>
-<li>提出方案</li>
-<li>解决问题</li>
-</ul>
-<h2 id="开源摘星计划"><a href="#开源摘星计划" class="headerlink" title="开源摘星计划"></a>开源摘星计划</h2><p>本文已参与「开源摘星计划」，欢迎正在阅读的你加入。活动链接：<a href="https://github.com/weopenprojects/WeOpen-Star">https://github.com/weopenprojects/WeOpen-Star</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>iscsi客户端常用操作</title>
     <url>/docs/linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C.html</url>
     <content><![CDATA[<h1 id="iscsi客户端常用操作"><a href="#iscsi客户端常用操作" class="headerlink" title="iscsi客户端常用操作"></a>iscsi客户端常用操作</h1><h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>本篇主要记录iscsi的客户端的一些常用的一些操作</p>
@@ -723,30 +689,6 @@
 <p>注意<br>iscsi的相关参数是在discovery的时候设置的，所以通过配置文件修改的参数要在下次才能生效，或者通过命令进行在线的更新</p>
 </blockquote>
 <h3 id="服务端在线更新配置"><a href="#服务端在线更新配置" class="headerlink" title="服务端在线更新配置"></a>服务端在线更新配置</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tgtadm --lld iscsi --op update --mode logicalunit --tid 3  --lun 13 --params lbppbe=0</span><br></pre></td></tr></table></figure>
-]]></content>
-  </entry>
-  <entry>
-    <title>使用串口连接查看启动信息</title>
-    <url>/docs/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/%E4%BD%BF%E7%94%A8%E4%B8%B2%E5%8F%A3%E8%BF%9E%E6%8E%A5%E6%9F%A5%E7%9C%8B%E5%90%AF%E5%8A%A8%E4%BF%A1%E6%81%AF.html</url>
-    <content><![CDATA[<h1 id="使用串口连接查看启动信息"><a href="#使用串口连接查看启动信息" class="headerlink" title="使用串口连接查看启动信息"></a>使用串口连接查看启动信息</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>一般情况下通过屏幕连接就可以查看信息，但是有的时候，需要看下系统启动过程中的一些问题，所以就需要串口方式了</p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><h3 id="连接设备"><a href="#连接设备" class="headerlink" title="连接设备"></a>连接设备</h3><p>把三根线插到板子的针脚下面，这个按规定的插上就行</p>
-<h3 id="windows电脑连接"><a href="#windows电脑连接" class="headerlink" title="windows电脑连接"></a>windows电脑连接</h3><p>使用xshell里面连接设置即可</p>
-<p><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/2022-11-25-16-37-37.png"></p>
-<p>在设备管理器里面找到编号，这个的属性里面可以不调整，里面也没有我们需要设置的速率，不动就行</p>
-<p><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/16693656453631.jpg"></p>
-<p>xshell设置配置</p>
-<p><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/16693656121943.jpg"></p>
-<p>设置好了以后重新上电即可</p>
-<h2 id="线材问题"><a href="#线材问题" class="headerlink" title="线材问题"></a>线材问题</h2><p>线材我使用的是：</p>
-<blockquote>
-<p>FT232RL USB转TTL模块串口线下载线刷机线FT232升级小板带壳</p>
-</blockquote>
-<p><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/16693658366133.jpg"></p>
-<p>这个线就可以支持的，其它的可以自己试试，速度支持1500000的就可以</p>
-<p>连接方式就是按这个顺序连<br><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/16693661267490.jpg"></p>
-<p>靠外面一排，从倒数第五个针脚开始，绿白黑连接，红色线不管</p>
-<p>连上以后就可以操作终端了</p>
-<p><img src="/media/rk3588/%E7%A1%AC%E4%BB%B6%E7%AF%87/assets/16693662544154.jpg"></p>
 ]]></content>
   </entry>
   <entry>
@@ -831,15 +773,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>安装系统</title>
-    <url>/docs/rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/index.html</url>
-    <content><![CDATA[<ul>
-<li><a href="rockpi5b%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F-microsd.html">rockpi5b安装系统-microsd</a></li>
-<li><a href="ubuntu-server%E5%AE%89%E8%A3%85%E6%A1%8C%E9%9D%A2.html">ubuntu-server安装桌面</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
     <title>打包一个支持rbd的tgt</title>
     <url>/docs/linux/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/iscsi%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3/%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81rbd%E7%9A%84tgt.html</url>
     <content><![CDATA[<h1 id="打包一个支持rbd的tgt"><a href="#打包一个支持rbd的tgt" class="headerlink" title="打包一个支持rbd的tgt"></a>打包一个支持rbd的tgt</h1><h2 id="下载源码包"><a href="#下载源码包" class="headerlink" title="下载源码包"></a>下载源码包</h2><p>当前的最新版本到了1.0.84,本篇就以这个举例子</p>
@@ -865,6 +798,15 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab103 scsi]<span class="comment"># rpmbuild -bb scsi-target-utils.spec</span></span><br><span class="line">···</span><br><span class="line">Wrote: /root/rpmbuild/RPMS/x86_64/scsi-target-utils-1.0.84-4.el7.x86_64.rpm</span><br><span class="line">Wrote: /root/rpmbuild/RPMS/x86_64/scsi-target-utils-rbd-1.0.84-4.el7.x86_64.rpm</span><br><span class="line">···</span><br></pre></td></tr></table></figure>
 
 <p>这两个包就是我们需要的包</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>安装系统</title>
+    <url>/docs/rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/index.html</url>
+    <content><![CDATA[<ul>
+<li><a href="rockpi5b%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F-microsd.html">rockpi5b安装系统-microsd</a></li>
+<li><a href="ubuntu-server%E5%AE%89%E8%A3%85%E6%A1%8C%E9%9D%A2.html">ubuntu-server安装桌面</a></li>
+</ul>
 ]]></content>
   </entry>
   <entry>
@@ -914,213 +856,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>操作系统相关</title>
-    <url>/docs/rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/index.html</url>
-    <content><![CDATA[<ul>
-<li><a href="rock5b%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84UOS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html">rock5b可以运行的UOS操作系统</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>内核相关</title>
-    <url>/docs/rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/index.html</url>
-    <content><![CDATA[<ul>
-<li><a href="%E8%87%AA%E5%AE%9A%E4%B9%89rock5b%E5%86%85%E6%A0%B8.html">自定义rock5b内核</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>自定义rock5b内核</title>
-    <url>/docs/rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/%E8%87%AA%E5%AE%9A%E4%B9%89rock5b%E5%86%85%E6%A0%B8.html</url>
-    <content><![CDATA[<h1 id="自定义rock5b内核"><a href="#自定义rock5b内核" class="headerlink" title="自定义rock5b内核"></a>自定义rock5b内核</h1><h2 id="官方资料"><a href="#官方资料" class="headerlink" title="官方资料"></a>官方资料</h2><blockquote>
-<p><a href="https://wiki.radxa.com/Rock5/guide/build-debian-from-debos-radxa">https://wiki.radxa.com/Rock5/guide/build-debian-from-debos-radxa</a></p>
-</blockquote>
-<p>官方的资料在这里，打包成deb包，然后进行安装的是没有问题的，手动编译成Image，和dtb的，然后替换的部分，是有问题的，如果严格按照上面的文档的方法手动去更新内核，是启动不起来的，本篇就把这块补充起来</p>
-<p>大部分资料是参考官方的即可，小部分是补充的</p>
-<h2 id="二者的区别"><a href="#二者的区别" class="headerlink" title="二者的区别"></a>二者的区别</h2><p>其实整体上是没有太大的区别的，deb包就是完整的内核替换流程，而手动的就是方便如果只进行部分内核模块的修改的时候，替换模块文件即可，能够做更精细的内核替换</p>
-<h2 id="deb的内核更新方式"><a href="#deb的内核更新方式" class="headerlink" title="deb的内核更新方式"></a>deb的内核更新方式</h2><h3 id="获取内核代码"><a href="#获取内核代码" class="headerlink" title="获取内核代码"></a>获取内核代码</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get install git</span><br><span class="line"><span class="built_in">mkdir</span> ~/rk3588-sdk &amp;&amp; <span class="built_in">cd</span> ~/rk3588-sdk</span><br><span class="line">git <span class="built_in">clone</span> -b stable-5.10-rock5 https://github.com/radxa/u-boot.git</span><br><span class="line">git <span class="built_in">clone</span> -b stable-5.10-rock5 https://github.com/radxa/kernel.git</span><br><span class="line">git <span class="built_in">clone</span> -b master https://github.com/radxa/rkbin.git</span><br><span class="line">git <span class="built_in">clone</span> -b debian https://github.com/radxa/build.git</span><br><span class="line">git <span class="built_in">clone</span> -b main https://github.com/radxa/debos-radxa.git</span><br></pre></td></tr></table></figure>
-
-<p>如果是在X86的环境下面编译就按官方文档安装工具链，如果就是在arm64板卡上面进行编译的，就不需要，目前我的编译环境是在arm64下面，就按arm64的写步骤</p>
-<p>能够提供arm64编译环境的地方：</p>
-<ul>
-<li>1、板卡，rock4b或者rock5b</li>
-<li>2、mac M1 安装ubuntu 虚拟机</li>
-<li>3、大型的arm64服务器</li>
-</ul>
-<h3 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get install device-tree-compiler libncurses5 libncurses5-dev build-essential libssl-dev mtools bc python dosfstools</span><br></pre></td></tr></table></figure>
-
-<h3 id="打包成deb内核包"><a href="#打包成deb内核包" class="headerlink" title="打包成deb内核包"></a>打包成deb内核包</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./build/pack-kernel.sh -d rockchip_linux_defconfig -r 10 <span class="comment"># rockchip_linux_defconfig: kernel defconfig; 1: release number</span></span><br></pre></td></tr></table></figure>
-<p>编译完成以后就在下面的这个目录里面有相关的deb包生成，然后去安装即可</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ls</span> out/packages/</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="内核启动分析"><a href="#内核启动分析" class="headerlink" title="内核启动分析"></a>内核启动分析</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~<span class="comment"># cat /boot/extlinux/extlinux.conf</span></span><br><span class="line"><span class="built_in">timeout</span> 10</span><br><span class="line">menu title select kernel</span><br><span class="line"></span><br><span class="line">label kernel-5.10.66-11-rockchip-gc428536281d6</span><br><span class="line">    kernel /vmlinuz-5.10.66-11-rockchip-gc428536281d6</span><br><span class="line">    initrd /initrd.img-5.10.66-11-rockchip-gc428536281d6</span><br><span class="line">    devicetreedir /dtbs/5.10.66-11-rockchip-gc428536281d6</span><br><span class="line">    fdtoverlays  /dtbs/5.10.66-11-rockchip-gc428536281d6/rockchip/overlay/rk3588-uart7-m2.dtbo</span><br><span class="line">    append   root=UUID=67ad0e7b-3914-48d6-97c2-c48e5e0e405b earlycon=uart8250,mmio32,0xfeb50000 console=ttyFIQ0 console=tty1 consoleblank=0 loglevel=0 panic=10 rootwait rw init=/sbin/init rootfstype=ext4 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 irqchip.gicv3_pseudo_nmi=0 switolb=1 coherent_pool=2M</span><br></pre></td></tr></table></figure>
-<p>这个就是板卡的启动控制文件，这个跟x86的那个grub也是类似的，都是加载模块，然后根据指定的参数启动</p>
-<ul>
-<li>kernel 就是内核，启动的时候加载的</li>
-<li>initrd 这个是根据&#x2F;lib&#x2F;modules&#x2F;kernel生成的，是内核的一些模块，我们编译内核的时候*就是放在内核里面，M的模块就是放在了modules里面，然后生成的initrd可以在启动的时候加载这部分的内核</li>
-<li>devicetreedir 这个就是dtbs设备树</li>
-<li>fdtoverlays 这部分是补充的一部分的</li>
-<li>append 是启动的控制参数部分</li>
-</ul>
-<p>deb包的是会自己处理好这部分的，但是手动的，可以看到只提供了Image和fdt两个，单纯使用这两个是启动不了内核的，因为sdk提供的内核里面把一些模块是按module的方式处理的，Image里面并没有这部分，也就无法正常的启动了</p>
-<h2 id="手动替换方法"><a href="#手动替换方法" class="headerlink" title="手动替换方法"></a>手动替换方法</h2><h3 id="下载内核"><a href="#下载内核" class="headerlink" title="下载内核"></a>下载内核</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b stable-5.10-rock5 https://github.com/radxa/kernel.git</span><br></pre></td></tr></table></figure>
-
-<h3 id="检查内核"><a href="#检查内核" class="headerlink" title="检查内核"></a>检查内核</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~/rk3588-sdk/kernel<span class="comment"># git log</span></span><br><span class="line">commit c428536281d69aeb2b3480f65b2b227210b61535 (HEAD -&gt; stable-5.10-rock5, origin/stable-5.10-rock5)</span><br><span class="line">Author: 忘怀 &lt;otgwt@outlook.com&gt;</span><br><span class="line">Date:   Tue Nov 1 09:08:05 2022 +0800</span><br><span class="line"></span><br><span class="line">    rockchip_linux_defconfig: add Kubernetes support2 (<span class="comment">#36)</span></span><br><span class="line"></span><br><span class="line">    To support kubernetes and bring more Networking feature，</span><br><span class="line">    Need to open more Network supports.</span><br><span class="line">    NETFILTER sets、MT_TCP、TLS、TCPacc、802.1d</span><br><span class="line">    Fix issue : rockchip-linux<span class="comment">#273</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Network packet filtering framework (Netfilter)</span></span><br><span class="line">    CONFIG_NETFILTER_XT_TARGET_CHECKSUM=m</span><br><span class="line">    CONFIG_NETFILTER_XT_TARGET_DSCP=m</span><br><span class="line">    CONFIG_NETFILTER_XT_TARGET_TPROXY=m</span><br><span class="line">    CONFIG_NETFILTER_XT_TARGET_TRACE=m</span><br><span class="line">    CONFIG_NETFILTER_XT_TARGET_TCPOPTSTRIP=m</span><br></pre></td></tr></table></figure>
-<p>可以看到最新的是解决了k8s的运行问题，缺了一些模块，官方开启了相关的模块</p>
-<h3 id="编译内核"><a href="#编译内核" class="headerlink" title="编译内核"></a>编译内核</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/rk3588-sdk/kernel</span><br><span class="line">make kernelversion</span><br><span class="line">make rockchip_linux_defconfig</span><br><span class="line">make -j24</span><br></pre></td></tr></table></figure>
-<p>上面的rockchip_linux_defconfig文件路径为arch&#x2F;arm64&#x2F;configs&#x2F;rockchip_linux_defconfig,这个就是内核的配置文件，开启了这些配置，如果需要更改这个默认的配置就按下面的流程，官方的脚本是调用的这个默认配置，如果是自己手动编译，就直接修改即可<br>上面的编译完成以后，并没有结束，我们需要提取我们需要的东西，官方的文档是Image和dtb文件，我们按照deb包里面的进行提取</p>
-<h3 id="修改默认内核配置"><a href="#修改默认内核配置" class="headerlink" title="修改默认内核配置"></a>修改默认内核配置</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">make menuconfig</span><br><span class="line">make savedefconfig</span><br><span class="line"><span class="built_in">cp</span> defconfig <span class="built_in">arch</span>/arm64/configs/rockchip_linux_defconfig</span><br></pre></td></tr></table></figure>
-
-<h3 id="提取内核输出"><a href="#提取内核输出" class="headerlink" title="提取内核输出"></a>提取内核输出</h3><p>这个步骤就是上面的编译完成以后我们需要提取的东西，按下面的步骤操作</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /tmp/out/</span><br><span class="line"><span class="built_in">export</span>  INSTALL_PATH=/tmp/out/; make install</span><br><span class="line"><span class="built_in">export</span>  INSTALL_PATH=/tmp/out/; make dtbs_install</span><br><span class="line"><span class="built_in">export</span> INSTALL_MOD_PATH=/tmp/out;make modules_install</span><br></pre></td></tr></table></figure>
-<ul>
-<li>上面的第一个install 是安装的内核vmlinuz文件</li>
-<li>第二个dtbs_install 是安装的dtbs相关的</li>
-<li>第三个modules_install 是安装的内核模块的文件</li>
-</ul>
-<p>默认的打出来的版本号是5.10.66-267892-gc428536281d6，</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">out/lib/modules/5.10.66-267892-gc428536281d6</span><br></pre></td></tr></table></figure>
-<p>为了避免冲突或者错误的替换，我们自己加入自己需要的版本信息</p>
-<p>内核的版本信息在这里面</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> kernel/include/generated/utsrelease.h </span><br></pre></td></tr></table></figure>
-<p>是根据makefile和.config生成的</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~/rk3588-sdk/kernel<span class="comment"># make -j 48</span></span><br><span class="line">  UPD     include/config/kernel.release</span><br><span class="line">  UPD     include/generated/utsrelease.h</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~/rk3588-sdk/kernel<span class="comment"># head  -n 10 Makefile</span></span><br><span class="line"><span class="comment"># SPDX-License-Identifier: GPL-2.0</span></span><br><span class="line">VERSION = 5</span><br><span class="line">PATCHLEVEL = 10</span><br><span class="line">SUBLEVEL = 66</span><br><span class="line">EXTRAVERSION = -zp1</span><br><span class="line">NAME = Dare mighty thing</span><br></pre></td></tr></table></figure>
-<p>我们在makefile里面增加EXTRAVERSION &#x3D; -zp1</p>
-<p>上面的操作以后我们得到的就是下面的这些，我们拷贝到rock5b的机器上</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~<span class="comment"># ll /tmp/out/</span></span><br><span class="line">total 37040</span><br><span class="line">drwxr-xr-x  4 root root     4096 Nov 24 07:21 ./</span><br><span class="line">drwxrwxrwt 14 root root     4096 Nov 24 07:22 ../</span><br><span class="line">-rw-r--r--  1 root root   210401 Nov 24 07:20 config-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">drwxr-xr-x  3 root root     4096 Nov 24 07:21 dtbs/</span><br><span class="line">drwxr-xr-x  3 root root     4096 Nov 24 07:21 lib/</span><br><span class="line">-rw-r--r--  1 root root  7165888 Nov 24 07:20 System.map-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">-rw-r--r--  1 root root 30530048 Nov 24 07:20 vmlinuz-5.10.66-zp1-267892-gc428536281d6-dirty</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装内核"><a href="#安装内核" class="headerlink" title="安装内核"></a>安装内核</h3><p>拷贝模块</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> -ra lib/modules/5.10.66-zp1-267892-gc428536281d6-dirty/ /lib/modules/</span><br></pre></td></tr></table></figure>
-<h4 id="半自动处理方式"><a href="#半自动处理方式" class="headerlink" title="半自动处理方式"></a>半自动处理方式</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /usr/lib/linux-image-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line"><span class="built_in">cp</span> -ra vmlinuz-5.10.66-zp1-267892-gc428536281d6-dirty /boot/</span><br><span class="line"><span class="built_in">cp</span> -ra dtbs/5.10.66-zp1-267892-gc428536281d6-dirty/rockchip  /usr/lib/linux-image-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">run-parts --arg=<span class="string">&quot;5.10.66-zp1-267892-gc428536281d6-dirty&quot;</span> --arg=<span class="string">&quot;/boot/vmlinuz-5.10.66-zp1-267892-gc428536281d6-dirty&quot;</span> /etc/kernel/postinst.d</span><br></pre></td></tr></table></figure>
-<p>上面的run-parts脚本<br>做了下面几个工作：</p>
-<ul>
-<li>1、生成了（&#x2F;boot&#x2F;initrd.img-5.10.66-zp1-267892-gc428536281d6-dirty）</li>
-<li>2、把&#x2F;usr&#x2F;lib&#x2F;linux-image-5.10.66-zp1-267892-gc428536281d6-dirty里面的dtb拷贝到dtbs里面</li>
-<li>3、更新extlinux.conf脚本</li>
-</ul>
-<h4 id="纯手动处理方式"><a href="#纯手动处理方式" class="headerlink" title="纯手动处理方式"></a>纯手动处理方式</h4><p>拷贝文件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> -ra dtbs/5.10.66-zp1-267892-gc428536281d6-dirty/ /boot/dtbs/</span><br><span class="line"><span class="built_in">cp</span> -ra vmlinuz-5.10.66-zp1-267892-gc428536281d6-dirty /boot/</span><br><span class="line"><span class="built_in">cp</span> -ra System.map-5.10.66-zp1-267892-gc428536281d6-dirty /boot/</span><br><span class="line"><span class="built_in">cp</span> -ra config-5.10.66-zp1-267892-gc428536281d6-dirty /boot/</span><br></pre></td></tr></table></figure>
-<p>生成initrd</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~/zp/out<span class="comment"># update-initramfs -k 5.10.66-zp1-267892-gc428536281d6-dirty -c</span></span><br><span class="line">update-initramfs: Generating /boot/initrd.img-5.10.66-zp1-267892-gc428536281d6-dirty</span><br></pre></td></tr></table></figure>
-<p>编写&#x2F;boot&#x2F;extlinux&#x2F;extlinux.conf文件</p>
-<h4 id=""><a href="#" class="headerlink" title=""></a></h4><p>上面的手工部分是通过解压官方的image查看到的脚本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dpkg -e linux-image-5.10.66-11-rockchip-gc428536281d6_5.10.66-11-rockchip_arm64.deb debian/</span><br><span class="line"><span class="built_in">cat</span> debian/postinst</span><br></pre></td></tr></table></figure>
-
-<h4 id="内核启动脚本内核"><a href="#内核启动脚本内核" class="headerlink" title="内核启动脚本内核"></a>内核启动脚本内核</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:/boot<span class="comment"># cat /boot/extlinux/extlinux.conf</span></span><br><span class="line"><span class="comment">#timeout 10</span></span><br><span class="line"><span class="comment">#menu title select kernel</span></span><br><span class="line"></span><br><span class="line">label kernel-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">    kernel /vmlinuz-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">    initrd /initrd.img-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">    devicetreedir /dtbs/5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">    fdtoverlays  /dtbs/5.10.66-zp1-267892-gc428536281d6-dirty/rockchip/overlay/rk3588-uart7-m2.dtbo</span><br><span class="line">    append   root=UUID=67ad0e7b-3914-48d6-97c2-c48e5e0e405b earlycon=uart8250,mmio32,0xfeb50000 console=ttyFIQ0 console=tty1 consoleblank=0 loglevel=0 panic=10 rootwait rw init=/sbin/init rootfstype=ext4 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 irqchip.gicv3_pseudo_nmi=0 switolb=1 coherent_pool=2M</span><br></pre></td></tr></table></figure>
-
-<p>重启后检查</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~<span class="comment"># uname  -a</span></span><br><span class="line">Linux rock-5b 5.10.66-zp1-267892-gc428536281d6-dirty <span class="comment">#2 SMP Thu Nov 24 04:26:01 UTC 2022 aarch64 aarch64 aarch64 GNU/Linux</span></span><br></pre></td></tr></table></figure>
-
-<p>可以看到内核已经替换好了</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>ceph相关技术</title>
-    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/index.html</url>
-    <content><![CDATA[<h2 id="ceph统计信息"><a href="#ceph统计信息" class="headerlink" title="ceph统计信息"></a>ceph统计信息</h2><ul>
-<li><a href="ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/ceph%E7%9A%84%E8%AE%BE%E5%A4%87%E5%85%B3%E7%B3%BB%E8%8E%B7%E5%8F%96.html">ceph的设备关系获取</a></li>
-<li><a href="ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/%E8%8E%B7%E5%8F%96%E4%B8%80%E6%AE%B5%E6%97%B6%E9%97%B4%E5%86%85ceph%E7%9A%84osd%E7%A3%81%E7%9B%98%E8%AF%BB%E5%86%99%E6%83%85%E5%86%B5.html">获取一段时间内ceph的osd磁盘读写情况</a></li>
-<li><a href="s3%E7%9A%84v2%E8%AE%A4%E8%AF%81%E6%9E%84%E9%80%A0-lua.html">s3的v2认证构造-lua</a></li>
-</ul>
-<h2 id="编译打包相关"><a href="#编译打包相关" class="headerlink" title="编译打包相关"></a>编译打包相关</h2><ul>
-<li><a href="%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E7%9B%B8%E5%85%B3/ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD.html">ceph编译打包中断继续</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>ubuntu-server安装桌面</title>
-    <url>/docs/rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/ubuntu-server%E5%AE%89%E8%A3%85%E6%A1%8C%E9%9D%A2.html</url>
-    <content><![CDATA[<h1 id="ubuntu-server安装桌面"><a href="#ubuntu-server安装桌面" class="headerlink" title="ubuntu-server安装桌面"></a>ubuntu-server安装桌面</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>默认安装的是不带图形界面的，我们自己安装下桌面</p>
-<h2 id="修改源文件"><a href="#修改源文件" class="headerlink" title="修改源文件"></a>修改源文件</h2><p>默认也是用的官方的ubuntu的源，我们修改为国内的源要快一些</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~<span class="comment"># cp /etc/apt/sources.list /etc/apt/sources.list.bk</span></span><br><span class="line">root@rock-5b:~<span class="comment"># sed -i &#x27;s/ports.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g&#x27; /etc/apt/sources.list</span></span><br><span class="line">root@rock-5b:~<span class="comment"># apt-get update</span></span><br></pre></td></tr></table></figure>
-<p>或者华为源（最近清华源有点慢）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~<span class="comment"># sed -i &#x27;s/ports.ubuntu.com/repo.huaweicloud.com/g&#x27; /etc/apt/sources.list</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="安装图形界面"><a href="#安装图形界面" class="headerlink" title="安装图形界面"></a>安装图形界面</h2><p>这里我们安装gnome</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~<span class="comment"># apt install ubuntu-desktop</span></span><br></pre></td></tr></table></figure>
-
-<p>安装完成以后进行重启，就会自动进入图形界面</p>
-<p>图形界面如下：</p>
-<p><img src="/media/rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/assets/ubuntu-print.png" alt="ubuntu"></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>MAC-M1可以运行的opencloudos-8</title>
-    <url>/docs/linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/MAC-M1%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84opencloudos-8.6.html</url>
-    <content><![CDATA[<h1 id="MAC-M1可以运行的opencloudos-8-6"><a href="#MAC-M1可以运行的opencloudos-8-6" class="headerlink" title="MAC-M1可以运行的opencloudos-8.6"></a>MAC-M1可以运行的opencloudos-8.6</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在centos7比较晚的版本，以及centos8的aarch64的版本里面，内核的pagesize已经默认改成了64K，而mac M1的操作系统底层最大支持的pagesize是16K的，所以启动系统的时候，安装就直接闪退</p>
-<p><img src="/media/16633226856220/16633228021078.jpg"></p>
-<p>显示是上面的效果，这个在centos系统里面都有这个问题，fedora里面就还是维持4k，没有问题</p>
-<span id="more"></span>
-
-<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>操作系统安装的时候会加载一个内核，这个地方需要修改的地方</p>
-<ul>
-<li>initrd.gz</li>
-<li>vmlinuz<br>这两个需要修改为4K的</li>
-</ul>
-<p>然后加载安装的时候，会加载install.img，这个里面带的是系统安装过程需要的内核模块，所以这个地方也需要替换</p>
-<p>进入安装系统以后，安装的内核rpm包也是64k的，那么也需要把这个地方替换掉</p>
-<p>上面的步骤完成以后，打的新的iso 就是可以正常在M1下运行的ISO了</p>
-<p><img src="/media/16633226856220/16633230068670.jpg"><br><img src="/media/16633226856220/16633239872905.jpg"></p>
-<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>M1是aarch64架构的，可以使用vmware fusion 做虚拟机，这个是免费的，不用购买pd来做，那么这个M1的架构有什么好处，就是如果在做国产化或者arm的适配的时候，有一个高性能的虚拟机会方便的很多，比如需要对opencloudos进行arm的其它包的开发的时候，如果物理机器资源不是那么充足的情况下，就可以独立在虚拟机里面完成适配，目前看就是这个pagesize影响了安装，其它的ubuntu，centos，也都做了定制ISO进行了发布</p>
-<p>安装部分内核调用了fedora的一部分东西，所以分区如果不喜欢看到fedora字样，可以不用lvm分区即可，不过这个本身是虚拟机，问题不大，ISO其它部分没有做任何改动</p>
-<h2 id="资源地址"><a href="#资源地址" class="headerlink" title="资源地址"></a>资源地址</h2><p>链接: <a href="https://pan.baidu.com/s/1-UBAAco0GQTDKLrQtl8IMA?pwd=x9bp">https://pan.baidu.com/s/1-UBAAco0GQTDKLrQtl8IMA?pwd=x9bp</a> 提取码: x9bp</p>
-<h2 id="开源摘星计划"><a href="#开源摘星计划" class="headerlink" title="开源摘星计划"></a>开源摘星计划</h2><p>本文已参与「开源摘星计划」，欢迎正在阅读的你加入。活动链接：<a href="https://github.com/weopenprojects/WeOpen-Star">https://github.com/weopenprojects/WeOpen-Star</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>cubefs相关技术</title>
-    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/cubefs%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/index.html</url>
-    <content><![CDATA[<ul>
-<li><a href="%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96cubefs%E7%9A%84master%E7%9A%84%E4%BF%A1%E6%81%AF.html">如何获取cubefs的master的信息</a></li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>s3的v2认证构造-lua</title>
-    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/s3%E7%9A%84v2%E8%AE%A4%E8%AF%81%E6%9E%84%E9%80%A0-lua.html</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇内容实现了相关功能的硬编码的部分，还有细节未处理，验证了可行性</p>
-<h2 id="相关代码记录"><a href="#相关代码记录" class="headerlink" title="相关代码记录"></a>相关代码记录</h2><figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;文件路径为:&quot;</span>, ngx.var.uri)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求方法为:&quot;</span>, ngx.var.request_method)</span><br><span class="line"><span class="comment">--这个打印的是收到的header的内容</span></span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求header2为:&quot;</span>, ngx.req.raw_header(<span class="literal">true</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">--获取编码需要的信息</span></span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的method&quot;</span>, ngx.var.request_method)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的content-md5:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;content-md5&#x27;</span>])</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的content-type:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;content-type&#x27;</span>])</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的date:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;date&#x27;</span>])</span><br><span class="line"><span class="comment">--从这里开始的获取的应该进行一个key的排序，动态的变量，然后拼接</span></span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的x-amz-date:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;x-amz-date&#x27;</span>])</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的x-amz-meta-s3cmd-attrs:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;x-amz-meta-s3cmd-attrs&#x27;</span>])</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的x-amz-storage-class:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;x-amz-storage-class&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> string_to_sign = ngx.var.request_method .. <span class="string">&quot;\n&quot;</span> </span><br><span class="line"><span class="keyword">if</span> ngx.req.get_headers()[<span class="string">&#x27;content-md5&#x27;</span>] == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">    string_to_sign =  string_to_sign .. <span class="string">&quot;\n&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    string_to_sign =  string_to_sign .. ngx.req.get_headers()[<span class="string">&#x27;content-md5&#x27;</span>]</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ngx.req.get_headers()[<span class="string">&#x27;content-type&#x27;</span>] == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">    string_to_sign =  string_to_sign .. <span class="string">&quot;\n&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">string_to_sign = string_to_sign .. ngx.req.get_headers()[<span class="string">&#x27;content-type&#x27;</span>] .. <span class="string">&quot;\n&quot;</span></span><br><span class="line"><span class="keyword">end</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ngx.req.get_headers()[<span class="string">&#x27;date&#x27;</span>] == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">    string_to_sign =  string_to_sign .. <span class="string">&quot;\n&quot;</span></span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">    string_to_sign = string_to_sign .. ngx.req.get_headers()[<span class="string">&#x27;date&#x27;</span>] .. <span class="string">&quot;\n&quot;</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> headers = ngx.req.get_headers()  </span><br><span class="line"><span class="keyword">local</span> hkeys = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> k,_ <span class="keyword">in</span> <span class="built_in">pairs</span>(headers) <span class="keyword">do</span> </span><br><span class="line">    <span class="built_in">table</span>.<span class="built_in">insert</span>(hkeys, k) </span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="built_in">table</span>.<span class="built_in">sort</span>(hkeys)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> _,key <span class="keyword">in</span> <span class="built_in">pairs</span>(hkeys) <span class="keyword">do</span>  </span><br><span class="line">      <span class="keyword">if</span> <span class="built_in">string</span>.<span class="built_in">find</span>(key,<span class="string">&quot;x-amz-&quot;</span>) ~= <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">if</span> key == <span class="string">&quot;x-amz-storage-class&quot;</span> <span class="keyword">then</span></span><br><span class="line">            ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;需要替换的class:&quot;</span>,key,headers[key])</span><br><span class="line">            string_to_sign = string_to_sign .. key .. <span class="string">&quot;:&quot;</span> ..  <span class="string">&quot;STANDARD&quot;</span> .. <span class="string">&quot;\n&quot;</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;zp_key_panduan: &quot;</span>, key)</span><br><span class="line">        string_to_sign = string_to_sign .. key .. <span class="string">&quot;:&quot;</span> ..  headers[key] .. <span class="string">&quot;\n&quot;</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      <span class="keyword">if</span> <span class="built_in">string</span>.<span class="built_in">find</span>(key,<span class="string">&quot;x-emc-&quot;</span>) ~= <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">        string_to_sign = string_to_sign .. key .. <span class="string">&quot;:&quot;</span> ..  headers[key] .. <span class="string">&quot;\n&quot;</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">string_to_sign = string_to_sign .. ngx.var.uri</span><br><span class="line"></span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;自定义的string_to_sign:&quot;</span>,string_to_sign)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- print(string_to_sign)</span></span><br><span class="line"><span class="comment">--截取函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Str_Cut</span><span class="params">(str,s_begin,s_end)</span></span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">local</span> StrLen = <span class="built_in">string</span>.<span class="built_in">len</span>(str)</span><br><span class="line">    <span class="keyword">local</span> s_begin_Len = <span class="built_in">string</span>.<span class="built_in">len</span>(s_begin)</span><br><span class="line">    <span class="keyword">local</span> s_end_Len = <span class="built_in">string</span>.<span class="built_in">len</span>(s_end)</span><br><span class="line">    <span class="keyword">local</span> s_begin_x = <span class="built_in">string</span>.<span class="built_in">find</span>(str, s_begin, <span class="number">1</span>)</span><br><span class="line">    <span class="comment">--print(s_begin_x)</span></span><br><span class="line">    <span class="keyword">local</span> s_end_x = <span class="built_in">string</span>.<span class="built_in">find</span>(str, s_end, s_begin_x+<span class="number">1</span>)</span><br><span class="line">    <span class="comment">--print(s_end_x)</span></span><br><span class="line">    <span class="keyword">local</span> rs=(<span class="built_in">string</span>.<span class="built_in">sub</span>(str, s_begin_x+s_begin_Len, s_end_x<span class="number">-1</span>))</span><br><span class="line">    <span class="keyword">return</span> rs</span><br><span class="line"> </span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> secret_key = <span class="string">&quot;test1&quot;</span></span><br><span class="line"><span class="keyword">local</span> digest = ngx.hmac_sha1(secret_key, string_to_sign)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;加密后的Authorization:&quot;</span>,ngx.encode_base64(digest))</span><br><span class="line"><span class="keyword">local</span> header_authorization = ngx.req.get_headers()[<span class="string">&quot;authorization&quot;</span>]</span><br><span class="line"><span class="comment">--local accesskey = string.match(header_authorization,&quot;%s+.+:&quot;)</span></span><br><span class="line"><span class="keyword">local</span> auth_start,auth_end,auth_name,auth_access,auth_authorization  = <span class="built_in">string</span>.<span class="built_in">find</span>(header_authorization,<span class="string">&#x27;(.+)%s(.+):(.+)&#x27;</span>)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;accesskey:&quot;</span>,auth_access)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;authorization:&quot;</span>,auth_authorization)</span><br><span class="line"></span><br><span class="line"><span class="comment">--这个是从header里面提取的原始的</span></span><br><span class="line"><span class="comment">--new_auth= &quot;AWS &quot; .. auth_access ..&quot;:&quot; .. auth_authorization</span></span><br><span class="line"><span class="comment">-- 下面是自己在openresty里面重新构造的</span></span><br><span class="line">new_auth= <span class="string">&quot;AWS &quot;</span> .. auth_access ..<span class="string">&quot;:&quot;</span> .. ngx.encode_base64(digest)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;new_auth:&quot;</span>,new_auth)</span><br><span class="line"><span class="comment">--到这里完成了相关的构造，现在要尝试修改headers的内容以及重新生产的auth</span></span><br><span class="line">ngx.req.set_header(<span class="string">&quot;Authorization&quot;</span>, new_auth )</span><br><span class="line">ngx.req.set_header(<span class="string">&quot;x-amz-storage-class&quot;</span>, <span class="string">&quot;STANDARD&quot;</span> )</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;获取的header的authorization: &quot;</span>,ngx.req.get_headers()[<span class="string">&quot;authorization&quot;</span>])</span><br><span class="line"><span class="comment">-- </span></span><br><span class="line"><span class="keyword">local</span> attrs = ngx.req.get_headers()[<span class="string">&quot;x-amz-meta-s3cmd-attrs&quot;</span>]</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;获取的x-amz-meta-s3cmd-attrs&quot;</span>,attrs)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="built_in">date</span>=<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">&quot;%Y%m%d%H%M%S&quot;</span>);</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;当前时间:&quot;</span>,<span class="built_in">date</span>)</span><br></pre></td></tr></table></figure>
-
-<p>在s3传输的过程中，可以通过构造改变请求的方式，在中间截取认证，并且控制数据流向</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>gluster副本三配置down两个可写</title>
-    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E5%89%AF%E6%9C%AC%E4%B8%89%E9%85%8D%E7%BD%AEdown%E4%B8%A4%E4%B8%AA%E5%8F%AF%E5%86%99.html</url>
-    <content><![CDATA[<h1 id="gluster副本三配置down两个可写"><a href="#gluster副本三配置down两个可写" class="headerlink" title="gluster副本三配置down两个可写"></a>gluster副本三配置down两个可写</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>默认做了控制，副本三down两个就阻止写了，这个可以通过参数控制</p>
-<h2 id="参数调整"><a href="#参数调整" class="headerlink" title="参数调整"></a>参数调整</h2><p>副本三，关闭两个可写</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gluster volume <span class="built_in">set</span> testvolume cluster.quorum-type fixed</span><br><span class="line">gluster volume <span class="built_in">set</span> testvolume cluster.quorum-count 1</span><br><span class="line">gluster volume <span class="built_in">set</span> testvolume cluster.quorum-reads <span class="built_in">yes</span></span><br><span class="line">gluster volume <span class="built_in">set</span>  testvolume network.ping-timeout 10</span><br></pre></td></tr></table></figure>
-
-<span id="more"></span>
-
-<p>副本二，关闭一个可写</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gluster volume <span class="built_in">set</span> testvolume cluster.quorum-count 1</span><br><span class="line">gluster volume <span class="built_in">set</span> testvolume cluster.quorum-reads <span class="built_in">yes</span></span><br><span class="line">gluster volume <span class="built_in">set</span>  testvolume network.ping-timeout 10</span><br></pre></td></tr></table></figure>
-
-<p>上面的区别是，副本3默认把cluster.quorum-type设置为auto了</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://docs.gluster.org/en/latest/Administrator-Guide/arbiter-volumes-and-quorum/">Arbiter volumes and quorum options in gluster</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>rock5b可以运行的UOS操作系统</title>
-    <url>/docs/rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/rock5b%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84UOS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html</url>
-    <content><![CDATA[<h1 id="rock5b可以运行的UOS操作系统"><a href="#rock5b可以运行的UOS操作系统" class="headerlink" title="rock5b可以运行的UOS操作系统"></a>rock5b可以运行的UOS操作系统</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>uos是国产操作系统里面桌面做的顶尖的操作系统了，前身是deepin，基于的是debian，ubuntu系的做的桌面，国产操作系统的优势是会做一些办公工具相关的适配</p>
-<p>查了下资料，pro版本的试用期是90天，没有授权的话，只是不能使用应用商店，其它的使用没有区别</p>
-<h2 id="相关资源"><a href="#相关资源" class="headerlink" title="相关资源"></a>相关资源</h2><p>这个img为初始的版本，比较大，有12G的，看了下内部装完系统占用有7G左右，这个大小方面和使用后续会持续发布新的版本，内核相关的后面看下是否也更新替换下，目前采用的是官方提供的</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>由于网盘的原因，采用的分卷压缩的，全部分卷下载完成后，使用360zip进行解压即可</p>
-<span id="more"></span>
-
-<h3 id="登陆"><a href="#登陆" class="headerlink" title="登陆"></a>登陆</h3><p>用户名密码：<br>root<br>123456</p>
-<p>默认为命令行界面，执行下startx即可进入桌面</p>
-<p>这个地方有个问题，设置为图形界面启动后，tty1会成为日志输出，tty2才可以登陆，设置文本登陆，然后再执行startx即可<br><img src="/media/16659908084571/16659915417239.jpg"></p>
-<p>登陆以后</p>
-<p><img src="/media/16659908084571/16659941281094.jpg"></p>
-<h2 id="版本发布说明"><a href="#版本发布说明" class="headerlink" title="版本发布说明"></a>版本发布说明</h2><p>rock-5b-uos-202210171400<br>发布说明：<br>    初始版本，可以使用<br>资源地址：<br>    链接: <a href="https://pan.baidu.com/s/1W-FwrCBzPAh3Ty4HrcX1Fw?pwd=3vmj">https://pan.baidu.com/s/1W-FwrCBzPAh3Ty4HrcX1Fw?pwd=3vmj</a> 提取码: 3vmj</p>
-]]></content>
-  </entry>
-  <entry>
     <title>opencloudos-aarch64可以使用的vdbench</title>
     <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/opencloudos-aarch64%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E7%9A%84vdbench.html</url>
     <content><![CDATA[<h1 id="opencloudos-aarch64可以使用的vdbench"><a href="#opencloudos-aarch64可以使用的vdbench" class="headerlink" title="opencloudos-aarch64可以使用的vdbench"></a>opencloudos-aarch64可以使用的vdbench</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>vdbench是一个I&#x2F;O工作负载生成器，通常用于验证数据完整性和测试存储性能。它可以运行在windows、linux环境，可用于测试文件系统或块设备基准性能。很多大型的测试都是采用这个工具进行测试的，能过模拟很多不同的负载</p>
@@ -1147,20 +882,36 @@
 ]]></content>
   </entry>
   <entry>
-    <title>gluster相关技术</title>
-    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/index.html</url>
+    <title>cubefs相关技术</title>
+    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/cubefs%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/index.html</url>
     <content><![CDATA[<ul>
-<li><a href="gluster%E5%89%AF%E6%9C%AC%E4%B8%89%E9%85%8D%E7%BD%AEdown%E4%B8%A4%E4%B8%AA%E5%8F%AF%E5%86%99.html">gluster副本三配置down两个可写</a></li>
+<li><a href="%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96cubefs%E7%9A%84master%E7%9A%84%E4%BF%A1%E6%81%AF.html">如何获取cubefs的master的信息</a></li>
 </ul>
 ]]></content>
   </entry>
   <entry>
-    <title>存储测试相关</title>
-    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/index.html</url>
-    <content><![CDATA[<ul>
-<li><a href="opencloudos-aarch64%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E7%9A%84vdbench.html">opencloudos-aarch64可以使用的vdbench</a></li>
-<li><a href="vdbench%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90%E5%99%A8.html">vdbench测试生成器</a></li>
-</ul>
+    <title>vdbench测试生成器</title>
+    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/vdbench%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90%E5%99%A8.html</url>
+    <content><![CDATA[<h1 id="vdbench测试生成器"><a href="#vdbench测试生成器" class="headerlink" title="vdbench测试生成器"></a>vdbench测试生成器</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>vdbench测试是根据配置文件进行测试的，有的时候我们需要循环的进行不同的测试用例进行测试，并且进行数据的大量填充，大小文件进行交错的填充来检测环境的稳定性</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>我们定义几组不同的配置文件，然后根据配置文件定义测试的次数，然后定义总次数，以及测试目录，然后生成配置文件，再使用脚本按顺序进行测试并记录结果</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="写几个模版配置文件"><a href="#写几个模版配置文件" class="headerlink" title="写几个模版配置文件"></a>写几个模版配置文件</h3><p>这个没有什么特殊的地方，根据自己的需要编写即可<br>测试的目录留空</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">anchor=</span><br></pre></td></tr></table></figure>
+<h3 id="编写run-ini配置文件"><a href="#编写run-ini配置文件" class="headerlink" title="编写run.ini配置文件"></a>编写run.ini配置文件</h3><p>安装解析ini的软件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install crudini</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>这个是用于定义上面配置文件的运行组合的</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[runcase]</span><br><span class="line">run1=base-big-1M</span><br><span class="line">run2=base-mid-500K</span><br><span class="line">run3=base-small-100K</span><br><span class="line">[runtime]</span><br><span class="line">run1=1</span><br><span class="line">run2=2</span><br><span class="line">run3=1</span><br><span class="line">total=8</span><br><span class="line">[rundir]</span><br><span class="line">rundir=/mnt</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成测试配置文件"><a href="#生成测试配置文件" class="headerlink" title="生成测试配置文件"></a>生成测试配置文件</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line"><span class="built_in">unalias</span> <span class="built_in">cp</span></span><br><span class="line">i=0</span><br><span class="line">rundir=`crudini --get run.ini rundir rundir`</span><br><span class="line">total=`crudini --get run.ini runtime total`</span><br><span class="line"><span class="keyword">while</span> (( total &gt; <span class="number">0</span> ))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="comment">#echo $num</span></span><br><span class="line">    <span class="keyword">for</span> runcase <span class="keyword">in</span> `crudini --get run.ini runcase`</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        runtime=`crudini --get run.ini runtime <span class="variable">$runcase</span>`</span><br><span class="line">        <span class="keyword">for</span> run <span class="keyword">in</span>  `<span class="built_in">seq</span> <span class="variable">$runtime</span>`</span><br><span class="line">        <span class="keyword">do</span>   </span><br><span class="line">            i=$(( <span class="variable">$i</span> + <span class="number">1</span> ))</span><br><span class="line">            <span class="comment">#echo $run</span></span><br><span class="line">            myrun=`crudini --get run.ini runcase <span class="variable">$runcase</span>`</span><br><span class="line">            mytest=<span class="variable">$myrun</span>-<span class="variable">$i</span></span><br><span class="line">            <span class="built_in">echo</span> <span class="variable">$mytest</span></span><br><span class="line">            <span class="built_in">mkdir</span> runcase/<span class="variable">$mytest</span> -p</span><br><span class="line">            total=$(( <span class="variable">$total</span> - <span class="number">1</span> ))</span><br><span class="line">            <span class="built_in">cp</span> -ra <span class="variable">$myrun</span> runcase/<span class="variable">$mytest</span>/case.conf</span><br><span class="line">            sed -i <span class="string">&quot;s#anchor=*,#anchor=<span class="variable">$&#123;rundir&#125;</span>/<span class="variable">$&#123;mytest&#125;</span>,#&quot;</span> runcase/<span class="variable">$mytest</span>/case.conf</span><br><span class="line">        <span class="keyword">done</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="运行测试"><a href="#运行测试" class="headerlink" title="运行测试"></a>运行测试</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">vdbench=/root/vdbench50407/vdbench</span><br><span class="line"><span class="built_in">unalias</span> <span class="built_in">cp</span></span><br><span class="line">i=0</span><br><span class="line">rundir=`crudini --get run.ini rundir rundir`</span><br><span class="line">total=`crudini --get run.ini runtime total`</span><br><span class="line"><span class="keyword">while</span> (( total &gt; <span class="number">0</span> ))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="comment">#echo $num</span></span><br><span class="line">    <span class="keyword">for</span> runcase <span class="keyword">in</span> `crudini --get run.ini runcase`</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        runtime=`crudini --get run.ini runtime <span class="variable">$runcase</span>`</span><br><span class="line">        <span class="keyword">for</span> run <span class="keyword">in</span>  `<span class="built_in">seq</span> <span class="variable">$runtime</span>`</span><br><span class="line">        <span class="keyword">do</span>   </span><br><span class="line">            i=$(( <span class="variable">$i</span> + <span class="number">1</span> ))</span><br><span class="line">            <span class="comment">#echo $run</span></span><br><span class="line">            myrun=`crudini --get run.ini runcase <span class="variable">$runcase</span>`</span><br><span class="line">            mytest=<span class="variable">$myrun</span>-<span class="variable">$i</span></span><br><span class="line">            <span class="built_in">echo</span> <span class="variable">$mytest</span></span><br><span class="line">            total=$(( <span class="variable">$total</span> - <span class="number">1</span> ))</span><br><span class="line">            dofile=runcase/<span class="variable">$mytest</span>/dodo</span><br><span class="line">            <span class="keyword">if</span> [ ! -f <span class="string">&quot;<span class="variable">$dofile</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">                <span class="variable">$vdbench</span> -f runcase/<span class="variable">$mytest</span>/case.conf -o runcase/<span class="variable">$mytest</span>/output</span><br><span class="line">                <span class="built_in">touch</span> runcase/<span class="variable">$mytest</span>/dodo</span><br><span class="line">            <span class="keyword">fi</span></span><br><span class="line">        <span class="keyword">done</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>使用脚本就控制几个循环的执行，可以自定义不同的vdbench怎么去跑的，整体上操作难度较低，测试结果也分开保存了，数据也写到不同的目录</p>
+<h2 id="归档项目地址"><a href="#归档项目地址" class="headerlink" title="归档项目地址"></a>归档项目地址</h2><blockquote>
+<p><a href="https://e.coding.net/zphj1987/vdbench-generater/vdbench-generater.git">https://e.coding.net/zphj1987/vdbench-generater/vdbench-generater.git</a></p>
+</blockquote>
 ]]></content>
   </entry>
   <entry>
@@ -1274,28 +1025,258 @@
 ]]></content>
   </entry>
   <entry>
-    <title>vdbench测试生成器</title>
-    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/vdbench%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90%E5%99%A8.html</url>
-    <content><![CDATA[<h1 id="vdbench测试生成器"><a href="#vdbench测试生成器" class="headerlink" title="vdbench测试生成器"></a>vdbench测试生成器</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>vdbench测试是根据配置文件进行测试的，有的时候我们需要循环的进行不同的测试用例进行测试，并且进行数据的大量填充，大小文件进行交错的填充来检测环境的稳定性</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>我们定义几组不同的配置文件，然后根据配置文件定义测试的次数，然后定义总次数，以及测试目录，然后生成配置文件，再使用脚本按顺序进行测试并记录结果</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="写几个模版配置文件"><a href="#写几个模版配置文件" class="headerlink" title="写几个模版配置文件"></a>写几个模版配置文件</h3><p>这个没有什么特殊的地方，根据自己的需要编写即可<br>测试的目录留空</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">anchor=</span><br></pre></td></tr></table></figure>
-<h3 id="编写run-ini配置文件"><a href="#编写run-ini配置文件" class="headerlink" title="编写run.ini配置文件"></a>编写run.ini配置文件</h3><p>安装解析ini的软件</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install crudini</span><br></pre></td></tr></table></figure>
+    <title>存储测试相关</title>
+    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E5%AD%98%E5%82%A8%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/index.html</url>
+    <content><![CDATA[<ul>
+<li><a href="opencloudos-aarch64%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E7%9A%84vdbench.html">opencloudos-aarch64可以使用的vdbench</a></li>
+<li><a href="vdbench%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90%E5%99%A8.html">vdbench测试生成器</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>ubuntu-server安装桌面</title>
+    <url>/docs/rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/ubuntu-server%E5%AE%89%E8%A3%85%E6%A1%8C%E9%9D%A2.html</url>
+    <content><![CDATA[<h1 id="ubuntu-server安装桌面"><a href="#ubuntu-server安装桌面" class="headerlink" title="ubuntu-server安装桌面"></a>ubuntu-server安装桌面</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>默认安装的是不带图形界面的，我们自己安装下桌面</p>
+<h2 id="修改源文件"><a href="#修改源文件" class="headerlink" title="修改源文件"></a>修改源文件</h2><p>默认也是用的官方的ubuntu的源，我们修改为国内的源要快一些</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~<span class="comment"># cp /etc/apt/sources.list /etc/apt/sources.list.bk</span></span><br><span class="line">root@rock-5b:~<span class="comment"># sed -i &#x27;s/ports.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g&#x27; /etc/apt/sources.list</span></span><br><span class="line">root@rock-5b:~<span class="comment"># apt-get update</span></span><br></pre></td></tr></table></figure>
+<p>或者华为源（最近清华源有点慢）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~<span class="comment"># sed -i &#x27;s/ports.ubuntu.com/repo.huaweicloud.com/g&#x27; /etc/apt/sources.list</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安装图形界面"><a href="#安装图形界面" class="headerlink" title="安装图形界面"></a>安装图形界面</h2><p>这里我们安装gnome</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~<span class="comment"># apt install ubuntu-desktop</span></span><br></pre></td></tr></table></figure>
+
+<p>安装完成以后进行重启，就会自动进入图形界面</p>
+<p>图形界面如下：</p>
+<p><img src="/media/rk3588/%E5%9F%BA%E7%A1%80%E7%AF%87/assets/ubuntu-print.png" alt="ubuntu"></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>ceph相关技术</title>
+    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/index.html</url>
+    <content><![CDATA[<h2 id="ceph统计信息"><a href="#ceph统计信息" class="headerlink" title="ceph统计信息"></a>ceph统计信息</h2><ul>
+<li><a href="ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/ceph%E7%9A%84%E8%AE%BE%E5%A4%87%E5%85%B3%E7%B3%BB%E8%8E%B7%E5%8F%96.html">ceph的设备关系获取</a></li>
+<li><a href="ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/%E8%8E%B7%E5%8F%96%E4%B8%80%E6%AE%B5%E6%97%B6%E9%97%B4%E5%86%85ceph%E7%9A%84osd%E7%A3%81%E7%9B%98%E8%AF%BB%E5%86%99%E6%83%85%E5%86%B5.html">获取一段时间内ceph的osd磁盘读写情况</a></li>
+<li><a href="s3%E7%9A%84v2%E8%AE%A4%E8%AF%81%E6%9E%84%E9%80%A0-lua.html">s3的v2认证构造-lua</a></li>
+</ul>
+<h2 id="编译打包相关"><a href="#编译打包相关" class="headerlink" title="编译打包相关"></a>编译打包相关</h2><ul>
+<li><a href="%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E7%9B%B8%E5%85%B3/ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD.html">ceph编译打包中断继续</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>s3的v2认证构造-lua</title>
+    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/s3%E7%9A%84v2%E8%AE%A4%E8%AF%81%E6%9E%84%E9%80%A0-lua.html</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇内容实现了相关功能的硬编码的部分，还有细节未处理，验证了可行性</p>
+<h2 id="相关代码记录"><a href="#相关代码记录" class="headerlink" title="相关代码记录"></a>相关代码记录</h2><figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;文件路径为:&quot;</span>, ngx.var.uri)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求方法为:&quot;</span>, ngx.var.request_method)</span><br><span class="line"><span class="comment">--这个打印的是收到的header的内容</span></span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求header2为:&quot;</span>, ngx.req.raw_header(<span class="literal">true</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">--获取编码需要的信息</span></span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的method&quot;</span>, ngx.var.request_method)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的content-md5:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;content-md5&#x27;</span>])</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的content-type:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;content-type&#x27;</span>])</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的date:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;date&#x27;</span>])</span><br><span class="line"><span class="comment">--从这里开始的获取的应该进行一个key的排序，动态的变量，然后拼接</span></span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的x-amz-date:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;x-amz-date&#x27;</span>])</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的x-amz-meta-s3cmd-attrs:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;x-amz-meta-s3cmd-attrs&#x27;</span>])</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;请求的x-amz-storage-class:&quot;</span>, ngx.req.get_headers()[<span class="string">&#x27;x-amz-storage-class&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> string_to_sign = ngx.var.request_method .. <span class="string">&quot;\n&quot;</span> </span><br><span class="line"><span class="keyword">if</span> ngx.req.get_headers()[<span class="string">&#x27;content-md5&#x27;</span>] == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">    string_to_sign =  string_to_sign .. <span class="string">&quot;\n&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    string_to_sign =  string_to_sign .. ngx.req.get_headers()[<span class="string">&#x27;content-md5&#x27;</span>]</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ngx.req.get_headers()[<span class="string">&#x27;content-type&#x27;</span>] == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">    string_to_sign =  string_to_sign .. <span class="string">&quot;\n&quot;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">string_to_sign = string_to_sign .. ngx.req.get_headers()[<span class="string">&#x27;content-type&#x27;</span>] .. <span class="string">&quot;\n&quot;</span></span><br><span class="line"><span class="keyword">end</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ngx.req.get_headers()[<span class="string">&#x27;date&#x27;</span>] == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">    string_to_sign =  string_to_sign .. <span class="string">&quot;\n&quot;</span></span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">    string_to_sign = string_to_sign .. ngx.req.get_headers()[<span class="string">&#x27;date&#x27;</span>] .. <span class="string">&quot;\n&quot;</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> headers = ngx.req.get_headers()  </span><br><span class="line"><span class="keyword">local</span> hkeys = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> k,_ <span class="keyword">in</span> <span class="built_in">pairs</span>(headers) <span class="keyword">do</span> </span><br><span class="line">    <span class="built_in">table</span>.<span class="built_in">insert</span>(hkeys, k) </span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="built_in">table</span>.<span class="built_in">sort</span>(hkeys)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> _,key <span class="keyword">in</span> <span class="built_in">pairs</span>(hkeys) <span class="keyword">do</span>  </span><br><span class="line">      <span class="keyword">if</span> <span class="built_in">string</span>.<span class="built_in">find</span>(key,<span class="string">&quot;x-amz-&quot;</span>) ~= <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">if</span> key == <span class="string">&quot;x-amz-storage-class&quot;</span> <span class="keyword">then</span></span><br><span class="line">            ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;需要替换的class:&quot;</span>,key,headers[key])</span><br><span class="line">            string_to_sign = string_to_sign .. key .. <span class="string">&quot;:&quot;</span> ..  <span class="string">&quot;STANDARD&quot;</span> .. <span class="string">&quot;\n&quot;</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">        ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;zp_key_panduan: &quot;</span>, key)</span><br><span class="line">        string_to_sign = string_to_sign .. key .. <span class="string">&quot;:&quot;</span> ..  headers[key] .. <span class="string">&quot;\n&quot;</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">      <span class="keyword">if</span> <span class="built_in">string</span>.<span class="built_in">find</span>(key,<span class="string">&quot;x-emc-&quot;</span>) ~= <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">        string_to_sign = string_to_sign .. key .. <span class="string">&quot;:&quot;</span> ..  headers[key] .. <span class="string">&quot;\n&quot;</span></span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">string_to_sign = string_to_sign .. ngx.var.uri</span><br><span class="line"></span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;自定义的string_to_sign:&quot;</span>,string_to_sign)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- print(string_to_sign)</span></span><br><span class="line"><span class="comment">--截取函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Str_Cut</span><span class="params">(str,s_begin,s_end)</span></span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">local</span> StrLen = <span class="built_in">string</span>.<span class="built_in">len</span>(str)</span><br><span class="line">    <span class="keyword">local</span> s_begin_Len = <span class="built_in">string</span>.<span class="built_in">len</span>(s_begin)</span><br><span class="line">    <span class="keyword">local</span> s_end_Len = <span class="built_in">string</span>.<span class="built_in">len</span>(s_end)</span><br><span class="line">    <span class="keyword">local</span> s_begin_x = <span class="built_in">string</span>.<span class="built_in">find</span>(str, s_begin, <span class="number">1</span>)</span><br><span class="line">    <span class="comment">--print(s_begin_x)</span></span><br><span class="line">    <span class="keyword">local</span> s_end_x = <span class="built_in">string</span>.<span class="built_in">find</span>(str, s_end, s_begin_x+<span class="number">1</span>)</span><br><span class="line">    <span class="comment">--print(s_end_x)</span></span><br><span class="line">    <span class="keyword">local</span> rs=(<span class="built_in">string</span>.<span class="built_in">sub</span>(str, s_begin_x+s_begin_Len, s_end_x<span class="number">-1</span>))</span><br><span class="line">    <span class="keyword">return</span> rs</span><br><span class="line"> </span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="comment">--</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> secret_key = <span class="string">&quot;test1&quot;</span></span><br><span class="line"><span class="keyword">local</span> digest = ngx.hmac_sha1(secret_key, string_to_sign)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;加密后的Authorization:&quot;</span>,ngx.encode_base64(digest))</span><br><span class="line"><span class="keyword">local</span> header_authorization = ngx.req.get_headers()[<span class="string">&quot;authorization&quot;</span>]</span><br><span class="line"><span class="comment">--local accesskey = string.match(header_authorization,&quot;%s+.+:&quot;)</span></span><br><span class="line"><span class="keyword">local</span> auth_start,auth_end,auth_name,auth_access,auth_authorization  = <span class="built_in">string</span>.<span class="built_in">find</span>(header_authorization,<span class="string">&#x27;(.+)%s(.+):(.+)&#x27;</span>)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;accesskey:&quot;</span>,auth_access)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;authorization:&quot;</span>,auth_authorization)</span><br><span class="line"></span><br><span class="line"><span class="comment">--这个是从header里面提取的原始的</span></span><br><span class="line"><span class="comment">--new_auth= &quot;AWS &quot; .. auth_access ..&quot;:&quot; .. auth_authorization</span></span><br><span class="line"><span class="comment">-- 下面是自己在openresty里面重新构造的</span></span><br><span class="line">new_auth= <span class="string">&quot;AWS &quot;</span> .. auth_access ..<span class="string">&quot;:&quot;</span> .. ngx.encode_base64(digest)</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;new_auth:&quot;</span>,new_auth)</span><br><span class="line"><span class="comment">--到这里完成了相关的构造，现在要尝试修改headers的内容以及重新生产的auth</span></span><br><span class="line">ngx.req.set_header(<span class="string">&quot;Authorization&quot;</span>, new_auth )</span><br><span class="line">ngx.req.set_header(<span class="string">&quot;x-amz-storage-class&quot;</span>, <span class="string">&quot;STANDARD&quot;</span> )</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;获取的header的authorization: &quot;</span>,ngx.req.get_headers()[<span class="string">&quot;authorization&quot;</span>])</span><br><span class="line"><span class="comment">-- </span></span><br><span class="line"><span class="keyword">local</span> attrs = ngx.req.get_headers()[<span class="string">&quot;x-amz-meta-s3cmd-attrs&quot;</span>]</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO,<span class="string">&quot;获取的x-amz-meta-s3cmd-attrs&quot;</span>,attrs)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> <span class="built_in">date</span>=<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">&quot;%Y%m%d%H%M%S&quot;</span>);</span><br><span class="line">ngx.<span class="built_in">log</span>(ngx.INFO, <span class="string">&quot;当前时间:&quot;</span>,<span class="built_in">date</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在s3传输的过程中，可以通过构造改变请求的方式，在中间截取认证，并且控制数据流向</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>gluster副本三配置down两个可写</title>
+    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E5%89%AF%E6%9C%AC%E4%B8%89%E9%85%8D%E7%BD%AEdown%E4%B8%A4%E4%B8%AA%E5%8F%AF%E5%86%99.html</url>
+    <content><![CDATA[<h1 id="gluster副本三配置down两个可写"><a href="#gluster副本三配置down两个可写" class="headerlink" title="gluster副本三配置down两个可写"></a>gluster副本三配置down两个可写</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>默认做了控制，副本三down两个就阻止写了，这个可以通过参数控制</p>
+<h2 id="参数调整"><a href="#参数调整" class="headerlink" title="参数调整"></a>参数调整</h2><p>副本三，关闭两个可写</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gluster volume <span class="built_in">set</span> testvolume cluster.quorum-type fixed</span><br><span class="line">gluster volume <span class="built_in">set</span> testvolume cluster.quorum-count 1</span><br><span class="line">gluster volume <span class="built_in">set</span> testvolume cluster.quorum-reads <span class="built_in">yes</span></span><br><span class="line">gluster volume <span class="built_in">set</span>  testvolume network.ping-timeout 10</span><br></pre></td></tr></table></figure>
 
 <span id="more"></span>
 
-<p>这个是用于定义上面配置文件的运行组合的</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[runcase]</span><br><span class="line">run1=base-big-1M</span><br><span class="line">run2=base-mid-500K</span><br><span class="line">run3=base-small-100K</span><br><span class="line">[runtime]</span><br><span class="line">run1=1</span><br><span class="line">run2=2</span><br><span class="line">run3=1</span><br><span class="line">total=8</span><br><span class="line">[rundir]</span><br><span class="line">rundir=/mnt</span><br></pre></td></tr></table></figure>
+<p>副本二，关闭一个可写</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gluster volume <span class="built_in">set</span> testvolume cluster.quorum-count 1</span><br><span class="line">gluster volume <span class="built_in">set</span> testvolume cluster.quorum-reads <span class="built_in">yes</span></span><br><span class="line">gluster volume <span class="built_in">set</span>  testvolume network.ping-timeout 10</span><br></pre></td></tr></table></figure>
 
-<h3 id="生成测试配置文件"><a href="#生成测试配置文件" class="headerlink" title="生成测试配置文件"></a>生成测试配置文件</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line"><span class="built_in">unalias</span> <span class="built_in">cp</span></span><br><span class="line">i=0</span><br><span class="line">rundir=`crudini --get run.ini rundir rundir`</span><br><span class="line">total=`crudini --get run.ini runtime total`</span><br><span class="line"><span class="keyword">while</span> (( total &gt; <span class="number">0</span> ))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="comment">#echo $num</span></span><br><span class="line">    <span class="keyword">for</span> runcase <span class="keyword">in</span> `crudini --get run.ini runcase`</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        runtime=`crudini --get run.ini runtime <span class="variable">$runcase</span>`</span><br><span class="line">        <span class="keyword">for</span> run <span class="keyword">in</span>  `<span class="built_in">seq</span> <span class="variable">$runtime</span>`</span><br><span class="line">        <span class="keyword">do</span>   </span><br><span class="line">            i=$(( <span class="variable">$i</span> + <span class="number">1</span> ))</span><br><span class="line">            <span class="comment">#echo $run</span></span><br><span class="line">            myrun=`crudini --get run.ini runcase <span class="variable">$runcase</span>`</span><br><span class="line">            mytest=<span class="variable">$myrun</span>-<span class="variable">$i</span></span><br><span class="line">            <span class="built_in">echo</span> <span class="variable">$mytest</span></span><br><span class="line">            <span class="built_in">mkdir</span> runcase/<span class="variable">$mytest</span> -p</span><br><span class="line">            total=$(( <span class="variable">$total</span> - <span class="number">1</span> ))</span><br><span class="line">            <span class="built_in">cp</span> -ra <span class="variable">$myrun</span> runcase/<span class="variable">$mytest</span>/case.conf</span><br><span class="line">            sed -i <span class="string">&quot;s#anchor=*,#anchor=<span class="variable">$&#123;rundir&#125;</span>/<span class="variable">$&#123;mytest&#125;</span>,#&quot;</span> runcase/<span class="variable">$mytest</span>/case.conf</span><br><span class="line">        <span class="keyword">done</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="运行测试"><a href="#运行测试" class="headerlink" title="运行测试"></a>运行测试</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#! /bin/sh</span></span><br><span class="line">vdbench=/root/vdbench50407/vdbench</span><br><span class="line"><span class="built_in">unalias</span> <span class="built_in">cp</span></span><br><span class="line">i=0</span><br><span class="line">rundir=`crudini --get run.ini rundir rundir`</span><br><span class="line">total=`crudini --get run.ini runtime total`</span><br><span class="line"><span class="keyword">while</span> (( total &gt; <span class="number">0</span> ))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="comment">#echo $num</span></span><br><span class="line">    <span class="keyword">for</span> runcase <span class="keyword">in</span> `crudini --get run.ini runcase`</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        runtime=`crudini --get run.ini runtime <span class="variable">$runcase</span>`</span><br><span class="line">        <span class="keyword">for</span> run <span class="keyword">in</span>  `<span class="built_in">seq</span> <span class="variable">$runtime</span>`</span><br><span class="line">        <span class="keyword">do</span>   </span><br><span class="line">            i=$(( <span class="variable">$i</span> + <span class="number">1</span> ))</span><br><span class="line">            <span class="comment">#echo $run</span></span><br><span class="line">            myrun=`crudini --get run.ini runcase <span class="variable">$runcase</span>`</span><br><span class="line">            mytest=<span class="variable">$myrun</span>-<span class="variable">$i</span></span><br><span class="line">            <span class="built_in">echo</span> <span class="variable">$mytest</span></span><br><span class="line">            total=$(( <span class="variable">$total</span> - <span class="number">1</span> ))</span><br><span class="line">            dofile=runcase/<span class="variable">$mytest</span>/dodo</span><br><span class="line">            <span class="keyword">if</span> [ ! -f <span class="string">&quot;<span class="variable">$dofile</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">                <span class="variable">$vdbench</span> -f runcase/<span class="variable">$mytest</span>/case.conf -o runcase/<span class="variable">$mytest</span>/output</span><br><span class="line">                <span class="built_in">touch</span> runcase/<span class="variable">$mytest</span>/dodo</span><br><span class="line">            <span class="keyword">fi</span></span><br><span class="line">        <span class="keyword">done</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>使用脚本就控制几个循环的执行，可以自定义不同的vdbench怎么去跑的，整体上操作难度较低，测试结果也分开保存了，数据也写到不同的目录</p>
-<h2 id="归档项目地址"><a href="#归档项目地址" class="headerlink" title="归档项目地址"></a>归档项目地址</h2><blockquote>
-<p><a href="https://e.coding.net/zphj1987/vdbench-generater/vdbench-generater.git">https://e.coding.net/zphj1987/vdbench-generater/vdbench-generater.git</a></p>
+<p>上面的区别是，副本3默认把cluster.quorum-type设置为auto了</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://docs.gluster.org/en/latest/Administrator-Guide/arbiter-volumes-and-quorum/">Arbiter volumes and quorum options in gluster</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>自定义rock5b内核</title>
+    <url>/docs/rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/%E8%87%AA%E5%AE%9A%E4%B9%89rock5b%E5%86%85%E6%A0%B8.html</url>
+    <content><![CDATA[<h1 id="自定义rock5b内核"><a href="#自定义rock5b内核" class="headerlink" title="自定义rock5b内核"></a>自定义rock5b内核</h1><h2 id="官方资料"><a href="#官方资料" class="headerlink" title="官方资料"></a>官方资料</h2><blockquote>
+<p><a href="https://wiki.radxa.com/Rock5/guide/build-debian-from-debos-radxa">https://wiki.radxa.com/Rock5/guide/build-debian-from-debos-radxa</a></p>
 </blockquote>
+<p>官方的资料在这里，打包成deb包，然后进行安装的是没有问题的，手动编译成Image，和dtb的，然后替换的部分，是有问题的，如果严格按照上面的文档的方法手动去更新内核，是启动不起来的，本篇就把这块补充起来</p>
+<p>大部分资料是参考官方的即可，小部分是补充的</p>
+<h2 id="二者的区别"><a href="#二者的区别" class="headerlink" title="二者的区别"></a>二者的区别</h2><p>其实整体上是没有太大的区别的，deb包就是完整的内核替换流程，而手动的就是方便如果只进行部分内核模块的修改的时候，替换模块文件即可，能够做更精细的内核替换</p>
+<h2 id="deb的内核更新方式"><a href="#deb的内核更新方式" class="headerlink" title="deb的内核更新方式"></a>deb的内核更新方式</h2><h3 id="获取内核代码"><a href="#获取内核代码" class="headerlink" title="获取内核代码"></a>获取内核代码</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get install git</span><br><span class="line"><span class="built_in">mkdir</span> ~/rk3588-sdk &amp;&amp; <span class="built_in">cd</span> ~/rk3588-sdk</span><br><span class="line">git <span class="built_in">clone</span> -b stable-5.10-rock5 https://github.com/radxa/u-boot.git</span><br><span class="line">git <span class="built_in">clone</span> -b stable-5.10-rock5 https://github.com/radxa/kernel.git</span><br><span class="line">git <span class="built_in">clone</span> -b master https://github.com/radxa/rkbin.git</span><br><span class="line">git <span class="built_in">clone</span> -b debian https://github.com/radxa/build.git</span><br><span class="line">git <span class="built_in">clone</span> -b main https://github.com/radxa/debos-radxa.git</span><br></pre></td></tr></table></figure>
+
+<p>如果是在X86的环境下面编译就按官方文档安装工具链，如果就是在arm64板卡上面进行编译的，就不需要，目前我的编译环境是在arm64下面，就按arm64的写步骤</p>
+<p>能够提供arm64编译环境的地方：</p>
+<ul>
+<li>1、板卡，rock4b或者rock5b</li>
+<li>2、mac M1 安装ubuntu 虚拟机</li>
+<li>3、大型的arm64服务器</li>
+</ul>
+<h3 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get install device-tree-compiler libncurses5 libncurses5-dev build-essential libssl-dev mtools bc python dosfstools</span><br></pre></td></tr></table></figure>
+
+<h3 id="打包成deb内核包"><a href="#打包成deb内核包" class="headerlink" title="打包成deb内核包"></a>打包成deb内核包</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./build/pack-kernel.sh -d rockchip_linux_defconfig -r 10 <span class="comment"># rockchip_linux_defconfig: kernel defconfig; 1: release number</span></span><br></pre></td></tr></table></figure>
+<p>编译完成以后就在下面的这个目录里面有相关的deb包生成，然后去安装即可</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ls</span> out/packages/</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="内核启动分析"><a href="#内核启动分析" class="headerlink" title="内核启动分析"></a>内核启动分析</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~<span class="comment"># cat /boot/extlinux/extlinux.conf</span></span><br><span class="line"><span class="built_in">timeout</span> 10</span><br><span class="line">menu title select kernel</span><br><span class="line"></span><br><span class="line">label kernel-5.10.66-11-rockchip-gc428536281d6</span><br><span class="line">    kernel /vmlinuz-5.10.66-11-rockchip-gc428536281d6</span><br><span class="line">    initrd /initrd.img-5.10.66-11-rockchip-gc428536281d6</span><br><span class="line">    devicetreedir /dtbs/5.10.66-11-rockchip-gc428536281d6</span><br><span class="line">    fdtoverlays  /dtbs/5.10.66-11-rockchip-gc428536281d6/rockchip/overlay/rk3588-uart7-m2.dtbo</span><br><span class="line">    append   root=UUID=67ad0e7b-3914-48d6-97c2-c48e5e0e405b earlycon=uart8250,mmio32,0xfeb50000 console=ttyFIQ0 console=tty1 consoleblank=0 loglevel=0 panic=10 rootwait rw init=/sbin/init rootfstype=ext4 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 irqchip.gicv3_pseudo_nmi=0 switolb=1 coherent_pool=2M</span><br></pre></td></tr></table></figure>
+<p>这个就是板卡的启动控制文件，这个跟x86的那个grub也是类似的，都是加载模块，然后根据指定的参数启动</p>
+<ul>
+<li>kernel 就是内核，启动的时候加载的</li>
+<li>initrd 这个是根据&#x2F;lib&#x2F;modules&#x2F;kernel生成的，是内核的一些模块，我们编译内核的时候*就是放在内核里面，M的模块就是放在了modules里面，然后生成的initrd可以在启动的时候加载这部分的内核</li>
+<li>devicetreedir 这个就是dtbs设备树</li>
+<li>fdtoverlays 这部分是补充的一部分的</li>
+<li>append 是启动的控制参数部分</li>
+</ul>
+<p>deb包的是会自己处理好这部分的，但是手动的，可以看到只提供了Image和fdt两个，单纯使用这两个是启动不了内核的，因为sdk提供的内核里面把一些模块是按module的方式处理的，Image里面并没有这部分，也就无法正常的启动了</p>
+<h2 id="手动替换方法"><a href="#手动替换方法" class="headerlink" title="手动替换方法"></a>手动替换方法</h2><h3 id="下载内核"><a href="#下载内核" class="headerlink" title="下载内核"></a>下载内核</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> -b stable-5.10-rock5 https://github.com/radxa/kernel.git</span><br></pre></td></tr></table></figure>
+
+<h3 id="检查内核"><a href="#检查内核" class="headerlink" title="检查内核"></a>检查内核</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~/rk3588-sdk/kernel<span class="comment"># git log</span></span><br><span class="line">commit c428536281d69aeb2b3480f65b2b227210b61535 (HEAD -&gt; stable-5.10-rock5, origin/stable-5.10-rock5)</span><br><span class="line">Author: 忘怀 &lt;otgwt@outlook.com&gt;</span><br><span class="line">Date:   Tue Nov 1 09:08:05 2022 +0800</span><br><span class="line"></span><br><span class="line">    rockchip_linux_defconfig: add Kubernetes support2 (<span class="comment">#36)</span></span><br><span class="line"></span><br><span class="line">    To support kubernetes and bring more Networking feature，</span><br><span class="line">    Need to open more Network supports.</span><br><span class="line">    NETFILTER sets、MT_TCP、TLS、TCPacc、802.1d</span><br><span class="line">    Fix issue : rockchip-linux<span class="comment">#273</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Network packet filtering framework (Netfilter)</span></span><br><span class="line">    CONFIG_NETFILTER_XT_TARGET_CHECKSUM=m</span><br><span class="line">    CONFIG_NETFILTER_XT_TARGET_DSCP=m</span><br><span class="line">    CONFIG_NETFILTER_XT_TARGET_TPROXY=m</span><br><span class="line">    CONFIG_NETFILTER_XT_TARGET_TRACE=m</span><br><span class="line">    CONFIG_NETFILTER_XT_TARGET_TCPOPTSTRIP=m</span><br></pre></td></tr></table></figure>
+<p>可以看到最新的是解决了k8s的运行问题，缺了一些模块，官方开启了相关的模块</p>
+<h3 id="编译内核"><a href="#编译内核" class="headerlink" title="编译内核"></a>编译内核</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/rk3588-sdk/kernel</span><br><span class="line">make kernelversion</span><br><span class="line">make rockchip_linux_defconfig</span><br><span class="line">make -j24</span><br></pre></td></tr></table></figure>
+<p>上面的rockchip_linux_defconfig文件路径为arch&#x2F;arm64&#x2F;configs&#x2F;rockchip_linux_defconfig,这个就是内核的配置文件，开启了这些配置，如果需要更改这个默认的配置就按下面的流程，官方的脚本是调用的这个默认配置，如果是自己手动编译，就直接修改即可<br>上面的编译完成以后，并没有结束，我们需要提取我们需要的东西，官方的文档是Image和dtb文件，我们按照deb包里面的进行提取</p>
+<h3 id="修改默认内核配置"><a href="#修改默认内核配置" class="headerlink" title="修改默认内核配置"></a>修改默认内核配置</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">make menuconfig</span><br><span class="line">make savedefconfig</span><br><span class="line"><span class="built_in">cp</span> defconfig <span class="built_in">arch</span>/arm64/configs/rockchip_linux_defconfig</span><br></pre></td></tr></table></figure>
+
+<h3 id="提取内核输出"><a href="#提取内核输出" class="headerlink" title="提取内核输出"></a>提取内核输出</h3><p>这个步骤就是上面的编译完成以后我们需要提取的东西，按下面的步骤操作</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /tmp/out/</span><br><span class="line"><span class="built_in">export</span>  INSTALL_PATH=/tmp/out/; make install</span><br><span class="line"><span class="built_in">export</span>  INSTALL_PATH=/tmp/out/; make dtbs_install</span><br><span class="line"><span class="built_in">export</span> INSTALL_MOD_PATH=/tmp/out;make modules_install</span><br></pre></td></tr></table></figure>
+<ul>
+<li>上面的第一个install 是安装的内核vmlinuz文件</li>
+<li>第二个dtbs_install 是安装的dtbs相关的</li>
+<li>第三个modules_install 是安装的内核模块的文件</li>
+</ul>
+<p>默认的打出来的版本号是5.10.66-267892-gc428536281d6，</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">out/lib/modules/5.10.66-267892-gc428536281d6</span><br></pre></td></tr></table></figure>
+<p>为了避免冲突或者错误的替换，我们自己加入自己需要的版本信息</p>
+<p>内核的版本信息在这里面</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> kernel/include/generated/utsrelease.h </span><br></pre></td></tr></table></figure>
+<p>是根据makefile和.config生成的</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~/rk3588-sdk/kernel<span class="comment"># make -j 48</span></span><br><span class="line">  UPD     include/config/kernel.release</span><br><span class="line">  UPD     include/generated/utsrelease.h</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~/rk3588-sdk/kernel<span class="comment"># head  -n 10 Makefile</span></span><br><span class="line"><span class="comment"># SPDX-License-Identifier: GPL-2.0</span></span><br><span class="line">VERSION = 5</span><br><span class="line">PATCHLEVEL = 10</span><br><span class="line">SUBLEVEL = 66</span><br><span class="line">EXTRAVERSION = -zp1</span><br><span class="line">NAME = Dare mighty thing</span><br></pre></td></tr></table></figure>
+<p>我们在makefile里面增加EXTRAVERSION &#x3D; -zp1</p>
+<p>上面的操作以后我们得到的就是下面的这些，我们拷贝到rock5b的机器上</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@ubuntu:~<span class="comment"># ll /tmp/out/</span></span><br><span class="line">total 37040</span><br><span class="line">drwxr-xr-x  4 root root     4096 Nov 24 07:21 ./</span><br><span class="line">drwxrwxrwt 14 root root     4096 Nov 24 07:22 ../</span><br><span class="line">-rw-r--r--  1 root root   210401 Nov 24 07:20 config-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">drwxr-xr-x  3 root root     4096 Nov 24 07:21 dtbs/</span><br><span class="line">drwxr-xr-x  3 root root     4096 Nov 24 07:21 lib/</span><br><span class="line">-rw-r--r--  1 root root  7165888 Nov 24 07:20 System.map-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">-rw-r--r--  1 root root 30530048 Nov 24 07:20 vmlinuz-5.10.66-zp1-267892-gc428536281d6-dirty</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装内核"><a href="#安装内核" class="headerlink" title="安装内核"></a>安装内核</h3><p>拷贝模块</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> -ra lib/modules/5.10.66-zp1-267892-gc428536281d6-dirty/ /lib/modules/</span><br></pre></td></tr></table></figure>
+<h4 id="半自动处理方式"><a href="#半自动处理方式" class="headerlink" title="半自动处理方式"></a>半自动处理方式</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /usr/lib/linux-image-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line"><span class="built_in">cp</span> -ra vmlinuz-5.10.66-zp1-267892-gc428536281d6-dirty /boot/</span><br><span class="line"><span class="built_in">cp</span> -ra dtbs/5.10.66-zp1-267892-gc428536281d6-dirty/rockchip  /usr/lib/linux-image-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">run-parts --arg=<span class="string">&quot;5.10.66-zp1-267892-gc428536281d6-dirty&quot;</span> --arg=<span class="string">&quot;/boot/vmlinuz-5.10.66-zp1-267892-gc428536281d6-dirty&quot;</span> /etc/kernel/postinst.d</span><br></pre></td></tr></table></figure>
+<p>上面的run-parts脚本<br>做了下面几个工作：</p>
+<ul>
+<li>1、生成了（&#x2F;boot&#x2F;initrd.img-5.10.66-zp1-267892-gc428536281d6-dirty）</li>
+<li>2、把&#x2F;usr&#x2F;lib&#x2F;linux-image-5.10.66-zp1-267892-gc428536281d6-dirty里面的dtb拷贝到dtbs里面</li>
+<li>3、更新extlinux.conf脚本</li>
+</ul>
+<h4 id="纯手动处理方式"><a href="#纯手动处理方式" class="headerlink" title="纯手动处理方式"></a>纯手动处理方式</h4><p>拷贝文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> -ra dtbs/5.10.66-zp1-267892-gc428536281d6-dirty/ /boot/dtbs/</span><br><span class="line"><span class="built_in">cp</span> -ra vmlinuz-5.10.66-zp1-267892-gc428536281d6-dirty /boot/</span><br><span class="line"><span class="built_in">cp</span> -ra System.map-5.10.66-zp1-267892-gc428536281d6-dirty /boot/</span><br><span class="line"><span class="built_in">cp</span> -ra config-5.10.66-zp1-267892-gc428536281d6-dirty /boot/</span><br></pre></td></tr></table></figure>
+<p>生成initrd</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~/zp/out<span class="comment"># update-initramfs -k 5.10.66-zp1-267892-gc428536281d6-dirty -c</span></span><br><span class="line">update-initramfs: Generating /boot/initrd.img-5.10.66-zp1-267892-gc428536281d6-dirty</span><br></pre></td></tr></table></figure>
+<p>编写&#x2F;boot&#x2F;extlinux&#x2F;extlinux.conf文件</p>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><p>上面的手工部分是通过解压官方的image查看到的脚本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dpkg -e linux-image-5.10.66-11-rockchip-gc428536281d6_5.10.66-11-rockchip_arm64.deb debian/</span><br><span class="line"><span class="built_in">cat</span> debian/postinst</span><br></pre></td></tr></table></figure>
+
+<h4 id="内核启动脚本内核"><a href="#内核启动脚本内核" class="headerlink" title="内核启动脚本内核"></a>内核启动脚本内核</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:/boot<span class="comment"># cat /boot/extlinux/extlinux.conf</span></span><br><span class="line"><span class="comment">#timeout 10</span></span><br><span class="line"><span class="comment">#menu title select kernel</span></span><br><span class="line"></span><br><span class="line">label kernel-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">    kernel /vmlinuz-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">    initrd /initrd.img-5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">    devicetreedir /dtbs/5.10.66-zp1-267892-gc428536281d6-dirty</span><br><span class="line">    fdtoverlays  /dtbs/5.10.66-zp1-267892-gc428536281d6-dirty/rockchip/overlay/rk3588-uart7-m2.dtbo</span><br><span class="line">    append   root=UUID=67ad0e7b-3914-48d6-97c2-c48e5e0e405b earlycon=uart8250,mmio32,0xfeb50000 console=ttyFIQ0 console=tty1 consoleblank=0 loglevel=0 panic=10 rootwait rw init=/sbin/init rootfstype=ext4 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1 irqchip.gicv3_pseudo_nmi=0 switolb=1 coherent_pool=2M</span><br></pre></td></tr></table></figure>
+
+<p>重启后检查</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">root@rock-5b:~<span class="comment"># uname  -a</span></span><br><span class="line">Linux rock-5b 5.10.66-zp1-267892-gc428536281d6-dirty <span class="comment">#2 SMP Thu Nov 24 04:26:01 UTC 2022 aarch64 aarch64 aarch64 GNU/Linux</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到内核已经替换好了</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>gluster相关技术</title>
+    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/gluster%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/index.html</url>
+    <content><![CDATA[<ul>
+<li><a href="gluster%E5%89%AF%E6%9C%AC%E4%B8%89%E9%85%8D%E7%BD%AEdown%E4%B8%A4%E4%B8%AA%E5%8F%AF%E5%86%99.html">gluster副本三配置down两个可写</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>操作系统相关</title>
+    <url>/docs/rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/index.html</url>
+    <content><![CDATA[<ul>
+<li><a href="rock5b%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84UOS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html">rock5b可以运行的UOS操作系统</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>rock5b可以运行的UOS操作系统</title>
+    <url>/docs/rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/rock5b%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84UOS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F.html</url>
+    <content><![CDATA[<h1 id="rock5b可以运行的UOS操作系统"><a href="#rock5b可以运行的UOS操作系统" class="headerlink" title="rock5b可以运行的UOS操作系统"></a>rock5b可以运行的UOS操作系统</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>uos是国产操作系统里面桌面做的顶尖的操作系统了，前身是deepin，基于的是debian，ubuntu系的做的桌面，国产操作系统的优势是会做一些办公工具相关的适配</p>
+<p>查了下资料，pro版本的试用期是90天，没有授权的话，只是不能使用应用商店，其它的使用没有区别</p>
+<h2 id="相关资源"><a href="#相关资源" class="headerlink" title="相关资源"></a>相关资源</h2><p>这个img为初始的版本，比较大，有12G的，看了下内部装完系统占用有7G左右，这个大小方面和使用后续会持续发布新的版本，内核相关的后面看下是否也更新替换下，目前采用的是官方提供的</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>由于网盘的原因，采用的分卷压缩的，全部分卷下载完成后，使用360zip进行解压即可</p>
+<span id="more"></span>
+
+<h3 id="登陆"><a href="#登陆" class="headerlink" title="登陆"></a>登陆</h3><p>用户名密码：<br>root<br>123456</p>
+<p>默认为命令行界面，执行下startx即可进入桌面</p>
+<p>这个地方有个问题，设置为图形界面启动后，tty1会成为日志输出，tty2才可以登陆，设置文本登陆，然后再执行startx即可<br><img src="/media/16659908084571/16659915417239.jpg"></p>
+<p>登陆以后</p>
+<p><img src="/media/16659908084571/16659941281094.jpg"></p>
+<h2 id="版本发布说明"><a href="#版本发布说明" class="headerlink" title="版本发布说明"></a>版本发布说明</h2><p>rock-5b-uos-202210171400<br>发布说明：<br>    初始版本，可以使用<br>资源地址：<br>    链接: <a href="https://pan.baidu.com/s/1W-FwrCBzPAh3Ty4HrcX1Fw?pwd=3vmj">https://pan.baidu.com/s/1W-FwrCBzPAh3Ty4HrcX1Fw?pwd=3vmj</a> 提取码: 3vmj</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>MAC-M1可以运行的opencloudos-8</title>
+    <url>/docs/linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/MAC-M1%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84opencloudos-8.6.html</url>
+    <content><![CDATA[<h1 id="MAC-M1可以运行的opencloudos-8-6"><a href="#MAC-M1可以运行的opencloudos-8-6" class="headerlink" title="MAC-M1可以运行的opencloudos-8.6"></a>MAC-M1可以运行的opencloudos-8.6</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在centos7比较晚的版本，以及centos8的aarch64的版本里面，内核的pagesize已经默认改成了64K，而mac M1的操作系统底层最大支持的pagesize是16K的，所以启动系统的时候，安装就直接闪退</p>
+<p><img src="/media/16633226856220/16633228021078.jpg"></p>
+<p>显示是上面的效果，这个在centos系统里面都有这个问题，fedora里面就还是维持4k，没有问题</p>
+<span id="more"></span>
+
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>操作系统安装的时候会加载一个内核，这个地方需要修改的地方</p>
+<ul>
+<li>initrd.gz</li>
+<li>vmlinuz<br>这两个需要修改为4K的</li>
+</ul>
+<p>然后加载安装的时候，会加载install.img，这个里面带的是系统安装过程需要的内核模块，所以这个地方也需要替换</p>
+<p>进入安装系统以后，安装的内核rpm包也是64k的，那么也需要把这个地方替换掉</p>
+<p>上面的步骤完成以后，打的新的iso 就是可以正常在M1下运行的ISO了</p>
+<p><img src="/media/16633226856220/16633230068670.jpg"><br><img src="/media/16633226856220/16633239872905.jpg"></p>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>M1是aarch64架构的，可以使用vmware fusion 做虚拟机，这个是免费的，不用购买pd来做，那么这个M1的架构有什么好处，就是如果在做国产化或者arm的适配的时候，有一个高性能的虚拟机会方便的很多，比如需要对opencloudos进行arm的其它包的开发的时候，如果物理机器资源不是那么充足的情况下，就可以独立在虚拟机里面完成适配，目前看就是这个pagesize影响了安装，其它的ubuntu，centos，也都做了定制ISO进行了发布</p>
+<p>安装部分内核调用了fedora的一部分东西，所以分区如果不喜欢看到fedora字样，可以不用lvm分区即可，不过这个本身是虚拟机，问题不大，ISO其它部分没有做任何改动</p>
+<h2 id="资源地址"><a href="#资源地址" class="headerlink" title="资源地址"></a>资源地址</h2><p>链接: <a href="https://pan.baidu.com/s/1-UBAAco0GQTDKLrQtl8IMA?pwd=x9bp">https://pan.baidu.com/s/1-UBAAco0GQTDKLrQtl8IMA?pwd=x9bp</a> 提取码: x9bp</p>
+<h2 id="开源摘星计划"><a href="#开源摘星计划" class="headerlink" title="开源摘星计划"></a>开源摘星计划</h2><p>本文已参与「开源摘星计划」，欢迎正在阅读的你加入。活动链接：<a href="https://github.com/weopenprojects/WeOpen-Star">https://github.com/weopenprojects/WeOpen-Star</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>opencloudos容器镜像优化</title>
+    <url>/docs/linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/opencloudos%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E4%BC%98%E5%8C%96.html</url>
+    <content><![CDATA[<h1 id="opencloudos容器镜像优化"><a href="#opencloudos容器镜像优化" class="headerlink" title="opencloudos容器镜像优化"></a>opencloudos容器镜像优化</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前因为官方的容器也在移植阶段，并且系统是刚出来的，各方面的应该都会慢慢完善，因为之前也做了相关的移植，所以移植的作为备选的即可</p>
+<p>测试发现官方的容器目前还有一些需要处理一些东西，本篇就是简单的介绍怎么用官方的容器，以及存在的问题，最后提供下我自己移植好的容器</p>
+<h2 id="官方容器使用方法"><a href="#官方容器使用方法" class="headerlink" title="官方容器使用方法"></a>官方容器使用方法</h2><h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><p>这个操作是使用容器的常规操作了，官方也都发布到了docker hub里面，直接拉取即可</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 /]<span class="comment"># docker pull opencloudos/opencloudos:8.6</span></span><br><span class="line">[root@lab101 /]<span class="comment"># docker image ls</span></span><br><span class="line">docker.io/opencloudos/opencloudos   8.6                 85381566b97e        7 days ago               280 MB</span><br></pre></td></tr></table></figure>
+<p>可以看到官方的为280MB</p>
+<span id="more"></span>
+
+<h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 /]<span class="comment"># docker run --name opencloudos  --net=host  --hostname=opencloudos  -dit   --privileged=true  opencloudos/opencloudos:8.6   /sbin/init</span></span><br><span class="line">bbe06493e7b2305b430c635c23b06b6eeca7d0df38ebfa6a9ab8428a39f1b11c</span><br></pre></td></tr></table></figure>
+
+<h3 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 /]<span class="comment"># docker exec -it opencloudos /bin/bash</span></span><br><span class="line">bash-4.4<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p>可以看到进入容器是显示的bash-4.4不是主机名<br>可以看到</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash-4.4<span class="comment"># ls /root/</span></span><br></pre></td></tr></table></figure>
+<p>root下面是空的<br>应该是要有下面的</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@centos8 /]<span class="comment"># ls /root/.</span></span><br><span class="line">./             ../            .bash_history  .bash_logout   .bash_profile  .bashrc        .cshrc         .tcshrc</span><br></pre></td></tr></table></figure>
+
+<p>检查常用包</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash-4.4<span class="comment"># rpm -qa|grep hostname</span></span><br><span class="line">bash-4.4<span class="comment"># rpm -qa|grep vi</span></span><br><span class="line">device-mapper-1.02.181-3.oc8.x86_64</span><br><span class="line">device-mapper-libs-1.02.181-3.oc8.x86_64</span><br></pre></td></tr></table></figure>
+<p>发现vi和hostname命令都没加进去，这里基本的包还是保持比较好，这个在centos8的官方容器里面都做了保留</p>
+<p>上面的主机名的处理也可以自己修改&#x2F;root&#x2F;.下面做处理做恢复，相关的包也可以自己安装下即可</p>
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>基于官方容器的优化，这个实际上我是基于操作系统，然后按centos8的容器包的标准，以及根据centos8的裁剪力度，来做的容器包</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 /]<span class="comment"># docker pull zphj1987/opencloudos:8.6</span></span><br></pre></td></tr></table></figure>
+
+<p>使用上面的就可以拿到opencloudos的8.6的容器版本，容器大小做到了跟官方的centos8基本一致的大小</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@lab101 /]<span class="comment"># docker pull zphj1987/opencloudos:8.6</span></span><br><span class="line">Trying to pull repository docker.io/zphj1987/opencloudos ...</span><br><span class="line">8.6: Pulling from docker.io/zphj1987/opencloudos</span><br><span class="line">e6ad0a38566d: Downloading [&gt;                                                  ] 528.9 kB/87.57 MB</span><br></pre></td></tr></table></figure>
+<p>容器iamge大小</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@opencloud ~]<span class="comment"># docker image ls</span></span><br><span class="line">zphj1987/opencloudos   8.6              8779b4d2cd5c   5 hours ago     227MB</span><br></pre></td></tr></table></figure>
+<p>基本跟centos官方的 231 MB大小一致</p>
+<h3 id="做容器过程的一个经验"><a href="#做容器过程的一个经验" class="headerlink" title="做容器过程的一个经验"></a>做容器过程的一个经验</h3><p>如果改了容器，不要在原来的基础上面commit,直接export出来，然后创建成新的容器，这样是一个比较简单的控制容器大小的方法，一直commit会叠加容器的大小</p>
+<h2 id="对待问题的方法"><a href="#对待问题的方法" class="headerlink" title="对待问题的方法"></a>对待问题的方法</h2><ul>
+<li>发现问题</li>
+<li>提出方案</li>
+<li>解决问题</li>
+</ul>
+<h2 id="开源摘星计划"><a href="#开源摘星计划" class="headerlink" title="开源摘星计划"></a>开源摘星计划</h2><p>本文已参与「开源摘星计划」，欢迎正在阅读的你加入。活动链接：<a href="https://github.com/weopenprojects/WeOpen-Star">https://github.com/weopenprojects/WeOpen-Star</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>内核相关</title>
+    <url>/docs/rk3588/%E8%BF%9B%E9%98%B6%E7%AF%87/%E5%86%85%E6%A0%B8%E7%9B%B8%E5%85%B3/index.html</url>
+    <content><![CDATA[<ul>
+<li><a href="%E8%87%AA%E5%AE%9A%E4%B9%89rock5b%E5%86%85%E6%A0%B8.html">自定义rock5b内核</a></li>
+</ul>
 ]]></content>
   </entry>
   <entry>
@@ -1312,6 +1293,16 @@
 ]]></content>
   </entry>
   <entry>
+    <title>centos系统相关</title>
+    <url>/docs/linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/index.html</url>
+    <content><![CDATA[<ul>
+<li><a href="MAC-M1%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84opencloudos-8.6.html">MAC-M1可以运行的opencloudos-8.6</a></li>
+<li><a href="centos7yum%E6%BA%90%E9%85%8D%E7%BD%AE.html">centos7yum源配置</a></li>
+<li><a href="opencloudos%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E4%BC%98%E5%8C%96.html">opencloudos容器镜像优化</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
     <title>ceph统计信息</title>
     <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/index.html</url>
     <content><![CDATA[<ul>
@@ -1321,15 +1312,20 @@
 ]]></content>
   </entry>
   <entry>
-    <title>ceph编译打包中断继续</title>
-    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E7%9B%B8%E5%85%B3/ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD.html</url>
-    <content><![CDATA[<h1 id="ceph编译打包中断继续"><a href="#ceph编译打包中断继续" class="headerlink" title="ceph编译打包中断继续"></a>ceph编译打包中断继续</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>使用rpmbuild打包的时候，如果编译了很久，中间突然出问题，需要从头来处理，这个地方如果有多个错误需要处理的话，每次从头开始就比较浪费时间，我们可以让rpmbuild打包不去删除编译好的包，直接继续</p>
-<span id="more"></span>
-
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>修改ceph.spec脚本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@vcluster ceph]<span class="comment"># rpmbuild -bb ceph.spec</span>修改下ceph.spec文件，可以实现中断继续的功能%prep%autosetup -D -p1 -n ceph-12.2.13<span class="comment">#mkdir build</span></span><br></pre></td></tr></table></figure>
-
-<p>上面的修改了以后，就可以中断继续编译了</p>
+    <title>编译打包相关</title>
+    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E7%9B%B8%E5%85%B3/index.html</url>
+    <content><![CDATA[<ul>
+<li><a href="ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD.html">ceph编译打包中断继续</a></li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>centos7yum源配置</title>
+    <url>/docs/linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/centos7yum%E6%BA%90%E9%85%8D%E7%BD%AE.html</url>
+    <content><![CDATA[<h1 id="centos7yum源配置"><a href="#centos7yum源配置" class="headerlink" title="centos7yum源配置"></a>centos7yum源配置</h1><h2 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h2><p>默认的源可能是国外源，下载比较慢，所以替换下地址为国内源比较好</p>
+<h3 id="清华源"><a href="#清华源" class="headerlink" title="清华源"></a>清华源</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mv</span> /etc/yum.repos.d/* /opt/ </span><br><span class="line">vim /etc/yum.repos.d/my.repo</span><br></pre></td></tr></table></figure>
+<p>内容如下:<br>有四个源，默认开启base和epel，其它两个自行开启</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[centos7-base]</span><br><span class="line">name=centos7-base</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/7/os/x86_64/</span><br><span class="line">gpgcheck=0</span><br><span class="line"><span class="built_in">enable</span>=1</span><br><span class="line"></span><br><span class="line">[centos7-updates]</span><br><span class="line">name=centos7-updates</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/7/updates/x86_64/</span><br><span class="line">gpgcheck=0</span><br><span class="line"><span class="built_in">enable</span>=0</span><br><span class="line"></span><br><span class="line">[centos7-extras]</span><br><span class="line">name=centos7-extras</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/7/extras/x86_64/</span><br><span class="line">gpgcheck=0</span><br><span class="line"><span class="built_in">enable</span>=0</span><br><span class="line"></span><br><span class="line">[centos7-epel]</span><br><span class="line">name=centos7-epel</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/epel/7/x86_64/</span><br><span class="line">gpgcheck=0</span><br><span class="line"><span class="built_in">enable</span>=1</span><br></pre></td></tr></table></figure>
 ]]></content>
   </entry>
   <entry>
@@ -1350,11 +1346,15 @@
 ]]></content>
   </entry>
   <entry>
-    <title>编译打包相关</title>
-    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E7%9B%B8%E5%85%B3/index.html</url>
-    <content><![CDATA[<ul>
-<li><a href="ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD.html">ceph编译打包中断继续</a></li>
-</ul>
+    <title>ceph编译打包中断继续</title>
+    <url>/docs/storage/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/ceph%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E7%9B%B8%E5%85%B3/ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD.html</url>
+    <content><![CDATA[<h1 id="ceph编译打包中断继续"><a href="#ceph编译打包中断继续" class="headerlink" title="ceph编译打包中断继续"></a>ceph编译打包中断继续</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>使用rpmbuild打包的时候，如果编译了很久，中间突然出问题，需要从头来处理，这个地方如果有多个错误需要处理的话，每次从头开始就比较浪费时间，我们可以让rpmbuild打包不去删除编译好的包，直接继续</p>
+<span id="more"></span>
+
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>修改ceph.spec脚本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@vcluster ceph]<span class="comment"># rpmbuild -bb ceph.spec</span>修改下ceph.spec文件，可以实现中断继续的功能%prep%autosetup -D -p1 -n ceph-12.2.13<span class="comment">#mkdir build</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的修改了以后，就可以中断继续编译了</p>
 ]]></content>
   </entry>
 </search>

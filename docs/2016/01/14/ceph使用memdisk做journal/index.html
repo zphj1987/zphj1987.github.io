@@ -1,0 +1,507 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>ceph使用memdisk做journal | 磨磨的技术博客</title><meta name="keywords" content="暂未分类"><meta name="author" content="zphj1987"><meta name="copyright" content="zphj1987"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="ceph使用memdisk做journal"><meta name="application-name" content="ceph使用memdisk做journal"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="ceph使用memdisk做journal"><meta property="og:url" content="http://localhost:4000/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/index.html"><meta property="og:site_name" content="磨磨的技术博客"><meta property="og:description" content="记得在很久很久以前，ceph当时的版本是有提供使用内存做journal的配置的，当时是使用的tmpfs，但是现在的版本在搜资料的时候，发现关于这个的没怎么找到资料，邮件列表里面有人有提到怎么做，看了下大致的原理，然后还是自己来实践一次 预备知识：首先需要知道的是什么是内存盘，内存盘就是划分了一个内存"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="http://localhost:4000/images/default_cover_1.jpeg"><meta property="article:author" content="zphj1987"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="http://localhost:4000/images/default_cover_1.jpeg"><meta name="description" content="记得在很久很久以前，ceph当时的版本是有提供使用内存做journal的配置的，当时是使用的tmpfs，但是现在的版本在搜资料的时候，发现关于这个的没怎么找到资料，邮件列表里面有人有提到怎么做，看了下大致的原理，然后还是自己来实践一次 预备知识：首先需要知道的是什么是内存盘，内存盘就是划分了一个内存"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="http://localhost:4000/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?eca2aabff7ab72c0c873639aa989c061";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  peoplecanvas: undefined,
+  postHeadAiDescription: {"enable":true,"gptName":"AnZhiYu","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: undefined,
+  LA51: undefined,
+  greetingBox: undefined,
+  twikooEnvId: '',
+  commentBarrageConfig:undefined,
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: false,
+  mainTone: undefined,
+  authorStatus: undefined,
+  algolia: {"appId":"GXWN6XTBBN","apiKey":"46fe2a73adf385608a95fb1cf263e589","indexName":"zphj","hits":{"per_page":6},"languages":{"input_placeholder":"输入关键词后按下回车查找","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":330},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: zphj1987","link":"链接: ","source":"来源: 磨磨的技术博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: '磨磨的技术博客',
+  title: 'ceph使用memdisk做journal',
+  postAI: '',
+  pageFillDescription: '预备知识：, 测试环境：, 1、准备journal的内存盘, 检查内存盘大小, 格式化内存盘并且挂载, 创建挂载目录（有多少osd建几个）, 格式化memdisk(需要几个格式化几个), 挂载内存盘, 挂载完了后的效果如下：, 2、准备ceph的环境, 创建mon, 创建osd, 继续部署生效的三个osd, 开始测试, 内存盘journal与磁盘journal性能对比, 增加知识（x2Fdevx2Fshm模式）记得在很久很久以前当时的版本是有提供使用内存做的配置的当时是使用的但是现在的版本在搜资料的时候发现关于这个的没怎么找到资料邮件列表里面有人有提到怎么做看了下大致的原理然后还是自己来实践一次预备知识首先需要知道的是什么是内存盘内存盘就是划分了一个内存空间来当磁盘使用来进行加速的这个在某些操作系统里面会把分区挂载到下来达到加速的目的这样就是重启后会清空的内容默认的分区方式也使用了来加速可以看下那个就是内存盘了本文使用的不是这个是因为不是我们常见意义上的那种文件系统它不能格式化在进行日志创建的时候会去检查所在分区的而在检测的时候会返回一个全的字符串这个在校验的时候显示的无效的所以也就部署起来有问题下面开始介绍我的做法这个里面做法很多步骤也可以自己去变化这里只是提供了我的一种思路我使用的是关于怎么做这个也研究了一下因为篇幅有点长并且属于预备步骤请参考我的另外一篇文章下做内存盘的方法测试环境单机四块的日志为内存盘大小为副本分组说明因为这里只去研究这个内存盘的实现以及性能的差别其他的组合方案需要自己去配置所以单机的环境已经可以完成这个准备的内存盘检查内存盘大小我的大小为格式化内存盘并且挂载创建挂载目录有多少建几个格式化需要几个格式化几个挂载内存盘挂载完了后的效果如下准备的环境修改的文件在部署前修改好单机环境添加下面的三个意思就不在这里介绍了创建创建部署完这个检查下可以看到内存盘分区内已经生成可一个的文件可以看到分区的也是链接到了内存盘环境没问题继续部署生效的三个部署完再次检查环境都挂载正确检查集群的状态环境部署完毕开始测试测试一采用内存盘的方式使用进行测试采取默认的写并且不删除的测试尽量把内存写满未进行任何调优测试二采用默认的磁盘的方式环境恢复要原始的情况测试的结果如上上表格也许看的更直观正好之前在找一个表格插件现在用用内存盘与磁盘性能对比内存盘磁盘测试时间写数据块数总共写入数据数据块大小写带宽带宽标准偏差最大带宽平均延时延时偏差最大延时最小延时可以看到相关数据光写带宽就提升了接近一倍这个是因为在磁盘情况下写入的同时还有的数据写入相当于同时有两个写入在磁盘上磁盘的性能自然只有一半了以上就是关于的内存盘实现这里面还会面临着其他的问题机器内存的占用问题断电后的处理同时断电是否会搞坏状态搞坏的情况是否能恢复如果解决了这些问题这个不失为一种性能提升的方案毕竟内存的成本和速度是的磁盘和单独磁盘不能比的本身也是一种循环的写入的空间增加知识模式上面的通过的方式是可以还有更方便的方式就是直接用内存路径需要处理几个地方我们来看下怎么处理首先修改配置文件增加这三个选项否则会失败这个是因为在内存这个路径下用文件的时候是无法满足默认的和选项的会造成无法生成文件生成的的文件的大小为无法成功假如我们给替换我们看下操作步骤创建目录并且修改权限修改这个是用来校验的而内存的为所以修改这个文件创建启动就可以了变更记录创建武汉运维磨渣增加路径模式武汉运维磨渣',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-05 23:39:19',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="/images/logo.jpeg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">其它站点</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/zphj1987" title="CSDN-武汉磨磨"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="CSDN-武汉磨磨"/><span class="back-menu-item-text">CSDN-武汉磨磨</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">磨磨的技术博客</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文库</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 文章列表</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 全部分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 全部标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="/images/wechatmei.png" target="_blank"><img class="post-qr-code-img" alt="微信" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/wechatmei.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubaomei.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/zhifubaomei.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/ceph/" style="font-size: 1.05rem;">ceph<sup>1</sup></a><a href="/tags/chatgpt/" style="font-size: 1.05rem;">chatgpt<sup>1</sup></a><a href="/tags/openai/" style="font-size: 1.05rem;">openai<sup>1</sup></a><a href="/tags/%E5%86%85%E6%A0%B8/" style="font-size: 1.05rem;">内核<sup>2</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">博客相关<sup>1</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.05rem;">操作系统<sup>1</sup></a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" style="font-size: 1.05rem;">暂未分类<sup>302</sup></a><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 1.05rem;">杂七杂八<sup>1</sup></a><a href="/tags/%E7%9B%91%E6%8E%A7/" style="font-size: 1.05rem;">监控<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" style="font-size: 1.05rem;">系统服务<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 1.05rem;">计算机<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 1.05rem;">高可用<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="anzhiyufont anzhiyu-icon-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">一月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/06/"><span class="card-archive-list-date">六月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/04/"><span class="card-archive-list-date">四月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/02/"><span class="card-archive-list-date">二月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/01/"><span class="card-archive-list-date">一月 2023</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">27</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/04/"><span class="card-archive-list-date">四月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/03/"><span class="card-archive-list-date">三月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">10</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/02/"><span class="card-archive-list-date">二月 2021</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" itemprop="url">暂未分类</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>暂未分类</span></a></span></div></div><h1 class="post-title" itemprop="name headline">ceph使用memdisk做journal</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2016-01-14T07:37:00.000Z" title="发表于 2016-01-14 15:37:00">2016-01-14</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2024-01-05T15:39:19.802Z" title="更新于 2024-01-05 23:39:19">2024-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-pv-cv" id="" data-flag-title="ceph使用memdisk做journal"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为武汉"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>武汉</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="/images/default_cover_1.jpeg"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="http://localhost:4000/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/"><header><a class="post-meta-categories" href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" itemprop="url">暂未分类</a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" tabindex="-1" itemprop="url">暂未分类</a><h1 id="CrawlerTitle" itemprop="name headline">ceph使用memdisk做journal</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">zphj1987</span><time itemprop="dateCreated datePublished" datetime="2016-01-14T07:37:00.000Z" title="发表于 2016-01-14 15:37:00">2016-01-14</time><time itemprop="dateCreated datePublished" datetime="2024-01-05T15:39:19.802Z" title="更新于 2024-01-05 23:39:19">2024-01-05</time></header><p>记得在很久很久以前，ceph当时的版本是有提供使用内存做journal的配置的，当时是使用的tmpfs，但是现在的版本在搜资料的时候，发现关于这个的没怎么找到资料，邮件列表里面有人有提到怎么做，看了下大致的原理，然后还是自己来实践一次</p>
+<h3 id="预备知识："><a href="#预备知识：" class="headerlink" title="预备知识："></a>预备知识：</h3><p>首先需要知道的是什么是内存盘，内存盘就是划分了一个内存空间来当磁盘使用来进行加速的，这个在某些操作系统里面会把&#x2F;tmp&#x2F;分区挂载到tmpfs下，来达到加速的目的，这样就是重启后，会清空&#x2F;tmp的内容，centos7 默认的分区方式也使用了tmpfs来加速，df -h可以看下那个tmpfs就是内存盘了</p>
+<p>本文使用的不是tmpfs，这个是因为tmpfs不是我们常见意义上的那种文件系统，它不能格式化，ceph 在进行日志创建的时候会去检查journal 所在分区的 uuid， 而tmpfs在检测的时候 会返回一个全0的字符串，这个在校验的时候显示的无效的，所以也就部署起来有问题，下面开始介绍我的做法，这个里面做法很多，步骤也可以自己去变化，这里只是提供了我的一种思路</p>
+<p>我使用的是ramdisk，关于怎么做ramdisk这个也研究了一下，因为篇幅有点长并且属于预备步骤，请参考我的另外一篇文章：</p>
+<p><a href="/2016/01/14/centos7%E4%B8%8B%E5%81%9A%E5%86%85%E5%AD%98%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95/" title="centos7下做内存盘的方法">centos7下做内存盘的方法</a></p>
+<h3 id="测试环境："><a href="#测试环境：" class="headerlink" title="测试环境："></a>测试环境：</h3><p>单机，四块SAS的OSD，日志为5G（内存盘大小为6G），副本 2， osd分组</p>
+<p>说明：因为这里只去研究这个内存盘journal的实现，以及性能的差别，其他的组合方案需要自己去配置，所以单机的环境已经可以完成这个</p>
+<h3 id="1、准备journal的内存盘"><a href="#1、准备journal的内存盘" class="headerlink" title="1、准备journal的内存盘"></a>1、准备journal的内存盘</h3><h4 id="检查内存盘大小"><a href="#检查内存盘大小" class="headerlink" title="检查内存盘大小"></a>检查内存盘大小</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># fdisk -l /dev/ram0</span></span><br><span class="line"></span><br><span class="line">Disk /dev/ram0: 6797 MB, 6797721600 bytes, 13276800 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br></pre></td></tr></table></figure>
+<p>我的大小为6G</p>
+<h4 id="格式化内存盘，并且挂载"><a href="#格式化内存盘，并且挂载" class="headerlink" title="格式化内存盘，并且挂载"></a>格式化内存盘，并且挂载</h4><h5 id="创建挂载目录（有多少osd建几个）"><a href="#创建挂载目录（有多少osd建几个）" class="headerlink" title="创建挂载目录（有多少osd建几个）"></a>创建挂载目录（有多少osd建几个）</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># mkdir -p /var/lib/ceph/mem/ceph-0</span></span><br></pre></td></tr></table></figure>
+<h5 id="格式化memdisk-需要几个格式化几个"><a href="#格式化memdisk-需要几个格式化几个" class="headerlink" title="格式化memdisk(需要几个格式化几个)"></a>格式化memdisk(需要几个格式化几个)</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># mkfs.xfs /dev/ram0  -f</span></span><br></pre></td></tr></table></figure>
+<h5 id="挂载内存盘"><a href="#挂载内存盘" class="headerlink" title="挂载内存盘"></a>挂载内存盘</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># mount /dev/ram0 /var/lib/ceph/mem/ceph-0/</span></span><br></pre></td></tr></table></figure>
+<h5 id="挂载完了后的效果如下："><a href="#挂载完了后的效果如下：" class="headerlink" title="挂载完了后的效果如下："></a>挂载完了后的效果如下：</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># df -h</span></span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/sda2        50G  9.7G   41G  20% /</span><br><span class="line">devtmpfs         24G     0   24G   0% /dev</span><br><span class="line">tmpfs            24G     0   24G   0% /dev/shm</span><br><span class="line">tmpfs            24G   17M   24G   1% /run</span><br><span class="line">tmpfs            24G     0   24G   0% /sys/fs/cgroup</span><br><span class="line">/dev/sda1       283M   94M  190M  33% /boot</span><br><span class="line">/dev/ram0       6.4G   33M  6.3G   1% /var/lib/ceph/mem/ceph-0</span><br><span class="line">/dev/ram1       6.4G   33M  6.3G   1% /var/lib/ceph/mem/ceph-1</span><br><span class="line">/dev/ram2       6.4G   33M  6.3G   1% /var/lib/ceph/mem/ceph-2</span><br><span class="line">/dev/ram3       6.4G   33M  6.3G   1% /var/lib/ceph/mem/ceph-3</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、准备ceph的环境"><a href="#2、准备ceph的环境" class="headerlink" title="2、准备ceph的环境"></a>2、准备ceph的环境</h3><p>修改deploy的ceph.conf文件，在部署前修改好<br>单机环境添加下面的三个</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">osd_crush_chooseleaf_type = 0</span><br><span class="line">osd_pool_default_size = 2</span><br><span class="line">osd_journal = /var/lib/ceph/mem/<span class="variable">$cluster</span>-<span class="variable">$id</span>/journal</span><br></pre></td></tr></table></figure>
+<p>意思就不在这里介绍了</p>
+<h4 id="创建mon"><a href="#创建mon" class="headerlink" title="创建mon"></a>创建mon</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ceph-deploy mon create lab8106</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment"># ceph-deploy gatherkeys lab8106</span></span><br></pre></td></tr></table></figure>
+<h4 id="创建osd"><a href="#创建osd" class="headerlink" title="创建osd"></a>创建osd</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ceph-deploy osd prepare lab8106:/dev/sdb1:/var/lib/ceph/mem/ceph-0/journal</span></span><br><span class="line">[root@lab8106 ceph]<span class="comment"># ceph-deploy osd activate lab8106:/dev/sdb1</span></span><br></pre></td></tr></table></figure>
+<p>部署完这个检查下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># df -h</span></span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">……</span><br><span class="line">/dev/ram0       6.4G  5.1G  1.3G  80% /var/lib/ceph/mem/ceph-0</span><br><span class="line">/dev/ram1       6.4G   33M  6.3G   1% /var/lib/ceph/mem/ceph-1</span><br><span class="line">/dev/ram2       6.4G   33M  6.3G   1% /var/lib/ceph/mem/ceph-2</span><br><span class="line">/dev/ram3       6.4G   33M  6.3G   1% /var/lib/ceph/mem/ceph-3</span><br><span class="line">/dev/sdb1       280G   34M  280G   1% /var/lib/ceph/osd/ceph-0</span><br></pre></td></tr></table></figure>
+<p>可以看到内存盘分区内已经生成可一个5G的journal文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ll /var/lib/ceph/osd/ceph-0</span></span><br><span class="line">total 40</span><br><span class="line">……</span><br><span class="line">lrwxrwxrwx  1 root root   32 Jan 14 10:28 journal -&gt; /var/lib/ceph/mem/ceph-0/journal</span><br></pre></td></tr></table></figure>
+<p>可以看到osd分区的也是链接到了内存盘，环境没问题</p>
+<h4 id="继续部署生效的三个osd"><a href="#继续部署生效的三个osd" class="headerlink" title="继续部署生效的三个osd"></a>继续部署生效的三个osd</h4><p>部署完再次检查环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># df -h|grep ceph</span></span><br><span class="line">/dev/ram0       6.4G  5.1G  1.3G  80% /var/lib/ceph/mem/ceph-0</span><br><span class="line">/dev/ram1       6.4G  5.1G  1.3G  80% /var/lib/ceph/mem/ceph-1</span><br><span class="line">/dev/ram2       6.4G  5.1G  1.3G  80% /var/lib/ceph/mem/ceph-2</span><br><span class="line">/dev/ram3       6.4G  5.1G  1.3G  80% /var/lib/ceph/mem/ceph-3</span><br><span class="line">/dev/sdb1       280G   34M  280G   1% /var/lib/ceph/osd/ceph-0</span><br><span class="line">/dev/sdc1       280G   34M  280G   1% /var/lib/ceph/osd/ceph-1</span><br><span class="line">/dev/sdd1       280G   34M  280G   1% /var/lib/ceph/osd/ceph-2</span><br><span class="line">/dev/sde1       280G   33M  280G   1% /var/lib/ceph/osd/ceph-3</span><br></pre></td></tr></table></figure>
+<p>都挂载正确<br>检查集群的状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster 68735617-2d30-4a81-9865-aeab3ea85e6e</span><br><span class="line">     health HEALTH_OK</span><br><span class="line">     monmap e1: 1 mons at &#123;lab8106=192.168.8.106:6789/0&#125;</span><br><span class="line">            election epoch 2, quorum 0 lab8106</span><br><span class="line">     osdmap e21: 4 osds: 4 up, 4 <span class="keyword">in</span></span><br><span class="line">      pgmap v35: 192 pgs, 1 pools, 0 bytes data, 0 objects</span><br><span class="line">            136 MB used, 1116 GB / 1117 GB avail</span><br><span class="line">                 192 active+clean</span><br></pre></td></tr></table></figure>
+<p>环境部署完毕</p>
+<h3 id="开始测试"><a href="#开始测试" class="headerlink" title="开始测试"></a>开始测试</h3><p>测试一：采用内存盘journal的方式<br>使用radosbench进行测试（采取默认的写，并且不删除的测试，尽量把内存写满，未进行任何调优）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># rados bench -p rbd 120 write --no-cleanup --run-name testmemdisk</span></span><br><span class="line">Total time run:         120.568031</span><br><span class="line">Total writes made:      5857</span><br><span class="line">Write size:             4194304</span><br><span class="line">Bandwidth (MB/sec):     194.314 </span><br><span class="line"></span><br><span class="line">Stddev Bandwidth:       144.18</span><br><span class="line">Max bandwidth (MB/sec): 504</span><br><span class="line">Min bandwidth (MB/sec): 0</span><br><span class="line">Average Latency:        0.329322</span><br><span class="line">Stddev Latency:         0.48777</span><br><span class="line">Max latency:            3.01612</span><br><span class="line">Min latency:            0.0377235</span><br></pre></td></tr></table></figure>
+<p>测试二：采用默认的磁盘journal的方式，环境恢复要原始的情况</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph]<span class="comment"># rados bench -p rbd 120 write --no-cleanup --run-name testmemdisk</span></span><br><span class="line">Total time run:         120.613851</span><br><span class="line">Total writes made:      3404</span><br><span class="line">Write size:             4194304</span><br><span class="line">Bandwidth (MB/sec):     112.889 </span><br><span class="line"></span><br><span class="line">Stddev Bandwidth:       26.3641</span><br><span class="line">Max bandwidth (MB/sec): 160</span><br><span class="line">Min bandwidth (MB/sec): 0</span><br><span class="line">Average Latency:        0.566656</span><br><span class="line">Stddev Latency:         0.305038</span><br><span class="line">Max latency:            2.00623</span><br><span class="line">Min latency:            0.105026</span><br></pre></td></tr></table></figure>
+<p>测试的结果如上，上表格也许看的更直观，正好之前在找一个表格插件，现在用用</p>
+<h3 id="内存盘journal与磁盘journal性能对比"><a href="#内存盘journal与磁盘journal性能对比" class="headerlink" title="内存盘journal与磁盘journal性能对比"></a>内存盘journal与磁盘journal性能对比</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>内存盘journal</th>
+<th>磁盘journal</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>测试时间(s)</td>
+<td>120.568031</td>
+<td>120.613851</td>
+</tr>
+<tr>
+<td>写数据块数</td>
+<td>5857</td>
+<td>3404</td>
+</tr>
+<tr>
+<td>总共写入数据(MB)</td>
+<td>23428</td>
+<td>13616</td>
+</tr>
+<tr>
+<td>数据块大小</td>
+<td>4194304</td>
+<td>4194304</td>
+</tr>
+<tr>
+<td>写带宽(MB&#x2F;sec)</td>
+<td>194.314</td>
+<td>112.889</td>
+</tr>
+<tr>
+<td>带宽标准偏差</td>
+<td>144.18</td>
+<td>26.3641</td>
+</tr>
+<tr>
+<td>最大带宽(MB&#x2F;sec)</td>
+<td>504</td>
+<td>160</td>
+</tr>
+<tr>
+<td>平均延时</td>
+<td>0.32932</td>
+<td>0.566656</td>
+</tr>
+<tr>
+<td>延时偏差</td>
+<td>0.48777</td>
+<td>0.305038</td>
+</tr>
+<tr>
+<td>最大延时</td>
+<td>3.01612</td>
+<td>2.00623</td>
+</tr>
+<tr>
+<td>最小延时</td>
+<td>0.0377235</td>
+<td>0.105026</td>
+</tr>
+</tbody></table>
+<p>可以看到相关数据，光写带宽就提升了接近一倍，这个是因为，在磁盘journal情况下，写入journal的同时还有filestore的数据写入，相当于同时有两个写入在磁盘上，磁盘的性能自然只有一半了</p>
+<p>以上就是关于journal的内存盘实现，这里面还会面临着其他的问题</p>
+<ul>
+<li>机器内存的占用问题</li>
+<li>断电后的处理</li>
+<li>同时断电是否会搞坏pg状态</li>
+<li>搞坏的情况是否能恢复</li>
+</ul>
+<p>如果解决了这些问题，这个不失为一种性能提升的方案，毕竟内存的成本和速度是ssd的磁盘和单独磁盘journal不能比的，journal本身也是一种循环的写入的空间</p>
+<h2 id="增加知识（-dev-shm模式）"><a href="#增加知识（-dev-shm模式）" class="headerlink" title="增加知识（&#x2F;dev&#x2F;shm模式）"></a>增加知识（&#x2F;dev&#x2F;shm模式）</h2><p>上面的通过memdisk的方式是可以，还有更方便的方式就是直接用内存路径，需要处理几个地方，我们来看下怎么处理</p>
+<p>首先修改配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">osd_journal =/dev/shm/<span class="variable">$cluster</span>-<span class="variable">$id</span>/journal</span><br><span class="line">journal dio = <span class="literal">false</span></span><br><span class="line">journal aio = <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>增加这三个选项，否则会失败，这个是因为在内存这个路径下用文件的时候是无法满足默认的dio,和aio选项的，会造成无法生成journal文件，生成的journal的文件的大小为0，无法成功</p>
+<p>假如我们给osd.5替换journal，我们看下操作步骤</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph-5]<span class="comment"># mkdir /dev/shm/ceph-5</span></span><br><span class="line">[root@lab8106 ceph-5]<span class="comment"># chown ceph:ceph /dev/shm/ceph-5</span></span><br></pre></td></tr></table></figure>
+<p>创建目录并且修改权限<br>修改fsid</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph-5]<span class="comment"># cat fsid </span></span><br><span class="line">f66832a7-6bd0-4eef-a538-15ba2404243f</span><br></pre></td></tr></table></figure>
+<p>这个fsid是用来校验journal的<br>而内存的uuid为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph-5]<span class="comment">#ceph-osd -i 7 --get-journal-uuid --osd-journal /dev/shm/ceph-7/journal</span></span><br><span class="line">00000000-0000-0000-0000-000000000000</span><br></pre></td></tr></table></figure>
+<p>所以修改这个文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 00000000-0000-0000-0000-000000000000 &gt; fsid</span><br></pre></td></tr></table></figure>
+<p>创建journal</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8106 ceph-5]<span class="comment"># ceph-osd -i 5 --mkjournal --setuser ceph --setgroup ceph --debug_ms 20 --debug_osd 20</span></span><br><span class="line">2017-01-20 10:58:22.297737 7f0f1a75a800 -1 created new journal /dev/shm/ceph-5/journal <span class="keyword">for</span> object store /var/lib/ceph/osd/ceph-5</span><br><span class="line">[root@lab8106 ceph-5]<span class="comment"># ll /dev/shm/ceph-5/journal</span></span><br><span class="line">-rw-r--r-- 1 ceph ceph 1073741824 Jan 20 10:58 /dev/shm/ceph-5/journal</span><br></pre></td></tr></table></figure>
+
+<p>启动osd就可以了</p>
+<p>##变更记录</p>
+<table>
+<thead>
+<tr>
+<th align="center">Why</th>
+<th align="center">Who</th>
+<th align="center">When</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">创建</td>
+<td align="center">武汉-运维-磨渣</td>
+<td align="center">2016-01-14</td>
+</tr>
+<tr>
+<td align="center">增加&#x2F;dev&#x2F;shm&#x2F;路径模式</td>
+<td align="center">武汉-运维-磨渣</td>
+<td align="center">2017-01-20</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" title="头像" alt="头像"></a><div class="post-copyright__author_name">zphj1987</div><div class="post-copyright__author_desc">竹杖芒鞋轻胜马,一蓑烟雨任平生</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="http://localhost:4000/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('http://localhost:4000/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/')">ceph使用memdisk做journal</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"><div class="post-reward" onclick="anzhiyu.addRewardMask()"><div class="reward-button button--animated" title="赞赏作者"><i class="anzhiyufont anzhiyu-icon-hand-heart-fill"></i>打赏作者</div><div class="reward-main"><div class="reward-all"><span class="reward-title">感谢你赐予我前进的力量</span><ul class="reward-group"><li class="reward-item"><a href="/images/wechatmei.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/wechatmei.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubaomei.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/zhifubaomei.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul><a class="reward-main-btn" href="/about/#about-reward" target="_blank"><div class="reward-text">赞赏者名单</div><div class="reward-dec">因为你们的支持让我意识到写文章的价值🙏</div></a></div></div></div><div id="quit-box" onclick="anzhiyu.removeRewardMask()" style="display: none"></div></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="http://localhost:4000/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=ceph使用memdisk做journal&amp;url=http://localhost:4000/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/&amp;pic=/images/default_cover_1.jpeg" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://localhost:4000" target="_blank">磨磨的技术博客</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>暂未分类<span class="tagsPageCount">302</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="/images/blog/dingding.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2016/01/14/ceph%E5%8D%95%E6%9C%BA%E5%A4%9Amon%E7%9A%84%E5%AE%9E%E7%8E%B0/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ceph单机多mon的实现</div></div></a></div><div class="next-post pull-right"><a href="/2016/01/25/ceph-fuse%E5%8D%A1%E9%A1%BF%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E7%9A%84%E9%97%AE%E9%A2%98/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ceph-fuse卡顿无法写入的问题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2015/03/22/Bad%20magic%20number%20ImportError%20in%20python/" title="Bad magic number ImportError in python"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2015-03-22</div><div class="title">Bad magic number ImportError in python</div></div></a></div><div><a href="/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/" title="CPU相关的学习"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-06-13</div><div class="title">CPU相关的学习</div></div></a></div><div><a href="/2019/09/02/CTDB%E4%BD%BF%E7%94%A8radosobject%E4%BD%9C%E4%B8%BAlockfile/" title="CTDB使用radosobject作为lockfile"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2019-09-02</div><div class="title">CTDB使用radosobject作为lockfile</div></div></a></div><div><a href="/2016/09/12/Centos7%E4%B8%8BJewel%E7%89%88%E6%9C%ACradosgw%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/" title="Centos7下Jewel版本radosgw服务启动"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-09-12</div><div class="title">Centos7下Jewel版本radosgw服务启动</div></div></a></div><div><a href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" title="CentOS GRUB损坏修复方法"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2017-11-30</div><div class="title">CentOS GRUB损坏修复方法</div></div></a></div><div><a href="/2017/05/03/Ceph%20OSD%E4%BB%8Efilestore%20%E8%BD%AC%E6%8D%A2%E5%88%B0%20bluestore%E7%9A%84%E6%96%B9%E6%B3%95/" title="Ceph OSD从filestore 转换到 bluestore的方法"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2017-05-03</div><div class="title">Ceph OSD从filestore 转换到 bluestore的方法</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__description"><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">这有关于<b style="color:#fff">产品、技术、开发</b>相关的问题和看法</b>。</div><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">相信你可以在这里找到对你有用的<b style="color:#fff">知识</b>和<b style="color:#fff">教程</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">zphj1987</h1><div class="author-info__desc">竹杖芒鞋轻胜马,一蓑烟雨任平生</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/zphj1987" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">预备知识：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">测试环境：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%87%86%E5%A4%87journal%E7%9A%84%E5%86%85%E5%AD%98%E7%9B%98"><span class="toc-number">3.</span> <span class="toc-text">1、准备journal的内存盘</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E5%86%85%E5%AD%98%E7%9B%98%E5%A4%A7%E5%B0%8F"><span class="toc-number">3.1.</span> <span class="toc-text">检查内存盘大小</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%86%85%E5%AD%98%E7%9B%98%EF%BC%8C%E5%B9%B6%E4%B8%94%E6%8C%82%E8%BD%BD"><span class="toc-number">3.2.</span> <span class="toc-text">格式化内存盘，并且挂载</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%8C%82%E8%BD%BD%E7%9B%AE%E5%BD%95%EF%BC%88%E6%9C%89%E5%A4%9A%E5%B0%91osd%E5%BB%BA%E5%87%A0%E4%B8%AA%EF%BC%89"><span class="toc-number">3.2.1.</span> <span class="toc-text">创建挂载目录（有多少osd建几个）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96memdisk-%E9%9C%80%E8%A6%81%E5%87%A0%E4%B8%AA%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%87%A0%E4%B8%AA"><span class="toc-number">3.2.2.</span> <span class="toc-text">格式化memdisk(需要几个格式化几个)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD%E5%86%85%E5%AD%98%E7%9B%98"><span class="toc-number">3.2.3.</span> <span class="toc-text">挂载内存盘</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD%E5%AE%8C%E4%BA%86%E5%90%8E%E7%9A%84%E6%95%88%E6%9E%9C%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="toc-number">3.2.4.</span> <span class="toc-text">挂载完了后的效果如下：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E5%87%86%E5%A4%87ceph%E7%9A%84%E7%8E%AF%E5%A2%83"><span class="toc-number">4.</span> <span class="toc-text">2、准备ceph的环境</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAmon"><span class="toc-number">4.1.</span> <span class="toc-text">创建mon</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAosd"><span class="toc-number">4.2.</span> <span class="toc-text">创建osd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%A7%E7%BB%AD%E9%83%A8%E7%BD%B2%E7%94%9F%E6%95%88%E7%9A%84%E4%B8%89%E4%B8%AAosd"><span class="toc-number">4.3.</span> <span class="toc-text">继续部署生效的三个osd</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%B5%8B%E8%AF%95"><span class="toc-number">5.</span> <span class="toc-text">开始测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%9B%98journal%E4%B8%8E%E7%A3%81%E7%9B%98journal%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="toc-number">6.</span> <span class="toc-text">内存盘journal与磁盘journal性能对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E7%9F%A5%E8%AF%86%EF%BC%88-dev-shm%E6%A8%A1%E5%BC%8F%EF%BC%89"><span class="toc-number"></span> <span class="toc-text">增加知识（&#x2F;dev&#x2F;shm模式）</span></a></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/01/08/%E6%8E%A8%E9%80%81%E7%9B%91%E6%8E%A7%E6%B6%88%E6%81%AF%E5%88%B0%E9%92%89%E9%92%89%E7%BE%A4/" title="推送监控消息到钉钉群"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/dingding.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="推送监控消息到钉钉群"/></a><div class="content"><a class="title" href="/2024/01/08/%E6%8E%A8%E9%80%81%E7%9B%91%E6%8E%A7%E6%B6%88%E6%81%AF%E5%88%B0%E9%92%89%E9%92%89%E7%BE%A4/" title="推送监控消息到钉钉群">推送监控消息到钉钉群</a><time datetime="2024-01-08T02:55:26.000Z" title="发表于 2024-01-08 10:55:26">2024-01-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/06/%E5%A6%82%E4%BD%95%E5%AF%BC%E5%87%BAcnblog%E9%87%8C%E9%9D%A2%E7%9A%84md%E6%96%87%E4%BB%B6/" title="如何导出cnblog里面的md文件"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/movecnblog.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何导出cnblog里面的md文件"/></a><div class="content"><a class="title" href="/2024/01/06/%E5%A6%82%E4%BD%95%E5%AF%BC%E5%87%BAcnblog%E9%87%8C%E9%9D%A2%E7%9A%84md%E6%96%87%E4%BB%B6/" title="如何导出cnblog里面的md文件">如何导出cnblog里面的md文件</a><time datetime="2024-01-06T13:51:48.000Z" title="发表于 2024-01-06 21:51:48">2024-01-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/05/nmon%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" title="nmon文件过大的处理方法"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="nmon文件过大的处理方法"/></a><div class="content"><a class="title" href="/2024/01/05/nmon%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" title="nmon文件过大的处理方法">nmon文件过大的处理方法</a><time datetime="2024-01-05T13:26:00.000Z" title="发表于 2024-01-05 21:26:00">2024-01-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/06/openeuler%E4%B8%8D%E8%AF%86%E5%88%ABcmake-build/" title="openeuler不识别cmake_build"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="openeuler不识别cmake_build"/></a><div class="content"><a class="title" href="/2023/06/06/openeuler%E4%B8%8D%E8%AF%86%E5%88%ABcmake-build/" title="openeuler不识别cmake_build">openeuler不识别cmake_build</a><time datetime="2023-06-06T01:56:36.000Z" title="发表于 2023-06-06 09:56:36">2023-06-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/05/%E6%AF%94%E8%BE%83%E4%B8%A4%E4%B8%AA%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E7%9A%84rpm/" title="比较两个系统安装的rpm"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="比较两个系统安装的rpm"/></a><div class="content"><a class="title" href="/2023/06/05/%E6%AF%94%E8%BE%83%E4%B8%A4%E4%B8%AA%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E7%9A%84rpm/" title="比较两个系统安装的rpm">比较两个系统安装的rpm</a><time datetime="2023-06-05T02:21:23.000Z" title="发表于 2023-06-05 10:21:23">2023-06-05</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/shangban.svg" alt="距离月入25k也就还差一个大佬带我~" title="距离月入25k也就还差一个大佬带我~"/><div id="runtimeTextTip"></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2015 - 2024 By <a class="footer-bar-link" href="/" title="zphj1987" target="_blank">zphj1987</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://beian.miit.gov.cn/" title="鄂ICP备2022001754号-2">鄂ICP备2022001754号-2</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">338</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">4</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">其它站点</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/zphj1987" title="CSDN-武汉磨磨"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="CSDN-武汉磨磨"/><span class="back-menu-item-text">CSDN-武汉磨磨</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文库</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 文章列表</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 全部分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 全部标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/ceph/" style="font-size: 0.88rem;">ceph<sup>1</sup></a><a href="/tags/chatgpt/" style="font-size: 0.88rem;">chatgpt<sup>1</sup></a><a href="/tags/openai/" style="font-size: 0.88rem;">openai<sup>1</sup></a><a href="/tags/%E5%86%85%E6%A0%B8/" style="font-size: 0.88rem;">内核<sup>2</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">博客相关<sup>1</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 0.88rem;">操作系统<sup>1</sup></a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" style="font-size: 0.88rem;">暂未分类<sup>302</sup></a><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 0.88rem;">杂七杂八<sup>1</sup></a><a href="/tags/%E7%9B%91%E6%8E%A7/" style="font-size: 0.88rem;">监控<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" style="font-size: 0.88rem;">系统服务<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 0.88rem;">计算机<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 0.88rem;">高可用<sup>1</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="anzhiyufont anzhiyu-icon-xmark"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.cbd.int/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script async src="/anzhiyu/random.js"></script><script async="async">(function () {
+  var grt = new Date("03/19/2015 12:00:00"); //设置网站上线时间
+  var now = new Date();
+  var dnum;
+  var hnum;
+  var mnum;
+  var snum;
+  var nowHour;
+
+  // 计算并更新天数、小时数、分钟数和秒数
+  function updateTime() {
+    now = new Date(); // 更新 now 的值
+    nowHour = now.getHours(); // 更新 nowHour 的值
+    var days = (now - grt) / 1000 / 60 / 60 / 24;
+    dnum = Math.floor(days);
+    var hours = (now - grt) / 1000 / 60 / 60 - 24 * dnum;
+    hnum = Math.floor(hours);
+    if (String(hnum).length == 1) {
+      hnum = "0" + hnum;
+    }
+    var minutes = (now - grt) / 1000 / 60 - 24 * 60 * dnum - 60 * hnum;
+    mnum = Math.floor(minutes);
+    if (String(mnum).length == 1) {
+      mnum = "0" + mnum;
+    }
+    var seconds = (now - grt) / 1000 - 24 * 60 * 60 * dnum - 60 * 60 * hnum - 60 * mnum;
+    snum = Math.round(seconds);
+    if (String(snum).length == 1) {
+      snum = "0" + snum;
+    }
+  }
+
+  // 更新网页中显示的网站运行时间
+  function updateHtml() {
+    const footer = document.getElementById("footer");
+    if (!footer) return
+    let currentTimeHtml = "";
+    if (nowHour < 18 && nowHour >= 9) {
+      // 如果是上班时间，默认就是"安知鱼-上班摸鱼中.svg"图片，不需要更改
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    } else {
+      // 如果是下班时间，插入"安知鱼-下班啦.svg"图片
+      let img = document.querySelector("#workboard .workSituationImg");
+      if (img != null) {
+        img.src = "/images/xiaban.svg";
+        img.title = "下班了就该开开心心的玩耍，嘿嘿~";
+        img.alt = "下班了就该开开心心的玩耍，嘿嘿~";
+      }
+
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    }
+
+    if (document.getElementById("runtimeTextTip")) {
+      document.getElementById("runtimeTextTip").innerHTML = currentTimeHtml;
+    }
+  }
+
+  setInterval(() => {
+    updateTime();
+    updateHtml();
+  }, 1000);
+})();</script><script src="https://cdn.cbd.int/algoliasearch@4.18.0/dist/algoliasearch-lite.umd.js"></script><script src="https://cdn.cbd.int/instantsearch.js@4.60.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script><div class="js-pjax"><input type="hidden" name="page-type" id="page-type" value="post"></div><script>var visitorMail = "";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>

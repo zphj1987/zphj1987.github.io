@@ -1,3 +1,4 @@
+http://zphj1987.com/2024/03/07/%E6%9F%A5%E7%9C%8Bceph%E7%9A%84osd%E7%9A%84bluestore-min-alloc-size/
 http://zphj1987.com/2015/03/24/fio%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8/
 http://zphj1987.com/2023/01/31/centos7yum%E6%BA%90%E9%85%8D%E7%BD%AE/
 http://zphj1987.com/2024/03/06/drbd%E7%9A%84%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96/
@@ -361,11 +362,11 @@ http://zphj1987.com/2011/12/16/%E5%8D%95%E7%8B%AC%E7%BC%96%E8%AF%91%E4%B8%80%E4%
 http://zphj1987.com/
 http://zphj1987.com/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/
 http://zphj1987.com/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/
-http://zphj1987.com/tags/%E5%86%85%E6%A0%B8/
 http://zphj1987.com/tags/Linux/
+http://zphj1987.com/tags/%E5%86%85%E6%A0%B8/
 http://zphj1987.com/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/
-http://zphj1987.com/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/
 http://zphj1987.com/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/
+http://zphj1987.com/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/
 http://zphj1987.com/tags/chatgpt/
 http://zphj1987.com/tags/%E6%B5%8B%E8%AF%95/
 http://zphj1987.com/tags/ceph/
@@ -379,12 +380,13 @@ http://zphj1987.com/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/
 http://zphj1987.com/categories/%E6%93%8D%E4%BD%9C%E6%96%87%E6%A1%A3/
 http://zphj1987.com/categories/Linux%E7%9F%A5%E8%AF%86/
 http://zphj1987.com/categories/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/
+http://zphj1987.com/categories/%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/
 http://zphj1987.com/categories/%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/
 http://zphj1987.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/
-http://zphj1987.com/categories/%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/
 http://zphj1987.com/categories/%E5%AD%98%E5%82%A8/
-http://zphj1987.com/categories/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/
 http://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87/
+http://zphj1987.com/categories/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/
 http://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/
+http://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/
 http://zphj1987.com/categories/%E7%94%9F%E6%B4%BB%E6%97%A5%E5%B8%B8/
 http://zphj1987.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/

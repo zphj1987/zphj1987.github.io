@@ -1,0 +1,523 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>cgroup实践-资源控制 | 磨磨的技术博客</title><meta name="keywords" content="暂未分类"><meta name="author" content="zphj1987"><meta name="copyright" content="zphj1987"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="cgroup实践-资源控制"><meta name="application-name" content="cgroup实践-资源控制"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="cgroup实践-资源控制"><meta property="og:url" content="https://zphj1987.com/2015/03/24/cgroup%E5%AE%9E%E8%B7%B5-%E8%B5%84%E6%BA%90%E6%8E%A7%E5%88%B6/index.html"><meta property="og:site_name" content="磨磨的技术博客"><meta property="og:description" content="1、Cgroup安装安装Cgroups需要libcap-devel和libcgroup两个相关的包 1yum install gcc libcap-devel   2、Cgroup挂载配置 12345678Cgroup对应服务名称为cgconfig，cgconfig默认采用“多挂载点”挂载。经过实际"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://zphj1987.com/images/default_cover_1.jpeg"><meta property="article:author" content="zphj1987"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://zphj1987.com/images/default_cover_1.jpeg"><meta name="description" content="1、Cgroup安装安装Cgroups需要libcap-devel和libcgroup两个相关的包 1yum install gcc libcap-devel   2、Cgroup挂载配置 12345678Cgroup对应服务名称为cgconfig，cgconfig默认采用“多挂载点”挂载。经过实际"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://zphj1987.com/2015/03/24/cgroup%E5%AE%9E%E8%B7%B5-%E8%B5%84%E6%BA%90%E6%8E%A7%E5%88%B6/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0a806a1271c36ae0e709307eae2a6eb5";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  peoplecanvas: undefined,
+  postHeadAiDescription: {"enable":true,"gptName":"AnZhiYu","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: undefined,
+  LA51: undefined,
+  greetingBox: undefined,
+  twikooEnvId: '',
+  commentBarrageConfig:undefined,
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: false,
+  mainTone: undefined,
+  authorStatus: undefined,
+  algolia: {"appId":"GXWN6XTBBN","apiKey":"46fe2a73adf385608a95fb1cf263e589","indexName":"zphj","hits":{"per_page":6},"languages":{"input_placeholder":"输入关键词后按下回车查找","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":330},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: zphj1987","link":"链接: ","source":"来源: 磨磨的技术博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: '磨磨的技术博客',
+  title: 'cgroup实践-资源控制',
+  postAI: '',
+  pageFillDescription: '测试一：限制cpu的资源, 测试二：限制进程的内存资源, 测试三：限制进程的IO资源, 实践记录安装安装需要和两个相关的包挂载配置对应服务名称为默认采用多挂载点挂载经过实际测试发现在环境中应采用单挂载点进行挂载因此应当卸载原有文件系统并禁用或者停止卸载目录禁用服务避免其开机启动然后采用单挂载点方式重新挂载可以直接手动挂载这样仅当次挂载成功然后编辑输入下列内容这样每次开机后都会自动挂载常用的相关命令和配置文件查看已存在子系统查看已存在子系统清除所有挂载点内部文件相当于重新挂载默认挂载点配置文件简介命令是用来将运行的任务移动到一个或者多个命令是用来删除层级中的所有在文件中定义命令解析文件和并挂载层级在层级中创建新命令删除指定的命令在指定的中运行任务命令显示参数是服务的配置文件包含用来决定何时任务术语某些的规则在中发布任务命令为设定参数命令列出层级中的命令列出包含指定子系统的层级测试一限制的资源测试后验证了可以做到限制进程的占用百分比限制多个进程组的之间的使用权重指定进程的使用的和内存组绑定跑一个耗的脚本可以看到这个脚本基本占了的资源创建一个控制组控制这个进程的资源新建一个控制组将设为相对于的是然后的实时统计数据如下占用率将近看来关于的控制起了效果可以看到进程的占用已经被成功地限制到了这里测试的虚拟机只有一个核心在多核情况下看到的值会不一样另外也是可以大于的这主要是对于多核情况有个核时一个控制组中的进程自然最多就能用到倍的时间这两个值在层次中是有限制的下层的资源不能超过上层具体的说就是下层的值不能小于上层的值值不能大于上层的值另外的一组对应的是实时进程的限制平时可能不会有机会用到在子系统中就是用前面那种方法做的资源限制的统计了就是总共经过的周期和其中受限制的周期就是总共被控制组掐掉的使用时间还有个它也是用来限制使用的但是与有挺大区别不是限制进程能使用的绝对的时间而是控制各个组之间的配额比如那么当两个组中的进程都满负荷运行时中的进程所能占用的就是中的进程的两倍如果再建一个的也是且也有满负荷运行的进程那的占用比就是前面说的是各自都跑满的情况如果其他控制组中的进程闲着那某一个组的进程完全可以用满全部可见通常情况下这种方式在保证公平的情况下能更充分利用资源此外还可以限定进程可以使用哪些核心子系统就是处理进程可以使用的核心和内存节点以及其他一些相关配置这部分的很多配置都和有关其中就是用来限制进程可以使用的核心和内存节点的这两个参数中核心内存节点都用表示之间用分隔比如也可以用表示范围如两者可以结合起来用如在添加进程前必须同时设置而且必须是兼容的否则会出错例如这样中的进程只能使用和内存节点用除了用来限制资源使用外还有资源统计的功能做云计算的计费就可以用到它有一个子系统专门用来做资源统计统计了该控制组中进程用户态和内核态的使用量单位是也就是滴答数每秒的滴答数可以用来获取通常是将看到的值除以这个值就可以换算成秒测试二限制进程的内存资源测试后验证了限制了资源的占用达到内存以后进程直接杀掉测试方法跑一个耗内存的脚本内存不断增长看内存占用稳步上升下面用控制这个进程的内存资源分配的内存给这个控制组发现之前的脚本被掉已杀死因为这是强硬的限制内存当进程试图占用的内存超过了的限制会触发导致进程被掉实际情况中对进程的内存使用会有一个预估然后会给这个进程的限制超配比如除非发生内存泄露等异常情况才会因为的限制被掉也可以通过配置关掉进程通过来实现但是尽管进程不会被直接杀死但进程也进入了休眠状态无法继续执行仍然无法服务关于内存的控制还有以下配置文件关于虚拟内存的控制以及权值比重式的内存控制等测试三限制进程的资源测试验证了能够控制设备的读写速度跑一个耗的脚本通过看占用情况磁盘速度到了下面用控制这个进程的资源对应主设备号和副设备号可以通过查看再通过看确实将读速度降到了对于还有很多其他可以控制层面和方式如下子系统里东西很多不过大部分都是只读的状态报告可写的参数就只有下面这几个这些都是用来控制进程的磁盘的很明显地分成两类其中带的顾名思义就是节流阀将流量限制在某个值下而就是分配的权重再看看的和方式和子系统的和有点像都是一种是绝对限制另一种是相对限制并且在不繁忙的时候可以充分利用资源权重值的范围在之间测试权重方式要麻烦一点因为不是绝对限制所以会受到文件系统缓存的影响如在虚拟机中测试要关闭虚机如我用的在宿主机上的缓存如要测试读的效果先生成两个几个的大文件可以用搞然后设置两个权重测试前清空文件系统缓存以免干扰测试结果在这两个控制组中用产生测试效果还是用看看效果两个进程每秒读的字节数虽然会不断变动但是大致趋势还是维持在左右和设定的比例一致是分设备的写入时前面再加上设备号即可实践记录假如已经配置好一个资源组现在想让一个服务按这个组的资源分配来运行服务而不需要去找到进程号再写入到中这个运行以后有会自动将进程号写入到当中去查询一个组里面设置的资源的限制设置的值会显示出来没有设置的就会提示没有找到需要用两个限制条件对进程进行限制默认情况下是一个大根然后分了几个资源系统还支持做一个子系统组即单独组建一个资源组然后对这个资源组里面进行配置具体方法如下需要创建控制组群如上的想通过命令行的方式创建如上命令使用后会在中多了目录并且里面是继承的上级的里面的参数这样就创建了一个的组群删除组群的方式如下删除时其所有任务都移动到了父组群当中设置里面的配置参数需要设置执行路径是相对于根的如果想设置根的这个参数那么就执行这里需要注意只有某些参数是可以修改的某些参数是不能修改的也可以直接的方式进行参数的设置移动某个进程到控制组群当中动态的进行资源的调配移动指定进程到指定的控制组当中创建两个资源组使用上面的的脚本然后运行后使用进行监控监控看到的占用为监控看到的占用为注意支持多进程多资源组同时移动备用方法就是直接通过规则对指定的进程进行控制我们还可以通过设置规则来让规则引擎后台程序自动将进程分配给特定组后台程序根据文件中的设置将任务移到中启动监控进程服务效果如下运行相同的命令所占用的的资源按指定的比例进行占用如上所述指定用户可以指定进程进行控制也可以指定用户的所有进程进行控制后台的做的操作就是把进行的号移动到了指定的资源组的当中去了',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-05 23:39:20',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="/images/logo.jpeg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">其它站点</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/zphj1987" title="CSDN-武汉磨磨"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="CSDN-武汉磨磨"/><span class="back-menu-item-text">CSDN-武汉磨磨</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">磨磨的技术博客</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文库</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 文章列表</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 全部分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 全部标签</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/sitemap.xml"><span> sitemap</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="/images/wechatmei.png" target="_blank"><img class="post-qr-code-img" alt="微信" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/wechatmei.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubaomei.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/zhifubaomei.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Linux/" style="font-size: 1.05rem;">Linux<sup>1</sup></a><a href="/tags/ceph/" style="font-size: 1.05rem;">ceph<sup>7</sup></a><a href="/tags/chatgpt/" style="font-size: 1.05rem;">chatgpt<sup>1</sup></a><a href="/tags/lvm/" style="font-size: 1.05rem;">lvm<sup>1</sup></a><a href="/tags/openai/" style="font-size: 1.05rem;">openai<sup>1</sup></a><a href="/tags/windows/" style="font-size: 1.05rem;">windows<sup>2</sup></a><a href="/tags/%E5%86%85%E6%A0%B8/" style="font-size: 1.05rem;">内核<sup>2</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">博客相关<sup>1</sup></a><a href="/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">存储相关<sup>1</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.05rem;">操作系统<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/" style="font-size: 1.05rem;">数据管理<sup>1</sup></a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" style="font-size: 1.05rem;">暂未分类<sup>302</sup></a><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 1.05rem;">杂七杂八<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 1.05rem;">测试<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">测试相关<sup>1</sup></a><a href="/tags/%E7%9B%91%E6%8E%A7/" style="font-size: 1.05rem;">监控<sup>1</sup></a><a href="/tags/%E7%A3%81%E7%9B%98/" style="font-size: 1.05rem;">磁盘<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" style="font-size: 1.05rem;">系统服务<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 1.05rem;">系统配置<sup>3</sup></a><a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 1.05rem;">网络配置<sup>1</sup></a><a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/" style="font-size: 1.05rem;">虚拟化<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 1.05rem;">计算机<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 1.05rem;">高可用<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="anzhiyufont anzhiyu-icon-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/08/"><span class="card-archive-list-date">八月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/07/"><span class="card-archive-list-date">七月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">六月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">四月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">4</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/03/"><span class="card-archive-list-date">三月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">6</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/02/"><span class="card-archive-list-date">二月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">5</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">一月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" itemprop="url">暂未分类</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>暂未分类</span></a></span></div></div><h1 class="post-title" itemprop="name headline">cgroup实践-资源控制</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2015-03-24T05:32:00.000Z" title="发表于 2015-03-24 13:32:00">2015-03-24</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2024-01-05T15:39:20.465Z" title="更新于 2024-01-05 23:39:20">2024-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-pv-cv" id="" data-flag-title="cgroup实践-资源控制"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为武汉"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>武汉</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="/images/default_cover_1.jpeg"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://zphj1987.com/2015/03/24/cgroup%E5%AE%9E%E8%B7%B5-%E8%B5%84%E6%BA%90%E6%8E%A7%E5%88%B6/"><header><a class="post-meta-categories" href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" itemprop="url">暂未分类</a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" tabindex="-1" itemprop="url">暂未分类</a><h1 id="CrawlerTitle" itemprop="name headline">cgroup实践-资源控制</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">zphj1987</span><time itemprop="dateCreated datePublished" datetime="2015-03-24T05:32:00.000Z" title="发表于 2015-03-24 13:32:00">2015-03-24</time><time itemprop="dateCreated datePublished" datetime="2024-01-05T15:39:20.465Z" title="更新于 2024-01-05 23:39:20">2024-01-05</time></header><p>1、Cgroup安装<br>安装Cgroups需要libcap-devel和libcgroup两个相关的包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc libcap-devel </span><br></pre></td></tr></table></figure>
+
+<p>2、Cgroup挂载配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Cgroup对应服务名称为cgconfig，cgconfig默认采用“多挂载点”挂载。经过实际测试，发现在CentOS环境中应采用“单挂载点”进行挂载，因此应当卸载原有cgroup文件系统，并禁用cgconfig。</span><br><span class="line">cgclear或者sudo service cgconfig stop <span class="comment"># 停止cgconfig，卸载cgroup目录</span></span><br><span class="line">sudo chkconfig cgconfig off          <span class="comment"># 禁用cgconfig服务，避免其开机启动</span></span><br><span class="line">然后采用“单挂载点”方式重新挂载cgroup。</span><br><span class="line">可以直接手动挂载，这样仅当次挂载成功。</span><br><span class="line">mount -t cgroup none /cgroup</span><br><span class="line">然后编辑/etc/fstab/，输入下列内容。这样每次开机后都会自动挂载。</span><br><span class="line">none   /cgroup  cgroup  defaults   0 0</span><br></pre></td></tr></table></figure>
+
+<p>3、常用的Cgroup相关命令和配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">service cgconfig status|start|stop|restart    <span class="comment">#查看已存在子系统</span></span><br><span class="line">lssubsys –am    <span class="comment">#查看已存在子系统</span></span><br><span class="line">cgclear   <span class="comment"># 清除所有挂载点内部文件，相当于service  cgconfig stop</span></span><br><span class="line">cgconfigparser -l /etc/cgconfig.conf    <span class="comment">#重新挂载</span></span><br><span class="line"></span><br><span class="line">Cgroup默认挂载点（CentOS）：/cgroup</span><br><span class="line">cgconfig配置文件：/etc/cgconfig.conf</span><br></pre></td></tr></table></figure>
+<p>4、libcgroup Man Page简介</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">man 1 cgclassify -- cgclassify命令是用来将运行的任务移动到一个或者多个cgroup。</span><br><span class="line">man 1 cgclear -- cgclear 命令是用来删除层级中的所有cgroup。</span><br><span class="line">man 5 cgconfig.conf -- 在cgconfig.conf文件中定义cgroup。</span><br><span class="line">man 8 cgconfigparser -- cgconfigparser命令解析cgconfig.conf文件和并挂载层级。</span><br><span class="line"></span><br><span class="line">man 1 cgcreate -- cgcreate在层级中创建新cgroup。</span><br><span class="line">man 1 cgdelete -- cgdelete命令删除指定的cgroup。</span><br><span class="line">man 1 cgexec -- cgexec命令在指定的cgroup中运行任务。</span><br><span class="line">man 1 cgget -- cgget命令显示cgroup参数。</span><br><span class="line">man 5 cgred.conf -- cgred.conf是cgred服务的配置文件。</span><br><span class="line">man 5 cgrules.conf -- cgrules.conf 包含用来决定何时任务术语某些  cgroup的规则。</span><br><span class="line"></span><br><span class="line">man 8 cgrulesengd -- cgrulesengd 在  cgroup 中发布任务。</span><br><span class="line">man 1 cgset -- cgset 命令为  cgroup 设定参数。</span><br><span class="line">man 1 lscgroup -- lscgroup 命令列出层级中的  cgroup。</span><br><span class="line">man 1 lssubsys -- lssubsys 命令列出包含指定子系统的层级。</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="测试一：限制cpu的资源"><a href="#测试一：限制cpu的资源" class="headerlink" title="测试一：限制cpu的资源"></a>测试一：限制cpu的资源</h3><p>测试后验证了可以做到：</p>
+<ul>
+<li><pre><code>限制进程的cpu占用百分比
+</code></pre>
+</li>
+<li><pre><code>限制多个进程组的之间的cpu使用权重
+</code></pre>
+</li>
+<li><pre><code>指定进程的使用的cpu和内存组（绑定cpu）
+</code></pre>
+</li>
+</ul>
+<p>跑一个耗cpu的脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x=0</span><br><span class="line"><span class="keyword">while</span> [ True ];<span class="keyword">do</span></span><br><span class="line">    x=<span class="variable">$x</span>+1</span><br><span class="line"><span class="keyword">done</span>;</span><br></pre></td></tr></table></figure>
+<p>top可以看到这个脚本基本占了100%的cpu资源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">top - 15:30:01 up  1:03,  5 <span class="built_in">users</span>,  load average: 0.30, 0.50, 0.39</span><br><span class="line">Tasks: 210 total,   2 running, 208 sleeping,   0 stopped,   0 zombie</span><br><span class="line">Cpu(s):  6.3%us,  0.1%sy,  0.0%ni, 93.5%<span class="built_in">id</span>,  0.2%wa,  0.0%hi,  0.0%si,  0.0%st</span><br><span class="line">Mem:  49461228k total, 13412644k used, 36048584k free,    75384k buffers</span><br><span class="line">Swap:  2097148k total,        0k used,  2097148k free, 12498636k cached</span><br><span class="line"></span><br><span class="line">    PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND</span><br><span class="line">11605 root      20   0  104m 1528 1016 R 99.7  0.0   2:30.48 sh</span><br><span class="line">105 root      20   0     0    0    0 S  0.3  0.0   0:00.11 kworker/8:1  </span><br></pre></td></tr></table></figure>
+<p>创建一个控制组控制这个进程的cpu资源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /cgroup/cpu/foo	     <span class="comment">#新建一个控制组foo</span></span><br><span class="line"><span class="built_in">echo</span> 50000 &gt; /cgroup/cpu/foo/cpu.cfs_quota_us  <span class="comment">#将cpu.cfs_quota_us设为50000，相对于cpu.cfs_period_us的100000是50%</span></span><br><span class="line"><span class="built_in">echo</span> 11605 &gt; /cgroup/cpu/foo/tasks</span><br></pre></td></tr></table></figure>
+<p>然后top的实时统计数据如下，cpu占用率将近50%，看来cgroups关于cpu的控制起了效果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">top - 15:32:48 up  1:06,  5 <span class="built_in">users</span>,  load average: 0.80, 0.68, 0.48</span><br><span class="line">Tasks: 210 total,   2 running, 208 sleeping,   0 stopped,   0 zombie</span><br><span class="line">Cpu(s):  3.2%us,  0.0%sy,  0.0%ni, 96.8%<span class="built_in">id</span>,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st</span><br><span class="line">Mem:  49461228k total, 13412276k used, 36048952k free,    75400k buffers</span><br><span class="line">Swap:  2097148k total,        0k used,  2097148k free, 12498652k cached</span><br><span class="line"></span><br><span class="line">PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND</span><br><span class="line">11605 root      20   0  104m 1724 1016 R 50.2  0.0   5:09.97 sh</span><br><span class="line">11639 root      20   0 15200 1200  820 R  0.3  0.0   0:00.03 top    </span><br></pre></td></tr></table></figure>
+
+<p>可以看到，进程的 cpu 占用已经被成功地限制到了 50% 。这里，测试的虚拟机只有一个核心。在多核情况下，看到的值会不一样。另外，cfs_quota_us 也是可以大于 cfs_period_us 的，这主要是对于多核情况。有 n 个核时，一个控制组中的进程自然最多就能用到 n 倍的 cpu 时间。</p>
+<p>这两个值在 cgroups 层次中是有限制的，下层的资源不能超过上层。具体的说，就是下层的 cpu.cfs_period_us 值不能小于上层的值，cpu.cfs_quota_us 值不能大于上层的值。</p>
+<p>另外的一组 cpu.rt_period_us、cpu.rt_runtime_us 对应的是实时进程的限制，平时可能不会有机会用到。</p>
+<p>在 cpu 子系统中，cpu.stat 就是用前面那种方法做的资源限制的统计了。nr_periods、nr_throttled 就是总共经过的周期，和其中受限制的周期。throttled_time 就是总共被控制组掐掉的 cpu 使用时间。</p>
+<p>还有个 cpu.shares， 它也是用来限制 cpu 使用的。但是与 cpu.cfs_quota_us、cpu.cfs_period_us 有挺大区别。cpu.shares 不是限制进程能使用的绝对的 cpu 时间，而是控制各个组之间的配额。比如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/cpu/cpu.shares : 1024</span><br><span class="line">/cpu/foo/cpu.shares : 2048</span><br></pre></td></tr></table></figure>
+<p>那么当两个组中的进程都满负荷运行时，&#x2F;foo 中的进程所能占用的 cpu 就是 &#x2F; 中的进程的两倍。如果再建一个 &#x2F;foo&#x2F;bar 的 cpu.shares 也是 1024，且也有满负荷运行的进程，那 &#x2F;、&#x2F;foo、&#x2F;foo&#x2F;bar 的 cpu 占用比就是 1:2:1 。前面说的是各自都跑满的情况。如果其他控制组中的进程闲着，那某一个组的进程完全可以用满全部 cpu。可见通常情况下，这种方式在保证公平的情况下能更充分利用资源。</p>
+<p>此外，还可以限定进程可以使用哪些 cpu 核心。cpuset 子系统就是处理进程可以使用的 cpu 核心和内存节点，以及其他一些相关配置。这部分的很多配置都和 NUMA 有关。其中 cpuset.cpus、cpuset.mems 就是用来限制进程可以使用的 cpu 核心和内存节点的。这两个参数中 cpu 核心、内存节点都用 id 表示，之间用 “,” 分隔。比如 0,1,2 。也可以用 “-” 表示范围，如 0-3 。两者可以结合起来用。如“0-2,6,7”。在添加进程前，cpuset.cpus、cpuset.mems 必须同时设置，而且必须是兼容的，否则会出错。例如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># echo 0 &gt;/sys/fs/cgroup/cpuset/foo/cpuset.cpus</span></span><br><span class="line"><span class="comment"># echo 0 &gt;/sys/fs/cgroup/cpuset/foo/cpuset.mems</span></span><br><span class="line">这样， /foo 中的进程只能使用 cpu0 和内存节点0。用</span><br><span class="line"></span><br><span class="line"><span class="comment"># cat /proc/&lt;pid&gt;/status|grep &#x27;_allowed_list&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+<p>cgroups 除了用来限制资源使用外，还有资源统计的功能。做云计算的计费就可以用到它。有一个 cpuacct 子系统专门用来做 cpu 资源统计。cpuacct.stat 统计了该控制组中进程用户态和内核态的 cpu 使用量，单位是 USER_HZ，也就是 jiffies、cpu 滴答数。每秒的滴答数可以用 getconf CLK_TCK 来获取，通常是 100。将看到的值除以这个值就可以换算成秒。</p>
+<h3 id="测试二：限制进程的内存资源"><a href="#测试二：限制进程的内存资源" class="headerlink" title="测试二：限制进程的内存资源"></a>测试二：限制进程的内存资源</h3><p>测试后验证了：</p>
+<ul>
+<li>限制了资源的占用，达到内存以后，进程直接杀掉</li>
+</ul>
+<p>测试方法：</p>
+<p>跑一个耗内存的脚本，内存不断增长</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x=<span class="string">&quot;a&quot;</span></span><br><span class="line"><span class="keyword">while</span> [ True ];<span class="keyword">do</span></span><br><span class="line">    x=$x<span class="variable">$x</span></span><br><span class="line"><span class="keyword">done</span>;</span><br></pre></td></tr></table></figure>
+<p>top看内存占用稳步上升</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">    PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND</span><br><span class="line">    30215 root      20   0  871m 501m 1036 R 99.8 26.7   0:38.69 sh  </span><br><span class="line">30215 root      20   0 1639m 721m 1036 R 98.7 38.4   1:03.99 sh </span><br><span class="line">30215 root      20   0 1639m 929m 1036 R 98.6 49.5   1:13.73 sh</span><br></pre></td></tr></table></figure>
+<p>下面用cgroups控制这个进程的内存资源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /cgroup/memory/foo</span><br><span class="line"><span class="built_in">echo</span> 1048576 &gt;  /cgroup/memory/foo/memory.limit_in_bytes   <span class="comment">#分配1MB的内存给这个控制组</span></span><br><span class="line"><span class="built_in">echo</span> 30215 &gt; /cgroup/memory/foo/tasks </span><br></pre></td></tr></table></figure>
+<p>发现之前的脚本被kill掉</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># sh /home/test.sh </span></span><br><span class="line">已杀死</span><br></pre></td></tr></table></figure>
+<p>因为这是强硬的限制内存，当进程试图占用的内存超过了cgroups的限制，会触发out of memory，导致进程被kill掉。</p>
+<p>实际情况中对进程的内存使用会有一个预估，然后会给这个进程的限制超配50%比如，除非发生内存泄露等异常情况，才会因为cgroups的限制被kill掉。</p>
+<p>也可以通过配置关掉cgroups oom kill进程，通过memory.oom_control来实现（oom_kill_disable 1），但是尽管进程不会被直接杀死，但进程也进入了休眠状态，无法继续执行，仍然无法服务。</p>
+<p>关于内存的控制，还有以下配置文件，关于虚拟内存的控制，以及权值比重式的内存控制等</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment"># ls /cgroup/memory/foo/</span></span><br><span class="line">cgroup.event_control  memory.force_empty         memory.memsw.failcnt             </span><br><span class="line">memory.memsw.usage_in_bytes      memory.soft_limit_in_bytes  memory.usage_in_bytes  tasks</span><br><span class="line">cgroup.procs          memory.limit_in_bytes      memory.memsw.limit_in_bytes      </span><br><span class="line">memory.move_charge_at_immigrate  memory.stat                 memory.use_hierarchy</span><br><span class="line">memory.failcnt        memory.max_usage_in_bytes  memory.memsw.max_usage_in_bytes  </span><br><span class="line">memory.oom_control               memory.swappiness           notify_on_release</span><br></pre></td></tr></table></figure>
+<h3 id="测试三：限制进程的IO资源"><a href="#测试三：限制进程的IO资源" class="headerlink" title="测试三：限制进程的IO资源"></a>测试三：限制进程的IO资源</h3><p>测试验证了：</p>
+<ul>
+<li>能够控制io设备的读写速度</li>
+</ul>
+<p>跑一个耗io的脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">    <span class="built_in">dd</span> <span class="keyword">if</span>=/dev/sda of=/dev/null </span><br><span class="line"></span><br><span class="line">通过iotop看io占用情况，磁盘速度到了284M/s</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">30252 be/4 root      284.71 M/s    0.00 B/s  0.00 %  0.00 % <span class="built_in">dd</span> <span class="keyword">if</span>=/dev/sda of=/dev/null</span><br></pre></td></tr></table></figure>
+<p>下面用cgroups控制这个进程的io资源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p /cgroup/blkio/foo</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;8:0   1048576&#x27;</span> &gt;  /cgroup/blkio/foo/blkio.throttle.read_bps_device</span><br><span class="line"><span class="comment">#8:0对应主设备号和副设备号，可以通过ls -l /dev/sda查看</span></span><br><span class="line"><span class="built_in">echo</span> 30252 &gt; /cgroup/blkio/foo/tasks</span><br></pre></td></tr></table></figure>
+<p>再通过iotop看，确实将读速度降到了1M&#x2F;s</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">30252 be/4 root      993.36 K/s    0.00 B/s  0.00 %  0.00 % <span class="built_in">dd</span> <span class="keyword">if</span>=/dev/sda of=/dev/null  </span><br></pre></td></tr></table></figure>
+<p>对于io还有很多其他可以控制层面和方式，如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ls /cgroup/blkio/foo/</span></span><br><span class="line">blkio.io_merged         blkio.io_serviced      blkio.reset_stats                </span><br><span class="line">blkio.throttle.io_serviced       blkio.throttle.write_bps_device   blkio.weight          cgroup.procs</span><br><span class="line">blkio.io_queued         blkio.io_service_time  blkio.sectors                    </span><br><span class="line">blkio.throttle.read_bps_device   blkio.throttle.write_iops_device  blkio.weight_device   notify_on_release</span><br><span class="line">blkio.io_service_bytes  blkio.io_wait_time     blkio.throttle.io_service_bytes  </span><br><span class="line">blkio.throttle.read_iops_device  blkio.time                        cgroup.event_control  tasks</span><br></pre></td></tr></table></figure>
+
+<p>blkio 子系统里东西很多。不过大部分都是只读的状态报告，可写的参数就只有下面这几个：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">blkio.throttle.read_bps_device</span><br><span class="line">blkio.throttle.read_iops_device</span><br><span class="line">blkio.throttle.write_bps_device</span><br><span class="line">blkio.throttle.write_iops_device</span><br><span class="line">blkio.weight</span><br><span class="line">blkio.weight_device</span><br><span class="line"></span><br><span class="line">这些都是用来控制进程的磁盘 io 的。很明显地分成两类，其中带“throttle”的，顾名思义就是节流阀，将流量限制在某个值下。而“weight”就是分配 io 的权重。</span><br><span class="line">再看看 blkio.weight 。blkio 的 throttle 和 weight 方式和 cpu 子系统的 quota 和 shares 有点像，都是一种是绝对限制，另一种是相对限制，并且在不繁忙的时候可以充分利用资源，权重值的范围在 10 – 1000 之间。</span><br></pre></td></tr></table></figure>
+<p>测试权重方式要麻烦一点。因为不是绝对限制，所以会受到文件系统缓存的影响。如在虚拟机中测试，要关闭虚机如我用的 VirtualBox 在宿主机上的缓存。如要测试读 io 的效果，先生成两个几个 G 的大文件 &#x2F;tmp&#x2F;file_1，&#x2F;tmp&#x2F;file_2 ，可以用 dd 搞。然后设置两个权重</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># echo 500 &gt;/sys/fs/cgroup/blkio/foo/blkio.weight</span></span><br><span class="line"><span class="comment"># echo 100 &gt;/sys/fs/cgroup/blkio/bar/blkio.weight</span></span><br></pre></td></tr></table></figure>
+<p>测试前清空文件系统缓存，以免干扰测试结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sync</span></span><br><span class="line"><span class="built_in">echo</span> 3 &gt;/proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+<p>在这两个控制组中用 dd 产生 io 测试效果。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cgexec -g &quot;blkio:foo&quot; dd if=/tmp/file_1 of=/dev/null &amp;</span></span><br><span class="line">[1] 1838</span><br><span class="line"><span class="comment"># cgexec -g &quot;blkio:bar&quot; dd if=/tmp/file_2 of=/dev/null &amp;</span></span><br><span class="line">[2] 1839</span><br></pre></td></tr></table></figure>
+<p>还是用 iotop 看看效果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN     IO&gt;    COMMAND</span><br><span class="line">1839 be/4 root       48.14 M/s    0.00 B/s  0.00 % 99.21 % <span class="built_in">dd</span> <span class="keyword">if</span>=/tmp/file_2 of=/dev/null</span><br><span class="line">1838 be/4 root      223.59 M/s    0.00 B/s  0.00 % 16.44 % <span class="built_in">dd</span> <span class="keyword">if</span>=/tmp/file_1 of=/dev/null</span><br></pre></td></tr></table></figure>
+<p>两个进程每秒读的字节数虽然会不断变动，但是大致趋势还是维持在 1:5 左右，和设定的 weight 比例一致。blkio.weight_device 是分设备的。写入时，前面再加上设备号即可。</p>
+<h2 id="实践记录"><a href="#实践记录" class="headerlink" title="实践记录"></a>实践记录</h2><p>1、假如已经配置好一个资源组，现在想让一个服务按这个组的资源分配来运行服务，而不需要去找到进程号再写入到tasks中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8105 ~]<span class="comment"># cgexec -g cpu:daemons/ftp top</span></span><br></pre></td></tr></table></figure>
+<p>这个运行以后有会自动将top进程号写入到tasks当中去</p>
+<p>2、查询一个组里面设置的资源的限制</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">设置的值会显示出来，没有设置的就会提示没有找到</span><br><span class="line"></span><br><span class="line">[root@lab8105 ~]<span class="comment"># cgget  daemons/ftp</span></span><br><span class="line">daemons/ftp:</span><br><span class="line">cgget: cannot find controller <span class="string">&#x27;cpuset&#x27;</span> <span class="keyword">in</span> group <span class="string">&#x27;daemons/ftp&#x27;</span></span><br><span class="line">cpu.rt_period_us: 1000000</span><br><span class="line">cpu.rt_runtime_us: 0</span><br><span class="line">cpu.stat: nr_periods 0</span><br><span class="line">    nr_throttled 0</span><br><span class="line">    throttled_time 0</span><br><span class="line">cpu.cfs_period_us: 5000</span><br><span class="line">cpu.cfs_quota_us: -1</span><br><span class="line">cpu.shares: 1000</span><br><span class="line">cgget: cannot find controller <span class="string">&#x27;cpuacct&#x27;</span> <span class="keyword">in</span> group <span class="string">&#x27;daemons/ftp&#x27;</span></span><br><span class="line">cgget: cannot find controller <span class="string">&#x27;memory&#x27;</span> <span class="keyword">in</span> group <span class="string">&#x27;daemons/ftp&#x27;</span></span><br><span class="line">cgget: cannot find controller <span class="string">&#x27;devices&#x27;</span> <span class="keyword">in</span> group <span class="string">&#x27;daemons/ftp&#x27;</span></span><br><span class="line">cgget: cannot find controller <span class="string">&#x27;freezer&#x27;</span> <span class="keyword">in</span> group <span class="string">&#x27;daemons/ftp&#x27;</span></span><br><span class="line">cgget: cannot find controller <span class="string">&#x27;net_cls&#x27;</span> <span class="keyword">in</span> group <span class="string">&#x27;daemons/ftp&#x27;</span></span><br><span class="line">cgget: cannot find controller <span class="string">&#x27;blkio&#x27;</span> <span class="keyword">in</span> group <span class="string">&#x27;daemons/ftp&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>3、需要用两个限制条件对进程进行限制</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8105 ~]<span class="comment"># cgexec -g cpu:daemons/ftp -g memory:daemons/ftp top</span></span><br></pre></td></tr></table></figure>
+
+<p>4、默认情况下是一个大根，然后分了几个资源系统，还支持做一个子系统组，即单独组建一个资源组，然后对这个资源组里面进行配置，具体方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mount &#123;</span><br><span class="line">        cpu     = /cgroup/cpu_and_mem;</span><br><span class="line">        memory  = /cgroup/cpu_and_mem;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">group daemons/ftp &#123;</span><br><span class="line">                        cpu &#123;</span><br><span class="line">                                cpu.shares = <span class="string">&quot;1000&quot;</span>;</span><br><span class="line">                                cpu.cfs_period_us = <span class="string">&quot;5000&quot;</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        memory &#123;</span><br><span class="line">                                memory.swappiness = <span class="string">&quot;20&quot;</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                &#125;</span><br></pre></td></tr></table></figure>
+
+<p>5、需要创建控制组群，如上的daemons&#x2F;ftp，想通过命令行的方式创建</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8105 ~]<span class="comment"># cgcreate -g cpu:/zp -g memory:/zp	</span></span><br><span class="line">如上命令使用后会在/cgroup/cpu/中多了zp目录，并且里面是继承的上级的cpu里面的参数，这样就创建了一个zp的组群</span><br><span class="line"></span><br><span class="line">删除组群的方式如下（删除cgroup时，其所有任务都移动到了父组群当中）：</span><br><span class="line">[root@lab8105 ~]<span class="comment"># cgdelete cpu:/zp memory:/zp</span></span><br></pre></td></tr></table></figure>
+
+<p>6、设置里面的配置参数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">需要设置</span><br><span class="line">    /cgroup/cpu/daemons/ftp/cpu.shares</span><br><span class="line">执行</span><br><span class="line">[root@lab8105 ~]<span class="comment"># cgset -r cpu.shares=500 daemons/ftp</span></span><br><span class="line">daemons/ftp路径是相对于根的，如果想设置根的这个参数那么就执行</span><br><span class="line">[root@lab8105 ~]<span class="comment"># gset -r cpuacct.usage=0 /</span></span><br><span class="line">这里需要注意，只有某些参数是可以修改的，某些参数是不能修改的</span><br><span class="line">也可以直接<span class="built_in">echo</span>的方式进行参数的设置</span><br></pre></td></tr></table></figure>
+<p>7，移动某个进程到控制组群当中（动态的进行资源的调配）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">移动指定进程到指定的控制组当中，创建两个资源组，使用上面的cpu的脚本，然后运行后，使用top进行监控</span><br><span class="line">group half &#123;</span><br><span class="line">                        cpu &#123;</span><br><span class="line">                                    cpu.cfs_period_us=<span class="string">&quot;100000&quot;</span>;</span><br><span class="line">                                    cpu.cfs_quota_us=<span class="string">&quot;50000&quot;</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        memory &#123;</span><br><span class="line">                                memory.swappiness = <span class="string">&quot;50&quot;</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">group eighty &#123;</span><br><span class="line">                        cpu &#123;</span><br><span class="line">                                cpu.cfs_period_us = <span class="string">&quot;100000&quot;</span>;</span><br><span class="line">                                cpu.cfs_quota_us=<span class="string">&quot;50000&quot;</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        memory &#123;</span><br><span class="line">                                memory.swappiness = <span class="string">&quot;80&quot;</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                &#125;</span><br><span class="line">[root@lab8105 ~]<span class="comment"># cgclassify -g cpu:half 14245</span></span><br><span class="line">top监控看到cpu的占用为50%</span><br><span class="line">[root@lab8105 ~]<span class="comment"># cgclassify -g cpu:eighty 14245</span></span><br><span class="line">top监控看到cpu的占用为80%</span><br><span class="line">注意支持多进程，多资源组同时移动</span><br><span class="line">[root@lab8105 ~]<span class="comment"># cgclassify -g cpu,memory:eighty 14245 14565</span></span><br><span class="line">备用方法就是直接<span class="built_in">echo</span> </span><br></pre></td></tr></table></figure>
+
+<p>8、通过规则对指定的进程进行控制</p>
+<p>我们还可以通过设置规则来让 cgred（cgroup 规则引擎后台程序）自动将进程分配给特定组。cgred 后台程序根据 &#x2F;etc&#x2F;cgrules.conf 文件中的设置将任务移到 cgroup 中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8105 ~]<span class="comment"># vim /etc/cgrules.conf </span></span><br><span class="line">[root@lab8105 ~]<span class="comment"># man cgrules.conf       </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># /etc/cgrules.conf</span></span><br><span class="line"><span class="comment">#The format of this file is described in cgrules.conf(5)</span></span><br><span class="line"><span class="comment">#manual page.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Example:</span></span><br><span class="line"><span class="comment">#&lt;user&gt;         &lt;controllers&gt;   &lt;destination&gt;</span></span><br><span class="line"><span class="comment">#@student       cpu,memory      usergroup/student/</span></span><br><span class="line"><span class="comment">#peter          cpu             test1/</span></span><br><span class="line"><span class="comment">#%              memory          test2/</span></span><br><span class="line"><span class="comment"># End of file</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">root:cpu.sh           cpu             half/</span><br><span class="line">root                  cpu             half/</span><br><span class="line"></span><br><span class="line">启动监控进程服务</span><br><span class="line">[root@lab8105 ~]<span class="comment"># /etc/init.d/cgred </span></span><br></pre></td></tr></table></figure>
+<p>效果如下，运行相同的命令，所占用的cpu的资源按指定的比例进行占用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8105 ~]<span class="comment"># top</span></span><br><span class="line">top - 16:00:40 up 1 day,  1:34,  5 <span class="built_in">users</span>,  load average: 1.57, 1.13, 0.90</span><br><span class="line">Tasks: 216 total,   3 running, 213 sleeping,   0 stopped,   0 zombie</span><br><span class="line">Cpu(s):  6.9%us,  0.0%sy,  0.0%ni, 93.1%<span class="built_in">id</span>,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st</span><br><span class="line">Mem:  49461228k total, 49346312k used,   114916k free, 47374260k buffers</span><br><span class="line">Swap:  2097148k total,        0k used,  2097148k free,    33116k cached</span><br><span class="line"></span><br><span class="line">    PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                                               </span><br><span class="line">14648 root      20   0  104m 1716 1012 R 99.7  0.0   4:58.38 cpu1.sh                                                </span><br><span class="line">14565 root      20   0  104m 1704 1012 R 10.0  0.0   4:30.53 cpu.sh </span><br></pre></td></tr></table></figure>
+<p>如上所述，指定用户，可以指定进程进行控制，也可以指定用户的所有进程进行控制，后台的做的操作就是把进行的号移动到了指定的资源组的task当中去了</p>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" title="头像" alt="头像"></a><div class="post-copyright__author_name">zphj1987</div><div class="post-copyright__author_desc">但行好事，莫问前程</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://zphj1987.com/2015/03/24/cgroup%E5%AE%9E%E8%B7%B5-%E8%B5%84%E6%BA%90%E6%8E%A7%E5%88%B6/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://zphj1987.com/2015/03/24/cgroup%E5%AE%9E%E8%B7%B5-%E8%B5%84%E6%BA%90%E6%8E%A7%E5%88%B6/')">cgroup实践-资源控制</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"><div class="post-reward" onclick="anzhiyu.addRewardMask()"><div class="reward-button button--animated" title="赞赏作者"><i class="anzhiyufont anzhiyu-icon-hand-heart-fill"></i>打赏作者</div><div class="reward-main"><div class="reward-all"><span class="reward-title">感谢你赐予我前进的力量</span><ul class="reward-group"><li class="reward-item"><a href="/images/wechatmei.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/wechatmei.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubaomei.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/zhifubaomei.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul><a class="reward-main-btn" href="/about/#about-reward" target="_blank"><div class="reward-text">赞赏者名单</div><div class="reward-dec">因为你们的支持让我意识到写文章的价值🙏</div></a></div></div></div><div id="quit-box" onclick="anzhiyu.removeRewardMask()" style="display: none"></div></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://zphj1987.com/2015/03/24/cgroup%E5%AE%9E%E8%B7%B5-%E8%B5%84%E6%BA%90%E6%8E%A7%E5%88%B6/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=cgroup实践-资源控制&amp;url=https://zphj1987.com/2015/03/24/cgroup%E5%AE%9E%E8%B7%B5-%E8%B5%84%E6%BA%90%E6%8E%A7%E5%88%B6/&amp;pic=/images/default_cover_1.jpeg" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://zphj1987.com" target="_blank">磨磨的技术博客</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>暂未分类<span class="tagsPageCount">302</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="/images/blog/synctune.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2015/03/24/xenserver%E4%B8%ADlinux%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BF%AE%E6%94%B9%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">xenserver中linux虚拟机修改启动顺序</div></div></a></div><div class="next-post pull-right"><a href="/2015/03/25/%E5%8E%8B%E7%BC%A9css%E4%B8%8Ejs/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">压缩css与js</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2015/03/22/Bad%20magic%20number%20ImportError%20in%20python/" title="Bad magic number ImportError in python"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2015-03-22</div><div class="title">Bad magic number ImportError in python</div></div></a></div><div><a href="/2019/09/02/CTDB%E4%BD%BF%E7%94%A8radosobject%E4%BD%9C%E4%B8%BAlockfile/" title="CTDB使用radosobject作为lockfile"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2019-09-02</div><div class="title">CTDB使用radosobject作为lockfile</div></div></a></div><div><a href="/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/" title="CPU相关的学习"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-06-13</div><div class="title">CPU相关的学习</div></div></a></div><div><a href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" title="CentOS GRUB损坏修复方法"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2017-11-30</div><div class="title">CentOS GRUB损坏修复方法</div></div></a></div><div><a href="/2016/09/12/Centos7%E4%B8%8BJewel%E7%89%88%E6%9C%ACradosgw%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/" title="Centos7下Jewel版本radosgw服务启动"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-09-12</div><div class="title">Centos7下Jewel版本radosgw服务启动</div></div></a></div><div><a href="/2016/03/24/Ceph%20Bluestore%E9%A6%96%E6%B5%8B/" title="Ceph Bluestore首测"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-03-24</div><div class="title">Ceph Bluestore首测</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)">匿名评论</a><a href="/privacy" style="margin-left: 4px">隐私政策</a></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__description"><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">这有关于<b style="color:#fff">产品、技术、开发</b>相关的问题和看法</b>。</div><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">相信你可以在这里找到对你有用的<b style="color:#fff">知识</b>和<b style="color:#fff">教程</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">zphj1987</h1><div class="author-info__desc">但行好事，莫问前程</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/zphj1987" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%B8%80%EF%BC%9A%E9%99%90%E5%88%B6cpu%E7%9A%84%E8%B5%84%E6%BA%90"><span class="toc-number">1.</span> <span class="toc-text">测试一：限制cpu的资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%BA%8C%EF%BC%9A%E9%99%90%E5%88%B6%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%86%85%E5%AD%98%E8%B5%84%E6%BA%90"><span class="toc-number">2.</span> <span class="toc-text">测试二：限制进程的内存资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E4%B8%89%EF%BC%9A%E9%99%90%E5%88%B6%E8%BF%9B%E7%A8%8B%E7%9A%84IO%E8%B5%84%E6%BA%90"><span class="toc-number">3.</span> <span class="toc-text">测试三：限制进程的IO资源</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95"><span class="toc-number"></span> <span class="toc-text">实践记录</span></a></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" title="海量文件的rsync同步方案"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/synctune.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="海量文件的rsync同步方案"/></a><div class="content"><a class="title" href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" title="海量文件的rsync同步方案">海量文件的rsync同步方案</a><time datetime="2024-08-23T06:58:49.000Z" title="发表于 2024-08-23 14:58:49">2024-08-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" title="定位读写的扇区的编号"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/sector.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="定位读写的扇区的编号"/></a><div class="content"><a class="title" href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" title="定位读写的扇区的编号">定位读写的扇区的编号</a><time datetime="2024-08-19T02:17:10.000Z" title="发表于 2024-08-19 10:17:10">2024-08-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="udp服务器和客户端"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/networkudp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="udp服务器和客户端"/></a><div class="content"><a class="title" href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="udp服务器和客户端">udp服务器和客户端</a><time datetime="2024-08-14T03:09:34.000Z" title="发表于 2024-08-14 11:09:34">2024-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" title="限制rbd只能在一台机器上面挂载"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/locklogo.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="限制rbd只能在一台机器上面挂载"/></a><div class="content"><a class="title" href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" title="限制rbd只能在一台机器上面挂载">限制rbd只能在一台机器上面挂载</a><time datetime="2024-07-01T10:12:57.000Z" title="发表于 2024-07-01 18:12:57">2024-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/" title="利用Clonezilla进行windows的系统复制"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/clonezilla-live.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用Clonezilla进行windows的系统复制"/></a><div class="content"><a class="title" href="/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/" title="利用Clonezilla进行windows的系统复制">利用Clonezilla进行windows的系统复制</a><time datetime="2024-06-27T07:35:02.000Z" title="发表于 2024-06-27 15:35:02">2024-06-27</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/shangban.svg" alt="距离月入25k也就还差一个大佬带我~" title="距离月入25k也就还差一个大佬带我~"/><div id="runtimeTextTip"></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2015 - 2024 By <a class="footer-bar-link" href="/" title="zphj1987" target="_blank">zphj1987</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://beian.miit.gov.cn/" title="鄂ICP备2022001754号-2">鄂ICP备2022001754号-2</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">361</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">17</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">其它站点</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/zphj1987" title="CSDN-武汉磨磨"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="CSDN-武汉磨磨"/><span class="back-menu-item-text">CSDN-武汉磨磨</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文库</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 文章列表</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 全部分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 全部标签</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/sitemap.xml"><span> sitemap</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Linux/" style="font-size: 0.88rem;">Linux<sup>1</sup></a><a href="/tags/ceph/" style="font-size: 0.88rem;">ceph<sup>7</sup></a><a href="/tags/chatgpt/" style="font-size: 0.88rem;">chatgpt<sup>1</sup></a><a href="/tags/lvm/" style="font-size: 0.88rem;">lvm<sup>1</sup></a><a href="/tags/openai/" style="font-size: 0.88rem;">openai<sup>1</sup></a><a href="/tags/windows/" style="font-size: 0.88rem;">windows<sup>2</sup></a><a href="/tags/%E5%86%85%E6%A0%B8/" style="font-size: 0.88rem;">内核<sup>2</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">博客相关<sup>1</sup></a><a href="/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">存储相关<sup>1</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 0.88rem;">操作系统<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/" style="font-size: 0.88rem;">数据管理<sup>1</sup></a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" style="font-size: 0.88rem;">暂未分类<sup>302</sup></a><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 0.88rem;">杂七杂八<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 0.88rem;">测试<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">测试相关<sup>1</sup></a><a href="/tags/%E7%9B%91%E6%8E%A7/" style="font-size: 0.88rem;">监控<sup>1</sup></a><a href="/tags/%E7%A3%81%E7%9B%98/" style="font-size: 0.88rem;">磁盘<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" style="font-size: 0.88rem;">系统服务<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 0.88rem;">系统配置<sup>3</sup></a><a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 0.88rem;">网络配置<sup>1</sup></a><a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/" style="font-size: 0.88rem;">虚拟化<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 0.88rem;">计算机<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 0.88rem;">高可用<sup>1</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="anzhiyufont anzhiyu-icon-xmark"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.cbd.int/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script async src="/anzhiyu/random.js"></script><script async="async">(function () {
+  var grt = new Date("03/19/2015 12:00:00"); //设置网站上线时间
+  var now = new Date();
+  var dnum;
+  var hnum;
+  var mnum;
+  var snum;
+  var nowHour;
+
+  // 计算并更新天数、小时数、分钟数和秒数
+  function updateTime() {
+    now = new Date(); // 更新 now 的值
+    nowHour = now.getHours(); // 更新 nowHour 的值
+    var days = (now - grt) / 1000 / 60 / 60 / 24;
+    dnum = Math.floor(days);
+    var hours = (now - grt) / 1000 / 60 / 60 - 24 * dnum;
+    hnum = Math.floor(hours);
+    if (String(hnum).length == 1) {
+      hnum = "0" + hnum;
+    }
+    var minutes = (now - grt) / 1000 / 60 - 24 * 60 * dnum - 60 * hnum;
+    mnum = Math.floor(minutes);
+    if (String(mnum).length == 1) {
+      mnum = "0" + mnum;
+    }
+    var seconds = (now - grt) / 1000 - 24 * 60 * 60 * dnum - 60 * 60 * hnum - 60 * mnum;
+    snum = Math.round(seconds);
+    if (String(snum).length == 1) {
+      snum = "0" + snum;
+    }
+  }
+
+  // 更新网页中显示的网站运行时间
+  function updateHtml() {
+    const footer = document.getElementById("footer");
+    if (!footer) return
+    let currentTimeHtml = "";
+    if (nowHour < 18 && nowHour >= 9) {
+      // 如果是上班时间，默认就是"安知鱼-上班摸鱼中.svg"图片，不需要更改
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    } else {
+      // 如果是下班时间，插入"安知鱼-下班啦.svg"图片
+      let img = document.querySelector("#workboard .workSituationImg");
+      if (img != null) {
+        img.src = "/images/xiaban.svg";
+        img.title = "下班了就该开开心心的玩耍，嘿嘿~";
+        img.alt = "下班了就该开开心心的玩耍，嘿嘿~";
+      }
+
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    }
+
+    if (document.getElementById("runtimeTextTip")) {
+      document.getElementById("runtimeTextTip").innerHTML = currentTimeHtml;
+    }
+  }
+
+  setInterval(() => {
+    updateTime();
+    updateHtml();
+  }, 1000);
+})();</script><script src="https://cdn.cbd.int/algoliasearch@4.18.0/dist/algoliasearch-lite.umd.js"></script><script src="https://cdn.cbd.int/instantsearch.js@4.60.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script><div class="js-pjax"><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'zphj1987/zphj1987.github.io',
+      'data-repo-id': 'R_kgDOIV6zlA',
+      'data-category-id': 'DIC_kwDOIV6zlM4Cg8XC',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },{"data-lang":"zh-CN","data-mapping":"pathname","data-category":"Announcements","data-input-position":"bottom"})
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  anzhiyu.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) anzhiyu.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script><input type="hidden" name="page-type" id="page-type" value="post"></div><script>var visitorMail = "";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>

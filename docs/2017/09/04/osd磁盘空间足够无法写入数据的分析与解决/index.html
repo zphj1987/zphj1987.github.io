@@ -1,0 +1,508 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>osd磁盘空间足够无法写入数据的分析与解决 | 磨磨的技术博客</title><meta name="keywords" content="暂未分类"><meta name="author" content="zphj1987"><meta name="copyright" content="zphj1987"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="osd磁盘空间足够无法写入数据的分析与解决"><meta name="application-name" content="osd磁盘空间足够无法写入数据的分析与解决"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="osd磁盘空间足够无法写入数据的分析与解决"><meta property="og:url" content="https://zphj1987.com/2017/09/04/osd%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E8%B6%B3%E5%A4%9F%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3/index.html"><meta property="og:site_name" content="磨磨的技术博客"><meta property="og:description" content="前言这个问题的来源是ceph社区里面一个群友的环境出现在85%左右的时候，启动osd报错，然后在本地文件系统当中进行touch文件的时候也是报错，df -i查询inode也是没用多少，使用的也是inode64挂载的，开始的时候排除了配置原因引起的，在ceph的邮件列表里面有一个相同问题，也是没有得到"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://zphj1987.com/images/default_cover_1.jpeg"><meta property="article:author" content="zphj1987"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://zphj1987.com/images/default_cover_1.jpeg"><meta name="description" content="前言这个问题的来源是ceph社区里面一个群友的环境出现在85%左右的时候，启动osd报错，然后在本地文件系统当中进行touch文件的时候也是报错，df -i查询inode也是没用多少，使用的也是inode64挂载的，开始的时候排除了配置原因引起的，在ceph的邮件列表里面有一个相同问题，也是没有得到"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://zphj1987.com/2017/09/04/osd%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E8%B6%B3%E5%A4%9F%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0a806a1271c36ae0e709307eae2a6eb5";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  peoplecanvas: undefined,
+  postHeadAiDescription: {"enable":true,"gptName":"AnZhiYu","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: undefined,
+  LA51: undefined,
+  greetingBox: undefined,
+  twikooEnvId: '',
+  commentBarrageConfig:undefined,
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: false,
+  mainTone: undefined,
+  authorStatus: undefined,
+  algolia: {"appId":"GXWN6XTBBN","apiKey":"46fe2a73adf385608a95fb1cf263e589","indexName":"zphj","hits":{"per_page":6},"languages":{"input_placeholder":"输入关键词后按下回车查找","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":330},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: zphj1987","link":"链接: ","source":"来源: 磨磨的技术博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: '磨磨的技术博客',
+  title: 'osd磁盘空间足够无法写入数据的分析与解决',
+  postAI: '',
+  pageFillDescription: '前言, 定位问题, 解决办法, 为什么会出现这样, 解决办法, 总结, 后续, 变更记录前言这个问题的来源是社区里面一个群友的环境出现在左右的时候启动报错然后在本地文件系统当中进行文件的时候也是报错查询也是没用多少使用的也是挂载的开始的时候排除了配置原因引起的在的邮件列表里面有一个相同问题也是没有得到解决看到这个问题比较感兴趣就花了点时间来解决来定位和解决这个问题现在分享出来如果有类似的生产环境可以提前做好检查预防工作现象描述版本我复现的环境为这个版本查询使用空间可以看到空间才使用了可以看到剩余比例很多而文件确实无法创建这个时候把一个文件出来然后又可以创建了并且可以写入比出来的文件更大的文件写完一个无法再写入更多文件了这里有个初步判断不是容量写完了而是文件的个数限制住了那么来查询下文件系统的还剩余多少文件系统的是动态分配的我们先检查无法写入的文件系统的可以看到剩余的确实为这里确实是没有剩余了所以通过来判断是否用完并不准确那个是已经使用值与理论值的相除的结果查询碎片也是比例很低定位问题首先查看上面的数据结构上面的输出结果这里简单解释一下这里我也是反复比对和查看资料才理解这里的意思这里有篇的资料有提到这个这里我再拿一个刚刚格式化完的分区结果来看下这里用我自己的理解来描述下这个的剩余数目是动态变化的刚分完区的那个有个左右的逻辑区间而上面的无法写入数据的数据结构剩下的的平均大小为个而这样的总数有个占总体的也就是剩余的空间的的所覆盖的区域全部是个到个的这种空洞相当于蛋糕被切成很多小块了大的都拿走了剩下的总量还很多但是都是很小的碎蛋糕所以也没法取了默认来说为也就是需要的存储空间来存储这个剩下的空间已经不够分配了解决办法下个段落会讲下为什么会出现上面的情况现在先说解决办法把文件出来然后进去这个是在其他场景下的一个解决方法这个操作要小心因为有扩展属性操作不小心会弄掉了这里建议用另外一个办法的方法我的环境比较小的盘如果盘大就准备大盘这里是验证是否可行还原回去直接还原还是会有问题没有可以写的地方了这里因为已经了一份这里就的数据目录出去开始还原还原以后如果有权限需要处理的就处理下权限先检查下文件系统的数据结构可以看到数据结构已经很理想了然后启动然后检查下数据是不是都可以正常写进去了如果出现了上面的空间已经满了的情况处理的时候需要注意备份好数据单个盘进行处理备份的数据先保留好以防万一启动好了后验证下集群的状态后再继续可以尝试下数据检查数据为什么会出现这样我们在本地文件系统里面连续写个文件准备一个文件里面有每行个字符行这个文件大小就是检查文件的分布大部分情况下这个的分配是连续的先检查下当前的数据结构我们把刚刚的个对象到集群里面去监控下集群的数据目录的写入情况数据进去查看对象的数据里面并没有连续起来并且写入的数据的方式是打开文件设置扩展属性填充内容设置属性关闭很多并发在一起做写完的数据结构结果就是在这个数据模型下会产生很多小的空隙最后就是无法写完文件的情况这里产生空隙并不是很大的问题问题是这里剩下的空隙无法完成的动态分配的工作这里跟一个格式化选项的变化有关准备一个集群然后写入一直写就可以必现这个问题可以看到上面的从的区间从涨到了解决办法用在部署的时候默认的格式化参数为这个设置的是这个在后面剩余的空洞比较小的时候就无法写入新的数据了所以在里面存储这种小文件的场景的时候把的改成默认的就可以提前避免这个问题修改的行改成这个地方检查下是不是对的然后就可以避免这个问题了可以测试下是不是一直可以写到很多我的这个测试环境写到还没问题总结在特定的数据写入模型下可能出现一些可能无法预料的问题而参数的改变可能也没法覆盖所有场景本篇就是其中的一个比较特殊的问题定位好问题在遇到的时候能够解决或者提前避免掉后续在升级了内核到升级到重新部署还是一样的一样的写入模型可以看到已经很少的稀疏空间了留下比较大的空间这个地方应该是优化了底层数据存储的算法另外的是动态分配的官方也考虑到了这个可能空洞太多无法分配问题这个是最新的的是以个为来进行动态分配的应该是有两个也就是动态查询看到的是个以下在更新到最新的版本以后因为已经没有那么多空洞了所以即使在没开这个稀疏的情况下的小文件也能够把磁盘写满变更记录创建武汉运维磨渣增加更新内核和的验证武汉运维磨渣',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-05 23:57:38',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="/images/logo.jpeg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">其它站点</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/zphj1987" title="CSDN-武汉磨磨"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="CSDN-武汉磨磨"/><span class="back-menu-item-text">CSDN-武汉磨磨</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">磨磨的技术博客</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文库</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 文章列表</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 全部分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 全部标签</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/sitemap.xml"><span> sitemap</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="/images/wechatmei.png" target="_blank"><img class="post-qr-code-img" alt="微信" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/wechatmei.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubaomei.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/zhifubaomei.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Linux/" style="font-size: 1.05rem;">Linux<sup>1</sup></a><a href="/tags/ceph/" style="font-size: 1.05rem;">ceph<sup>7</sup></a><a href="/tags/chatgpt/" style="font-size: 1.05rem;">chatgpt<sup>1</sup></a><a href="/tags/lvm/" style="font-size: 1.05rem;">lvm<sup>1</sup></a><a href="/tags/openai/" style="font-size: 1.05rem;">openai<sup>1</sup></a><a href="/tags/windows/" style="font-size: 1.05rem;">windows<sup>2</sup></a><a href="/tags/%E5%86%85%E6%A0%B8/" style="font-size: 1.05rem;">内核<sup>2</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">博客相关<sup>1</sup></a><a href="/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">存储相关<sup>1</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.05rem;">操作系统<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/" style="font-size: 1.05rem;">数据管理<sup>1</sup></a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" style="font-size: 1.05rem;">暂未分类<sup>302</sup></a><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 1.05rem;">杂七杂八<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 1.05rem;">测试<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">测试相关<sup>1</sup></a><a href="/tags/%E7%9B%91%E6%8E%A7/" style="font-size: 1.05rem;">监控<sup>1</sup></a><a href="/tags/%E7%A3%81%E7%9B%98/" style="font-size: 1.05rem;">磁盘<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" style="font-size: 1.05rem;">系统服务<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 1.05rem;">系统配置<sup>3</sup></a><a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 1.05rem;">网络配置<sup>1</sup></a><a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/" style="font-size: 1.05rem;">虚拟化<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 1.05rem;">计算机<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 1.05rem;">高可用<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="anzhiyufont anzhiyu-icon-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/08/"><span class="card-archive-list-date">八月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/07/"><span class="card-archive-list-date">七月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">六月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">四月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">4</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/03/"><span class="card-archive-list-date">三月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">6</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/02/"><span class="card-archive-list-date">二月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">5</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">一月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" itemprop="url">暂未分类</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>暂未分类</span></a></span></div></div><h1 class="post-title" itemprop="name headline">osd磁盘空间足够无法写入数据的分析与解决</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2017-09-04T15:06:00.000Z" title="发表于 2017-09-04 23:06:00">2017-09-04</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2024-01-05T15:57:38.333Z" title="更新于 2024-01-05 23:57:38">2024-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-pv-cv" id="" data-flag-title="osd磁盘空间足够无法写入数据的分析与解决"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为武汉"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>武汉</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="/images/default_cover_1.jpeg"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://zphj1987.com/2017/09/04/osd%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E8%B6%B3%E5%A4%9F%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3/"><header><a class="post-meta-categories" href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" itemprop="url">暂未分类</a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" tabindex="-1" itemprop="url">暂未分类</a><h1 id="CrawlerTitle" itemprop="name headline">osd磁盘空间足够无法写入数据的分析与解决</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">zphj1987</span><time itemprop="dateCreated datePublished" datetime="2017-09-04T15:06:00.000Z" title="发表于 2017-09-04 23:06:00">2017-09-04</time><time itemprop="dateCreated datePublished" datetime="2024-01-05T15:57:38.333Z" title="更新于 2024-01-05 23:57:38">2024-01-05</time></header><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这个问题的来源是ceph社区里面一个群友的环境出现在85%左右的时候，启动osd报错，然后在本地文件系统当中进行touch文件的时候也是报错，df -i查询inode也是没用多少，使用的也是inode64挂载的，开始的时候排除了配置原因引起的，在ceph的邮件列表里面有一个相同<a target="_blank" rel="noopener" href="http://lists.ceph.com/pipermail/ceph-users-ceph.com/2016-October/013929.html">问题</a>，也是没有得到解决</p>
+<p>看到这个问题比较感兴趣，就花了点时间来解决来定位和解决这个问题，现在分享出来，如果有类似的生产环境，可以提前做好检查预防工作</p>
+<p>##现象描述<br>ceph版本</p>
+<blockquote>
+<p>[root@lab8107 mnt]# ceph -v<br>ceph version 10.2.9 (2ee413f77150c0f375ff6f10edd6c8f9c7d060d0)<br>我复现的环境为这个版本</p>
+</blockquote>
+<p>查询使用空间</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082808space-image2.png" alt="image.png-19.8kB"><br>可以看到空间才使用了54%<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082815space-image3.png" alt="image.png-28kB"><br>可以看到，inode剩余比例很多，而文件确实无法创建</p>
+<p>这个时候把一个文件mv出来，然后又可以创建了，并且可以写入比mv出来的文件更大的文件，写完一个无法再写入更多文件了</p>
+<p>这里有个初步判断，不是容量写完了，而是文件的个数限制住了</p>
+<p>那么来查询下文件系统的inode还剩余多少，xfs文件系统的inode是动态分配的，我们先检查无法写入的文件系统的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xfs_db -r -c <span class="string">&quot;sb 0&quot;</span> -c <span class="string">&quot;p&quot;</span> -c <span class="string">&quot;freesp -s&quot;</span> /dev/sdb1|grep ifree</span><br></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082823space-image4.png" alt="image.png-5.1kB"><br>可以看到剩余的inode确实为0，这里确实是没有剩余inode了，所以通过df -i来判断inode是否用完并不准确，那个是已经使用值与理论值的相除的结果</p>
+<p>查询xfs碎片，也是比例很低</p>
+<h2 id="定位问题"><a href="#定位问题" class="headerlink" title="定位问题"></a>定位问题</h2><p>首先查看xfs上面的数据结构</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xfs_db -r -c <span class="string">&quot;sb 0&quot;</span> -c <span class="string">&quot;p&quot;</span> -c <span class="string">&quot;freesp -s &quot;</span> /dev/sdb1</span><br></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082832space-image5.png" alt="image.png-13.7kB"></p>
+<p>上面的输出结果这里简单解释一下，这里我也是反复比对和查看资料才理解这里的意思，这里有篇<a target="_blank" rel="noopener" href="https://www.novell.com/support/kb/doc.php?id=7014320">novell</a>的资料有提到这个，这里我再拿一个刚刚格式化完的分区结果来看下<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082837space-image6.png" alt="image.png-14.3kB"></p>
+<p>这里用我自己的理解来描述下，这个extents的剩余数目是动态变化的，刚分完区的那个，有4个1048576-1220608左右的逻辑区间，而上面的无法写入数据的数据结构，剩下的extent的平均大小为22个block，而这样的blocks总数有1138886个，占总体的99.85，也就是剩余的空间的的extents所覆盖的区域全部是16个block到31个block的这种空洞，相当于蛋糕被切成很多小块了，大的都拿走了，剩下的总量还很多，但是都是很小的碎蛋糕，所以也没法取了</p>
+<p>默认来说inode chunk 为64 ，也就是需要64*inodesize的存储空间来存储inode，这个剩下的空间已经不够分配了</p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>下个段落会讲下为什么会出现上面的情况，现在先说解决办法，把文件mv出来，然后mv进去，这个是在其他场景下的一个解决方法，这个操作要小心，因为有扩展属性，操作不小心会弄掉了，这里建议用另外一个办法xfs_dump的方法</p>
+<p>我的环境比较小，20G的盘，如果盘大就准备大盘,这里是验证是否可行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xfsdump -L osd0 -M osd0 -f /mnt/osd0 /var/lib/ceph/osd/ceph-0</span><br></pre></td></tr></table></figure>
+<p>还原回去</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8107 ceph-0]<span class="comment"># xfsrestore -f /mnt/osd0 /var/lib/ceph/osd/ceph-0</span></span><br><span class="line">xfsrestore: using file dump (drive_simple) strategy</span><br><span class="line">xfsrestore: version 3.1.4 (dump format 3.0) - <span class="built_in">type</span> ^C <span class="keyword">for</span> status and control</span><br><span class="line">xfsrestore: ERROR: unable to create /var/lib/ceph/osd/ceph-0/xfsrestorehousekeepingdir: No space left on device</span><br><span class="line">xfsrestore: Restore Status: ERROR</span><br></pre></td></tr></table></figure>
+<p>直接还原还是会有问题,没有可以写的地方了，这里因为已经dump了一份，这里就mv pg的数据目录出去</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> /var/lib/ceph/osd/ceph-0/current/ /mnt</span><br></pre></td></tr></table></figure>
+
+<p>开始还原</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xfsrestore  -o -f /mnt/osd0 /var/lib/ceph/osd/ceph-0</span><br></pre></td></tr></table></figure>
+<p>还原以后如果有权限需要处理的就处理下权限，先检查下文件系统的数据结构<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082843space-image7.png" alt="image.png-19.6kB"><br>可以看到数据结构已经很理想了<br>然后启动osd</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart ceph-osd@0</span><br></pre></td></tr></table></figure>
+<p>然后检查下数据是不是都可以正常写进去了</p>
+<ul>
+<li>如果出现了上面的空间已经满了的情况，处理的时候需要注意</li>
+<li>备份好数据</li>
+<li>单个盘进行处理</li>
+<li>备份的数据先保留好以防万一</li>
+<li>启动好了后，验证下集群的状态后再继续，可以尝试get下数据检查数据</li>
+</ul>
+<h2 id="为什么会出现这样"><a href="#为什么会出现这样" class="headerlink" title="为什么会出现这样"></a>为什么会出现这样</h2><p>我们在本地文件系统里面连续写100个文件<br>准备一个a文件里面有每行150个a字符，700行，这个文件大小就是100K</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8107 <span class="built_in">test</span>]<span class="comment"># seq 100|xargs -i dd if=a of=a&#123;&#125; bs=100K count=1</span></span><br></pre></td></tr></table></figure>
+<p>检查文件的分布</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8107 <span class="built_in">test</span>]<span class="comment"># seq 100|xargs -i xfs_bmap -v a&#123;&#125; |less</span></span><br></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082850space-image8.png" alt="image.png-47.1kB"></p>
+<p>大部分情况下这个block的分配是连续的</p>
+<p>先检查下当前的数据结构<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082856space-image9.png" alt="image.png-30.8kB"></p>
+<p>我们把刚刚的100个对象put到集群里面去，监控下集群的数据目录的写入情况</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">inotifywait -m --timefmt <span class="string">&#x27;%Y %B %d %H:%M:%S&#x27;</span> --format <span class="string">&#x27;%T %w %e %f&#x27;</span> -r -m /var/lib/ceph/osd/ceph-0/</span><br></pre></td></tr></table></figure>
+
+<p>put数据进去</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> `<span class="built_in">ls</span> ./`;<span class="keyword">do</span> rados -p rbd put <span class="variable">$a</span> <span class="variable">$a</span>;<span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082902space-image10.png" alt="image.png-53.7kB"><br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082920space-image11.png" alt="image.png-64.2kB"><br>查看对象的数据，里面并没有连续起来，并且写入的数据的方式是:<br>打开文件，设置扩展属性，填充内容，设置属性，关闭，很多并发在一起做</p>
+<p>写完的数据结构<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082926space-image12.png" alt="image.png-30.9kB"></p>
+<p>结果就是在100K这个数据模型下，会产生很多小的block空隙，最后就是无法写完文件的情况，这里产生空隙并不是很大的问题，问题是这里剩下的空隙无法完成inode的动态分配的工作，这里跟一个格式化选项的变化有关</p>
+<p>准备一个集群<br>然后写入(一直写)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rados -p rbd bench -b 100K 6000 write --no-cleanup</span><br></pre></td></tr></table></figure>
+<p>就可以必现这个问题，可以看到上面的从16-31 block的区间从 12 extents涨到了111 extents</p>
+<h2 id="解决办法-1"><a href="#解决办法-1" class="headerlink" title="解决办法"></a>解决办法</h2><p>用deploy在部署的时候默认的格式化参数为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command_check_call: Running <span class="built_in">command</span>: /usr/sbin/mkfs -t xfs -f -i size=2048 -- /dev/sdb1</span><br></pre></td></tr></table></figure>
+<p>这个isize设置的是2048，这个在后面剩余的空洞比较小的时候就无法写入新的数据了，所以在ceph里面存储100K这种小文件的场景的时候，把mkfs.xfs的isize改成默认的256就可以提前避免这个问题<br>修改 &#x2F;usr&#x2F;lib&#x2F;python2.7&#x2F;site-packages&#x2F;ceph_disk&#x2F;main.py的256行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">xfs=[</span><br><span class="line">    <span class="comment"># xfs insists on not overwriting previous fs; even if we wipe</span></span><br><span class="line">    <span class="comment"># partition table, we often recreate it exactly the same way,</span></span><br><span class="line">    <span class="comment"># so we&#x27;ll see ghosts of filesystems past</span></span><br><span class="line">    <span class="string">&#x27;-f&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;-i&#x27;</span>, <span class="string">&#x27;size=2048&#x27;</span>,</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+<p>改成</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;-i&#x27;</span>, <span class="string">&#x27;size=256&#x27;</span>,</span><br></pre></td></tr></table></figure>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901082932space-image13.png" alt="image.png-24.4kB"><br>这个地方检查下是不是对的，然后就可以避免这个问题了，可以测试下是不是一直可以写到很多，我的这个测试环境写到91%还没问题</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在特定的数据写入模型下，可能出现一些可能无法预料的问题，而参数的改变可能也没法覆盖所有场景，本篇就是其中的一个比较特殊的问题，定位好问题，在遇到的时候能够解决，或者提前避免掉</p>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>在升级了内核到</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8107 ~]<span class="comment"># uname  -a</span></span><br><span class="line">Linux lab8107 4.13.0-1.el7.elrepo.x86_64 <span class="comment">#1 SMP Sun Sep 3 19:07:24 EDT 2017 x86_64 x86_64 x86_64 GNU/Linux</span></span><br></pre></td></tr></table></figure>
+<p>升级xfsprogs到</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8107 ~]<span class="comment"># rpm -qa|grep xfsprogs</span></span><br><span class="line">xfsprogs-4.12.0-4.el7.centos.x86_64</span><br></pre></td></tr></table></figure>
+<p>重新部署osd，还是一样的isize&#x3D;2048，一样的写入模型</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@lab8107 ~]<span class="comment"># df -h /var/lib/ceph/osd/ceph-0</span></span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/sdb1       9.4G  9.0G  395M  96% /var/lib/ceph/osd/ceph-0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">meta_uuid = 00000000-0000-0000-0000-000000000000</span><br><span class="line">   from      to extents  blocks    pct</span><br><span class="line">      1       1     545     545   0.50</span><br><span class="line">      2       3     665    1666   1.52</span><br><span class="line">      4       7    1624    8927   8.12</span><br><span class="line">      8      15    1853   19063  17.34</span><br><span class="line">     16      31      19     352   0.32</span><br><span class="line">   4096    8191       1    7694   7.00</span><br><span class="line">  16384   32767       3   71659  65.20</span><br><span class="line">total free extents 4710</span><br><span class="line">total free blocks 109906</span><br><span class="line">average free extent size 23.3346</span><br><span class="line">[root@lab8107 ~]<span class="comment"># xfs_db -r -c &quot;sb 0&quot; -c &quot;p&quot; -c &quot;freesp -s &quot; /dev/sdb1</span></span><br></pre></td></tr></table></figure>
+<p>可以看到已经很少的稀疏空间了，留下比较大的空间，这个地方应该是优化了底层数据存储的算法</p>
+<p>另外，xfs的inode是动态分配的,xfs官方也考虑到了这个可能空洞太多无法分配inode问题，这个是最新的mkfs.xfs的man page</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sparse[=value]</span><br><span class="line">  Enable sparse inode chunk allocation. The value is either 0 or 1, with 1 signifying that sparse allocation is enabled.  If  the value  is omitted, 1 is assumed. Sparse inode allocation is disabled by default. This feature is only available <span class="keyword">for</span> filesystems formatted with -m crc=1.</span><br><span class="line">  </span><br><span class="line">   When enabled, sparse inode allocation allows the filesystem to allocate smaller than the  standard  64-inode  chunk  when  free space  is  severely  limited. This feature is useful <span class="keyword">for</span> filesystems that might fragment free space over time such that no free extents are large enough to accommodate a chunk of 64 inodes. Without this feature enabled, inode allocations can fail with out of space errors under severe fragmented free space conditions.</span><br></pre></td></tr></table></figure>
+<p>是以64个inode为chunk来进行动态分配的，应该是有两个chunk，也就是动态查询看到的是128个inode以下，在更新到最新的版本以后，因为已经没有那么多空洞了，所以即使在没开这个稀疏inode的情况下，ceph的小文件也能够把磁盘写满</p>
+<h2 id="变更记录"><a href="#变更记录" class="headerlink" title="变更记录"></a>变更记录</h2><table>
+<thead>
+<tr>
+<th align="center">Why</th>
+<th align="center">Who</th>
+<th align="center">When</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">创建</td>
+<td align="center">武汉-运维-磨渣</td>
+<td align="center">2017-09-04</td>
+</tr>
+<tr>
+<td align="center">增加更新内核和xfsprogs的验证</td>
+<td align="center">武汉-运维-磨渣</td>
+<td align="center">2017-09-05</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" title="头像" alt="头像"></a><div class="post-copyright__author_name">zphj1987</div><div class="post-copyright__author_desc">但行好事，莫问前程</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://zphj1987.com/2017/09/04/osd%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E8%B6%B3%E5%A4%9F%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://zphj1987.com/2017/09/04/osd%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E8%B6%B3%E5%A4%9F%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3/')">osd磁盘空间足够无法写入数据的分析与解决</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"><div class="post-reward" onclick="anzhiyu.addRewardMask()"><div class="reward-button button--animated" title="赞赏作者"><i class="anzhiyufont anzhiyu-icon-hand-heart-fill"></i>打赏作者</div><div class="reward-main"><div class="reward-all"><span class="reward-title">感谢你赐予我前进的力量</span><ul class="reward-group"><li class="reward-item"><a href="/images/wechatmei.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/wechatmei.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubaomei.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/zhifubaomei.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul><a class="reward-main-btn" href="/about/#about-reward" target="_blank"><div class="reward-text">赞赏者名单</div><div class="reward-dec">因为你们的支持让我意识到写文章的价值🙏</div></a></div></div></div><div id="quit-box" onclick="anzhiyu.removeRewardMask()" style="display: none"></div></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://zphj1987.com/2017/09/04/osd%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E8%B6%B3%E5%A4%9F%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=osd磁盘空间足够无法写入数据的分析与解决&amp;url=https://zphj1987.com/2017/09/04/osd%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E8%B6%B3%E5%A4%9F%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3/&amp;pic=/images/default_cover_1.jpeg" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://zphj1987.com" target="_blank">磨磨的技术博客</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>暂未分类<span class="tagsPageCount">302</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="/images/blog/synctune.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2017/08/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%B3%E4%B8%8D%E6%8E%89%E6%89%80%E6%9C%89%E7%9A%84OSD/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">为什么关不掉所有的OSD</div></div></a></div><div class="next-post pull-right"><a href="/2017/09/06/Ceph%20OSD%E6%9C%8D%E5%8A%A1%E5%A4%B1%E6%95%88%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E6%8E%A7%E5%88%B6/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Ceph OSD服务失效自动启动控制</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2015/03/22/Bad%20magic%20number%20ImportError%20in%20python/" title="Bad magic number ImportError in python"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2015-03-22</div><div class="title">Bad magic number ImportError in python</div></div></a></div><div><a href="/2019/09/02/CTDB%E4%BD%BF%E7%94%A8radosobject%E4%BD%9C%E4%B8%BAlockfile/" title="CTDB使用radosobject作为lockfile"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2019-09-02</div><div class="title">CTDB使用radosobject作为lockfile</div></div></a></div><div><a href="/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/" title="CPU相关的学习"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-06-13</div><div class="title">CPU相关的学习</div></div></a></div><div><a href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" title="CentOS GRUB损坏修复方法"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2017-11-30</div><div class="title">CentOS GRUB损坏修复方法</div></div></a></div><div><a href="/2016/09/12/Centos7%E4%B8%8BJewel%E7%89%88%E6%9C%ACradosgw%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/" title="Centos7下Jewel版本radosgw服务启动"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-09-12</div><div class="title">Centos7下Jewel版本radosgw服务启动</div></div></a></div><div><a href="/2016/03/24/Ceph%20Bluestore%E9%A6%96%E6%B5%8B/" title="Ceph Bluestore首测"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-03-24</div><div class="title">Ceph Bluestore首测</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)">匿名评论</a><a href="/privacy" style="margin-left: 4px">隐私政策</a></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__description"><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">这有关于<b style="color:#fff">产品、技术、开发</b>相关的问题和看法</b>。</div><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">相信你可以在这里找到对你有用的<b style="color:#fff">知识</b>和<b style="color:#fff">教程</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">zphj1987</h1><div class="author-info__desc">但行好事，莫问前程</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/zphj1987" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8D%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">定位问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%87%BA%E7%8E%B0%E8%BF%99%E6%A0%B7"><span class="toc-number">4.</span> <span class="toc-text">为什么会出现这样</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95-1"><span class="toc-number">5.</span> <span class="toc-text">解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E7%BB%AD"><span class="toc-number">7.</span> <span class="toc-text">后续</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E6%9B%B4%E8%AE%B0%E5%BD%95"><span class="toc-number">8.</span> <span class="toc-text">变更记录</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" title="海量文件的rsync同步方案"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/synctune.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="海量文件的rsync同步方案"/></a><div class="content"><a class="title" href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" title="海量文件的rsync同步方案">海量文件的rsync同步方案</a><time datetime="2024-08-23T06:58:49.000Z" title="发表于 2024-08-23 14:58:49">2024-08-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" title="定位读写的扇区的编号"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/sector.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="定位读写的扇区的编号"/></a><div class="content"><a class="title" href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" title="定位读写的扇区的编号">定位读写的扇区的编号</a><time datetime="2024-08-19T02:17:10.000Z" title="发表于 2024-08-19 10:17:10">2024-08-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="udp服务器和客户端"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/networkudp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="udp服务器和客户端"/></a><div class="content"><a class="title" href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="udp服务器和客户端">udp服务器和客户端</a><time datetime="2024-08-14T03:09:34.000Z" title="发表于 2024-08-14 11:09:34">2024-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" title="限制rbd只能在一台机器上面挂载"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/locklogo.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="限制rbd只能在一台机器上面挂载"/></a><div class="content"><a class="title" href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" title="限制rbd只能在一台机器上面挂载">限制rbd只能在一台机器上面挂载</a><time datetime="2024-07-01T10:12:57.000Z" title="发表于 2024-07-01 18:12:57">2024-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/" title="利用Clonezilla进行windows的系统复制"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/clonezilla-live.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用Clonezilla进行windows的系统复制"/></a><div class="content"><a class="title" href="/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/" title="利用Clonezilla进行windows的系统复制">利用Clonezilla进行windows的系统复制</a><time datetime="2024-06-27T07:35:02.000Z" title="发表于 2024-06-27 15:35:02">2024-06-27</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/shangban.svg" alt="距离月入25k也就还差一个大佬带我~" title="距离月入25k也就还差一个大佬带我~"/><div id="runtimeTextTip"></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2015 - 2024 By <a class="footer-bar-link" href="/" title="zphj1987" target="_blank">zphj1987</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://beian.miit.gov.cn/" title="鄂ICP备2022001754号-2">鄂ICP备2022001754号-2</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">361</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">17</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">其它站点</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/zphj1987" title="CSDN-武汉磨磨"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="CSDN-武汉磨磨"/><span class="back-menu-item-text">CSDN-武汉磨磨</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文库</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 文章列表</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 全部分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 全部标签</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/sitemap.xml"><span> sitemap</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Linux/" style="font-size: 0.88rem;">Linux<sup>1</sup></a><a href="/tags/ceph/" style="font-size: 0.88rem;">ceph<sup>7</sup></a><a href="/tags/chatgpt/" style="font-size: 0.88rem;">chatgpt<sup>1</sup></a><a href="/tags/lvm/" style="font-size: 0.88rem;">lvm<sup>1</sup></a><a href="/tags/openai/" style="font-size: 0.88rem;">openai<sup>1</sup></a><a href="/tags/windows/" style="font-size: 0.88rem;">windows<sup>2</sup></a><a href="/tags/%E5%86%85%E6%A0%B8/" style="font-size: 0.88rem;">内核<sup>2</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">博客相关<sup>1</sup></a><a href="/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">存储相关<sup>1</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 0.88rem;">操作系统<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/" style="font-size: 0.88rem;">数据管理<sup>1</sup></a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" style="font-size: 0.88rem;">暂未分类<sup>302</sup></a><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 0.88rem;">杂七杂八<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 0.88rem;">测试<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">测试相关<sup>1</sup></a><a href="/tags/%E7%9B%91%E6%8E%A7/" style="font-size: 0.88rem;">监控<sup>1</sup></a><a href="/tags/%E7%A3%81%E7%9B%98/" style="font-size: 0.88rem;">磁盘<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" style="font-size: 0.88rem;">系统服务<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 0.88rem;">系统配置<sup>3</sup></a><a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 0.88rem;">网络配置<sup>1</sup></a><a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/" style="font-size: 0.88rem;">虚拟化<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 0.88rem;">计算机<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 0.88rem;">高可用<sup>1</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="anzhiyufont anzhiyu-icon-xmark"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.cbd.int/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script async src="/anzhiyu/random.js"></script><script async="async">(function () {
+  var grt = new Date("03/19/2015 12:00:00"); //设置网站上线时间
+  var now = new Date();
+  var dnum;
+  var hnum;
+  var mnum;
+  var snum;
+  var nowHour;
+
+  // 计算并更新天数、小时数、分钟数和秒数
+  function updateTime() {
+    now = new Date(); // 更新 now 的值
+    nowHour = now.getHours(); // 更新 nowHour 的值
+    var days = (now - grt) / 1000 / 60 / 60 / 24;
+    dnum = Math.floor(days);
+    var hours = (now - grt) / 1000 / 60 / 60 - 24 * dnum;
+    hnum = Math.floor(hours);
+    if (String(hnum).length == 1) {
+      hnum = "0" + hnum;
+    }
+    var minutes = (now - grt) / 1000 / 60 - 24 * 60 * dnum - 60 * hnum;
+    mnum = Math.floor(minutes);
+    if (String(mnum).length == 1) {
+      mnum = "0" + mnum;
+    }
+    var seconds = (now - grt) / 1000 - 24 * 60 * 60 * dnum - 60 * 60 * hnum - 60 * mnum;
+    snum = Math.round(seconds);
+    if (String(snum).length == 1) {
+      snum = "0" + snum;
+    }
+  }
+
+  // 更新网页中显示的网站运行时间
+  function updateHtml() {
+    const footer = document.getElementById("footer");
+    if (!footer) return
+    let currentTimeHtml = "";
+    if (nowHour < 18 && nowHour >= 9) {
+      // 如果是上班时间，默认就是"安知鱼-上班摸鱼中.svg"图片，不需要更改
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    } else {
+      // 如果是下班时间，插入"安知鱼-下班啦.svg"图片
+      let img = document.querySelector("#workboard .workSituationImg");
+      if (img != null) {
+        img.src = "/images/xiaban.svg";
+        img.title = "下班了就该开开心心的玩耍，嘿嘿~";
+        img.alt = "下班了就该开开心心的玩耍，嘿嘿~";
+      }
+
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    }
+
+    if (document.getElementById("runtimeTextTip")) {
+      document.getElementById("runtimeTextTip").innerHTML = currentTimeHtml;
+    }
+  }
+
+  setInterval(() => {
+    updateTime();
+    updateHtml();
+  }, 1000);
+})();</script><script src="https://cdn.cbd.int/algoliasearch@4.18.0/dist/algoliasearch-lite.umd.js"></script><script src="https://cdn.cbd.int/instantsearch.js@4.60.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script><div class="js-pjax"><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'zphj1987/zphj1987.github.io',
+      'data-repo-id': 'R_kgDOIV6zlA',
+      'data-category-id': 'DIC_kwDOIV6zlM4Cg8XC',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },{"data-lang":"zh-CN","data-mapping":"pathname","data-category":"Announcements","data-input-position":"bottom"})
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  anzhiyu.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) anzhiyu.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script><input type="hidden" name="page-type" id="page-type" value="post"></div><script>var visitorMail = "";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>

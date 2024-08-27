@@ -1,0 +1,532 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>CPU相关的学习 | 磨磨的技术博客</title><meta name="keywords" content="暂未分类"><meta name="author" content="zphj1987"><meta name="copyright" content="zphj1987"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="CPU相关的学习"><meta name="application-name" content="CPU相关的学习"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="CPU相关的学习"><meta property="og:url" content="https://zphj1987.com/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/index.html"><meta property="og:site_name" content="磨磨的技术博客"><meta property="og:description" content="我理解的CPU目前对cpu的了解停留在这个水平查看CPU型号： 12cat &amp;#x2F;proc&amp;#x2F;cpuinfo |grep model |tail -n 1model name	: Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz  查看有多少processor： 12ca"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://zphj1987.com/images/default_cover_1.jpeg"><meta property="article:author" content="zphj1987"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://zphj1987.com/images/default_cover_1.jpeg"><meta name="description" content="我理解的CPU目前对cpu的了解停留在这个水平查看CPU型号： 12cat &amp;#x2F;proc&amp;#x2F;cpuinfo |grep model |tail -n 1model name	: Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz  查看有多少processor： 12ca"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://zphj1987.com/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0a806a1271c36ae0e709307eae2a6eb5";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  peoplecanvas: undefined,
+  postHeadAiDescription: {"enable":true,"gptName":"AnZhiYu","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: undefined,
+  LA51: undefined,
+  greetingBox: undefined,
+  twikooEnvId: '',
+  commentBarrageConfig:undefined,
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: false,
+  mainTone: undefined,
+  authorStatus: undefined,
+  algolia: {"appId":"GXWN6XTBBN","apiKey":"46fe2a73adf385608a95fb1cf263e589","indexName":"zphj","hits":{"per_page":6},"languages":{"input_placeholder":"输入关键词后按下回车查找","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":330},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: zphj1987","link":"链接: ","source":"来源: 磨磨的技术博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: '磨磨的技术博客',
+  title: 'CPU相关的学习',
+  postAI: '',
+  pageFillDescription: '我理解的CPU, 单核和多核, NUNA与SMP的概念, Node-gtSocket-gtCore-gtProcessor(Threads), 查看CPU信息, 通过命令行查看cpu信息, Cpu Topology可视化, NUMA分组信息, cache信息, cpu绑定注意的几点, 测试CPU绑定性能我理解的目前对的了解停留在这个水平查看型号查看有多少然后对性能要求就是主频越高越好越多越好其它的知道的很少由于需要做性能相关调优所以对这一块做一个系统的学习如果参考网上的一些性能调优的资料很多地方都是让关闭以免影响性能这个从来都是只有人给出答案至于为什么对不对适合不适合你的环境没有人给出来没有数据支持的调优都是耍流氓单核和多核在英文里面单核和多核多称作和这里先对这些概念做一个说明这里所说的或是一个泛指是从使用者或消费者的角度看计算机系统因此或者或者处理器都是逻辑概念指的是一个可以独立运算处理的核心而这个核心可以以任何形式存在例如单独的一个如通常意义上的单核处理器一个上集成多个核心如一个核心上实现多个以支持多线程如等等这是从硬件实现的角度看的最后从操作系统进程调度的角度又会统一看待这些不同硬件实现的核心例如上面开始所提及的个从编号开始因为它们都有一个共同的特点执行进程或线程与的概念非一致性内存访问和对称多处理器系统是两种不同的硬件体系架构的主要特征是共享所有的共享使用全部资源例如内存总线和多个对称工作彼此之间没有主次之分平等地访问共享的资源这样势必引入资源的竞争问题从而导致它的扩展内力非常有限特别是在现在一台机器核心比较多内存比较大的情况技术将划分成不同的组每个由多个组成并且有独立的本地内存等资源之间通过互联模块连接和沟通因此除了本地内存外每个仍可以访问远端的内存只不过效率会比访问本地内存差一些我们用之间的距离抽象的概念来定义各个之间互访资源的开销本章主要是去做的相关探索下图是一个多核系统简单的如果你只知道这么一个概念那么是无法理解的拓扑的事实上在架构下的概念从大到小依次是可以理解成主板上的插槽数物理的颗数一般同一上的共享三级缓存而中的每个核心被称为常说的核核有独立的物理资源比如单独的一级二级缓存什么的为了进一步提升的处理能力又引入了超线程的技术一个打开之后在看来就是两个核当然这个核是逻辑上的概念所以也被称为如果不开超线程应该与相等如果开了超线程应该是的倍数相互之间共享物理资源上图的多核图中没有涉及是体系中的概念由于体系中各个访问内存只能通过单一的通道导致内存访问成为瓶颈再多也无用后来引入了通过划分每个有本地这样内访问速度会非常快但跨的访问代价会相对高一点下面看一下两种架构的明显区别由此可以总结这样的逻辑关系包含区分这几个概念为了了解的分布因为绑定的目的就是提高的命中率降低颠簸所以了解与之间的关系是非常重要的通常来讲同内的共享三级级缓存每个有自己独立的二级缓存一个上超线程出来的避免绑定看似可能会提高命中率但也可能有严重的争抢导致性能非常差查看信息颗核双线程一共是也可以看到是体系可以使用以下命令详细查看信息非体系时所有都划分为一个的不连续的原因是开启了超线程超线程的是从新的开始计数的也就是从开始计数的两个每个内存左右这台机器我的物理内存是通过命令行查看信息获取名称与主频获取逻辑核数获取物理核数查看的是否打开超线程检查与的比例为未开启查看大小自省替换查看各个之间与的获取分布的信息信息这一个可以看出来和在同一个都是读取文件系统信息并进行格式化输出人性化的内容当没有网络而都没有安装时只能使用这种命令行方式了能用工具还是用工具工具就是解放双手的可视化指令由数据包提供创建了用户的系统示意图指令提供详尽的文本输出通过与获取的信息必要的时候查询了的数据将正在使用的的进行可视化详细的信息可以通过查看包含以下个目录级数据级指令级级对应里的目录里的文件是信息描述以本机的为例简单解释一下文件内容说明数据如果查看就是大小为表示这个被和解释一下内容的格式表面上看是进制其实是进制表示每个表示一个个数字可以表示个截取的后位转换为进制表示的进制表示表示和即的是和共享的也可以使用上面提到的命令进行查询这个得到的是文本的拓扑这个转换成一个图看的要清楚一些分组信息通过图可以看到为架构且有两个将同一内的都划分在一个中通过上图也解释了中序列不连续的问题因为同一个上的两个是超线程出来的超线程的在原有的基础上增长的每个中有左右的本地可用信息每个都有独立的二级缓存而不是中所有的共享二级缓存同中的共享三级缓存跨的内存访问的花费要大些绑定注意的几点体系中如果夸绑定性能会下降因为命中率低跨内存访问代价高绑定同同一个中的两个超线程出来的性能会急剧下降密集型的线程硬件争用严重玩转中也提到了架构可能引起需要注意测试绑定性能这个部分就不在这里赘述了上面是把比较清晰的剥离出来至于效果需要在实际环境当中去验证了有可能变坏也有可能变好本篇参考了很多网络上的很多其他资料',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-06 00:04:05',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="/images/logo.jpeg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">其它站点</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/zphj1987" title="CSDN-武汉磨磨"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="CSDN-武汉磨磨"/><span class="back-menu-item-text">CSDN-武汉磨磨</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">磨磨的技术博客</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文库</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 文章列表</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 全部分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 全部标签</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/sitemap.xml"><span> sitemap</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="/images/wechatmei.png" target="_blank"><img class="post-qr-code-img" alt="微信" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/wechatmei.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubaomei.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/zhifubaomei.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Linux/" style="font-size: 1.05rem;">Linux<sup>1</sup></a><a href="/tags/ceph/" style="font-size: 1.05rem;">ceph<sup>7</sup></a><a href="/tags/chatgpt/" style="font-size: 1.05rem;">chatgpt<sup>1</sup></a><a href="/tags/lvm/" style="font-size: 1.05rem;">lvm<sup>1</sup></a><a href="/tags/openai/" style="font-size: 1.05rem;">openai<sup>1</sup></a><a href="/tags/windows/" style="font-size: 1.05rem;">windows<sup>2</sup></a><a href="/tags/%E5%86%85%E6%A0%B8/" style="font-size: 1.05rem;">内核<sup>2</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">博客相关<sup>1</sup></a><a href="/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">存储相关<sup>1</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.05rem;">操作系统<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/" style="font-size: 1.05rem;">数据管理<sup>1</sup></a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" style="font-size: 1.05rem;">暂未分类<sup>302</sup></a><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 1.05rem;">杂七杂八<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 1.05rem;">测试<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">测试相关<sup>1</sup></a><a href="/tags/%E7%9B%91%E6%8E%A7/" style="font-size: 1.05rem;">监控<sup>1</sup></a><a href="/tags/%E7%A3%81%E7%9B%98/" style="font-size: 1.05rem;">磁盘<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" style="font-size: 1.05rem;">系统服务<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 1.05rem;">系统配置<sup>3</sup></a><a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 1.05rem;">网络配置<sup>1</sup></a><a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/" style="font-size: 1.05rem;">虚拟化<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 1.05rem;">计算机<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 1.05rem;">高可用<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="anzhiyufont anzhiyu-icon-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/08/"><span class="card-archive-list-date">八月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/07/"><span class="card-archive-list-date">七月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">六月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">四月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">4</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/03/"><span class="card-archive-list-date">三月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">6</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/02/"><span class="card-archive-list-date">二月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">5</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">一月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" itemprop="url">暂未分类</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>暂未分类</span></a></span></div></div><h1 class="post-title" itemprop="name headline">CPU相关的学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2016-06-13T09:20:00.000Z" title="发表于 2016-06-13 17:20:00">2016-06-13</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2024-01-05T16:04:05.076Z" title="更新于 2024-01-06 00:04:05">2024-01-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-pv-cv" id="" data-flag-title="CPU相关的学习"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为武汉"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>武汉</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="/images/default_cover_1.jpeg"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://zphj1987.com/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/"><header><a class="post-meta-categories" href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" itemprop="url">暂未分类</a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" tabindex="-1" itemprop="url">暂未分类</a><h1 id="CrawlerTitle" itemprop="name headline">CPU相关的学习</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">zphj1987</span><time itemprop="dateCreated datePublished" datetime="2016-06-13T09:20:00.000Z" title="发表于 2016-06-13 17:20:00">2016-06-13</time><time itemprop="dateCreated datePublished" datetime="2024-01-05T16:04:05.076Z" title="更新于 2024-01-06 00:04:05">2024-01-06</time></header><h3 id="我理解的CPU"><a href="#我理解的CPU" class="headerlink" title="我理解的CPU"></a>我理解的CPU</h3><p>目前对cpu的了解停留在这个水平<br>查看CPU型号：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /proc/cpuinfo |grep model |<span class="built_in">tail</span> -n 1</span><br><span class="line">model name	: Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz</span><br></pre></td></tr></table></figure>
+
+<p>查看有多少processor：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /proc/cpuinfo |grep processor|<span class="built_in">tail</span> -n 1</span><br><span class="line">processor	: 23</span><br></pre></td></tr></table></figure>
+<p>然后对性能要求就是主频越高越好，processor越多越好，其它的知道的很少，由于需要做性能相关调优，所以对CPU这一块做一个系统的学习，如果参考网上的一些CEPH性能调优的资料，很多地方都是让关闭numa，以免影响性能，这个从来都是只有人给出答案，至于为什么，对不对，适合不适合你的环境，没有人给出来，没有数据支持的调优都是耍流氓</p>
+<h3 id="单核和多核"><a href="#单核和多核" class="headerlink" title="单核和多核"></a>单核和多核</h3><p>在英文里面，单核（single-core）和多核（multi-core）多称作uniprocessor和multiprocessor，这里先对这些概念做一个说明：</p>
+<blockquote>
+<p>这里所说的core（或processor），是一个泛指，是从使用者（或消费者）的角度看计算机系统。因此，core，或者processor，或者处理器（CPU），都是逻辑概念，指的是一个可以独立运算、处理的核心。</p>
+</blockquote>
+<p>而这个核心，可以以任何形式存在，例如：单独的一个chip（如通常意义上的单核处理器）；一个chip上集成多个核心（如SMP，symmetric multiprocessing）；一个核心上实现多个hardware context，以支持多线程（如SMT，Simultaneous multithreading）；等等。这是从硬件实现的角度看的。<br>最后，从操作系统进程调度的角度，又会统一看待这些不同硬件实现的核心，例如上面开始所提及的CPU（24个CPUs，从0编号开始），因为它们都有一个共同的特点：执行进程（或线程）。</p>
+<h3 id="NUNA与SMP的概念"><a href="#NUNA与SMP的概念" class="headerlink" title="NUNA与SMP的概念"></a>NUNA与SMP的概念</h3><p>NUMA(Non-Uniform Memory Access，非一致性内存访问)和SMP(Symmetric Multi-Processor，对称多处理器系统)是两种不同的CPU硬件体系架构</p>
+<p>SMP（Symmetric Multi-Processing）的主要特征是共享，所有的CPU共享使用全部资源，例如内存、总线和I&#x2F;O，多个CPU对称工作，彼此之间没有主次之分，平等地访问共享的资源，这样势必引入资源的竞争问题，从而导致它的扩展内力非常有限。特别是在现在一台机器CPU核心比较多，内存比较大的情况</p>
+<p>NUMA技术将CPU划分成不同的组（Node)，每个Node由多个CPU组成，并且有独立的本地内存、I&#x2F;O等资源。Node之间通过互联模块连接和沟通，因此除了本地内存外，每个CPU仍可以访问远端Node的内存，只不过效率会比访问本地内存差一些，我们用Node之间的距离（Distance，抽象的概念）来定义各个Node之间互访资源的开销。</p>
+<p>本章主要是去做NUMA的相关探索，下图是一个多核系统简单的topology</p>
+<center>![coremuti.gif-23.7kB][2]</center>
+
+<h3 id="Node-Socket-Core-Processor-Threads"><a href="#Node-Socket-Core-Processor-Threads" class="headerlink" title="Node-&gt;Socket-&gt;Core-&gt;Processor(Threads)"></a>Node-&gt;Socket-&gt;Core-&gt;Processor(Threads)</h3><p>如果你只知道CPU这么一个概念，那么是无法理解CPU的拓扑的。事实上，在NUMA架构下，CPU的概念从大到小依次是：Node、Socket、Core、Processor</p>
+<ul>
+<li>Sockets 可以理解成主板上cpu的插槽数，物理cpu的颗数，一般同一socket上的core共享三级缓存</li>
+<li>Cores 而Socket中的每个核心被称为Core,常说的核,核有独立的物理资源.比如单独的一级二级缓存什么的</li>
+<li>Threads 为了进一步提升CPU的处理能力，Intel又引入了HT（Hyper-Threading，超线程)的技术，一个Core打开HT之后，在OS看来就是两个核，当然这个核是逻辑上的概念，所以也被称为Logical Processor,如果不开超线程,threads应该与cores相等,如果开了超线程,threads应该是cores的倍数.相互之间共享物理资源</li>
+<li>Nodes 上图的多核图中没有涉及， Node是NUMA体系中的概念．由于SMP体系中各个CPU访问内存只能通过单一的通道．导致内存访问成为瓶颈,cpu再多也无用．后来引入了NUMA．通过划分node,每个node有本地RAM,这样node内访问RAM速度会非常快．但跨Node的RAM访问代价会相对高一点，下面看一下两种架构的明显区别</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901040636smpnuma.png" alt="smpnuma.png-67.5kB"></p>
+<p>由此可以总结这样的逻辑关系(包含):Node &gt; Socket &gt; Core &gt; Thread 区分这几个概念为了了解cache的分布,因为cpu绑定的目的就是提高cache的命中率,降低cpu颠簸.所以了解cache与cpu之间的mapping关系是非常重要的.通常来讲:</p>
+<ul>
+<li>同Socket内的cpu共享三级级缓存</li>
+<li>每个Core有自己独立的二级缓存</li>
+<li>一个Core上超线程出来的Threads,避免绑定，看似可能会提高L2 cache命中率,但也可能有严重的cpu争抢，导致性能非常差.</li>
+</ul>
+<h3 id="查看CPU信息"><a href="#查看CPU信息" class="headerlink" title="查看CPU信息"></a>查看CPU信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@server9 ~]<span class="comment"># lscpu </span></span><br><span class="line">Architecture:          x86_64</span><br><span class="line">CPU op-mode(s):        32-bit, 64-bit</span><br><span class="line">Byte Order:            Little Endian</span><br><span class="line">CPU(s):                24</span><br><span class="line">On-line CPU(s) list:   0-23</span><br><span class="line">Thread(s) per core:    2</span><br><span class="line">Core(s) per socket:    6</span><br><span class="line">Socket(s):             2</span><br><span class="line">NUMA node(s):          2</span><br><span class="line">Vendor ID:             GenuineIntel</span><br><span class="line">CPU family:            6</span><br><span class="line">Model:                 62</span><br><span class="line">Model name:            Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz</span><br><span class="line">Stepping:              4</span><br><span class="line">CPU MHz:               1607.894</span><br><span class="line">BogoMIPS:              4205.65</span><br><span class="line">Virtualization:        VT-x</span><br><span class="line">L1d cache:             32K</span><br><span class="line">L1i cache:             32K</span><br><span class="line">L2 cache:              256K</span><br><span class="line">L3 cache:              15360K</span><br><span class="line">NUMA node0 CPU(s):     0-5,12-17</span><br><span class="line">NUMA node1 CPU(s):     6-11,18-23</span><br></pre></td></tr></table></figure>
+<p>2颗6核双线程，一共是24 processors,也可以看到是NUMA体系，可以使用以下命令详细查看numa信息.非NUMA体系时,所有cpu都划分为一个Node</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@server9 ~]<span class="comment"># numactl --hardware</span></span><br><span class="line">available: 2 nodes (0-1)</span><br><span class="line">node 0 cpus: 0 1 2 3 4 5 12 13 14 15 16 17</span><br><span class="line">node 0 size: 31880 MB</span><br><span class="line">node 0 free: 19634 MB</span><br><span class="line">node 1 cpus: 6 7 8 9 10 11 18 19 20 21 22 23</span><br><span class="line">node 1 size: 32253 MB</span><br><span class="line">node 1 free: 29315 MB</span><br><span class="line">node distances:</span><br><span class="line">node   0   1 </span><br><span class="line">  0:  10  21 </span><br><span class="line">  1:  21  10 </span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>cpu的id不连续的原因是开启了超线程，超线程的cpuid是从新的ID开始计数的，也就是从12开始计数的</p>
+</blockquote>
+<p>两个node，每个node32G内存左右，这台机器我的物理内存是64G</p>
+<h3 id="通过命令行查看cpu信息"><a href="#通过命令行查看cpu信息" class="headerlink" title="通过命令行查看cpu信息"></a>通过命令行查看cpu信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取cpu名称与主频</span></span><br><span class="line"><span class="built_in">cat</span> /proc/cpuinfo | grep <span class="string">&#x27;model name&#x27;</span>  | <span class="built_in">cut</span> -f2 -d: | <span class="built_in">head</span> -n1 | sed <span class="string">&#x27;s/^ //&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取逻辑核数</span></span><br><span class="line"><span class="built_in">cat</span> /proc/cpuinfo | grep <span class="string">&#x27;model name&#x27;</span>  | <span class="built_in">wc</span> -l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取物理核数</span></span><br><span class="line"><span class="built_in">cat</span> /proc/cpuinfo | grep <span class="string">&#x27;physical id&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> | <span class="built_in">wc</span> -l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看cpu的flags</span></span><br><span class="line"><span class="built_in">cat</span> /proc/cpuinfo | grep flags | <span class="built_in">uniq</span> | <span class="built_in">cut</span> -f2 -d : | sed <span class="string">&#x27;s/^ //&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 是否打开超线程（检查 physical id * cpu cores 与 processor的比例 1:1为未开启）</span></span><br><span class="line"><span class="built_in">cat</span> /proc/cpuinfo </span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看cache大小,X自省替换</span></span><br><span class="line">sudo <span class="built_in">cat</span> /sys/devices/system/cpu/cpuX/cache/indexX/size</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看各个cpu之间与cache的mapping</span></span><br><span class="line"><span class="built_in">cat</span> /sys/devices/system/cpu/cpuX/cache/indexX/shared_cpu_list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取CPU分布的信息（id-&gt; core信息）（这一个可以看出来CPU0和CPU12在同一个core）</span></span><br><span class="line">egrep <span class="string">&#x27;processor|core id|physical id&#x27;</span> /proc/cpuinfo | <span class="built_in">cut</span> -d : -f 2 | <span class="built_in">paste</span> - - -  | awk <span class="string">&#x27;&#123;print &quot;CPU&quot;$1&quot;\tsocket &quot;$2&quot; core &quot;$3&#125;&#x27;</span></span><br><span class="line">CPU0	socket 0 core 0</span><br><span class="line">CPU1	socket 0 core 1</span><br><span class="line">CPU2	socket 0 core 2</span><br><span class="line">CPU3	socket 0 core 3</span><br><span class="line">CPU4	socket 0 core 4</span><br><span class="line">CPU5	socket 0 core 5</span><br><span class="line">CPU6	socket 1 core 0</span><br><span class="line">CPU7	socket 1 core 1</span><br><span class="line">CPU8	socket 1 core 2</span><br><span class="line">CPU9	socket 1 core 3</span><br><span class="line">CPU10	socket 1 core 4</span><br><span class="line">CPU11	socket 1 core 5</span><br><span class="line">CPU12	socket 0 core 0</span><br><span class="line">CPU13	socket 0 core 1</span><br><span class="line">CPU14	socket 0 core 2</span><br><span class="line">CPU15	socket 0 core 3</span><br><span class="line">CPU16	socket 0 core 4</span><br><span class="line">CPU17	socket 0 core 5</span><br><span class="line">CPU18	socket 1 core 0</span><br><span class="line">CPU19	socket 1 core 1</span><br><span class="line">CPU20	socket 1 core 2</span><br><span class="line">CPU21	socket 1 core 3</span><br><span class="line">CPU22	socket 1 core 4</span><br><span class="line">CPU23	socket 1 core 5</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>lscpu,numactl都是读取proc,sys文件系统信息并进行格式化，输出人性化的内容．当没有网络,而lscpu,numactl都没有安装时，只能使用这种命令行方式了</p>
+<p>能用工具还是用工具，工具就是解放双手的</p>
+<h3 id="Cpu-Topology可视化"><a href="#Cpu-Topology可视化" class="headerlink" title="Cpu Topology可视化"></a>Cpu Topology可视化</h3><p>lstopo 指令由 hwloc 数据包提供，创建了用户的系统示意图。lstopo-no-graphics 指令提供详尽的文本输出<br>通过lscpu与numactl获取的信息，必要的时候查询了&#x2F;sys&#x2F;devices&#x2F;system&#x2F;cpu&#x2F;cpuX&#x2F;*的数据将正在使用的 Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz的topology进行可视化<br>详细的cache信息可以通过sysfs查看</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /sys/devices/system/cpu/cpu0/cache/</span><br><span class="line">index0 index1 index2 index3</span><br></pre></td></tr></table></figure>
+<p>包含以下4个目录：</p>
+<ul>
+<li>index0:1级数据cache </li>
+<li>index1:1级指令cache </li>
+<li>index2:2级cache </li>
+<li>index3:3级cache,对应cpuinfo里的cache</li>
+</ul>
+<p>目录里的文件是cache信息描述，以本机的cpu0&#x2F;index0为例简单解释一下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">文件</th>
+<th align="center">内容</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">type</td>
+<td align="center">Data</td>
+<td align="center">数据cache，如果查看index1就是Instruction</td>
+</tr>
+<tr>
+<td align="center">Level</td>
+<td align="center">1</td>
+<td align="center">L1</td>
+</tr>
+<tr>
+<td align="center">Size</td>
+<td align="center">32K</td>
+<td align="center">大小为32K</td>
+</tr>
+<tr>
+<td align="center">coherency_line_size</td>
+<td align="center">64</td>
+<td align="center">64<em>4</em>128&#x3D;32K</td>
+</tr>
+<tr>
+<td align="center">physical_line_partition</td>
+<td align="center">1</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">ways_of_associativity</td>
+<td align="center">4</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">number_of_sets</td>
+<td align="center">128</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">shared_cpu_map</td>
+<td align="center">00000101</td>
+<td align="center">表示这个cache被CPU0和CPU8 share</td>
+</tr>
+</tbody></table>
+<p>解释一下shared_cpu_map内容的格式：<br>表面上看是2进制，其实是16进制表示，每个bit表示一个cpu，1个数字可以表示4个cpu 截取00000101的后4位，转换为2进制表示</p>
+<p>|CPU id|15|14|13|12|11|10|9|8|7|6|5|4|3|2|1|0|<br>| :—: | :—: | :—-: | :—-: | :—-: | :—-: | :—-: | :—-: | :—-: | :—-: | :—-: | :—-: | :—-: | :—-: | :—-: | :—-: |<br>|0×0101的2进制表示|0|0|0|0|0|0|0|1|0|0|0|0|0|0|0|1|</p>
+<p>0101表示cpu8和cpu0，即cpu0的L1 data cache是和cpu8共享的。<br>也可以使用上面提到的lstopo-no-graphics命令进行查询</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">[root@server9 ~]<span class="comment"># lstopo-no-graphics </span></span><br><span class="line">Machine (63GB)</span><br><span class="line">  NUMANode L<span class="comment">#0 (P#0 31GB)</span></span><br><span class="line">    Socket L<span class="comment">#0 + L3 L#0 (15MB)</span></span><br><span class="line">      L2 L<span class="comment">#0 (256KB) + L1d L#0 (32KB) + L1i L#0 (32KB) + Core L#0</span></span><br><span class="line">        PU L<span class="comment">#0 (P#0)</span></span><br><span class="line">        PU L<span class="comment">#1 (P#12)</span></span><br><span class="line">      L2 L<span class="comment">#1 (256KB) + L1d L#1 (32KB) + L1i L#1 (32KB) + Core L#1</span></span><br><span class="line">        PU L<span class="comment">#2 (P#1)</span></span><br><span class="line">        PU L<span class="comment">#3 (P#13)</span></span><br><span class="line">      L2 L<span class="comment">#2 (256KB) + L1d L#2 (32KB) + L1i L#2 (32KB) + Core L#2</span></span><br><span class="line">        PU L<span class="comment">#4 (P#2)</span></span><br><span class="line">        PU L<span class="comment">#5 (P#14)</span></span><br><span class="line">      L2 L<span class="comment">#3 (256KB) + L1d L#3 (32KB) + L1i L#3 (32KB) + Core L#3</span></span><br><span class="line">        PU L<span class="comment">#6 (P#3)</span></span><br><span class="line">        PU L<span class="comment">#7 (P#15)</span></span><br><span class="line">      L2 L<span class="comment">#4 (256KB) + L1d L#4 (32KB) + L1i L#4 (32KB) + Core L#4</span></span><br><span class="line">        PU L<span class="comment">#8 (P#4)</span></span><br><span class="line">        PU L<span class="comment">#9 (P#16)</span></span><br><span class="line">      L2 L<span class="comment">#5 (256KB) + L1d L#5 (32KB) + L1i L#5 (32KB) + Core L#5</span></span><br><span class="line">        PU L<span class="comment">#10 (P#5)</span></span><br><span class="line">        PU L<span class="comment">#11 (P#17)</span></span><br><span class="line">    HostBridge L<span class="comment">#0</span></span><br><span class="line">      PCIBridge</span><br><span class="line">        PCI 1000:0086</span><br><span class="line">      PCIBridge</span><br><span class="line">        PCI 8086:1521</span><br><span class="line">          Net L<span class="comment">#0 &quot;enp4s0f0&quot;</span></span><br><span class="line">        PCI 8086:1521</span><br><span class="line">          Net L<span class="comment">#1 &quot;enp4s0f1&quot;</span></span><br><span class="line">        PCI 8086:1521</span><br><span class="line">          Net L<span class="comment">#2 &quot;enp4s0f2&quot;</span></span><br><span class="line">        PCI 8086:1521</span><br><span class="line">          Net L<span class="comment">#3 &quot;enp4s0f3&quot;</span></span><br><span class="line">      PCIBridge</span><br><span class="line">        PCI 8086:10fb</span><br><span class="line">          Net L<span class="comment">#4 &quot;enp6s0f0&quot;</span></span><br><span class="line">        PCI 8086:10fb</span><br><span class="line">          Net L<span class="comment">#5 &quot;enp6s0f1&quot;</span></span><br><span class="line">      PCIBridge</span><br><span class="line">        PCI 8086:1d6b</span><br><span class="line">      PCIBridge</span><br><span class="line">        PCI 102b:0532</span><br><span class="line">          GPU L<span class="comment">#6 &quot;card0&quot;</span></span><br><span class="line">          GPU L<span class="comment">#7 &quot;controlD64&quot;</span></span><br><span class="line">      PCI 8086:1d02</span><br><span class="line">        Block L<span class="comment">#8 &quot;sda&quot;</span></span><br><span class="line">  NUMANode L<span class="comment">#1 (P#1 31GB) + Socket L#1 + L3 L#1 (15MB)</span></span><br><span class="line">    L2 L<span class="comment">#6 (256KB) + L1d L#6 (32KB) + L1i L#6 (32KB) + Core L#6</span></span><br><span class="line">      PU L<span class="comment">#12 (P#6)</span></span><br><span class="line">      PU L<span class="comment">#13 (P#18)</span></span><br><span class="line">    L2 L<span class="comment">#7 (256KB) + L1d L#7 (32KB) + L1i L#7 (32KB) + Core L#7</span></span><br><span class="line">      PU L<span class="comment">#14 (P#7)</span></span><br><span class="line">      PU L<span class="comment">#15 (P#19)</span></span><br><span class="line">    L2 L<span class="comment">#8 (256KB) + L1d L#8 (32KB) + L1i L#8 (32KB) + Core L#8</span></span><br><span class="line">      PU L<span class="comment">#16 (P#8)</span></span><br><span class="line">      PU L<span class="comment">#17 (P#20)</span></span><br><span class="line">    L2 L<span class="comment">#9 (256KB) + L1d L#9 (32KB) + L1i L#9 (32KB) + Core L#9</span></span><br><span class="line">      PU L<span class="comment">#18 (P#9)</span></span><br><span class="line">      PU L<span class="comment">#19 (P#21)</span></span><br><span class="line">    L2 L<span class="comment">#10 (256KB) + L1d L#10 (32KB) + L1i L#10 (32KB) + Core L#10</span></span><br><span class="line">      PU L<span class="comment">#20 (P#10)</span></span><br><span class="line">      PU L<span class="comment">#21 (P#22)</span></span><br><span class="line">    L2 L<span class="comment">#11 (256KB) + L1d L#11 (32KB) + L1i L#11 (32KB) + Core L#11</span></span><br><span class="line">      PU L<span class="comment">#22 (P#11)</span></span><br><span class="line">      PU L<span class="comment">#23 (P#23)</span></span><br></pre></td></tr></table></figure>
+<p>这个得到的是文本的拓扑，这个转换成一个图看的要清楚一些<br><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901040628nodesock.png" alt="nodesock.png-45.9kB"></p>
+<h4 id="NUMA分组信息"><a href="#NUMA分组信息" class="headerlink" title="NUMA分组信息"></a>NUMA分组信息</h4><ul>
+<li>通过图可以看到cpu为numa架构,且有两个node</li>
+<li>将同一socket内的cpu(threads)都划分在一个node中.通过上图也解释了node中cpu序列不连续的问题.因为同一个Core上的两个Threads是超线程出来的.超线程Thread的cpu id在原有的core id基础上增长的</li>
+<li>每个node中有32G左右的本地RAM可用</li>
+</ul>
+<h4 id="cache信息"><a href="#cache信息" class="headerlink" title="cache信息"></a>cache信息</h4><ul>
+<li>每个core都有独立的二级缓存,而不是socket中所有的core共享二级缓存</li>
+<li>同node中的cpu共享三级缓存</li>
+<li>跨node的内存访问的花费要大些</li>
+</ul>
+<h3 id="cpu绑定注意的几点"><a href="#cpu绑定注意的几点" class="headerlink" title="cpu绑定注意的几点"></a>cpu绑定注意的几点</h3><ul>
+<li>Numa体系中,如果夸node绑定,性能会下降.因为L3 cache命中率低,跨node内存访问代价高.</li>
+<li>绑定同Node,同一个Core中的两个超线程出来的cpu,性能会急剧下降.cpu密集型的线程硬件争用严重.”玩转CPU Topology”中也提到了.</li>
+<li>Numa架构可能引起swap insanity.需要注意</li>
+</ul>
+<h3 id="测试CPU绑定性能"><a href="#测试CPU绑定性能" class="headerlink" title="测试CPU绑定性能"></a>测试CPU绑定性能</h3><p>这个部分就不在这里赘述了，上面是把cpu比较清晰的剥离出来，至于效果，需要在实际环境当中去验证了，有可能变坏，也有可能变好</p>
+<p>本篇参考了很多网络上的很多其他资料</p>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" title="头像" alt="头像"></a><div class="post-copyright__author_name">zphj1987</div><div class="post-copyright__author_desc">但行好事，莫问前程</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://zphj1987.com/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://zphj1987.com/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/')">CPU相关的学习</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"><div class="post-reward" onclick="anzhiyu.addRewardMask()"><div class="reward-button button--animated" title="赞赏作者"><i class="anzhiyufont anzhiyu-icon-hand-heart-fill"></i>打赏作者</div><div class="reward-main"><div class="reward-all"><span class="reward-title">感谢你赐予我前进的力量</span><ul class="reward-group"><li class="reward-item"><a href="/images/wechatmei.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/wechatmei.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubaomei.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/zhifubaomei.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul><a class="reward-main-btn" href="/about/#about-reward" target="_blank"><div class="reward-text">赞赏者名单</div><div class="reward-dec">因为你们的支持让我意识到写文章的价值🙏</div></a></div></div></div><div id="quit-box" onclick="anzhiyu.removeRewardMask()" style="display: none"></div></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://zphj1987.com/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=CPU相关的学习&amp;url=https://zphj1987.com/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/&amp;pic=/images/default_cover_1.jpeg" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://zphj1987.com" target="_blank">磨磨的技术博客</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>暂未分类<span class="tagsPageCount">302</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="/images/blog/synctune.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2016/06/07/rbd%E6%97%A0%E6%B3%95map(rbd%20feature%20disable)/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">rbd无法map(rbd feature disable)</div></div></a></div><div class="next-post pull-right"><a href="/2016/06/19/rgw%E5%AE%9E%E7%8E%B0nfs%E7%9A%84%E9%A6%96%E6%B5%8B/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">rgw实现nfs的首测</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2015/03/22/Bad%20magic%20number%20ImportError%20in%20python/" title="Bad magic number ImportError in python"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2015-03-22</div><div class="title">Bad magic number ImportError in python</div></div></a></div><div><a href="/2019/09/02/CTDB%E4%BD%BF%E7%94%A8radosobject%E4%BD%9C%E4%B8%BAlockfile/" title="CTDB使用radosobject作为lockfile"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2019-09-02</div><div class="title">CTDB使用radosobject作为lockfile</div></div></a></div><div><a href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" title="CentOS GRUB损坏修复方法"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2017-11-30</div><div class="title">CentOS GRUB损坏修复方法</div></div></a></div><div><a href="/2016/09/12/Centos7%E4%B8%8BJewel%E7%89%88%E6%9C%ACradosgw%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/" title="Centos7下Jewel版本radosgw服务启动"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-09-12</div><div class="title">Centos7下Jewel版本radosgw服务启动</div></div></a></div><div><a href="/2016/03/24/Ceph%20Bluestore%E9%A6%96%E6%B5%8B/" title="Ceph Bluestore首测"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-03-24</div><div class="title">Ceph Bluestore首测</div></div></a></div><div><a href="/2017/06/01/Centos7%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8%E5%90%8E%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" title="Centos7升级内核后无法启动解决办法"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2017-06-01</div><div class="title">Centos7升级内核后无法启动解决办法</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)">匿名评论</a><a href="/privacy" style="margin-left: 4px">隐私政策</a></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__description"><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">这有关于<b style="color:#fff">产品、技术、开发</b>相关的问题和看法</b>。</div><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">相信你可以在这里找到对你有用的<b style="color:#fff">知识</b>和<b style="color:#fff">教程</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">zphj1987</h1><div class="author-info__desc">但行好事，莫问前程</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/zphj1987" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%91%E7%90%86%E8%A7%A3%E7%9A%84CPU"><span class="toc-number">1.</span> <span class="toc-text">我理解的CPU</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E6%A0%B8%E5%92%8C%E5%A4%9A%E6%A0%B8"><span class="toc-number">2.</span> <span class="toc-text">单核和多核</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NUNA%E4%B8%8ESMP%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">3.</span> <span class="toc-text">NUNA与SMP的概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-Socket-Core-Processor-Threads"><span class="toc-number">4.</span> <span class="toc-text">Node-&gt;Socket-&gt;Core-&gt;Processor(Threads)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BCPU%E4%BF%A1%E6%81%AF"><span class="toc-number">5.</span> <span class="toc-text">查看CPU信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%9F%A5%E7%9C%8Bcpu%E4%BF%A1%E6%81%AF"><span class="toc-number">6.</span> <span class="toc-text">通过命令行查看cpu信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cpu-Topology%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="toc-number">7.</span> <span class="toc-text">Cpu Topology可视化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#NUMA%E5%88%86%E7%BB%84%E4%BF%A1%E6%81%AF"><span class="toc-number">7.1.</span> <span class="toc-text">NUMA分组信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cache%E4%BF%A1%E6%81%AF"><span class="toc-number">7.2.</span> <span class="toc-text">cache信息</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cpu%E7%BB%91%E5%AE%9A%E6%B3%A8%E6%84%8F%E7%9A%84%E5%87%A0%E7%82%B9"><span class="toc-number">8.</span> <span class="toc-text">cpu绑定注意的几点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95CPU%E7%BB%91%E5%AE%9A%E6%80%A7%E8%83%BD"><span class="toc-number">9.</span> <span class="toc-text">测试CPU绑定性能</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" title="海量文件的rsync同步方案"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/synctune.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="海量文件的rsync同步方案"/></a><div class="content"><a class="title" href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" title="海量文件的rsync同步方案">海量文件的rsync同步方案</a><time datetime="2024-08-23T06:58:49.000Z" title="发表于 2024-08-23 14:58:49">2024-08-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" title="定位读写的扇区的编号"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/sector.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="定位读写的扇区的编号"/></a><div class="content"><a class="title" href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" title="定位读写的扇区的编号">定位读写的扇区的编号</a><time datetime="2024-08-19T02:17:10.000Z" title="发表于 2024-08-19 10:17:10">2024-08-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="udp服务器和客户端"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/networkudp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="udp服务器和客户端"/></a><div class="content"><a class="title" href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="udp服务器和客户端">udp服务器和客户端</a><time datetime="2024-08-14T03:09:34.000Z" title="发表于 2024-08-14 11:09:34">2024-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" title="限制rbd只能在一台机器上面挂载"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/locklogo.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="限制rbd只能在一台机器上面挂载"/></a><div class="content"><a class="title" href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" title="限制rbd只能在一台机器上面挂载">限制rbd只能在一台机器上面挂载</a><time datetime="2024-07-01T10:12:57.000Z" title="发表于 2024-07-01 18:12:57">2024-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/" title="利用Clonezilla进行windows的系统复制"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/clonezilla-live.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用Clonezilla进行windows的系统复制"/></a><div class="content"><a class="title" href="/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/" title="利用Clonezilla进行windows的系统复制">利用Clonezilla进行windows的系统复制</a><time datetime="2024-06-27T07:35:02.000Z" title="发表于 2024-06-27 15:35:02">2024-06-27</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/shangban.svg" alt="距离月入25k也就还差一个大佬带我~" title="距离月入25k也就还差一个大佬带我~"/><div id="runtimeTextTip"></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2015 - 2024 By <a class="footer-bar-link" href="/" title="zphj1987" target="_blank">zphj1987</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://beian.miit.gov.cn/" title="鄂ICP备2022001754号-2">鄂ICP备2022001754号-2</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">361</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">17</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">其它站点</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/zphj1987" title="CSDN-武汉磨磨"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="CSDN-武汉磨磨"/><span class="back-menu-item-text">CSDN-武汉磨磨</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文库</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 文章列表</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 全部分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 全部标签</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/sitemap.xml"><span> sitemap</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Linux/" style="font-size: 0.88rem;">Linux<sup>1</sup></a><a href="/tags/ceph/" style="font-size: 0.88rem;">ceph<sup>7</sup></a><a href="/tags/chatgpt/" style="font-size: 0.88rem;">chatgpt<sup>1</sup></a><a href="/tags/lvm/" style="font-size: 0.88rem;">lvm<sup>1</sup></a><a href="/tags/openai/" style="font-size: 0.88rem;">openai<sup>1</sup></a><a href="/tags/windows/" style="font-size: 0.88rem;">windows<sup>2</sup></a><a href="/tags/%E5%86%85%E6%A0%B8/" style="font-size: 0.88rem;">内核<sup>2</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">博客相关<sup>1</sup></a><a href="/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">存储相关<sup>1</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 0.88rem;">操作系统<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/" style="font-size: 0.88rem;">数据管理<sup>1</sup></a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" style="font-size: 0.88rem;">暂未分类<sup>302</sup></a><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 0.88rem;">杂七杂八<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 0.88rem;">测试<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">测试相关<sup>1</sup></a><a href="/tags/%E7%9B%91%E6%8E%A7/" style="font-size: 0.88rem;">监控<sup>1</sup></a><a href="/tags/%E7%A3%81%E7%9B%98/" style="font-size: 0.88rem;">磁盘<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" style="font-size: 0.88rem;">系统服务<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 0.88rem;">系统配置<sup>3</sup></a><a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 0.88rem;">网络配置<sup>1</sup></a><a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/" style="font-size: 0.88rem;">虚拟化<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 0.88rem;">计算机<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 0.88rem;">高可用<sup>1</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="anzhiyufont anzhiyu-icon-xmark"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.cbd.int/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script async src="/anzhiyu/random.js"></script><script async="async">(function () {
+  var grt = new Date("03/19/2015 12:00:00"); //设置网站上线时间
+  var now = new Date();
+  var dnum;
+  var hnum;
+  var mnum;
+  var snum;
+  var nowHour;
+
+  // 计算并更新天数、小时数、分钟数和秒数
+  function updateTime() {
+    now = new Date(); // 更新 now 的值
+    nowHour = now.getHours(); // 更新 nowHour 的值
+    var days = (now - grt) / 1000 / 60 / 60 / 24;
+    dnum = Math.floor(days);
+    var hours = (now - grt) / 1000 / 60 / 60 - 24 * dnum;
+    hnum = Math.floor(hours);
+    if (String(hnum).length == 1) {
+      hnum = "0" + hnum;
+    }
+    var minutes = (now - grt) / 1000 / 60 - 24 * 60 * dnum - 60 * hnum;
+    mnum = Math.floor(minutes);
+    if (String(mnum).length == 1) {
+      mnum = "0" + mnum;
+    }
+    var seconds = (now - grt) / 1000 - 24 * 60 * 60 * dnum - 60 * 60 * hnum - 60 * mnum;
+    snum = Math.round(seconds);
+    if (String(snum).length == 1) {
+      snum = "0" + snum;
+    }
+  }
+
+  // 更新网页中显示的网站运行时间
+  function updateHtml() {
+    const footer = document.getElementById("footer");
+    if (!footer) return
+    let currentTimeHtml = "";
+    if (nowHour < 18 && nowHour >= 9) {
+      // 如果是上班时间，默认就是"安知鱼-上班摸鱼中.svg"图片，不需要更改
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    } else {
+      // 如果是下班时间，插入"安知鱼-下班啦.svg"图片
+      let img = document.querySelector("#workboard .workSituationImg");
+      if (img != null) {
+        img.src = "/images/xiaban.svg";
+        img.title = "下班了就该开开心心的玩耍，嘿嘿~";
+        img.alt = "下班了就该开开心心的玩耍，嘿嘿~";
+      }
+
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    }
+
+    if (document.getElementById("runtimeTextTip")) {
+      document.getElementById("runtimeTextTip").innerHTML = currentTimeHtml;
+    }
+  }
+
+  setInterval(() => {
+    updateTime();
+    updateHtml();
+  }, 1000);
+})();</script><script src="https://cdn.cbd.int/algoliasearch@4.18.0/dist/algoliasearch-lite.umd.js"></script><script src="https://cdn.cbd.int/instantsearch.js@4.60.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script><div class="js-pjax"><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'zphj1987/zphj1987.github.io',
+      'data-repo-id': 'R_kgDOIV6zlA',
+      'data-category-id': 'DIC_kwDOIV6zlM4Cg8XC',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },{"data-lang":"zh-CN","data-mapping":"pathname","data-category":"Announcements","data-input-position":"bottom"})
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  anzhiyu.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) anzhiyu.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script><input type="hidden" name="page-type" id="page-type" value="post"></div><script>var visitorMail = "";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>

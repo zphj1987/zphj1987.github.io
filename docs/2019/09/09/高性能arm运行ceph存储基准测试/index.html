@@ -1,0 +1,794 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>高性能arm运行ceph存储基准测试 | 磨磨的技术博客</title><meta name="keywords" content="暂未分类"><meta name="author" content="zphj1987"><meta name="copyright" content="zphj1987"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="高性能arm运行ceph存储基准测试"><meta name="application-name" content="高性能arm运行ceph存储基准测试"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="高性能arm运行ceph存储基准测试"><meta property="og:url" content="https://zphj1987.com/2019/09/09/%E9%AB%98%E6%80%A7%E8%83%BDarm%E8%BF%90%E8%A1%8Cceph%E5%AD%98%E5%82%A8%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95/index.html"><meta property="og:site_name" content="磨磨的技术博客"><meta property="og:description" content="关于arm之前wdlab对外发布过一次约500个节点的arm的ceph集群，那个采用的是微集群的结构，使用的是双核的cortex-a9 ARM处理器，运行速度为1.3 GHz，内存为1 GB，直接焊接到驱动器的PCB上，选项包括2 GB内存和ECC保护 这个在国内也有类似的实现，深圳瑞驰商用Arm存"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="https://zphj1987.com/images/default_cover_1.jpeg"><meta property="article:author" content="zphj1987"><meta property="article:tag"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://zphj1987.com/images/default_cover_1.jpeg"><meta name="description" content="关于arm之前wdlab对外发布过一次约500个节点的arm的ceph集群，那个采用的是微集群的结构，使用的是双核的cortex-a9 ARM处理器，运行速度为1.3 GHz，内存为1 GB，直接焊接到驱动器的PCB上，选项包括2 GB内存和ECC保护 这个在国内也有类似的实现，深圳瑞驰商用Arm存"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="https://zphj1987.com/2019/09/09/%E9%AB%98%E6%80%A7%E8%83%BDarm%E8%BF%90%E8%A1%8Cceph%E5%AD%98%E5%82%A8%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95/"><link rel="preconnect" href="//cdn.cbd.int"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/swiper/swiper.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0a806a1271c36ae0e709307eae2a6eb5";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  peoplecanvas: undefined,
+  postHeadAiDescription: {"enable":true,"gptName":"AnZhiYu","mode":"local","switchBtn":false,"btnLink":"https://afdian.net/item/886a79d4db6711eda42a52540025c377","randomNum":3,"basicWordCount":1000,"key":"xxxx","Referer":"https://xx.xx/"},
+  diytitle: undefined,
+  LA51: undefined,
+  greetingBox: undefined,
+  twikooEnvId: '',
+  commentBarrageConfig:undefined,
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: false,
+  mainTone: undefined,
+  authorStatus: undefined,
+  algolia: {"appId":"GXWN6XTBBN","apiKey":"46fe2a73adf385608a95fb1cf263e589","indexName":"zphj","hits":{"per_page":6},"languages":{"input_placeholder":"输入关键词后按下回车查找","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":330},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: zphj1987","link":"链接: ","source":"来源: 磨磨的技术博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.1.2/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: '磨磨的技术博客',
+  title: '高性能arm运行ceph存储基准测试',
+  postAI: '',
+  pageFillDescription: '关于arm, 高性能arm设备说明, 测试环境, 主机带宽, 集群的测试数据, 64K块大小性能, 4M块大小性能, 总结, 变更记录关于之前对外发布过一次约个节点的的集群那个采用的是微集群的结构使用的是双核的处理器运行速度为内存为直接焊接到驱动器的上选项包括内存和保护这个在国内也有类似的实现深圳瑞驰商用存储这个采用的是微集群的架构能够比较好的应对一些冷存场景但是今天要说的不是这种架构而是一个比较新的平台采用的是高性能的的架构也就是类似的大主板结构很多人了解的的特点是小功耗低主频低这个是以前的想发力的场景类似于做的一款在很早期的时候我在的公司也尝试过基于主板做过的存储但是后来各种原因没有继续下去实际上也在发力高性能的场景但是这个比较新并不是每个人都能接触的到在这里我把我们的硬件设备的测试数据发一部分出来也许能改变你对的印象在未来硬件选型的时候也许就多了一层选择高性能设备说明机器采用的是的最新的平台平台进行的测试这里只是做了最小环境的测试因为测试设备被占用了就利用有限的资源进行测试即可机器上面的插口都没有什么限制支持插槽能够自己扩展到多盘位机器也支持万兆网卡本次测试采用的就是盘位的机器对于盘位的机器来说底层的磁盘的总资源肯定是大于网络带宽的这样也有个好处就是磁盘在前端业务满载的时候不会那么忙测试环境测试环境说明环境为单机盘位的版本配置的版本的使用的是设置的副本然后用一台机器作为客户端客户端和服务器之间通过万兆相连对比测试的机器同样为盘位的机器为了保证环境的一致性测试过程中集群没有重搭直接把盘换了一个平台进行了启动后进行测试磁盘有块的盘本次测试测试了两组数据机器的主机带宽测试的机器带上以后的输出带宽本次测试只在现有的环境下对比测试模型很多同样的选型都可以选出各种各样的这里我只拿我现有的机器进行的测试和的都为的服务器内存一致主机带宽主机测试测试项目测试时长带宽随机写随机读顺序写顺序读这个是对主机带宽进行的测试为什么需要这个测试很久以前看过一篇博客是讲测试的博主提出了一个概念你如果只是测试一个磁盘的数据然后相加这个数据可能跟实际偏离很多还有个情况就是的处理的并发能力同样会影响最终输出也就是你的写入越接近最终的并发写入越能反应最终的可能的最大输出带宽所以这个地方通过或者都能测出主机带宽在知道可能存在这个问题以后每次都会测一测到目前为止已经发现了两次问题第一次是前面的硬盘的面板带宽的之前有次测试的数据个盘不管怎么样都是在到了个盘之后的数据就不再上升磁盘一直都是后来查出来是面板驱动问题找硬件厂商刷了下驱动后带宽就恢复正常一次是本次测试同样盘一直跑出来发现只有排查以后发现是内部的的卡到面板只用了一根线虽然看到的是个盘但是受限于线的带宽只有把线换成根以后性能就到了上面的了这个如果不跑下整机带宽也许没发现或者后续会怀疑是不是本身软件处理慢了本次测试主要是的盘的也就是跑的带宽模式大的场景需要小的场景的需要的环境了不在本篇讨论范围内集群的测试数据和测试数据对比命令的例子根据不同的用例进行调整参数块大小性能读写块大小并发数写写写写写写写写写写读读读读读读读读读读块大小性能读写块大小并发数写写写写写写写写写写读读读读读读读读读读从上面的两大组数据可以看到在这个测试模型下面这个的机器的性能并不差两款硬件在同样的测试压力和同等磁盘的情况下基本维持了跟一致的水平这个如果硬要说哪款好我觉得那也不是一下两下说的清楚的只能说给出一个测试模型然后两个同样的压力同样环境去做比较这样就太多场景了并且也还会考虑成本的问题兼容性的问题如果在各方面都差不多的情况下这个不失为一种选择硬盘还分为高铁也有普通列车和谐号复兴号的差别这个看怎么去定位硬件本身的输出能力了这里从测试数据来看还是一款不错的高性能硬件当然需要到更多的环境下面去适应和磨合了总结在安培的高性能机器下也能跑出跟下的差不多的性能了虽然还不能说绝对能去完全替换但是目前看性能还是很不错的值得一试如果价格合适又满足需求还是可行的变更记录创建武汉运维磨渣',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-05 23:55:52',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0"></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="/images/logo.jpeg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">其它站点</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/zphj1987" title="CSDN-武汉磨磨"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="CSDN-武汉磨磨"/><span class="back-menu-item-text">CSDN-武汉磨磨</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">磨磨的技术博客</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文库</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 文章列表</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 全部分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 全部标签</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/sitemap.xml"><span> sitemap</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="/images/wechatmei.png" target="_blank"><img class="post-qr-code-img" alt="微信" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/wechatmei.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubaomei.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/zhifubaomei.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Linux/" style="font-size: 1.05rem;">Linux<sup>1</sup></a><a href="/tags/ceph/" style="font-size: 1.05rem;">ceph<sup>7</sup></a><a href="/tags/chatgpt/" style="font-size: 1.05rem;">chatgpt<sup>1</sup></a><a href="/tags/lvm/" style="font-size: 1.05rem;">lvm<sup>1</sup></a><a href="/tags/openai/" style="font-size: 1.05rem;">openai<sup>1</sup></a><a href="/tags/windows/" style="font-size: 1.05rem;">windows<sup>2</sup></a><a href="/tags/%E5%86%85%E6%A0%B8/" style="font-size: 1.05rem;">内核<sup>2</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">博客相关<sup>1</sup></a><a href="/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">存储相关<sup>1</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.05rem;">操作系统<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/" style="font-size: 1.05rem;">数据管理<sup>1</sup></a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" style="font-size: 1.05rem;">暂未分类<sup>302</sup></a><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 1.05rem;">杂七杂八<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 1.05rem;">测试<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/" style="font-size: 1.05rem;">测试相关<sup>1</sup></a><a href="/tags/%E7%9B%91%E6%8E%A7/" style="font-size: 1.05rem;">监控<sup>1</sup></a><a href="/tags/%E7%A3%81%E7%9B%98/" style="font-size: 1.05rem;">磁盘<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" style="font-size: 1.05rem;">系统服务<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 1.05rem;">系统配置<sup>3</sup></a><a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 1.05rem;">网络配置<sup>1</sup></a><a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/" style="font-size: 1.05rem;">虚拟化<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 1.05rem;">计算机<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 1.05rem;">高可用<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="anzhiyufont anzhiyu-icon-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/08/"><span class="card-archive-list-date">八月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/07/"><span class="card-archive-list-date">七月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">1</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">六月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">2</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">四月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">4</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/03/"><span class="card-archive-list-date">三月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">6</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/02/"><span class="card-archive-list-date">二月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">5</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">一月 2024</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">3</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" itemprop="url">暂未分类</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>暂未分类</span></a></span></div></div><h1 class="post-title" itemprop="name headline">高性能arm运行ceph存储基准测试</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2019-09-09T03:13:00.000Z" title="发表于 2019-09-09 11:13:00">2019-09-09</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2024-01-05T15:55:52.211Z" title="更新于 2024-01-05 23:55:52">2024-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-pv-cv" id="" data-flag-title="高性能arm运行ceph存储基准测试"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="busuanzi_value_page_pv"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为武汉"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>武汉</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="/images/default_cover_1.jpeg"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="https://zphj1987.com/2019/09/09/%E9%AB%98%E6%80%A7%E8%83%BDarm%E8%BF%90%E8%A1%8Cceph%E5%AD%98%E5%82%A8%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95/"><header><a class="post-meta-categories" href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" itemprop="url">暂未分类</a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" tabindex="-1" itemprop="url">暂未分类</a><h1 id="CrawlerTitle" itemprop="name headline">高性能arm运行ceph存储基准测试</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">zphj1987</span><time itemprop="dateCreated datePublished" datetime="2019-09-09T03:13:00.000Z" title="发表于 2019-09-09 11:13:00">2019-09-09</time><time itemprop="dateCreated datePublished" datetime="2024-01-05T15:55:52.211Z" title="更新于 2024-01-05 23:55:52">2024-01-05</time></header><h2 id="关于arm"><a href="#关于arm" class="headerlink" title="关于arm"></a>关于arm</h2><p>之前wdlab对外发布过一次约500个节点的arm的ceph集群，那个采用的是微集群的结构，使用的是双核的cortex-a9 ARM处理器，运行速度为1.3 GHz，内存为1 GB，直接焊接到驱动器的PCB上，选项包括2 GB内存和ECC保护</p>
+<p>这个在国内也有类似的实现，深圳瑞驰商用Arm存储NxCells</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/o_200901101035smallarm.png" alt="small-arm"></p>
+<p>这个采用的是微集群的架构，能够比较好的应对一些冷存场景，但是今天要说的不是这种架构，而是一个比较新的平台，采用的是高性能的arm的架构，也就是类似X86的大主板结构</p>
+<p>很多人了解的arm的特点是小，功耗低，主频低，这个是以前的arm想发力的场景，类似于intel做的一款atom，在很早期的时候，我在的公司也尝试过基于atom主板做过1U的ceph存储，但是后来各种原因没有继续下去</p>
+<p>实际上arm也在发力高性能的场景，但是这个比较新，并不是每个人都能接触的到，在这里，我把我们的硬件设备的测试数据发一部分出来，也许能改变你对arm的印象，在未来硬件选型的时候，也许就多了一层选择</p>
+<h2 id="高性能arm设备说明"><a href="#高性能arm设备说明" class="headerlink" title="高性能arm设备说明"></a>高性能arm设备说明</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">System Information</span><br><span class="line">  PROCESSOR:          Ampere eMAG ARMv8 @ 3.00GHz</span><br><span class="line">    Core Count:       32                        </span><br><span class="line">    Scaling Driver:   cppc_cpufreq conservative </span><br><span class="line"></span><br><span class="line">  GRAPHICS:           ASPEED</span><br><span class="line">    Screen:           1024x768         </span><br><span class="line"></span><br><span class="line">  MOTHERBOARD:        MiTAC RAPTOR</span><br><span class="line">    BIOS Version:     0.11                                               </span><br><span class="line">    Chipset:          Ampere Computing LLC Skylark                       </span><br><span class="line">    Network:          2 x Intel 82599ES 10-Gigabit SFI/SFP+ + Intel I210 </span><br><span class="line"></span><br><span class="line">  MEMORY:             2 x 32 GB DDR4-2667MT/s Samsung M393A4K40BB2-CTD</span><br><span class="line"></span><br><span class="line">  DISK:               FORESEE 256GB SS + 6001GB Seagate ST6000NM0115-1YZ</span><br><span class="line">    File-System:      xfs                               </span><br><span class="line">    Mount Options:    attr2 inode64 noquota relatime rw </span><br><span class="line">    Disk Scheduler:   DEADLINE                          </span><br><span class="line"></span><br><span class="line">  OPERATING SYSTEM:   CentOS Linux 7</span><br><span class="line">    Kernel:           4.14.0-115.el7a.0.1.aarch64 (aarch64) 20181125          </span><br><span class="line">    Compiler:         GCC 4.8.5 20150623                                      </span><br><span class="line">    Security:         meltdown: Mitigation of PTI                             </span><br><span class="line">                      + spec_store_bypass: Not affected                       </span><br><span class="line">                      + spectre_v1: Mitigation of __user pointer sanitization </span><br><span class="line">                      + spectre_v2: Vulnerable             </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>机器采用的是ampere的最新的平台RAPTOR平台进行的测试，这里只是做了最小环境的测试，因为测试设备被占用了，就利用有限的资源进行测试即可,机器上面的插口都没有什么限制，支持pcie插槽，能够自己扩展到多盘位机器，也支持万兆网卡，本次测试采用的就是36盘位的机器，对于36盘位的机器来说，底层的磁盘的总资源肯定是大于网络带宽的，这样也有个好处就是磁盘在前端业务满载的时候，不会那么忙</p>
+<h2 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境"></a>测试环境</h2><p>测试环境说明</p>
+<p>环境为单机36盘位的ceph12版本，配置的12.2.10版本的ceph，使用的是bluestore，设置的副本1，然后用一台X86机器作为客户端，客户端和服务器之间通过万兆相连，对比测试的机器同样为36盘位的机器，为了保证环境的一致性，测试过程中集群没有重搭，直接把盘换了一个平台进行了启动后进行测试</p>
+<p>磁盘有36块6T的sata盘</p>
+<p>本次测试测试了两组数据</p>
+<ul>
+<li>机器的主机带宽（vdbench测试arm的）</li>
+<li>机器带上ceph以后的输出带宽</li>
+</ul>
+<p>本次测试只在现有的环境下对比，测试模型很多，同样的X86选型都可以选出各种各样的，这里我只拿我现有的机器进行的测试，X86和arm的都为32 processor的服务器，内存一致</p>
+<h3 id="主机带宽"><a href="#主机带宽" class="headerlink" title="主机带宽"></a>主机带宽</h3><p>主机vdbench测试</p>
+<table>
+<thead>
+<tr>
+<th align="center">测试项目</th>
+<th align="center">测试时长</th>
+<th align="center">IOPS</th>
+<th align="center">response</th>
+<th align="center">带宽</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">4K随机写</td>
+<td align="center">600s</td>
+<td align="center">13123.1</td>
+<td align="center">5.400</td>
+<td align="center">51.26M&#x2F;s</td>
+</tr>
+<tr>
+<td align="center">4K随机读</td>
+<td align="center">600s</td>
+<td align="center">3463.0</td>
+<td align="center">20.782</td>
+<td align="center">13.53M&#x2F;s</td>
+</tr>
+<tr>
+<td align="center">1M顺序写</td>
+<td align="center">600s</td>
+<td align="center">3661.6</td>
+<td align="center">19.360</td>
+<td align="center">3661.63M&#x2F;s</td>
+</tr>
+<tr>
+<td align="center">1M顺序读</td>
+<td align="center">600s</td>
+<td align="center">3857.8</td>
+<td align="center">18.657</td>
+<td align="center">3857.82M&#x2F;s</td>
+</tr>
+</tbody></table>
+<p>这个是vdbench 对主机带宽进行的测试，为什么需要这个测试，很久以前看过一篇博客，是讲fio测试的，博主提出了一个概念，你如果只是测试一个磁盘的数据，然后相加，这个数据可能跟实际偏离很多，还有个情况就是cpu的处理io的并发能力同样会影响最终输出，也就是你的写入越接近最终的并发写入，越能反应最终的可能的最大输出带宽，所以这个地方通过fio或者vdbench都能测出主机带宽，在知道可能存在这个问题以后，每次都会测一测，到目前为止已经发现了两次问题</p>
+<p>第一次是前面的硬盘的面板带宽的，之前有次测试的数据24个盘不管怎么样都是1.9G，在到了19个盘之后的数据就不再上升，磁盘utils一直都是100%，后来查出来是面板驱动问题，找硬件厂商刷了下驱动后，带宽就恢复正常</p>
+<p>一次是本次测试同样36盘一直跑出来发现只有2G&#x2F;s,排查以后发现是内部的lsi的卡到面板只用了一根线，虽然看到的是36个盘，但是受限于线的带宽，只有2G&#x2F;s，把线换成2根以后，性能就到了上面的3.6G&#x2F;s了，这个如果不跑下整机带宽，也许没发现，或者后续会怀疑是不是本身软件处理慢了</p>
+<p>本次测试主要是sata的盘的，也就是跑的带宽模式，大IO的场景，需要小io的场景的需要ssd的环境了，不在本篇讨论范围内</p>
+<h3 id="集群的测试数据"><a href="#集群的测试数据" class="headerlink" title="集群的测试数据"></a>集群的测试数据</h3><p>arm和X86测试数据对比</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rados -p rbd -t 32 -b 64K bench  300 write --no-cleanup --run-name 64kt32</span><br><span class="line">rados -p rbd -t 8 -b 4096K bench  300 write --no-cleanup --run-name 4Mt8</span><br></pre></td></tr></table></figure>
+<p>命令的例子，根据不同的用例进行调整参数</p>
+<h4 id="64K块大小性能"><a href="#64K块大小性能" class="headerlink" title="64K块大小性能"></a>64K块大小性能</h4><table>
+<thead>
+<tr>
+<th align="center">读&#x2F;写</th>
+<th align="center">块大小&#x2F;并发数</th>
+<th align="center">Bandwidth(MB&#x2F;s)</th>
+<th align="center">Average IOPS</th>
+<th align="center">Average Latency(ms)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">arm写</td>
+<td align="center">64K&#x2F;32</td>
+<td align="center">39.8914</td>
+<td align="center">638</td>
+<td align="center">0.0501339</td>
+</tr>
+<tr>
+<td align="center">X86写</td>
+<td align="center">64K&#x2F;32</td>
+<td align="center">39.3184</td>
+<td align="center">629</td>
+<td align="center">0.0508632</td>
+</tr>
+<tr>
+<td align="center">arm写</td>
+<td align="center">64K&#x2F;64</td>
+<td align="center">67.283</td>
+<td align="center">1076</td>
+<td align="center">0.0594479</td>
+</tr>
+<tr>
+<td align="center">X86写</td>
+<td align="center">64K&#x2F;64</td>
+<td align="center">66.0471</td>
+<td align="center">1056</td>
+<td align="center">0.0605586</td>
+</tr>
+<tr>
+<td align="center">arm写</td>
+<td align="center">64K&#x2F;128</td>
+<td align="center">110.14</td>
+<td align="center">1762</td>
+<td align="center">0.0726323</td>
+</tr>
+<tr>
+<td align="center">X86写</td>
+<td align="center">64K&#x2F;128</td>
+<td align="center">108.525</td>
+<td align="center">1736</td>
+<td align="center">0.0737129</td>
+</tr>
+<tr>
+<td align="center">arm写</td>
+<td align="center">64K&#x2F;256</td>
+<td align="center">177.103</td>
+<td align="center">2833</td>
+<td align="center">0.0903411</td>
+</tr>
+<tr>
+<td align="center">X86写</td>
+<td align="center">64K&#x2F;256</td>
+<td align="center">190.263</td>
+<td align="center">3044</td>
+<td align="center">0.0840909</td>
+</tr>
+<tr>
+<td align="center">arm写</td>
+<td align="center">64K&#x2F;512</td>
+<td align="center">260.715</td>
+<td align="center">4171</td>
+<td align="center">0.122732</td>
+</tr>
+<tr>
+<td align="center">X86写</td>
+<td align="center">64K&#x2F;512</td>
+<td align="center">261.358</td>
+<td align="center">4181</td>
+<td align="center">0.122422</td>
+</tr>
+<tr>
+<td align="center">arm读</td>
+<td align="center">64K&#x2F;32</td>
+<td align="center">1060.96</td>
+<td align="center">16975</td>
+<td align="center">0.00186769</td>
+</tr>
+<tr>
+<td align="center">X86读</td>
+<td align="center">64K&#x2F;32</td>
+<td align="center">958.661</td>
+<td align="center">15338</td>
+<td align="center">0.00206133</td>
+</tr>
+<tr>
+<td align="center">arm读</td>
+<td align="center">64K&#x2F;64</td>
+<td align="center">1026.75</td>
+<td align="center">16428</td>
+<td align="center">0.00387973</td>
+</tr>
+<tr>
+<td align="center">X86读</td>
+<td align="center">64K&#x2F;64</td>
+<td align="center">946.426</td>
+<td align="center">15142</td>
+<td align="center">0.00419585</td>
+</tr>
+<tr>
+<td align="center">arm读</td>
+<td align="center">64K&#x2F;128</td>
+<td align="center">1082.39</td>
+<td align="center">17318</td>
+<td align="center">0.007375</td>
+</tr>
+<tr>
+<td align="center">X86读</td>
+<td align="center">64K&#x2F;128</td>
+<td align="center">931.589</td>
+<td align="center">14905</td>
+<td align="center">0.00855418</td>
+</tr>
+<tr>
+<td align="center">arm读</td>
+<td align="center">64K&#x2F;256</td>
+<td align="center">1116.87</td>
+<td align="center">17869</td>
+<td align="center">0.0143076</td>
+</tr>
+<tr>
+<td align="center">X86读</td>
+<td align="center">64K&#x2F;256</td>
+<td align="center">1001.93</td>
+<td align="center">16030</td>
+<td align="center">0.0159373</td>
+</tr>
+<tr>
+<td align="center">arm读</td>
+<td align="center">64K&#x2F;512</td>
+<td align="center">1116.81</td>
+<td align="center">17868</td>
+<td align="center">0.0286263</td>
+</tr>
+<tr>
+<td align="center">X86读</td>
+<td align="center">64K&#x2F;512</td>
+<td align="center">1008.51</td>
+<td align="center">16136</td>
+<td align="center">0.0316968</td>
+</tr>
+</tbody></table>
+<h4 id="4M块大小性能"><a href="#4M块大小性能" class="headerlink" title="4M块大小性能"></a>4M块大小性能</h4><table>
+<thead>
+<tr>
+<th align="center">读&#x2F;写</th>
+<th align="center">块大小&#x2F;并发数</th>
+<th align="center">Bandwidth(MB&#x2F;s)</th>
+<th align="center">Average IOPS</th>
+<th align="center">Average Latency(ms)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">arm写</td>
+<td align="center">4M&#x2F;8</td>
+<td align="center">377.74</td>
+<td align="center">94</td>
+<td align="center">0.0847078</td>
+</tr>
+<tr>
+<td align="center">X86写</td>
+<td align="center">4M&#x2F;8</td>
+<td align="center">377.604</td>
+<td align="center">94</td>
+<td align="center">0.0847369</td>
+</tr>
+<tr>
+<td align="center">arm写</td>
+<td align="center">4M&#x2F;16</td>
+<td align="center">676.168</td>
+<td align="center">169</td>
+<td align="center">0.094649</td>
+</tr>
+<tr>
+<td align="center">X86写</td>
+<td align="center">4M&#x2F;16</td>
+<td align="center">670.021</td>
+<td align="center">167</td>
+<td align="center">0.0955143</td>
+</tr>
+<tr>
+<td align="center">arm写</td>
+<td align="center">4M&#x2F;32</td>
+<td align="center">900.391</td>
+<td align="center">225</td>
+<td align="center">0.142123</td>
+</tr>
+<tr>
+<td align="center">X86写</td>
+<td align="center">4M&#x2F;32</td>
+<td align="center">902.573</td>
+<td align="center">225</td>
+<td align="center">0.1418</td>
+</tr>
+<tr>
+<td align="center">arm写</td>
+<td align="center">4M&#x2F;64</td>
+<td align="center">901.906</td>
+<td align="center">225</td>
+<td align="center">0.283723</td>
+</tr>
+<tr>
+<td align="center">X86写</td>
+<td align="center">4M&#x2F;64</td>
+<td align="center">902.953</td>
+<td align="center">225</td>
+<td align="center">0.28335</td>
+</tr>
+<tr>
+<td align="center">arm写</td>
+<td align="center">4M&#x2F;128</td>
+<td align="center">903.476</td>
+<td align="center">225</td>
+<td align="center">0.566172</td>
+</tr>
+<tr>
+<td align="center">X86写</td>
+<td align="center">4M&#x2F;128</td>
+<td align="center">904.942</td>
+<td align="center">226</td>
+<td align="center">0.56528</td>
+</tr>
+<tr>
+<td align="center">arm读</td>
+<td align="center">4M&#x2F;8</td>
+<td align="center">906.495</td>
+<td align="center">226</td>
+<td align="center">0.0347298</td>
+</tr>
+<tr>
+<td align="center">X86读</td>
+<td align="center">4M&#x2F;8</td>
+<td align="center">784.499</td>
+<td align="center">196</td>
+<td align="center">0.0395726</td>
+</tr>
+<tr>
+<td align="center">arm读</td>
+<td align="center">4M&#x2F;16</td>
+<td align="center">968.325</td>
+<td align="center">242</td>
+<td align="center">0.0655441</td>
+</tr>
+<tr>
+<td align="center">X86读</td>
+<td align="center">4M&#x2F;16</td>
+<td align="center">1091.42</td>
+<td align="center">272</td>
+<td align="center">0.0570873</td>
+</tr>
+<tr>
+<td align="center">arm读</td>
+<td align="center">4M&#x2F;32</td>
+<td align="center">1074.49</td>
+<td align="center">268</td>
+<td align="center">0.118411</td>
+</tr>
+<tr>
+<td align="center">X86读</td>
+<td align="center">4M&#x2F;32</td>
+<td align="center">1108.76</td>
+<td align="center">277</td>
+<td align="center">0.113665</td>
+</tr>
+<tr>
+<td align="center">arm读</td>
+<td align="center">4M&#x2F;64</td>
+<td align="center">1053.77</td>
+<td align="center">263</td>
+<td align="center">0.242012</td>
+</tr>
+<tr>
+<td align="center">X86读</td>
+<td align="center">4M&#x2F;64</td>
+<td align="center">1116.84</td>
+<td align="center">279</td>
+<td align="center">0.227442</td>
+</tr>
+<tr>
+<td align="center">arm读</td>
+<td align="center">4M&#x2F;128</td>
+<td align="center">1121.86</td>
+<td align="center">280</td>
+<td align="center">0.4553</td>
+</tr>
+<tr>
+<td align="center">X86读</td>
+<td align="center">4M&#x2F;128</td>
+<td align="center">1102.44</td>
+<td align="center">275</td>
+<td align="center">0.462227</td>
+</tr>
+</tbody></table>
+<p>从上面的两大组数据可以看到，在这个测试模型下面，这个arm的机器的性能并不差，两款硬件在同样的测试压力，和同等磁盘的情况下，基本维持了跟X86一致的水平</p>
+<p>这个如果硬要说哪款好，我觉得那也不是一下两下说的清楚的，只能说给出一个测试模型，然后两个同样的压力同样环境去做比较，这样就太多场景了，并且也还会考虑成本的问题，兼容性的问题，如果在各方面都差不多的情况下，这个不失为一种选择</p>
+<p>硬盘还分为sata，sas，ssd，高铁也有普通列车，和谐号，复兴号的差别，这个看怎么去定位硬件本身的输出能力了，这里从测试数据来看，还是一款不错的高性能arm硬件，当然需要到更多的环境下面去适应和磨合了</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在安培的arm高性能机器下，也能跑出跟X86下的差不多的性能了，虽然还不能说绝对能去完全替换X86，但是目前看性能还是很不错的，值得一试，如果价格合适，又满足需求，还是可行的</p>
+<h2 id="变更记录"><a href="#变更记录" class="headerlink" title="变更记录"></a>变更记录</h2><table>
+<thead>
+<tr>
+<th align="center">Why</th>
+<th align="center">Who</th>
+<th align="center">When</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">创建</td>
+<td align="center">武汉-运维-磨渣</td>
+<td align="center">2018-09-09</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" title="头像" alt="头像"></a><div class="post-copyright__author_name">zphj1987</div><div class="post-copyright__author_desc">但行好事，莫问前程</div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="https://zphj1987.com/2019/09/09/%E9%AB%98%E6%80%A7%E8%83%BDarm%E8%BF%90%E8%A1%8Cceph%E5%AD%98%E5%82%A8%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('https://zphj1987.com/2019/09/09/%E9%AB%98%E6%80%A7%E8%83%BDarm%E8%BF%90%E8%A1%8Cceph%E5%AD%98%E5%82%A8%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95/')">高性能arm运行ceph存储基准测试</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"><div class="post-reward" onclick="anzhiyu.addRewardMask()"><div class="reward-button button--animated" title="赞赏作者"><i class="anzhiyufont anzhiyu-icon-hand-heart-fill"></i>打赏作者</div><div class="reward-main"><div class="reward-all"><span class="reward-title">感谢你赐予我前进的力量</span><ul class="reward-group"><li class="reward-item"><a href="/images/wechatmei.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/wechatmei.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/images/zhifubaomei.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/zhifubaomei.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul><a class="reward-main-btn" href="/about/#about-reward" target="_blank"><div class="reward-text">赞赏者名单</div><div class="reward-dec">因为你们的支持让我意识到写文章的价值🙏</div></a></div></div></div><div id="quit-box" onclick="anzhiyu.removeRewardMask()" style="display: none"></div></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="https://zphj1987.com/2019/09/09/%E9%AB%98%E6%80%A7%E8%83%BDarm%E8%BF%90%E8%A1%8Cceph%E5%AD%98%E5%82%A8%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=高性能arm运行ceph存储基准测试&amp;url=https://zphj1987.com/2019/09/09/%E9%AB%98%E6%80%A7%E8%83%BDarm%E8%BF%90%E8%A1%8Cceph%E5%AD%98%E5%82%A8%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95/&amp;pic=/images/default_cover_1.jpeg" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://zphj1987.com" target="_blank">磨磨的技术博客</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>暂未分类<span class="tagsPageCount">302</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="/images/blog/synctune.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/09/04/bluestore%E7%9A%84osd%E8%87%AA%E5%90%AF%E5%8A%A8/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">bluestore的osd自启动</div></div></a></div><div class="next-post pull-right"><a href="/2019/09/19/ceph%20osd%20tree%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ceph osd tree的可视化</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/2015/03/22/Bad%20magic%20number%20ImportError%20in%20python/" title="Bad magic number ImportError in python"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2015-03-22</div><div class="title">Bad magic number ImportError in python</div></div></a></div><div><a href="/2019/09/02/CTDB%E4%BD%BF%E7%94%A8radosobject%E4%BD%9C%E4%B8%BAlockfile/" title="CTDB使用radosobject作为lockfile"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2019-09-02</div><div class="title">CTDB使用radosobject作为lockfile</div></div></a></div><div><a href="/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/" title="CPU相关的学习"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-06-13</div><div class="title">CPU相关的学习</div></div></a></div><div><a href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" title="CentOS GRUB损坏修复方法"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2017-11-30</div><div class="title">CentOS GRUB损坏修复方法</div></div></a></div><div><a href="/2016/09/12/Centos7%E4%B8%8BJewel%E7%89%88%E6%9C%ACradosgw%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8/" title="Centos7下Jewel版本radosgw服务启动"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-09-12</div><div class="title">Centos7下Jewel版本radosgw服务启动</div></div></a></div><div><a href="/2016/03/24/Ceph%20Bluestore%E9%A6%96%E6%B5%8B/" title="Ceph Bluestore首测"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/default_cover_1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2016-03-24</div><div class="title">Ceph Bluestore首测</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)">匿名评论</a><a href="/privacy" style="margin-left: 4px">隐私政策</a></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="author-info-avatar"><img class="avatar-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/logo.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__description"><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">这有关于<b style="color:#fff">产品、技术、开发</b>相关的问题和看法</b>。</div><div style="line-height:1.38;margin:0.6rem 0;text-align:justify;color:rgba(255, 255, 255, 0.8);">相信你可以在这里找到对你有用的<b style="color:#fff">知识</b>和<b style="color:#fff">教程</b>。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/"><h1 class="author-info__name">zphj1987</h1><div class="author-info__desc">但行好事，莫问前程</div></a><div class="card-info-social-icons is-center"><a class="social-icon faa-parent animated-hover" href="https://github.com/zphj1987" target="_blank" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8Earm"><span class="toc-number">1.</span> <span class="toc-text">关于arm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E6%80%A7%E8%83%BDarm%E8%AE%BE%E5%A4%87%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">高性能arm设备说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83"><span class="toc-number">3.</span> <span class="toc-text">测试环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E5%B8%A6%E5%AE%BD"><span class="toc-number">3.1.</span> <span class="toc-text">主机带宽</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E7%9A%84%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE"><span class="toc-number">3.2.</span> <span class="toc-text">集群的测试数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#64K%E5%9D%97%E5%A4%A7%E5%B0%8F%E6%80%A7%E8%83%BD"><span class="toc-number">3.2.1.</span> <span class="toc-text">64K块大小性能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4M%E5%9D%97%E5%A4%A7%E5%B0%8F%E6%80%A7%E8%83%BD"><span class="toc-number">3.2.2.</span> <span class="toc-text">4M块大小性能</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E6%9B%B4%E8%AE%B0%E5%BD%95"><span class="toc-number">5.</span> <span class="toc-text">变更记录</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-history"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" title="海量文件的rsync同步方案"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/synctune.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="海量文件的rsync同步方案"/></a><div class="content"><a class="title" href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" title="海量文件的rsync同步方案">海量文件的rsync同步方案</a><time datetime="2024-08-23T06:58:49.000Z" title="发表于 2024-08-23 14:58:49">2024-08-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" title="定位读写的扇区的编号"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/sector.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="定位读写的扇区的编号"/></a><div class="content"><a class="title" href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" title="定位读写的扇区的编号">定位读写的扇区的编号</a><time datetime="2024-08-19T02:17:10.000Z" title="发表于 2024-08-19 10:17:10">2024-08-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="udp服务器和客户端"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/networkudp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="udp服务器和客户端"/></a><div class="content"><a class="title" href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="udp服务器和客户端">udp服务器和客户端</a><time datetime="2024-08-14T03:09:34.000Z" title="发表于 2024-08-14 11:09:34">2024-08-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" title="限制rbd只能在一台机器上面挂载"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/locklogo.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="限制rbd只能在一台机器上面挂载"/></a><div class="content"><a class="title" href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" title="限制rbd只能在一台机器上面挂载">限制rbd只能在一台机器上面挂载</a><time datetime="2024-07-01T10:12:57.000Z" title="发表于 2024-07-01 18:12:57">2024-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/" title="利用Clonezilla进行windows的系统复制"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/blog/clonezilla-live.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="利用Clonezilla进行windows的系统复制"/></a><div class="content"><a class="title" href="/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/" title="利用Clonezilla进行windows的系统复制">利用Clonezilla进行windows的系统复制</a><time datetime="2024-06-27T07:35:02.000Z" title="发表于 2024-06-27 15:35:02">2024-06-27</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/images/shangban.svg" alt="距离月入25k也就还差一个大佬带我~" title="距离月入25k也就还差一个大佬带我~"/><div id="runtimeTextTip"></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2015 - 2024 By <a class="footer-bar-link" href="/" title="zphj1987" target="_blank">zphj1987</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://beian.miit.gov.cn/" title="鄂ICP备2022001754号-2">鄂ICP备2022001754号-2</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">361</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">17</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">其它站点</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.csdn.net/zphj1987" title="CSDN-武汉磨磨"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/img/404.jpg&quot;" data-lazy-src="/img/favicon.ico" alt="CSDN-武汉磨磨"/><span class="back-menu-item-text">CSDN-武汉磨磨</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文库</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 文章列表</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 全部分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 全部标签</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/sitemap.xml"><span> sitemap</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 我的</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/album/"><i class="anzhiyufont anzhiyu-icon-images faa-tada" style="font-size: 0.9em;"></i><span> 相册集</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/equipment/"><i class="anzhiyufont anzhiyu-icon-dice-d20 faa-tada" style="font-size: 0.9em;"></i><span> 我的装备</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/essay/"><i class="anzhiyufont anzhiyu-icon-lightbulb faa-tada" style="font-size: 0.9em;"></i><span> 闲言碎语</span></a></li><li><a class="site-page child faa-parent animated-hover" href="javascript:toRandomPost()"><i class="anzhiyufont anzhiyu-icon-shoe-prints1 faa-tada" style="font-size: 0.9em;"></i><span> 随便逛逛</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 关于本人</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/Linux/" style="font-size: 0.88rem;">Linux<sup>1</sup></a><a href="/tags/ceph/" style="font-size: 0.88rem;">ceph<sup>7</sup></a><a href="/tags/chatgpt/" style="font-size: 0.88rem;">chatgpt<sup>1</sup></a><a href="/tags/lvm/" style="font-size: 0.88rem;">lvm<sup>1</sup></a><a href="/tags/openai/" style="font-size: 0.88rem;">openai<sup>1</sup></a><a href="/tags/windows/" style="font-size: 0.88rem;">windows<sup>2</sup></a><a href="/tags/%E5%86%85%E6%A0%B8/" style="font-size: 0.88rem;">内核<sup>2</sup></a><a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">博客相关<sup>1</sup></a><a href="/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">存储相关<sup>1</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 0.88rem;">操作系统<sup>1</sup></a><a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/" style="font-size: 0.88rem;">数据管理<sup>1</sup></a><a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" style="font-size: 0.88rem;">暂未分类<sup>302</sup></a><a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" style="font-size: 0.88rem;">杂七杂八<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 0.88rem;">测试<sup>1</sup></a><a href="/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/" style="font-size: 0.88rem;">测试相关<sup>1</sup></a><a href="/tags/%E7%9B%91%E6%8E%A7/" style="font-size: 0.88rem;">监控<sup>1</sup></a><a href="/tags/%E7%A3%81%E7%9B%98/" style="font-size: 0.88rem;">磁盘<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" style="font-size: 0.88rem;">系统服务<sup>1</sup></a><a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 0.88rem;">系统配置<sup>3</sup></a><a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 0.88rem;">网络配置<sup>1</sup></a><a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/" style="font-size: 0.88rem;">虚拟化<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" style="font-size: 0.88rem;">计算机<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 0.88rem;">高可用<sup>1</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="anzhiyufont anzhiyu-icon-xmark"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@5.0.28/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@17.8.5/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.cbd.int/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script async src="/anzhiyu/random.js"></script><script async="async">(function () {
+  var grt = new Date("03/19/2015 12:00:00"); //设置网站上线时间
+  var now = new Date();
+  var dnum;
+  var hnum;
+  var mnum;
+  var snum;
+  var nowHour;
+
+  // 计算并更新天数、小时数、分钟数和秒数
+  function updateTime() {
+    now = new Date(); // 更新 now 的值
+    nowHour = now.getHours(); // 更新 nowHour 的值
+    var days = (now - grt) / 1000 / 60 / 60 / 24;
+    dnum = Math.floor(days);
+    var hours = (now - grt) / 1000 / 60 / 60 - 24 * dnum;
+    hnum = Math.floor(hours);
+    if (String(hnum).length == 1) {
+      hnum = "0" + hnum;
+    }
+    var minutes = (now - grt) / 1000 / 60 - 24 * 60 * dnum - 60 * hnum;
+    mnum = Math.floor(minutes);
+    if (String(mnum).length == 1) {
+      mnum = "0" + mnum;
+    }
+    var seconds = (now - grt) / 1000 - 24 * 60 * 60 * dnum - 60 * 60 * hnum - 60 * mnum;
+    snum = Math.round(seconds);
+    if (String(snum).length == 1) {
+      snum = "0" + snum;
+    }
+  }
+
+  // 更新网页中显示的网站运行时间
+  function updateHtml() {
+    const footer = document.getElementById("footer");
+    if (!footer) return
+    let currentTimeHtml = "";
+    if (nowHour < 18 && nowHour >= 9) {
+      // 如果是上班时间，默认就是"安知鱼-上班摸鱼中.svg"图片，不需要更改
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    } else {
+      // 如果是下班时间，插入"安知鱼-下班啦.svg"图片
+      let img = document.querySelector("#workboard .workSituationImg");
+      if (img != null) {
+        img.src = "/images/xiaban.svg";
+        img.title = "下班了就该开开心心的玩耍，嘿嘿~";
+        img.alt = "下班了就该开开心心的玩耍，嘿嘿~";
+      }
+
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    }
+
+    if (document.getElementById("runtimeTextTip")) {
+      document.getElementById("runtimeTextTip").innerHTML = currentTimeHtml;
+    }
+  }
+
+  setInterval(() => {
+    updateTime();
+    updateHtml();
+  }, 1000);
+})();</script><script src="https://cdn.cbd.int/algoliasearch@4.18.0/dist/algoliasearch-lite.umd.js"></script><script src="https://cdn.cbd.int/instantsearch.js@4.60.0/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script><div class="js-pjax"><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'zphj1987/zphj1987.github.io',
+      'data-repo-id': 'R_kgDOIV6zlA',
+      'data-category-id': 'DIC_kwDOIV6zlM4Cg8XC',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },{"data-lang":"zh-CN","data-mapping":"pathname","data-category":"Announcements","data-input-position":"bottom"})
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  anzhiyu.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) anzhiyu.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script><input type="hidden" name="page-type" id="page-type" value="post"></div><script>var visitorMail = "";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.min.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>

@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>磨磨的技术博客</title>
+  
+  <subtitle>但行好事，莫问前程</subtitle>
+  <link href="https://zphj1987.com/atom.xml" rel="self"/>
+  
+  <link href="https://zphj1987.com/"/>
+  <updated>2024-09-12T01:38:46.424Z</updated>
+  <id>https://zphj1987.com/</id>
+  
+  <author>
+    <name>zphj1987</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用qemu构建一个loongarch64虚拟机</title>
+    <link href="https://zphj1987.com/2024/09/11/%E4%BD%BF%E7%94%A8qemu%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAloongarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    <id>https://zphj1987.com/2024/09/11/%E4%BD%BF%E7%94%A8qemu%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAloongarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/</id>
+    <published>2024-09-11T08:55:44.000Z</published>
+    <updated>2024-09-12T01:38:46.424Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="虚拟化" scheme="https://zphj1987.com/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ceph-radosgw配置bucket的policy</title>
+    <link href="https://zphj1987.com/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/"/>
+    <id>https://zphj1987.com/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/</id>
+    <published>2024-09-05T02:59:01.000Z</published>
+    <updated>2024-09-05T03:56:01.688Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>questdb在opencloudos下的打包总结</title>
+    <link href="https://zphj1987.com/2024/08/28/questdb%E5%9C%A8opencloudos%E4%B8%8B%E7%9A%84%E6%89%93%E5%8C%85%E6%80%BB%E7%BB%93/"/>
+    <id>https://zphj1987.com/2024/08/28/questdb%E5%9C%A8opencloudos%E4%B8%8B%E7%9A%84%E6%89%93%E5%8C%85%E6%80%BB%E7%BB%93/</id>
+    <published>2024-08-28T10:45:23.000Z</published>
+    <updated>2024-08-28T11:18:23.243Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>海量文件的rsync同步方案</title>
+    <link href="https://zphj1987.com/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/"/>
+    <id>https://zphj1987.com/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/</id>
+    <published>2024-08-23T06:58:49.000Z</published>
+    <updated>2024-09-04T09:01:46.746Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="数据管理" scheme="https://zphj1987.com/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>定位读写的扇区的编号</title>
+    <link href="https://zphj1987.com/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/"/>
+    <id>https://zphj1987.com/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/</id>
+    <published>2024-08-19T02:17:10.000Z</published>
+    <updated>2024-08-23T07:51:55.201Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;最近有碰到扇区的错误，引起osd的无法启动，经过处理，系统可以恢复了，但是扇区的错误为什么导致了osd</summary>
+        
+      
+    
+    
+    
+    <category term="问题处理" scheme="https://zphj1987.com/categories/%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/"/>
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>udp服务器和客户端</title>
+    <link href="https://zphj1987.com/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/"/>
+    <id>https://zphj1987.com/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/</id>
+    <published>2024-08-14T03:09:34.000Z</published>
+    <updated>2024-08-14T04:11:44.455Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;需求背景&quot;&gt;&lt;a href=&quot;#需求背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统服务" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+    <category term="测试相关" scheme="https://zphj1987.com/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>限制rbd只能在一台机器上面挂载</title>
+    <link href="https://zphj1987.com/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/"/>
+    <id>https://zphj1987.com/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/</id>
+    <published>2024-07-01T10:12:57.000Z</published>
+    <updated>2024-07-01T10:25:35.685Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;需求&quot;&gt;&lt;a href=&quot;#需求&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>利用Clonezilla进行windows的系统复制</title>
+    <link href="https://zphj1987.com/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/"/>
+    <id>https://zphj1987.com/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/</id>
+    <published>2024-06-27T07:35:02.000Z</published>
+    <updated>2024-06-27T07:49:38.179Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;需求&quot;&gt;&lt;a href=&quot;#需求&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="操作系统" scheme="https://zphj1987.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+    <category term="windows" scheme="https://zphj1987.com/tags/windows/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>rbd做快照克隆以后的容量相关问题</title>
+    <link href="https://zphj1987.com/2024/06/26/rbd%E5%81%9A%E5%BF%AB%E7%85%A7%E5%85%8B%E9%9A%86%E4%BB%A5%E5%90%8E%E7%9A%84%E5%AE%B9%E9%87%8F%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/"/>
+    <id>https://zphj1987.com/2024/06/26/rbd%E5%81%9A%E5%BF%AB%E7%85%A7%E5%85%8B%E9%9A%86%E4%BB%A5%E5%90%8E%E7%9A%84%E5%AE%B9%E9%87%8F%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</id>
+    <published>2024-06-26T06:02:53.000Z</published>
+    <updated>2024-06-26T07:17:42.874Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>制作一个支持中文的winpeiso</title>
+    <link href="https://zphj1987.com/2024/05/09/%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E7%9A%84winpeiso/"/>
+    <id>https://zphj1987.com/2024/05/09/%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E7%9A%84winpeiso/</id>
+    <published>2024-05-09T07:45:03.000Z</published>
+    <updated>2024-05-09T07:56:14.636Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统配置" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/"/>
+    
+    
+    <category term="windows" scheme="https://zphj1987.com/tags/windows/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>lvmetad内存泄露问题处理</title>
+    <link href="https://zphj1987.com/2024/05/09/lvmetad%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/"/>
+    <id>https://zphj1987.com/2024/05/09/lvmetad%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/</id>
+    <published>2024-05-09T01:47:46.000Z</published>
+    <updated>2024-05-09T02:14:30.265Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;问题背景&quot;&gt;&lt;a href=&quot;#问题背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="问题处理" scheme="https://zphj1987.com/categories/%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/"/>
+    
+    
+    <category term="lvm" scheme="https://zphj1987.com/tags/lvm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ceph-mon卡死故障分析处理</title>
+    <link href="https://zphj1987.com/2024/04/30/ceph-mon%E5%8D%A1%E6%AD%BB%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/"/>
+    <id>https://zphj1987.com/2024/04/30/ceph-mon%E5%8D%A1%E6%AD%BB%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/</id>
+    <published>2024-04-30T07:33:18.000Z</published>
+    <updated>2024-04-30T07:55:47.801Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;问题现象&quot;&gt;&lt;a href=&quot;#问题现象&quot; class=&quot;headerlink&quot; title=&quot;问题现象&quot;&gt;&lt;/a&gt;问题现象&lt;/h2&gt;&lt;p&gt;ceph -s命令无返回了，查看mon的日志输出内容如下&lt;/p&gt;
+&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>磁盘出现sector_error的修复</title>
+    <link href="https://zphj1987.com/2024/04/30/%E7%A3%81%E7%9B%98%E5%87%BA%E7%8E%B0sector-error%E7%9A%84%E4%BF%AE%E5%A4%8D/"/>
+    <id>https://zphj1987.com/2024/04/30/%E7%A3%81%E7%9B%98%E5%87%BA%E7%8E%B0sector-error%E7%9A%84%E4%BF%AE%E5%A4%8D/</id>
+    <published>2024-04-30T07:13:22.000Z</published>
+    <updated>2024-04-30T07:29:51.311Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;坏快的模拟操作&quot;&gt;&lt;a href=&quot;#坏快的模拟操作&quot; class=&quot;headerlink&quot; title=&quot;坏快的模拟操作&quot;&gt;&lt;/a&gt;坏快的模拟操作&lt;/h2&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
+        
+      
+    
+    
+    
+    <category term="故障处理" scheme="https://zphj1987.com/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/"/>
+    
+    
+    <category term="磁盘" scheme="https://zphj1987.com/tags/%E7%A3%81%E7%9B%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>开启s3的https客户端无法使用的问题</title>
+    <link href="https://zphj1987.com/2024/04/30/%E5%BC%80%E5%90%AFs3%E7%9A%84https%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+    <id>https://zphj1987.com/2024/04/30/%E5%BC%80%E5%90%AFs3%E7%9A%84https%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98/</id>
+    <published>2024-04-30T02:28:01.000Z</published>
+    <updated>2024-04-30T04:22:40.817Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>vmware平台下IPv6丢包</title>
+    <link href="https://zphj1987.com/2024/04/17/vmware%E5%B9%B3%E5%8F%B0%E4%B8%8BIPv6%E4%B8%A2%E5%8C%85/"/>
+    <id>https://zphj1987.com/2024/04/17/vmware%E5%B9%B3%E5%8F%B0%E4%B8%8BIPv6%E4%B8%A2%E5%8C%85/</id>
+    <published>2024-04-17T02:15:30.000Z</published>
+    <updated>2024-04-17T02:28:10.236Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;问题现象&quot;&gt;&lt;a href=&quot;#问题现象&quot; class=&quot;headerlink&quot; title=&quot;问题现象&quot;&gt;&lt;/a&gt;问题现象&lt;/h2&gt;&lt;p&gt;在vmware的平台下的虚拟机里面配置了IPv6，然后测试的时候发现丢包严重，引起带宽非常低&lt;/p&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="网络配置" scheme="https://zphj1987.com/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一个编译参数引起的ceph性能大幅下降</title>
+    <link href="https://zphj1987.com/2024/03/21/%E4%B8%80%E4%B8%AA%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E6%80%A7%E8%83%BD%E5%A4%A7%E5%B9%85%E4%B8%8B%E9%99%8D/"/>
+    <id>https://zphj1987.com/2024/03/21/%E4%B8%80%E4%B8%AA%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E6%80%A7%E8%83%BD%E5%A4%A7%E5%B9%85%E4%B8%8B%E9%99%8D/</id>
+    <published>2024-03-21T09:22:45.000Z</published>
+    <updated>2024-04-17T02:30:38.913Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>storecli管理raid</title>
+    <link href="https://zphj1987.com/2024/03/20/storecli%E7%AE%A1%E7%90%86raid/"/>
+    <id>https://zphj1987.com/2024/03/20/storecli%E7%AE%A1%E7%90%86raid/</id>
+    <published>2024-03-20T06:18:37.000Z</published>
+    <updated>2024-08-16T04:25:12.007Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本篇记录一些常用的配置raid的命令&lt;/p&gt;
+&lt;h2 id=&quot;安装&quot;&gt;&lt;a href=&quot;#安装&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>查看ceph的osd的bluestore_min_alloc_size</title>
+    <link href="https://zphj1987.com/2024/03/07/%E6%9F%A5%E7%9C%8Bceph%E7%9A%84osd%E7%9A%84bluestore-min-alloc-size/"/>
+    <id>https://zphj1987.com/2024/03/07/%E6%9F%A5%E7%9C%8Bceph%E7%9A%84osd%E7%9A%84bluestore-min-alloc-size/</id>
+    <published>2024-03-07T10:08:11.000Z</published>
+    <updated>2024-03-07T10:13:21.518Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;需求&quot;&gt;&lt;a href=&quot;#需求&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>drbd的快速初始化</title>
+    <link href="https://zphj1987.com/2024/03/06/drbd%E7%9A%84%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96/"/>
+    <id>https://zphj1987.com/2024/03/06/drbd%E7%9A%84%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96/</id>
+    <published>2024-03-06T02:46:46.000Z</published>
+    <updated>2024-04-09T09:00:55.868Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;需求&quot;&gt;&lt;a href=&quot;#需求&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="存储设备" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87/"/>
+    
+    
+    <category term="系统配置" scheme="https://zphj1987.com/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Intel E810-XXV开启rdma功能</title>
+    <link href="https://zphj1987.com/2024/03/06/Intel-E810-XXV%E5%BC%80%E5%90%AFrdma%E5%8A%9F%E8%83%BD/"/>
+    <id>https://zphj1987.com/2024/03/06/Intel-E810-XXV%E5%BC%80%E5%90%AFrdma%E5%8A%9F%E8%83%BD/</id>
+    <published>2024-03-06T02:44:26.000Z</published>
+    <updated>2024-03-06T03:18:11.550Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;操作系统环境&quot;&gt;&lt;a href=&quot;#操作系统环境&quot; class=&quot;headerlink&quot; title=&quot;操作系统环境&quot;&gt;&lt;/a&gt;操作系统环境&lt;/h2&gt;&lt;h3 id=&quot;操作系统&quot;&gt;&lt;a href=&quot;#操作系统&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="网络配置" scheme="https://zphj1987.com/categories/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"/>
+    
+    
+    <category term="系统配置" scheme="https://zphj1987.com/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/"/>
+    
+  </entry>
+  
+</feed>

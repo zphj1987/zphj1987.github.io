@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zphj1987.com/2024/09/23/%E8%8E%B7%E5%8F%96docker%E7%9A%84%E9%95%9C%E5%83%8F%E7%9A%84%E6%96%B9%E6%B3%95/</loc>
+    
+    <lastmod>2024-09-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/2024/09/11/%E4%BD%BF%E7%94%A8qemu%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAloongarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
     
     <lastmod>2024-09-12</lastmod>
@@ -3504,7 +3513,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/tags/windows/</loc>
+    <loc>https://zphj1987.com/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</loc>
     <lastmod>2024-09-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -3518,7 +3527,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</loc>
+    <loc>https://zphj1987.com/tags/windows/</loc>
     <lastmod>2024-09-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -3561,6 +3570,13 @@
   
   <url>
     <loc>https://zphj1987.com/tags/%E7%A3%81%E7%9B%98/</loc>
+    <lastmod>2024-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/tags/docker/</loc>
     <lastmod>2024-09-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

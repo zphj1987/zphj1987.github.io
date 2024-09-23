@@ -6,7 +6,7 @@
   <link href="https://zphj1987.com/atom.xml" rel="self"/>
   
   <link href="https://zphj1987.com/"/>
-  <updated>2024-09-12T01:38:46.424Z</updated>
+  <updated>2024-09-23T08:33:46.193Z</updated>
   <id>https://zphj1987.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>获取docker的镜像的方法</title>
+    <link href="https://zphj1987.com/2024/09/23/%E8%8E%B7%E5%8F%96docker%E7%9A%84%E9%95%9C%E5%83%8F%E7%9A%84%E6%96%B9%E6%B3%95/"/>
+    <id>https://zphj1987.com/2024/09/23/%E8%8E%B7%E5%8F%96docker%E7%9A%84%E9%95%9C%E5%83%8F%E7%9A%84%E6%96%B9%E6%B3%95/</id>
+    <published>2024-09-23T07:43:05.000Z</published>
+    <updated>2024-09-23T08:33:46.193Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;需要下载一个mysql的docker的镜像，但是遇到了问题，这里把相关的方法记录下&lt;/p&gt;
+&lt;h2 id=&quot;问题&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="docker" scheme="https://zphj1987.com/tags/docker/"/>
+    
+  </entry>
   
   <entry>
     <title>使用qemu构建一个loongarch64虚拟机</title>
@@ -482,31 +508,6 @@
     
     
     <category term="存储设备" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87/"/>
-    
-    
-    <category term="系统配置" scheme="https://zphj1987.com/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Intel E810-XXV开启rdma功能</title>
-    <link href="https://zphj1987.com/2024/03/06/Intel-E810-XXV%E5%BC%80%E5%90%AFrdma%E5%8A%9F%E8%83%BD/"/>
-    <id>https://zphj1987.com/2024/03/06/Intel-E810-XXV%E5%BC%80%E5%90%AFrdma%E5%8A%9F%E8%83%BD/</id>
-    <published>2024-03-06T02:44:26.000Z</published>
-    <updated>2024-03-06T03:18:11.550Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;操作系统环境&quot;&gt;&lt;a href=&quot;#操作系统环境&quot; class=&quot;headerlink&quot; title=&quot;操作系统环境&quot;&gt;&lt;/a&gt;操作系统环境&lt;/h2&gt;&lt;h3 id=&quot;操作系统&quot;&gt;&lt;a href=&quot;#操作系统&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="网络配置" scheme="https://zphj1987.com/categories/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"/>
     
     
     <category term="系统配置" scheme="https://zphj1987.com/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/"/>

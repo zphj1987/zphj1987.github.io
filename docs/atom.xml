@@ -6,7 +6,7 @@
   <link href="https://zphj1987.com/atom.xml" rel="self"/>
   
   <link href="https://zphj1987.com/"/>
-  <updated>2024-11-04T07:19:31.350Z</updated>
+  <updated>2024-11-07T02:40:10.218Z</updated>
   <id>https://zphj1987.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>iis无法访问samba的文件的问题</title>
+    <link href="https://zphj1987.com/2024/11/07/iis%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AEsamba%E7%9A%84%E6%96%87%E4%BB%B6%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+    <id>https://zphj1987.com/2024/11/07/iis%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AEsamba%E7%9A%84%E6%96%87%E4%BB%B6%E7%9A%84%E9%97%AE%E9%A2%98/</id>
+    <published>2024-11-07T02:29:42.000Z</published>
+    <updated>2024-11-07T02:40:10.218Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;配置iis的数据目录为samba的共享目录，目录可以访问，文件不能访问&lt;/p&gt;
+&lt;h2 id=&quot;处理方法&quot;&gt;&lt;a href=&quot;#处理方法&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="samba" scheme="https://zphj1987.com/tags/samba/"/>
+    
+  </entry>
   
   <entry>
     <title>修改cephmon的ip</title>
@@ -489,30 +515,6 @@
     
     
     <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>storecli管理raid</title>
-    <link href="https://zphj1987.com/2024/03/20/storecli%E7%AE%A1%E7%90%86raid/"/>
-    <id>https://zphj1987.com/2024/03/20/storecli%E7%AE%A1%E7%90%86raid/</id>
-    <published>2024-03-20T06:18:37.000Z</published>
-    <updated>2024-08-16T04:25:12.007Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本篇记录一些常用的配置raid的命令&lt;/p&gt;
-&lt;h2 id=&quot;安装&quot;&gt;&lt;a href=&quot;#安装&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
-    
     
   </entry>
   

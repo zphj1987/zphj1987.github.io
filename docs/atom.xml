@@ -6,7 +6,7 @@
   <link href="https://zphj1987.com/atom.xml" rel="self"/>
   
   <link href="https://zphj1987.com/"/>
-  <updated>2024-11-21T07:19:18.141Z</updated>
+  <updated>2024-12-04T06:59:06.900Z</updated>
   <id>https://zphj1987.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>为什么只坏了一个盘集群无法读写</title>
+    <link href="https://zphj1987.com/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/"/>
+    <id>https://zphj1987.com/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/</id>
+    <published>2024-12-04T06:53:45.000Z</published>
+    <updated>2024-12-04T06:59:06.900Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
+    
+  </entry>
   
   <entry>
     <title>device_health_metrics正确的删除方法</title>
@@ -489,32 +514,6 @@
     
     
     <category term="lvm" scheme="https://zphj1987.com/tags/lvm/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ceph-mon卡死故障分析处理</title>
-    <link href="https://zphj1987.com/2024/04/30/ceph-mon%E5%8D%A1%E6%AD%BB%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/"/>
-    <id>https://zphj1987.com/2024/04/30/ceph-mon%E5%8D%A1%E6%AD%BB%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/</id>
-    <published>2024-04-30T07:33:18.000Z</published>
-    <updated>2024-04-30T07:55:47.801Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;问题现象&quot;&gt;&lt;a href=&quot;#问题现象&quot; class=&quot;headerlink&quot; title=&quot;问题现象&quot;&gt;&lt;/a&gt;问题现象&lt;/h2&gt;&lt;p&gt;ceph -s命令无返回了，查看mon的日志输出内容如下&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
-    
-    
-    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
     
   </entry>
   

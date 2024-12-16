@@ -1,3 +1,4 @@
+https://zphj1987.com/2024/12/16/esxi%E5%85%8B%E9%9A%86%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%96%B9%E6%B3%95/
 https://zphj1987.com/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/
 https://zphj1987.com/2024/11/14/earlyoom%E9%A2%84%E9%98%B2%E6%9C%BA%E5%99%A8%E5%8D%A1%E6%AD%BB/
 https://zphj1987.com/2024/11/11/docker%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F/
@@ -400,6 +401,7 @@ https://zphj1987.com/tags/ceph/
 https://zphj1987.com/tags/chatgpt/
 https://zphj1987.com/tags/docker/
 https://zphj1987.com/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/
+https://zphj1987.com/tags/exsi/
 https://zphj1987.com/tags/%E6%B5%8B%E8%AF%95/
 https://zphj1987.com/tags/samba/
 https://zphj1987.com/tags/lvm/
@@ -428,9 +430,9 @@ https://zphj1987.com/categories/%E5%AD%98%E5%82%A8/
 https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/
 https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87/
 https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/
+https://zphj1987.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/
 https://zphj1987.com/categories/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/
 https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/
 https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/
 https://zphj1987.com/categories/%E7%94%9F%E6%B4%BB%E6%97%A5%E5%B8%B8/
 https://zphj1987.com/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/
-https://zphj1987.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/

@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zphj1987.com/2024/12/16/esxi%E5%85%8B%E9%9A%86%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%96%B9%E6%B3%95/</loc>
+    
+    <lastmod>2024-12-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/</loc>
     
     <lastmod>2024-12-13</lastmod>
@@ -3598,6 +3607,13 @@
   </url>
   
   <url>
+    <loc>https://zphj1987.com/tags/exsi/</loc>
+    <lastmod>2024-12-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/tags/%E6%B5%8B%E8%AF%95/</loc>
     <lastmod>2024-12-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -3796,6 +3812,13 @@
   </url>
   
   <url>
+    <loc>https://zphj1987.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</loc>
+    <lastmod>2024-12-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/categories/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/</loc>
     <lastmod>2024-12-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -3825,13 +3848,6 @@
   
   <url>
     <loc>https://zphj1987.com/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/</loc>
-    <lastmod>2024-12-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</loc>
     <lastmod>2024-12-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

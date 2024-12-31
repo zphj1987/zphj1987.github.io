@@ -6,7 +6,7 @@
   <link href="https://zphj1987.com/atom.xml" rel="self"/>
   
   <link href="https://zphj1987.com/"/>
-  <updated>2024-12-20T06:56:11.257Z</updated>
+  <updated>2024-12-31T07:33:06.397Z</updated>
   <id>https://zphj1987.com/</id>
   
   <author>
@@ -15,6 +15,57 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>小电视屏幕拉伸问题解决</title>
+    <link href="https://zphj1987.com/2024/12/31/%E5%B0%8F%E7%94%B5%E8%A7%86%E5%B1%8F%E5%B9%95%E6%8B%89%E4%BC%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/"/>
+    <id>https://zphj1987.com/2024/12/31/%E5%B0%8F%E7%94%B5%E8%A7%86%E5%B1%8F%E5%B9%95%E6%8B%89%E4%BC%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</id>
+    <published>2024-12-31T06:59:35.000Z</published>
+    <updated>2024-12-31T07:33:06.397Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;最近在看3D打印的东西，看到一个模型不错就拿来打了&lt;/p&gt;
+&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="3D打印" scheme="https://zphj1987.com/categories/3D%E6%89%93%E5%8D%B0/"/>
+    
+    
+    <category term="问题处理" scheme="https://zphj1987.com/tags/%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>清理macos下的citrix残留</title>
+    <link href="https://zphj1987.com/2024/12/20/%E6%B8%85%E7%90%86macos%E4%B8%8B%E7%9A%84citrix%E6%AE%8B%E7%95%99/"/>
+    <id>https://zphj1987.com/2024/12/20/%E6%B8%85%E7%90%86macos%E4%B8%8B%E7%9A%84citrix%E6%AE%8B%E7%95%99/</id>
+    <published>2024-12-20T08:25:42.000Z</published>
+    <updated>2024-12-31T07:36:14.730Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;这个问题困扰了很久，之前在macbook pro m1</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="macos" scheme="https://zphj1987.com/tags/macos/"/>
+    
+  </entry>
   
   <entry>
     <title>tgt的chap双向认证认证逻辑</title>
@@ -473,52 +524,6 @@
     
     
     <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>questdb在opencloudos下的打包总结</title>
-    <link href="https://zphj1987.com/2024/08/28/questdb%E5%9C%A8opencloudos%E4%B8%8B%E7%9A%84%E6%89%93%E5%8C%85%E6%80%BB%E7%BB%93/"/>
-    <id>https://zphj1987.com/2024/08/28/questdb%E5%9C%A8opencloudos%E4%B8%8B%E7%9A%84%E6%89%93%E5%8C%85%E6%80%BB%E7%BB%93/</id>
-    <published>2024-08-28T10:45:23.000Z</published>
-    <updated>2024-08-28T11:18:23.243Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>海量文件的rsync同步方案</title>
-    <link href="https://zphj1987.com/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/"/>
-    <id>https://zphj1987.com/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/</id>
-    <published>2024-08-23T06:58:49.000Z</published>
-    <updated>2024-09-04T09:01:46.746Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
-    
-    
-    <category term="数据管理" scheme="https://zphj1987.com/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/"/>
     
   </entry>
   

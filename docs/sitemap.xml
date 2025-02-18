@@ -4,7 +4,16 @@
   <url>
     <loc>https://zphj1987.com/2025/02/12/vdbench%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B%E5%8F%AF%E8%A7%86%E5%8C%96/</loc>
     
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/2025/02/18/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%BC%95%E8%B5%B7%E7%9A%84nvme%E7%A3%81%E7%9B%98%E4%B8%8D%E8%AF%86%E5%88%AB/</loc>
+    
+    <lastmod>2025-02-18</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -173,7 +182,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2024/05/09/%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E7%9A%84winpeiso/</loc>
+    <loc>https://zphj1987.com/2016/06/04/%E5%88%A9%E7%94%A8%E8%99%9A%E6%8B%9F%E5%8C%96%E7%8E%AF%E5%A2%83%E8%99%9A%E6%8B%9Fnvme%E7%9B%98/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -182,7 +191,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2016/06/04/%E5%88%A9%E7%94%A8%E8%99%9A%E6%8B%9F%E5%8C%96%E7%8E%AF%E5%A2%83%E8%99%9A%E6%8B%9Fnvme%E7%9B%98/</loc>
+    <loc>https://zphj1987.com/2024/05/09/%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E7%9A%84winpeiso/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -659,7 +668,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2016/09/08/%E5%A6%82%E4%BD%95%E7%BB%9F%E8%AE%A1Ceph%E7%9A%84RBD%E7%9C%9F%E5%AE%9E%E4%BD%BF%E7%94%A8%E5%AE%B9%E9%87%8F/</loc>
+    <loc>https://zphj1987.com/2017/08/10/%E5%A6%82%E4%BD%95%E6%B5%8B%E9%87%8FCeph%20OSD%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -668,7 +677,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2017/08/10/%E5%A6%82%E4%BD%95%E6%B5%8B%E9%87%8FCeph%20OSD%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8/</loc>
+    <loc>https://zphj1987.com/2016/09/08/%E5%A6%82%E4%BD%95%E7%BB%9F%E8%AE%A1Ceph%E7%9A%84RBD%E7%9C%9F%E5%AE%9E%E4%BD%BF%E7%94%A8%E5%AE%B9%E9%87%8F/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1001,7 +1010,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/22/%E6%A3%80%E6%9F%A5linux%E4%B8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%B8%A6%E5%AE%BD/</loc>
+    <loc>https://zphj1987.com/2016/05/16/%E6%94%AF%E6%8C%81jewel%E7%89%88%E6%9C%AC%E7%9A%84calamari/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1010,7 +1019,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2016/05/16/%E6%94%AF%E6%8C%81jewel%E7%89%88%E6%9C%AC%E7%9A%84calamari/</loc>
+    <loc>https://zphj1987.com/2015/03/22/%E6%A3%80%E6%9F%A5linux%E4%B8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%B8%A6%E5%AE%BD/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1100,7 +1109,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2017/04/13/%E6%9F%A5%E7%9C%8Bceph%E9%9B%86%E7%BE%A4%E8%A2%AB%E5%93%AA%E4%BA%9B%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5/</loc>
+    <loc>https://zphj1987.com/2024/03/07/%E6%9F%A5%E7%9C%8Bceph%E7%9A%84osd%E7%9A%84bluestore-min-alloc-size/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1109,7 +1118,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2024/03/07/%E6%9F%A5%E7%9C%8Bceph%E7%9A%84osd%E7%9A%84bluestore-min-alloc-size/</loc>
+    <loc>https://zphj1987.com/2017/04/13/%E6%9F%A5%E7%9C%8Bceph%E9%9B%86%E7%BE%A4%E8%A2%AB%E5%93%AA%E4%BA%9B%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1208,7 +1217,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/22/%E8%A5%BF%E6%95%B0WD2T%E7%A1%AC%E7%9B%98%E5%88%86%E5%8C%BA%E5%AF%B9%E9%BD%90%E7%9A%84%E6%96%B9%E6%B3%95/</loc>
+    <loc>https://zphj1987.com/2017/01/09/%E8%A7%A3%E5%86%B3calamari%E6%97%A0%E6%B3%95%E8%8E%B7%E5%8F%96%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AF%E7%9A%84bug/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1217,7 +1226,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2017/01/09/%E8%A7%A3%E5%86%B3calamari%E6%97%A0%E6%B3%95%E8%8E%B7%E5%8F%96%E8%8A%82%E7%82%B9%E4%BF%A1%E6%81%AF%E7%9A%84bug/</loc>
+    <loc>https://zphj1987.com/2015/03/22/%E8%A5%BF%E6%95%B0WD2T%E7%A1%AC%E7%9B%98%E5%88%86%E5%8C%BA%E5%AF%B9%E9%BD%90%E7%9A%84%E6%96%B9%E6%B3%95/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1325,7 +1334,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2016/10/28/zabbix%E8%87%AA%E5%8A%A8%E5%8F%91%E7%8E%B0%E7%9A%84python%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E7%94%9F%E6%88%90/</loc>
+    <loc>https://zphj1987.com/2016/10/28/zabbix%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E8%87%AA%E5%8A%A8%E5%8F%91%E7%8E%B0%E7%9A%84%E6%B5%81%E7%A8%8B/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1334,7 +1343,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2016/10/28/zabbix%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E8%87%AA%E5%8A%A8%E5%8F%91%E7%8E%B0%E7%9A%84%E6%B5%81%E7%A8%8B/</loc>
+    <loc>https://zphj1987.com/2016/10/28/zabbix%E8%87%AA%E5%8A%A8%E5%8F%91%E7%8E%B0%E7%9A%84python%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E7%94%9F%E6%88%90/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1352,7 +1361,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2017/05/03/%E5%A4%9AMDS%E5%8F%98%E6%88%90%E5%8D%95MDS%E7%9A%84%E6%96%B9%E6%B3%95/</loc>
+    <loc>https://zphj1987.com/2016/12/26/%E5%A4%84%E7%90%86Ceph%20osd%E7%9A%84journal%E7%9A%84uuid%E9%97%AE%E9%A2%98/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1361,7 +1370,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2016/12/26/%E5%A4%84%E7%90%86Ceph%20osd%E7%9A%84journal%E7%9A%84uuid%E9%97%AE%E9%A2%98/</loc>
+    <loc>https://zphj1987.com/2017/05/03/%E5%A4%9AMDS%E5%8F%98%E6%88%90%E5%8D%95MDS%E7%9A%84%E6%96%B9%E6%B3%95/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1397,15 +1406,6 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/24/xenserver%E4%B8%ADlinux%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BF%AE%E6%94%B9%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://zphj1987.com/2015/04/03/windows%E4%B8%8B%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81IP/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -1415,7 +1415,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/12/16/xenserver%E4%BD%BF%E7%94%A8ceph%E7%9A%84rbd%E7%9A%84%E6%96%B9%E6%B3%95/</loc>
+    <loc>https://zphj1987.com/2015/03/24/xenserver%E4%B8%ADlinux%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BF%AE%E6%94%B9%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1433,7 +1433,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2016/03/01/yum%E5%AE%89%E8%A3%85%E6%8C%87%E5%AE%9A%E7%89%88%E6%9C%ACceph%E5%8C%85/</loc>
+    <loc>https://zphj1987.com/2015/12/16/xenserver%E4%BD%BF%E7%94%A8ceph%E7%9A%84rbd%E7%9A%84%E6%96%B9%E6%B3%95/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1442,7 +1442,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2019/01/03/vdbench%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%97%B6%E5%8F%AF%E8%A7%86%E5%8C%96%E6%98%BE%E7%A4%BA/</loc>
+    <loc>https://zphj1987.com/2016/03/01/yum%E5%AE%89%E8%A3%85%E6%8C%87%E5%AE%9A%E7%89%88%E6%9C%ACceph%E5%8C%85/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1460,16 +1460,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2023/01/31/vdbench%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90%E5%99%A8/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/2021/03/09/vmware%E5%BC%80%E5%90%AFdisk-by-id/</loc>
+    <loc>https://zphj1987.com/2019/01/03/vdbench%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%97%B6%E5%8F%AF%E8%A7%86%E5%8C%96%E6%98%BE%E7%A4%BA/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1487,7 +1478,16 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/24/ubuntu%E4%BD%BF%E7%94%A8iso%E4%BD%9C%E4%B8%BA%E6%9C%AC%E5%9C%B0%E6%BA%90/</loc>
+    <loc>https://zphj1987.com/2021/03/09/vmware%E5%BC%80%E5%90%AFdisk-by-id/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/2023/01/31/vdbench%E6%B5%8B%E8%AF%95%E7%94%9F%E6%88%90%E5%99%A8/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1505,7 +1505,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/23/ubuntu%E6%9C%8D%E5%8A%A1%E5%99%A8dns%E9%87%8D%E5%90%AF%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/</loc>
+    <loc>https://zphj1987.com/2015/03/23/ubuntu%E6%97%A0%E6%B3%95%E5%85%B3%E6%9C%BA/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1523,6 +1523,15 @@
   </url>
   
   <url>
+    <loc>https://zphj1987.com/2015/03/23/ubuntu%E6%9C%8D%E5%8A%A1%E5%99%A8dns%E9%87%8D%E5%90%AF%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/2015/03/24/ubuntu%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%87%8D%E5%90%AF%E5%8D%A1%E6%AD%BB%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -1532,7 +1541,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/23/ubuntu%E6%97%A0%E6%B3%95%E5%85%B3%E6%9C%BA/</loc>
+    <loc>https://zphj1987.com/2015/03/24/ubuntu%E9%85%8D%E7%BD%AE%E7%AE%80%E5%8D%95%E7%9A%84DNS%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1541,7 +1550,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/24/ubuntu%E9%85%8D%E7%BD%AE%E7%AE%80%E5%8D%95%E7%9A%84DNS%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    <loc>https://zphj1987.com/2015/03/24/ubuntu%E4%BD%BF%E7%94%A8iso%E4%BD%9C%E4%B8%BA%E6%9C%AC%E5%9C%B0%E6%BA%90/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1560,15 +1569,6 @@
   
   <url>
     <loc>https://zphj1987.com/2024/09/24/systemd%E7%97%85%E6%AF%92%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%A4%84%E7%90%86/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/2024/12/20/tgt%E7%9A%84chap%E5%8F%8C%E5%90%91%E8%AE%A4%E8%AF%81%E8%AE%A4%E8%AF%81%E9%80%BB%E8%BE%91/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1613,25 +1613,16 @@
   </url>
   
   <url>
+    <loc>https://zphj1987.com/2024/12/20/tgt%E7%9A%84chap%E5%8F%8C%E5%90%91%E8%AE%A4%E8%AF%81%E8%AE%A4%E8%AF%81%E9%80%BB%E8%BE%91/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/2023/01/31/rockpi5b%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/2023/01/31/s3%E7%9A%84v2%E8%AE%A4%E8%AF%81%E6%9E%84%E9%80%A0-lua/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/2021/04/26/screen%E5%87%A0%E4%B8%AA%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1649,7 +1640,16 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/23/ssh%E9%85%8D%E5%A5%BD%E6%97%A0%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%EF%BC%88RSA%E5%85%AC%E9%92%A5%EF%BC%89%E5%90%8E%EF%BC%8C%E8%BF%98%E8%A6%81%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</loc>
+    <loc>https://zphj1987.com/2015/04/02/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E8%87%AA%E5%8A%A8%E4%BA%A4%E4%BA%92/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/2023/01/31/s3%E7%9A%84v2%E8%AE%A4%E8%AF%81%E6%9E%84%E9%80%A0-lua/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1667,7 +1667,16 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/04/02/shell%E8%84%9A%E6%9C%AC%E7%9A%84%E8%87%AA%E5%8A%A8%E4%BA%A4%E4%BA%92/</loc>
+    <loc>https://zphj1987.com/2021/04/26/screen%E5%87%A0%E4%B8%AA%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/2015/03/23/ssh%E9%85%8D%E5%A5%BD%E6%97%A0%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%EF%BC%88RSA%E5%85%AC%E9%92%A5%EF%BC%89%E5%90%8E%EF%BC%8C%E8%BF%98%E8%A6%81%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1685,15 +1694,6 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2020/09/08/rgw%E9%85%8D%E7%BD%AE%E5%88%A0%E9%99%A4%E5%BF%AB%E9%80%9F%E5%9B%9E%E6%94%B6%E5%AF%B9%E8%B1%A1/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://zphj1987.com/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -1703,7 +1703,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2023/01/31/rockpi5b%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F-microsd/</loc>
+    <loc>https://zphj1987.com/2023/01/31/rock5b%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84UOS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1712,7 +1712,16 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2023/01/31/rock5b%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84UOS%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
+    <loc>https://zphj1987.com/2020/09/08/rgw%E9%85%8D%E7%BD%AE%E5%88%A0%E9%99%A4%E5%BF%AB%E9%80%9F%E5%9B%9E%E6%94%B6%E5%AF%B9%E8%B1%A1/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/2023/01/31/rockpi5b%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F-microsd/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -1946,6 +1955,15 @@
   </url>
   
   <url>
+    <loc>https://zphj1987.com/2015/07/14/nginx%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E7%BC%93%E5%AD%98/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/2024/01/05/nmon%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -1956,15 +1974,6 @@
   
   <url>
     <loc>https://zphj1987.com/2015/03/22/ntpd%E9%85%8D%E7%BD%AE%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/2015/07/14/nginx%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E7%BC%93%E5%AD%98/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2135,7 +2144,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/22/libstdc++.so.6%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</loc>
+    <loc>https://zphj1987.com/2015/03/22/linux%E4%B8%8B%E5%86%85%E5%AD%98%E9%87%8A%E6%94%BE/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2144,7 +2153,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/22/linux%E4%B8%8B%E5%86%85%E5%AD%98%E9%87%8A%E6%94%BE/</loc>
+    <loc>https://zphj1987.com/2015/03/22/linux%E4%BF%AE%E6%94%B9%E7%BD%91%E5%8D%A1%E7%9A%84mac%E5%9C%B0%E5%9D%80/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2171,7 +2180,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/22/linux%E4%BF%AE%E6%94%B9%E7%BD%91%E5%8D%A1%E7%9A%84mac%E5%9C%B0%E5%9D%80/</loc>
+    <loc>https://zphj1987.com/2015/03/22/libstdc++.so.6%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2198,7 +2207,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2020/09/07/ipmi%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%91%BD%E4%BB%A4/</loc>
+    <loc>https://zphj1987.com/2020/09/18/iscsi%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2207,7 +2216,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2020/09/18/iscsi%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81%E6%96%B9%E6%B3%95/</loc>
+    <loc>https://zphj1987.com/2020/09/07/ipmi%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%91%BD%E4%BB%A4/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2234,6 +2243,15 @@
   </url>
   
   <url>
+    <loc>https://zphj1987.com/2024/11/07/iis%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AEsamba%E7%9A%84%E6%96%87%E4%BB%B6%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/2015/03/31/history%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BC%98%E5%8C%96/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -2252,25 +2270,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2024/11/07/iis%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AEsamba%E7%9A%84%E6%96%87%E4%BB%B6%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://zphj1987.com/2023/02/09/influxdb%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/2024/02/23/fio%E7%9A%84%E8%81%94%E6%9C%BA%E6%A8%A1%E5%BC%8F/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2289,6 +2289,15 @@
   
   <url>
     <loc>https://zphj1987.com/2015/03/24/fio%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/2024/02/23/fio%E7%9A%84%E8%81%94%E6%9C%BA%E6%A8%A1%E5%BC%8F/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2432,7 +2441,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2020/09/15/ceph%E5%90%84%E4%B8%AA%E7%89%88%E6%9C%AC%E4%B9%8B%E9%97%B4%E5%8F%82%E6%95%B0%E5%8F%98%E5%8C%96%E5%88%86%E6%9E%90/</loc>
+    <loc>https://zphj1987.com/2015/09/18/ceph%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%B1%9E%E6%80%A7%E5%8C%B9%E9%85%8D%E5%85%B3%E7%B3%BB/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2441,7 +2450,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/09/18/ceph%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%B1%9E%E6%80%A7%E5%8C%B9%E9%85%8D%E5%85%B3%E7%B3%BB/</loc>
+    <loc>https://zphj1987.com/2020/09/15/ceph%E5%90%84%E4%B8%AA%E7%89%88%E6%9C%AC%E4%B9%8B%E9%97%B4%E5%8F%82%E6%95%B0%E5%8F%98%E5%8C%96%E5%88%86%E6%9E%90/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2459,7 +2468,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2023/04/12/chatgpt%E7%9A%84%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE/</loc>
+    <loc>https://zphj1987.com/2015/03/22/checkhost%E5%AE%9E%E6%97%B6%E7%9B%91%E6%8E%A7%E7%BD%91%E7%AB%99%E6%88%96%E8%80%85%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E8%AE%BF%E9%97%AE/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2468,7 +2477,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/22/checkhost%E5%AE%9E%E6%97%B6%E7%9B%91%E6%8E%A7%E7%BD%91%E7%AB%99%E6%88%96%E8%80%85%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E8%AE%BF%E9%97%AE/</loc>
+    <loc>https://zphj1987.com/2023/04/12/chatgpt%E7%9A%84%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2513,7 +2522,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2023/01/31/ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD/</loc>
+    <loc>https://zphj1987.com/2020/09/16/ceph%E9%80%9A%E8%BF%87tgt%E9%85%8D%E7%BD%AE%E5%A4%9A%E8%B7%AF%E5%BE%84%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2522,7 +2531,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2020/09/16/ceph%E9%80%9A%E8%BF%87tgt%E9%85%8D%E7%BD%AE%E5%A4%9A%E8%B7%AF%E5%BE%84%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</loc>
+    <loc>https://zphj1987.com/2023/01/31/ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2603,7 +2612,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2016/01/11/ceph%E5%86%99osd%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6ceph.conf/</loc>
+    <loc>https://zphj1987.com/2019/09/04/ceph%E4%B8%8Eflashcache%E7%9A%84around%E6%A8%A1%E5%BC%8F%E7%BB%93%E5%90%88%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2612,7 +2621,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2019/09/04/ceph%E4%B8%8Eflashcache%E7%9A%84around%E6%A8%A1%E5%BC%8F%E7%BB%93%E5%90%88%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98/</loc>
+    <loc>https://zphj1987.com/2016/01/11/ceph%E5%86%99osd%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6ceph.conf/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2684,6 +2693,15 @@
   </url>
   
   <url>
+    <loc>https://zphj1987.com/2024/11/07/cephfs%E7%BB%9F%E8%AE%A1%E7%A8%80%E7%96%8F%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E8%84%9A%E6%9C%AC/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/2016/11/01/cephfs%E5%88%A0%E9%99%A4%E6%8A%A5nospace%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -2702,7 +2720,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2024/11/07/cephfs%E7%BB%9F%E8%AE%A1%E7%A8%80%E7%96%8F%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E8%84%9A%E6%9C%AC/</loc>
+    <loc>https://zphj1987.com/2017/06/28/ceph%20luminous%20%E6%96%B0%E5%8A%9F%E8%83%BD%E4%B9%8B%E7%A3%81%E7%9B%98%E6%99%BA%E8%83%BD%E5%88%86%E7%BB%84/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2711,7 +2729,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2017/06/28/ceph%20luminous%20%E6%96%B0%E5%8A%9F%E8%83%BD%E4%B9%8B%E7%A3%81%E7%9B%98%E6%99%BA%E8%83%BD%E5%88%86%E7%BB%84/</loc>
+    <loc>https://zphj1987.com/2019/09/03/ceph%20luminous%E7%89%88%E6%9C%AC%E9%99%90%E5%88%B6osd%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2730,15 +2748,6 @@
   
   <url>
     <loc>https://zphj1987.com/2016/11/04/ceph%20unfound%20objects%20%E5%A4%84%E7%90%86/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/2019/09/03/ceph%20luminous%E7%89%88%E6%9C%AC%E9%99%90%E5%88%B6osd%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2801,15 +2810,6 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2020/10/26/ceph%20bluestore%E7%9A%84db%E5%88%86%E5%8C%BA%E5%BA%94%E8%AF%A5%E9%A2%84%E7%95%99%E5%A4%9A%E5%A4%A7%E7%9A%84%E7%A9%BA%E9%97%B4/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://zphj1987.com/2018/06/12/ceph%20erasure%E9%BB%98%E8%AE%A4%E7%9A%84min_size%E5%88%86%E6%9E%90/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -2819,7 +2819,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2017/06/25/ceph%20luminous%20%E6%96%B0%E5%8A%9F%E8%83%BD%E4%B9%8B%E5%86%85%E7%BD%AEdashboard/</loc>
+    <loc>https://zphj1987.com/2020/10/26/ceph%20bluestore%E7%9A%84db%E5%88%86%E5%8C%BA%E5%BA%94%E8%AF%A5%E9%A2%84%E7%95%99%E5%A4%9A%E5%A4%A7%E7%9A%84%E7%A9%BA%E9%97%B4/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2829,6 +2829,15 @@
   
   <url>
     <loc>https://zphj1987.com/2019/09/02/ceph%20luminous%20bluestore%E7%83%AD%E6%8F%92%E6%8B%94%E5%AE%9E%E7%8E%B0/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/2017/06/25/ceph%20luminous%20%E6%96%B0%E5%8A%9F%E8%83%BD%E4%B9%8B%E5%86%85%E7%BD%AEdashboard/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2864,25 +2873,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2020/10/09/centos7%E5%8D%95%E7%8B%AC%E7%BC%96%E8%AF%91nbd%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://zphj1987.com/2023/01/31/centos7yum%E6%BA%90%E9%85%8D%E7%BD%AE/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/2024/12/18/centos7%E8%BF%87%E6%9C%9F%E6%BA%90%E6%B7%BB%E5%8A%A0/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2900,7 +2891,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/22/Ubuntu%2012.10%E8%AE%BE%E7%BD%AEroot%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2/</loc>
+    <loc>https://zphj1987.com/2020/10/09/centos7%E5%8D%95%E7%8B%AC%E7%BC%96%E8%AF%91nbd%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2909,7 +2900,16 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/22/Ubuntu12.10%20%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%90%AF%E5%8A%A8/</loc>
+    <loc>https://zphj1987.com/2024/12/18/centos7%E8%BF%87%E6%9C%9F%E6%BA%90%E6%B7%BB%E5%8A%A0/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/2015/03/22/Ubuntu%2012.10%E8%AE%BE%E7%BD%AEroot%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2936,6 +2936,15 @@
   </url>
   
   <url>
+    <loc>https://zphj1987.com/2021/01/13/awk%E5%A4%84%E7%90%86%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95%E6%B1%87%E6%80%BB/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/2016/04/24/backfill%E5%92%8Crecovery%E7%9A%84%E6%9C%80%E4%BC%98%E5%80%BC/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -2945,7 +2954,16 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2021/01/13/awk%E5%A4%84%E7%90%86%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95%E6%B1%87%E6%80%BB/</loc>
+    <loc>https://zphj1987.com/2015/03/22/Ubuntu12.10%20%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%90%AF%E5%8A%A8/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/2015/11/01/Mon%E5%A4%B1%E6%95%88%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2972,15 +2990,6 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/11/01/Mon%E5%A4%B1%E6%95%88%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://zphj1987.com/2017/07/27/RBD%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4%E7%9A%84%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90%E4%B8%8E%E6%94%B9%E8%BF%9B/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -2990,7 +2999,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2024/02/28/SCST%E9%85%8D%E7%BD%AEALUA%E7%9A%84%E6%94%AF%E6%8C%81/</loc>
+    <loc>https://zphj1987.com/2018/02/10/REDHAT%207.5beta%20%E6%96%B0%E6%8E%A8%E5%87%BA%E7%9A%84VDO%E5%8A%9F%E8%83%BD/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -2999,7 +3008,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2018/02/10/REDHAT%207.5beta%20%E6%96%B0%E6%8E%A8%E5%87%BA%E7%9A%84VDO%E5%8A%9F%E8%83%BD/</loc>
+    <loc>https://zphj1987.com/2024/02/28/SCST%E9%85%8D%E7%BD%AEALUA%E7%9A%84%E6%94%AF%E6%8C%81/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -3053,7 +3062,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2015/03/22/Microsoft%20Visual%20C++%202005%20SP1%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85/</loc>
+    <loc>https://zphj1987.com/2023/01/31/MAC-M1%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84opencloudos-8.6/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -3062,7 +3071,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2023/01/31/MAC-M1%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E7%9A%84opencloudos-8.6/</loc>
+    <loc>https://zphj1987.com/2015/03/22/Microsoft%20Visual%20C++%202005%20SP1%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -3134,6 +3143,15 @@
   </url>
   
   <url>
+    <loc>https://zphj1987.com/2017/03/29/Ceph%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%A8%AA%E5%90%91%E6%89%A9%E5%B1%95/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zphj1987.com/2017/03/22/Ceph%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E7%9A%84'%E4%B8%8D%E6%8B%86%E5%88%86'/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -3152,15 +3170,6 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2017/03/29/Ceph%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%A8%AA%E5%90%91%E6%89%A9%E5%B1%95/</loc>
-    
-    <lastmod>2025-02-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://zphj1987.com/2017/01/05/Ceph%E7%BC%96%E8%AF%91%E5%8A%A0%E9%80%9F%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/</loc>
     
     <lastmod>2025-02-13</lastmod>
@@ -3170,7 +3179,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2018/01/02/Ceph%E5%AF%B9%E8%B1%A1%E4%B8%BB%E6%9C%AC%E6%8D%9F%E5%9D%8F%E7%9A%84%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/</loc>
+    <loc>https://zphj1987.com/2016/11/02/Ceph%E9%83%A8%E7%BD%B2%E7%9A%84%E6%97%B6%E5%80%99%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E6%9D%83%E9%87%8D/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -3179,7 +3188,7 @@
   </url>
   
   <url>
-    <loc>https://zphj1987.com/2016/11/02/Ceph%E9%83%A8%E7%BD%B2%E7%9A%84%E6%97%B6%E5%80%99%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E6%9D%83%E9%87%8D/</loc>
+    <loc>https://zphj1987.com/2018/01/02/Ceph%E5%AF%B9%E8%B1%A1%E4%B8%BB%E6%9C%AC%E6%8D%9F%E5%9D%8F%E7%9A%84%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/</loc>
     
     <lastmod>2025-02-13</lastmod>
     
@@ -3577,7 +3586,7 @@
 
   <url>
     <loc>https://zphj1987.com/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -3585,238 +3594,245 @@
   
   <url>
     <loc>https://zphj1987.com/tags/%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/Linux/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E5%86%85%E6%A0%B8/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/</loc>
-    <lastmod>2025-02-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/tags/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/</loc>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/ceph/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/chatgpt/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/docker/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/exsi/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E6%B5%8B%E8%AF%95/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/samba/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/lvm/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E7%A3%81%E7%9B%98%E7%9B%B8%E5%85%B3/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/iscsi%E7%9B%B8%E5%85%B3/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E5%AD%98%E5%82%A8/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/windows/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/openai/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E7%9B%91%E6%8E%A7/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/deepseek/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/macos/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E7%A3%81%E7%9B%98/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/tags/nvme/</loc>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -3825,147 +3841,147 @@
   
   <url>
     <loc>https://zphj1987.com/categories/3D%E6%89%93%E5%8D%B0/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E6%93%8D%E4%BD%9C%E6%96%87%E6%A1%A3/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/Linux%E7%9F%A5%E8%AF%86/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</loc>
-    <lastmod>2025-02-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://zphj1987.com/categories/%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://zphj1987.com/categories/%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/</loc>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E5%AD%98%E5%82%A8/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E6%B5%8B%E8%AF%95/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E7%94%9F%E6%B4%BB%E6%97%A5%E5%B8%B8/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zphj1987.com/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/</loc>
-    <lastmod>2025-02-14</lastmod>
+    <lastmod>2025-02-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

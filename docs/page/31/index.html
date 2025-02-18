@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2015/12/16/xenserver%E4%BD%BF%E7%94%A8ceph%E7%9A%84rbd%E7%9A%84%E6%96%B9%E6%B3%95/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="xenserver使用ceph的rbd的方法">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2015/12/16/xenserver%E4%BD%BF%E7%94%A8ceph%E7%9A%84rbd%E7%9A%84%E6%96%B9%E6%B3%95/" target="_self">
+          xenserver使用ceph的rbd的方法
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2015/12/16/xenserver%E4%BD%BF%E7%94%A8ceph%E7%9A%84rbd%E7%9A%84%E6%96%B9%E6%B3%95/" target="_self">
+        <div>
+          首先安装的xenserver6.5的环境，看到有地方有提到这个上面可以安装rbd的支持，网上有一种方式是libvirt+kvm方式，因为ceph对libviet是原生支持的，但是xenserver底层是xen的，这个就不去研究太多，这个用最简单的方式最好 https://github.com/mstarikov/rbdsr这个是个第三方的插件，最近才出来的 实现原理是ssh到ceph的机器上获取到
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2015-12-16 15:31" pubdate>
+              2015-12-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2015/12/13/%E5%A6%82%E4%BD%95%E5%9C%A8%E6%89%80%E6%9C%89%E7%9A%84mon%E7%9A%84%E6%8D%9F%E5%9D%8F%E6%83%85%E5%86%B5%E4%B8%8B%E5%B0%86%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E5%A6%82%E5%88%9D/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="如何在所有的mon的损坏情况下将数据恢复如初">
         </a>
@@ -803,73 +870,6 @@
       <span class="category-chain">
         
   <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2015/09/18/ceph%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%B1%9E%E6%80%A7%E5%8C%B9%E9%85%8D%E5%85%B3%E7%B3%BB/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph客户端服务端属性匹配关系">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2015/09/18/ceph%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%B1%9E%E6%80%A7%E5%8C%B9%E9%85%8D%E5%85%B3%E7%B3%BB/" target="_self">
-          ceph客户端服务端属性匹配关系
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2015/09/18/ceph%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%B1%9E%E6%80%A7%E5%8C%B9%E9%85%8D%E5%85%B3%E7%B3%BB/" target="_self">
-        <div>
-          ceph的server是定期会发布版本，而它的客户端是放到linux 内核当中的，一些属性的支持是依赖于内核版本的，这样就存在一些问题，一些功能后端支持，而客户端旧了；还有可能是客户端用的很新的内核，而后端比较旧不支持，所以查看了下内核中的 features 文件，可以看到这个对应关系，总结了下就是下面的列表 注意表中：  S&#x3D;SUPPORTED_DEFAULT     代表客户端支持这
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2015-09-18 12:24" pubdate>
-              2015-09-18
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%98%E5%82%A8/" class="category-chain-item">存储</a>
   
   
 

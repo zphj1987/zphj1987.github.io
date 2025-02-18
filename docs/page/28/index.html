@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/05/19/ceph%E7%9A%84jewel%E6%96%B0%E6%94%AF%E6%8C%81%E7%9A%84rbd-nbd/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph的jewel新支持的rbd-nbd">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/05/19/ceph%E7%9A%84jewel%E6%96%B0%E6%94%AF%E6%8C%81%E7%9A%84rbd-nbd/" target="_self">
+          ceph的jewel新支持的rbd-nbd
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/05/19/ceph%E7%9A%84jewel%E6%96%B0%E6%94%AF%E6%8C%81%E7%9A%84rbd-nbd/" target="_self">
+        <div>
+          jewel版本新增加了一个驱动NBD，允许librbd实现一个内核级别的rbd NBD相比较于kernel rbd：  rbd-ko是根据内核主线走的，升级kernel rbd需要升级到相应的内核，改动太大 rbd-ko的开发要慢于librbd，需要很多的时间才能追赶上librbd  rbd-nbd是通过librbd这个用户空间通过nbd的内核模块实现了内核级别的驱动，稳定性和性能都有保障 怎么理
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-05-19 17:11" pubdate>
+              2016-05-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2016/05/16/%E6%94%AF%E6%8C%81jewel%E7%89%88%E6%9C%AC%E7%9A%84calamari/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="支持jewel版本的calamari">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2016-03-31 16:45" pubdate>
               2016-03-31
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/03/30/rbd-mirror%E6%96%B0%E5%8A%9F%E8%83%BD/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rbd-mirror新功能">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/03/30/rbd-mirror%E6%96%B0%E5%8A%9F%E8%83%BD/" target="_self">
-          rbd-mirror新功能
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/03/30/rbd-mirror%E6%96%B0%E5%8A%9F%E8%83%BD/" target="_self">
-        <div>
-          RBD 的 mirroring 功能将会在下一个稳定版本Jewel中实现，这个Jewel版本已经发布了第一个版本10.1.0,这个功能已经在这个发布的版本中实现了 一、基本原理我们试图解决的或者至少需要克服的问题是，ceph在内部是强一致性的，这个对于跨区域的情况数据同步是无法接受的，一个请求需要异地返回再确认完成，这个在性能上肯定是无法接受的，这就是为什么基本上无法部署跨区域的ceph集群 因此
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-03-30 16:40" pubdate>
-              2016-03-30
             </time>
           </div>
         

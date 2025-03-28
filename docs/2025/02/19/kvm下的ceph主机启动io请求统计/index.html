@@ -19,21 +19,23 @@
   <meta name="author" content="zphj1987">
   <meta name="keywords" content="">
   
-    <meta name="description" content="ceph的设备关系获取">
+    <meta name="description" content="背景假如一个主机存储在ceph里面，我们想统计下一次启动过程中的io读取的情况，那么可以通过下面的方法来统计启动时间也可以通过在宿主机里面去查看，通过日志这边要方便一点，无需登录到虚拟机内部 日志开启123456789101112131415[global]fsid &#x3D; 4064c56e-c9ad-4b19-bf74-c4e291be5920mon_initial_members &#x3D; lab104">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ceph的设备关系获取">
-<meta property="og:url" content="https://zphj1987.com/2023/01/31/ceph%E7%9A%84%E8%AE%BE%E5%A4%87%E5%85%B3%E7%B3%BB%E8%8E%B7%E5%8F%96/index.html">
+<meta property="og:title" content="kvm下的ceph主机启动io请求统计">
+<meta property="og:url" content="https://zphj1987.com/2025/02/19/kvm%E4%B8%8B%E7%9A%84ceph%E4%B8%BB%E6%9C%BA%E5%90%AF%E5%8A%A8io%E8%AF%B7%E6%B1%82%E7%BB%9F%E8%AE%A1/index.html">
 <meta property="og:site_name" content="磨磨的技术笔记">
-<meta property="og:description" content="ceph的设备关系获取">
+<meta property="og:description" content="背景假如一个主机存储在ceph里面，我们想统计下一次启动过程中的io读取的情况，那么可以通过下面的方法来统计启动时间也可以通过在宿主机里面去查看，通过日志这边要方便一点，无需登录到虚拟机内部 日志开启123456789101112131415[global]fsid &#x3D; 4064c56e-c9ad-4b19-bf74-c4e291be5920mon_initial_members &#x3D; lab104">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-01-31T09:55:46.000Z">
-<meta property="article:modified_time" content="2025-02-13T07:21:00.953Z">
+<meta property="og:image" content="https://zphj1987.com/images/blog/kvm.png">
+<meta property="article:published_time" content="2025-02-19T07:29:43.000Z">
+<meta property="article:modified_time" content="2025-02-19T08:54:41.259Z">
 <meta property="article:author" content="zphj1987">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://zphj1987.com/images/blog/kvm.png">
   
   
   
-  <title>ceph的设备关系获取 - 磨磨的技术笔记</title>
+  <title>kvm下的ceph主机启动io请求统计 - 磨磨的技术笔记</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -194,13 +196,13 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+     style="background: url('/images/blog/kvm.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.8)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="ceph的设备关系获取"></span>
+            <span id="subtitle" data-typed-text="kvm下的ceph主机启动io请求统计"></span>
           
         </div>
 
@@ -211,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-01-31 17:55" pubdate>
-          2023年1月31日 下午
+        <time datetime="2025-02-19 15:29" pubdate>
+          2025年2月19日 下午
         </time>
       </span>
     
@@ -223,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          339 字
+          962 字
         
       </span>
     
@@ -234,7 +236,7 @@
         
         
         
-          3 分钟
+          9 分钟
         
       </span>
     
@@ -271,19 +273,45 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">ceph的设备关系获取</h1>
+            <h1 id="seo-header">kvm下的ceph主机启动io请求统计</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="ceph的设备关系获取"><a href="#ceph的设备关系获取" class="headerlink" title="ceph的设备关系获取"></a>ceph的设备关系获取</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>因为ceph采用的是lvm管理，磁盘对应关系找起来没有以前方便，所以用一个脚本把当前机器的对应关系列出来</p>
-<span id="more"></span>
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>假如一个主机存储在ceph里面，我们想统计下一次启动过程中的io读取的情况，那么可以通过下面的方法来统计<br>启动时间也可以通过在宿主机里面去查看，通过日志这边要方便一点，无需登录到虚拟机内部</p>
+<h2 id="日志开启"><a href="#日志开启" class="headerlink" title="日志开启"></a>日志开启</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><br>[global]<br>fsid = 4064c56e-c9ad-4b19-bf74-c4e291be5920<br>mon_initial_members = lab104<br>mon_host = 192.168.19.104<br>auth_cluster_required = none<br>auth_service_required = none<br>auth_client_required = none<br><br>[client]<br>admin socket = /var/run/ceph/ceph-client/<span class="hljs-variable">$cluster</span>-<span class="hljs-variable">$type</span>.<span class="hljs-variable">$id</span>.<span class="hljs-variable">$pid</span>.asok<br>debug rbd = 20<br>debug client = 20<br>debug objectcacher = 20<br><span class="hljs-built_in">log</span> file = /var/run/ceph/ceph-client/<span class="hljs-variable">$cluster</span>-<span class="hljs-variable">$name</span>.<span class="hljs-built_in">log</span><br></code></pre></td></tr></table></figure>
+<p>通过这个可以看到 这个是开启日志的方法</p>
+<p>在kvm的主机上面添加上面的日志，这个写到ceph的配置文件即可</p>
+<h2 id="日志处理"><a href="#日志处理" class="headerlink" title="日志处理"></a>日志处理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab102 kvm]<span class="hljs-comment"># cat  ceph-client.admin.log |grep ObjectDispatch|grep read|grep ObjectDispatch|grep -v SimpleSchedule|tail -n 10</span><br>2025-02-19T14:54:10.524+0800 7f3a48873700 20 librbd::io::ObjectDispatch: 0x564ea4735e50 <span class="hljs-built_in">read</span>: rbd_data.3a5db2d07ea.0000000000000001 3833856~360448<br>2025-02-19T14:54:10.524+0800 7f3a48873700 20 librbd::io::ObjectDispatch: 0x564ea4735e50 <span class="hljs-built_in">read</span>: rbd_data.3a5db2d07ea.0000000000000002 0~155648<br>2025-02-19T14:54:10.524+0800 7f3a48873700 20 librbd::io::ObjectDispatch: 0x564ea4735e50 <span class="hljs-built_in">read</span>: rbd_data.3a5db2d07ea.0000000000000002 155648~516096<br>2025-02-19T14:54:10.524+0800 7f3a48873700 20 librbd::io::ObjectDispatch: 0x564ea4735e50 <span class="hljs-built_in">read</span>: rbd_data.3a5db2d07ea.0000000000000002 671744~516096<br>2025-02-19T14:54:10.524+0800 7f3a48873700 20 librbd::io::ObjectDispatch: 0x564ea4735e50 <span class="hljs-built_in">read</span>: rbd_data.3a5db2d07ea.0000000000000002 1187840~65536<br>2025-02-19T14:54:10.527+0800 7f3a48873700 20 librbd::io::ObjectDispatch: 0x564ea4735e50 <span class="hljs-built_in">read</span>: rbd_data.3a5db2d07ea.0000000000000002 1253376~516096<br>2025-02-19T14:54:10.528+0800 7f3a48873700 20 librbd::io::ObjectDispatch: 0x564ea4735e50 <span class="hljs-built_in">read</span>: rbd_data.3a5db2d07ea.0000000000000002 1769472~516096<br>2025-02-19T14:54:10.528+0800 7f3a48873700 20 librbd::io::ObjectDispatch: 0x564ea4735e50 <span class="hljs-built_in">read</span>: rbd_data.3a5db2d07ea.0000000000000002 2285568~516096<br></code></pre></td></tr></table></figure>
 
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@node235 ceph]<span class="hljs-comment"># cat get.sh </span><br><span class="hljs-comment">#! /bin/bash</span><br>IFS=$<span class="hljs-string">&#x27;\n\n&#x27;</span> <br><span class="hljs-keyword">for</span> osd <span class="hljs-keyword">in</span> `ceph osd dump|grep osd|grep -v req|grep -v max|awk <span class="hljs-string">&#x27;&#123;print $1,$19&#125;&#x27;</span>`<br><span class="hljs-keyword">do</span> <br><br>osdnum=`<span class="hljs-built_in">echo</span>  <span class="hljs-variable">$osd</span>|awk <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span>`<br>osdid=`<span class="hljs-built_in">echo</span>  <span class="hljs-variable">$osd</span>|awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>`<br>vgname=`lvdisplay |grep <span class="hljs-variable">$osdid</span> -A 1|<span class="hljs-built_in">tail</span>  -n 1|awk <span class="hljs-string">&#x27;&#123;print $3&#125;&#x27;</span>`<br>pvname=`pvdisplay |grep <span class="hljs-variable">$vgname</span> -B1|<span class="hljs-built_in">head</span> -n 1|awk <span class="hljs-string">&#x27;&#123;print $3&#125;&#x27;</span>`<br><br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$osdnum</span>  <span class="hljs-variable">$osdid</span>  <span class="hljs-variable">$vgname</span>  <span class="hljs-variable">$pvname</span><br><br><span class="hljs-keyword">done</span><br><br></code></pre></td></tr></table></figure>
+<p>可以看到请求的时间，请求的对象名称，请求的起点，请求的长度</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">rados的请求收到了7617次<br>[root@lab102 kvm]<span class="hljs-comment"># cat readnew.txt |wc -l</span><br>7617<br></code></pre></td></tr></table></figure>
+<p>一次启动在ceph这边的rados请求发起了这么多次</p>
+<p>下面是一个系统启动的时候读取的总的数据量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab102 kvm]<span class="hljs-comment"># cat  readnew.txt |awk &#x27;&#123;print $2&#125;&#x27;|awk -F~ &#x27;&#123;sum += $2&#125; END&#123;print sum&#125;&#x27;</span><br>167396352<br></code></pre></td></tr></table></figure>
+<p>总的数据读取大小大概在160MB&#x2F;s左右，主要也就是内核，内核大概也就100M左右，还有其它的一些数据</p>
+<p>对象被读取的情况</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab102 kvm]<span class="hljs-comment"># cat new1.txt |sort  -n -k 2|tail -n 15</span><br>rbd_data.3a5db2d07ea.00000000000026d5 3117056<br>rbd_data.3a5db2d07ea.0000000000000019 3407872<br>rbd_data.3a5db2d07ea.0000000000000dc5 3436544<br>rbd_data.3a5db2d07ea.0000000000000080 3542528<br>rbd_data.3a5db2d07ea.0000000000000003 4194304<br>rbd_data.3a5db2d07ea.0000000000000004 4194304<br>rbd_data.3a5db2d07ea.0000000000000005 4194304<br>rbd_data.3a5db2d07ea.000000000000001a 4194304<br>rbd_data.3a5db2d07ea.000000000000001b 4194304<br>rbd_data.3a5db2d07ea.000000000000001c 4194304<br>rbd_data.3a5db2d07ea.000000000000001d 4194304<br>rbd_data.3a5db2d07ea.0000000000000000 4820992<br>rbd_data.3a5db2d07ea.0000000000000100 4821504<br>rbd_data.3a5db2d07ea.0000000000000001 6348800<br>rbd_data.3a5db2d07ea.0000000000000002 7798784<br></code></pre></td></tr></table></figure>
+<p>可以看到有一部分对象还是比较连续的读取的，这个应该是一些操作系统大文件的，比如内核的，这个经过一层文件系统后的有一部分是连续id</p>
+<h2 id="如何利用这些日志信息"><a href="#如何利用这些日志信息" class="headerlink" title="如何利用这些日志信息"></a>如何利用这些日志信息</h2><p>我们可以看下，在不同的并发下面，这个启动的区别，理论上是越多并发，单个的时间就会越大，开始可能比一个会好一点，会缓存一点其它主机读取的相同的数据，但是这个到了一定的程度就会成为瓶颈了</p>
+<p>我们需要根据这个启动分析来得到一个比较合适的并发启动数目</p>
+<h2 id="一些命令记录"><a href="#一些命令记录" class="headerlink" title="一些命令记录"></a>一些命令记录</h2><p>并发启动虚拟机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">virsh list --all --name | xargs -P 11 -I &#123;&#125; virsh start  &#123;&#125;<br></code></pre></td></tr></table></figure>
 
-<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p>需要用bash命令运行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@node235 ceph]<span class="hljs-comment"># bash get.sh </span><br>osd.0 c40d9963-4894-42bd-a7a8-c9d8c3280e9f ceph-f0f4f8ce-8d02-4111-97bd-fae7ff20a961 /dev/sdd1<br>osd.1 c4b7f141-51a0-4b97-80b5-e9681025f7db ceph-f786b5a2-82f4-4086-b0d1-7f5e6787c421 /dev/sdc1<br>osd.2 24f68dd2-5a4f-4b41-8775-ae0211a06e5d ceph-07e22954-93d0-4bb1-9ce3-59485eab1673 /dev/sdi1<br>osd.3 deed6a2e-456f-40be-bade-07a4b358e2c1 ceph-f1f76e61-d0d6-447b-ac26-a9a2d7fd2d5d /dev/sds1<br>osd.4 f325a546-a6c7-4610-9916-31062ec6decc ceph-5c1357a5-036a-4f2e-83a8-4463e4349264 /dev/sdf1<br>osd.5 3790748f-f212-4d46-8b72-b6c9ba007019 ceph-9874a1ac-9163-4936-a2f9-976260f19d6d /dev/sdr1<br>osd.6 50140786-a01d-47c4-bca4-68ad7730863c ceph-0e4af92c-9766-467c-a7d5-db4435aadd6b /dev/sdk1<br>osd.7 5e56f9a0-7637-477a-95cf-b995987e6270 ceph-c0de6d4b-1907-49d7-aa9b-194ccbc72465 /dev/sdb1<br>osd.8 261ea9d8-581b-42ec-9493-1df7b74394b7 ceph-54946fde-edc4-4cf1-b59a-375d69bfff7a /dev/sdm1<br>osd.9 a4212438-e463-48f3-be58-7668df524c35 ceph-805428c1-077c-4092-80f5-95b0ac9f5ea5 /dev/sdh1<br>osd.10 ebfb8caf-a3e6-4715-b992-9ca560104c4e ceph-7e9809bf-c4c0-4686-84f6-4e8639f02dac /dev/sde1<br>osd.11 7c310379-994d-4faa-9724-1ec1bf6d85bd ceph-3b602d70-99d0-496e-8b96-c34b36d973bc /dev/sdo1<br>osd.12 cd608ef9-d491-4d09-8f7f-ac82e026b321 ceph-2a8d2275-d307-41ab-9125-17dbe610559a /dev/sdg1<br>osd.14 782cb3ed-9fcd-40aa-9db3-1cd7babda3fb ceph-9117f02b-c6a0-43a0-ac3f-c0af75381c5f /dev/sdq1<br>osd.15 77275ae5-d953-44fc-8196-d6b31e005fb3 ceph-c30f789a-3213-49ce-8831-2296e5697119 /dev/sdp1<br>osd.16 1a325633-209d-4c3a-a89a-c90d6c26688f ceph-397d3bce-9f1a-4e33-9bd0-48f52804a7f6 /dev/sdj1<br></code></pre></td></tr></table></figure>
+<p>获取虚拟机的ip</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab102 kvm]<span class="hljs-comment"># cat check.sh</span><br><span class="hljs-keyword">for</span> vm <span class="hljs-keyword">in</span> $(virsh list --all --name); <span class="hljs-keyword">do</span>     virsh domifaddr  <span class="hljs-variable">$vm</span>; <span class="hljs-keyword">done</span>|grep ipv|awk <span class="hljs-string">&#x27;&#123;print $4&#125;&#x27;</span>|<span class="hljs-built_in">cut</span> -d / -f 1 &gt; ip.list<br></code></pre></td></tr></table></figure>
 
+<p>查看启动时间</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> host <span class="hljs-keyword">in</span> `<span class="hljs-built_in">cat</span> ip.list`;<span class="hljs-keyword">do</span> ssh  root@<span class="hljs-variable">$host</span>  systemd-analyze ;<span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure>
+
+<p>启动一个虚拟机的时间</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab102 kvm]<span class="hljs-comment"># ssh 192.168.122.48  systemd-analyze</span><br>Startup finished <span class="hljs-keyword">in</span> 806ms (kernel) + 1.920s (initrd) + 11.502s (userspace) = 14.229s<br></code></pre></td></tr></table></figure>
+
+<p>并发启动10个虚拟机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab102 kvm]<span class="hljs-comment"># for host in `cat ip.list`;do ssh  root@$host  systemd-analyze ;done</span><br>Startup finished <span class="hljs-keyword">in</span> 880ms (kernel) + 3.479s (initrd) + 19.364s (userspace) = 23.724s<br>Startup finished <span class="hljs-keyword">in</span> 883ms (kernel) + 3.404s (initrd) + 17.888s (userspace) = 22.176s<br>Startup finished <span class="hljs-keyword">in</span> 984ms (kernel) + 3.143s (initrd) + 19.173s (userspace) = 23.302s<br>Startup finished <span class="hljs-keyword">in</span> 862ms (kernel) + 3.512s (initrd) + 19.606s (userspace) = 23.981s<br>Startup finished <span class="hljs-keyword">in</span> 868ms (kernel) + 2.628s (initrd) + 17.788s (userspace) = 21.285s<br>Startup finished <span class="hljs-keyword">in</span> 900ms (kernel) + 2.661s (initrd) + 18.296s (userspace) = 21.859s<br>Startup finished <span class="hljs-keyword">in</span> 880ms (kernel) + 3.479s (initrd) + 19.364s (userspace) = 23.724s<br>Startup finished <span class="hljs-keyword">in</span> 870ms (kernel) + 3.442s (initrd) + 19.233s (userspace) = 23.546s<br>Startup finished <span class="hljs-keyword">in</span> 911ms (kernel) + 3.395s (initrd) + 17.976s (userspace) = 22.283s<br>Startup finished <span class="hljs-keyword">in</span> 901ms (kernel) + 3.309s (initrd) + 19.488s (userspace) = 23.699s<br>Startup finished <span class="hljs-keyword">in</span> 901ms (kernel) + 2.597s (initrd) + 18.168s (userspace) = 21.667s<br></code></pre></td></tr></table></figure>
+<p>可以看到时间增加了7秒左右，大概是1.5倍，这个时间是11个虚拟机并发启动的情况，如果更多的情况可以继续查看</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">3.97k op/s<br>3.16k op/s<br>3.75k op/s<br>3.68k op/s<br>3.10k op/s<br>3.52k op/s<br>1.52k op/s<br>1.53k op/s<br></code></pre></td></tr></table></figure>
+<p>从ceph的日志看，可以看到启动11个时候的高峰期op大概在3k多</p>
 
                 
               </div>
@@ -301,8 +329,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>ceph的设备关系获取</div>
-      <div>https://zphj1987.com/2023/01/31/ceph的设备关系获取/</div>
+      <div>kvm下的ceph主机启动io请求统计</div>
+      <div>https://zphj1987.com/2025/02/19/kvm下的ceph主机启动io请求统计/</div>
     </div>
     <div class="license-meta">
       
@@ -314,7 +342,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年1月31日</div>
+          <div>2025年2月19日</div>
         </div>
       
       
@@ -346,18 +374,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/01/31/ceph%E7%BC%96%E8%AF%91%E6%89%93%E5%8C%85%E4%B8%AD%E6%96%AD%E7%BB%A7%E7%BB%AD/" title="ceph编译打包中断继续">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ceph编译打包中断继续</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/01/31/gluster%E5%89%AF%E6%9C%AC%E4%B8%89%E9%85%8D%E7%BD%AEdown%E4%B8%A4%E4%B8%AA%E5%8F%AF%E5%86%99/" title="gluster副本三配置down两个可写">
-                        <span class="hidden-mobile">gluster副本三配置down两个可写</span>
+                      <a href="/2025/02/18/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%BC%95%E8%B5%B7%E7%9A%84nvme%E7%A3%81%E7%9B%98%E4%B8%8D%E8%AF%86%E5%88%AB/" title="电源管理引起的nvme磁盘不识别">
+                        <span class="hidden-mobile">电源管理引起的nvme磁盘不识别</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

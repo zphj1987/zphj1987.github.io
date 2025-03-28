@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/06/26/rbd%E5%81%9A%E5%BF%AB%E7%85%A7%E5%85%8B%E9%9A%86%E4%BB%A5%E5%90%8E%E7%9A%84%E5%AE%B9%E9%87%8F%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" target="_self">
+          <img src="/images/blog/clone.png" srcset="/img/loading.gif" lazyload alt="rbd做快照克隆以后的容量相关问题">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/06/26/rbd%E5%81%9A%E5%BF%AB%E7%85%A7%E5%85%8B%E9%9A%86%E4%BB%A5%E5%90%8E%E7%9A%84%E5%AE%B9%E9%87%8F%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" target="_self">
+          rbd做快照克隆以后的容量相关问题
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/06/26/rbd%E5%81%9A%E5%BF%AB%E7%85%A7%E5%85%8B%E9%9A%86%E4%BB%A5%E5%90%8E%E7%9A%84%E5%AE%B9%E9%87%8F%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/" target="_self">
+        <div>
+          背景rbd的做快照，然后克隆，原始设备可以变成两个设备供客户端使用，占用的空间为1份，这个是在没有新写入情况下的容量占用情况那么如果有新写入的的数据之后，这个地方容量是怎么去看的，以及在出现写入又删除的情况下，rbd的实际占用空间又是如何释放的 相关测试操作快照后的容量占用我们先准备一个rbd的设备，并且格式化为ntfs的文件系统，然后写入一个大文件为2.4G的我们看下容量占用情况 1234567
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-06-26 14:02" pubdate>
+              2024-06-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/05/09/%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81%E4%B8%AD%E6%96%87%E7%9A%84winpeiso/" target="_self">
           <img src="/images/blog/winpe.png" srcset="/img/loading.gif" lazyload alt="制作一个支持中文的winpeiso">
         </a>
@@ -811,73 +878,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/ceph/">#ceph</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/03/06/drbd%E7%9A%84%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
-          <img src="/images/blog/drbdfast.png" srcset="/img/loading.gif" lazyload alt="drbd的快速初始化">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/03/06/drbd%E7%9A%84%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
-          drbd的快速初始化
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/03/06/drbd%E7%9A%84%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
-        <div>
-          需求默认启动drbd后，两个设备需要进行同步，而某些测试情况下，设备是空的，并不需要同步，都是空的就不需要同步了,但是系统自身是不会判断是否为空的，需要按下面的步骤处理一下 操作方法1、两台机器上面都执行初始化元数据 1drbdadm create-md &lt;resource&gt;  2、两台设备上面都执行启动 1drbdadm up &lt;resource&gt; 3、在备用节点上面执行
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-06 10:46" pubdate>
-              2024-03-06
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87/" class="category-chain-item">存储设备</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/">#系统配置</a>
             
           </div>
         

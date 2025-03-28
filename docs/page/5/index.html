@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/03/06/drbd%E7%9A%84%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
+          <img src="/images/blog/drbdfast.png" srcset="/img/loading.gif" lazyload alt="drbd的快速初始化">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/03/06/drbd%E7%9A%84%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
+          drbd的快速初始化
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/03/06/drbd%E7%9A%84%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
+        <div>
+          需求默认启动drbd后，两个设备需要进行同步，而某些测试情况下，设备是空的，并不需要同步，都是空的就不需要同步了,但是系统自身是不会判断是否为空的，需要按下面的步骤处理一下 操作方法1、两台机器上面都执行初始化元数据 1drbdadm create-md &lt;resource&gt;  2、两台设备上面都执行启动 1drbdadm up &lt;resource&gt; 3、在备用节点上面执行
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-03-06 10:46" pubdate>
+              2024-03-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E8%AE%BE%E5%A4%87/" class="category-chain-item">存储设备</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/">#系统配置</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/03/06/Intel-E810-XXV%E5%BC%80%E5%90%AFrdma%E5%8A%9F%E8%83%BD/" target="_self">
           <img src="/images/blog/roce.png" srcset="/img/loading.gif" lazyload alt="Intel E810-XXV开启rdma功能">
         </a>
@@ -783,73 +850,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E5%8D%9A%E5%AE%A2%E7%9B%B8%E5%85%B3/">#博客相关</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/01/05/nmon%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="nmon文件过大的处理方法">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/01/05/nmon%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_self">
-          nmon文件过大的处理方法
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/01/05/nmon%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/" target="_self">
-        <div>
-          nmon的文件存在过大的问题 获取第一个ZZZZ之前的内容，大概在2000行之前 root@ruichi-Default-string:&#x2F;chia# head -n 2000 ruichi-Default-string_210428_2224.nmon |grep -n “ZZZZ”1288:ZZZZ,T0001,22:24:43,28-APR-20211310:ZZZZ,T0002,2
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-01-05 21:26" pubdate>
-              2024-01-05
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
             
           </div>
         

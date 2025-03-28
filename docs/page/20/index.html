@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/06/06/Ceph%E9%83%A8%E7%BD%B2mon%E5%87%BA%E7%8E%B00.0.0.0%E5%9C%B0%E5%9D%80/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph部署mon出现0.0.0.0地址">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/06/06/Ceph%E9%83%A8%E7%BD%B2mon%E5%87%BA%E7%8E%B00.0.0.0%E5%9C%B0%E5%9D%80/" target="_self">
+          Ceph部署mon出现0.0.0.0地址
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/06/06/Ceph%E9%83%A8%E7%BD%B2mon%E5%87%BA%E7%8E%B00.0.0.0%E5%9C%B0%E5%9D%80/" target="_self">
+        <div>
+          前言最近在群里两次看到出现mon地址不对的问题，都是显示0.0.0.0:0地址，如下所示： 12345[root@lab8106 ceph]# ceph -s    cluster 3137d009-e41e-41f0-b8f8-5cb574502572     health HEALTH_ERR            1 mons down, quorum 0,1,2 lab8106,node8
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-06-06 18:30" pubdate>
+              2017-06-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2017/06/01/Centos7%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8%E5%90%8E%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Centos7升级内核后无法启动解决办法">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-04-20 18:18" pubdate>
               2017-04-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/04/19/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%A0%E9%99%A4%E7%9A%84Ceph%E5%AF%B9%E8%B1%A1%E8%BF%98%E8%83%BDget/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="为什么删除的Ceph对象还能get">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/04/19/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%A0%E9%99%A4%E7%9A%84Ceph%E5%AF%B9%E8%B1%A1%E8%BF%98%E8%83%BDget/" target="_self">
-          为什么删除的Ceph对象还能get
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/04/19/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%A0%E9%99%A4%E7%9A%84Ceph%E5%AF%B9%E8%B1%A1%E8%BF%98%E8%83%BDget/" target="_self">
-        <div>
-          前言在很久以前在研究一套文件系统的时候，当时发现一个比较奇怪的现象，没有文件存在，磁盘容量还在增加，在研究了一段时间后，发现这里面有一种比较奇特的处理逻辑 这套文件系统在处理一个文件的时候放入的是一个临时目录，最开始在发送第一个写请求后，在操作系统层面马上进行了一个delete操作，而写还在继续，并且需要处理这个数据的进程一直占着的，一旦使用完这个文件，不需要做处理，这个文件就会自动释放掉，而无需
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-04-19 18:17" pubdate>
-              2017-04-19
             </time>
           </div>
         

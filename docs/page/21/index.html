@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/04/20/Cephfs%E7%9A%84%E6%96%87%E4%BB%B6%E5%AD%98%E5%88%B0%E5%93%AA%E9%87%8C%E4%BA%86/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Cephfs的文件存到哪里了">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/04/20/Cephfs%E7%9A%84%E6%96%87%E4%BB%B6%E5%AD%98%E5%88%B0%E5%93%AA%E9%87%8C%E4%BA%86/" target="_self">
+          Cephfs的文件存到哪里了
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/04/20/Cephfs%E7%9A%84%E6%96%87%E4%BB%B6%E5%AD%98%E5%88%B0%E5%93%AA%E9%87%8C%E4%BA%86/" target="_self">
+        <div>
+          前言在ceph里面使用rbd接口的时候，存储的数据在后台是以固定的prifix的对象存在的，这样就能根据相同的前缀对象去对image文件进行拼接或者修复 在文件系统里面这一块就要复杂一些，本篇就写的关于这个，文件和对象的对应关系是怎样的，用系统命令怎么定位，又是怎么得到这个路径的 实践根据系统命令进行文件的定位写入测试文件 1dd if=/dev/zero of=/mnt/testfile bs=
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-04-20 18:18" pubdate>
+              2017-04-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2017/04/19/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%A0%E9%99%A4%E7%9A%84Ceph%E5%AF%B9%E8%B1%A1%E8%BF%98%E8%83%BDget/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="为什么删除的Ceph对象还能get">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-03-15 17:51" pubdate>
               2017-03-15
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/03/06/%E5%9C%A8%E7%BA%BF%E5%8A%A8%E6%80%81%E4%BF%AE%E6%94%B9ulimit/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="在线动态修改ulimit">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/03/06/%E5%9C%A8%E7%BA%BF%E5%8A%A8%E6%80%81%E4%BF%AE%E6%94%B9ulimit/" target="_self">
-          在线动态修改ulimit
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/03/06/%E5%9C%A8%E7%BA%BF%E5%8A%A8%E6%80%81%E4%BF%AE%E6%94%B9ulimit/" target="_self">
-        <div>
-          前言系统中有些地方会进行资源的限制，其中的一个就是open file的限制，操作系统默认限制的是1024,这个值可以通过各种方式修改，本篇主要讲的是如何在线修改，生产上是不可能随便重启进程的 实践查看系统默认的限制12[root@lab8106 ~]# ulimit -a|grep openopen files                      (-n) 1024 默认的打开文件是1024
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-03-06 17:50" pubdate>
-              2017-03-06
             </time>
           </div>
         

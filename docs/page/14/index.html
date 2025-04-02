@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/09/08/rgw%E9%85%8D%E7%BD%AE%E5%88%A0%E9%99%A4%E5%BF%AB%E9%80%9F%E5%9B%9E%E6%94%B6%E5%AF%B9%E8%B1%A1/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rgw配置删除快速回收对象">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/09/08/rgw%E9%85%8D%E7%BD%AE%E5%88%A0%E9%99%A4%E5%BF%AB%E9%80%9F%E5%9B%9E%E6%94%B6%E5%AF%B9%E8%B1%A1/" target="_self">
+          rgw配置删除快速回收对象
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/09/08/rgw%E9%85%8D%E7%BD%AE%E5%88%A0%E9%99%A4%E5%BF%AB%E9%80%9F%E5%9B%9E%E6%94%B6%E5%AF%B9%E8%B1%A1/" target="_self">
+        <div>
+          前言做rgw测试的时候，经常会有删除文件的操作，而用默认的参数的时候，rgw是通过gc回收机制来处理删除对象的，这个对于生产环境是有好处的，把删除对业务系统的压力分摊到不同的时间点，但是测试的时候，可能需要反复的写入删除，而这种情况下，可能希望能够迅速的回收对象，那么就需要修改几个参数了 参数主要调整下面的几个参数 123rgw_gc_obj_min_wait = 30rgw_gc_process
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-09-08 11:20" pubdate>
+              2020-09-08
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/07/ipmi%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%91%BD%E4%BB%A4/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ipmi常用的命令行命令">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2020-04-03 16:27" pubdate>
               2020-04-03
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/01/09/brctl%20%E5%A2%9E%E5%8A%A0%E6%A1%A5%E6%8E%A5%E7%BD%91%E5%8D%A1/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="brctl 增加桥接网卡">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2020/01/09/brctl%20%E5%A2%9E%E5%8A%A0%E6%A1%A5%E6%8E%A5%E7%BD%91%E5%8D%A1/" target="_self">
-          brctl 增加桥接网卡
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2020/01/09/brctl%20%E5%A2%9E%E5%8A%A0%E6%A1%A5%E6%8E%A5%E7%BD%91%E5%8D%A1/" target="_self">
-        <div>
-          前言之前有一篇介绍配置桥接网卡的，这个桥接网卡一般是手动做虚拟化的时候会用到，通过修改网卡的配置文件的方式会改变环境的原有的配置，而很多情况，我只是简单的用一下，并且尽量不要把网络搞断了，万一有问题，远程把机器重启一下也就恢复了，不至于反复去定位哪里改错了，当然如果是能够直连的修改的时候，还是建议通过配置文件的方式去修改 安装必要的软件包 1yum install bridge-utils 选择想
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-01-09 19:21" pubdate>
-              2020-01-09
             </time>
           </div>
         

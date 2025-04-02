@@ -1,0 +1,670 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/logo.jpeg">
+  <link rel="icon" href="/img/logo.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zphj1987">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景最近在看缓存相关，文件系统可以通过fscache加速，加速的效果就是读取的时候能够缓存，原理是在网关的地方加入一个高速缓存盘，这样在后续读取的时候，能够直接从缓存盘读取，这样能够减少与集群的交互，从而提供更大的性能，并且这个是缓存读取，所以数据安全性没有问题 rgw的d3n这个功能就是给rgw的网关加入了一个缓存盘，指定一个目录，然后能够缓存数据到目录 版本要求12[root@lab201 ~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rgw的d3n功能配置">
+<meta property="og:url" content="https://zphj1987.com/2025/04/02/rgw%E7%9A%84d3n%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="磨磨的技术笔记">
+<meta property="og:description" content="背景最近在看缓存相关，文件系统可以通过fscache加速，加速的效果就是读取的时候能够缓存，原理是在网关的地方加入一个高速缓存盘，这样在后续读取的时候，能够直接从缓存盘读取，这样能够减少与集群的交互，从而提供更大的性能，并且这个是缓存读取，所以数据安全性没有问题 rgw的d3n这个功能就是给rgw的网关加入了一个缓存盘，指定一个目录，然后能够缓存数据到目录 版本要求12[root@lab201 ~">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zphj1987.com/images/blog/d3n.png">
+<meta property="article:published_time" content="2025-04-02T09:44:26.000Z">
+<meta property="article:modified_time" content="2025-04-02T10:25:12.429Z">
+<meta property="article:author" content="zphj1987">
+<meta property="article:tag" content="ceph">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://zphj1987.com/images/blog/d3n.png">
+  
+  
+  
+  <title>rgw的d3n功能配置 - 磨磨的技术笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"zphj1987.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="磨磨的技术笔记" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>磨磨的技术笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/blog/d3n.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.8)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="rgw的d3n功能配置"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-02 17:44" pubdate>
+          2025年4月2日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          10 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">rgw的d3n功能配置</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近在看缓存相关，文件系统可以通过fscache加速，加速的效果就是读取的时候能够缓存，原理是在网关的地方加入一个高速缓存盘，这样在后续读取的时候，能够直接从缓存盘读取，这样能够减少与集群的交互，从而提供更大的性能，并且这个是缓存读取，所以数据安全性没有问题</p>
+<h2 id="rgw的d3n"><a href="#rgw的d3n" class="headerlink" title="rgw的d3n"></a>rgw的d3n</h2><p>这个功能就是给rgw的网关加入了一个缓存盘，指定一个目录，然后能够缓存数据到目录</p>
+<h3 id="版本要求"><a href="#版本要求" class="headerlink" title="版本要求"></a>版本要求</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># ceph -v</span><br>ceph version 17.2.8 (f817ceb7f187defb1d021d6328fa833eb8e943b3) quincy (stable)<br></code></pre></td></tr></table></figure>
+<p>至少要这个版本才可以</p>
+<p>操作系统要centos9</p>
+<h2 id="配置方法"><a href="#配置方法" class="headerlink" title="配置方法"></a>配置方法</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">debug_rgw=20<br>[client.rgw.lab201]<br>  host = lab201<br>  rgw_frontends=<span class="hljs-string">&quot;beast port=7481&quot;</span><br>  rgw_content_length_compat = <span class="hljs-literal">true</span><br>  rgw_d3n_l1_local_datacache_enabled = <span class="hljs-literal">true</span><br>  rgw_d3n_l1_datacache_persistent_path = <span class="hljs-string">&quot;/mnt/nvme0/rgw_datacache&quot;</span><br>  rgw_d3n_l1_datacache_size = 10737418240<br></code></pre></td></tr></table></figure>
+
+<p>改好了重启进程即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl restart ceph-radosgw@rgw.lab201<br></code></pre></td></tr></table></figure>
+<p>有问题的时候看日志</p>
+<h3 id="注意问题"><a href="#注意问题" class="headerlink" title="注意问题"></a>注意问题</h3><ul>
+<li>文件需要大于4M才会缓存</li>
+<li>注意缓存目录的权限需要给ceph权限</li>
+</ul>
+<p>4M的原因是:<br>D3N 当前仅缓存尾部对象，因为它们是不可变的（默认情况下它是大于 4MB 的对象的一部分）。（NGINX RGW 数据缓存和 CDN 支持缓存所有对象大小）<br>也就是文件的4M之后的部分是不可变的，默认去缓存这部分的对象</p>
+<p>没有权限的报错信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">2025-04-02T17:38:30.910+0800 7fee1770e640  1 D3nDataCache: create_aio_write_request fail, r=-1<br>2025-04-02T17:38:30.916+0800 7fee1770e640 10 D3nDataCache::put(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1, len=4194304<br>2025-04-02T17:38:30.916+0800 7fee1770e640 20 D3nDataCache: Before eviction _free_data_cache_size:10737418240, _outstanding_write_size:0, freed_size:0<br>2025-04-02T17:38:30.916+0800 7fee1770e640  0 ERROR: D3nCacheAioWriteRequest::create_io: open file failed, errno=13, location=<span class="hljs-string">&#x27;/mnt/nvme0/rgw_datacache/16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1&#x27;</span><br>2025-04-02T17:38:30.916+0800 7fee1770e640  0 ERROR: D3nDataCache: d3n_libaio_create_write_request() prepare libaio write op r=-1<br>2025-04-02T17:38:30.916+0800 7fee1770e640  1 D3nDataCache: create_aio_write_request fail, r=-1<br></code></pre></td></tr></table></figure>
+
+<h2 id="测试读取"><a href="#测试读取" class="headerlink" title="测试读取"></a>测试读取</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ceph]<span class="hljs-comment"># aws   --endpoint=http://192.168.0.201:7481 s3 cp s3://testbucket/testfile8M /tmp/cccccc</span><br>download: s3://testbucket/testfile8M to ../../tmp/cccccc<br></code></pre></td></tr></table></figure>
+<h3 id="查看日志"><a href="#查看日志" class="headerlink" title="查看日志"></a>查看日志</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash">2025-04-02T17:43:07.435+0800 7f860fc987c0  1 D3N datacache enabled: 1<br>2025-04-02T17:43:07.596+0800 7f860fc987c0  5 D3nDataCache: init: evicting the persistent storage directory on start<br>2025-04-02T17:50:55.169+0800 7f85416e2640 20 req 134200468731872662 0.004000050s s3:get_obj D3nDataCache::get_obj_iterate_cb(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__multipart_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1, is_head_obj=0, obj-ofs=0, read_ofs=0, len=4194304<br>2025-04-02T17:50:55.169+0800 7f85416e2640 20 req 134200468731872662 0.004000050s s3:get_obj D3nDataCache: get_obj_iterate_cb(): WRITE TO CACHE: oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__multipart_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1, obj-ofs=0, read_ofs=0 len=4194304<br>2025-04-02T17:50:55.169+0800 7f85416e2640 20 req 134200468731872662 0.004000050s s3:get_obj D3nDataCache::get_obj_iterate_cb(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1, is_head_obj=0, obj-ofs=4194304, read_ofs=0, len=4194304<br>2025-04-02T17:50:55.169+0800 7f85416e2640 20 req 134200468731872662 0.004000050s s3:get_obj D3nDataCache: get_obj_iterate_cb(): WRITE TO CACHE: oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1, obj-ofs=4194304, read_ofs=0 len=4194304<br>2025-04-02T17:50:55.183+0800 7f853eedd640 10 D3nDataCache::put(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__multipart_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1, len=4194304<br>2025-04-02T17:50:55.183+0800 7f853eedd640 20 D3nDataCache: Before eviction _free_data_cache_size:10737418240, _outstanding_write_size:0, freed_size:0<br>2025-04-02T17:50:55.196+0800 7f85446e8640 10 D3nDataCache::put(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1, len=4194304<br>2025-04-02T17:50:55.196+0800 7f85446e8640 20 D3nDataCache: Before eviction _free_data_cache_size:10737418240, _outstanding_write_size:4194304, freed_size:0<br>2025-04-02T17:50:55.212+0800 7f8461522640  5 D3nDataCache: d3n_libaio_write_completion_cb(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__multipart_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1<br>2025-04-02T17:50:55.367+0800 7f8461522640  5 D3nDataCache: d3n_libaio_write_completion_cb(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1<br>[root@lab201 ~]<span class="hljs-comment"># ll /mnt/nvme0/rgw_datacache/</span><br>total 8192<br>-rw-r--r-- 1 ceph ceph 4194304 Apr  2 17:50 16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__multipart_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1<br>-rw-r--r-- 1 ceph ceph 4194304 Apr  2 17:50 16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1<br></code></pre></td></tr></table></figure>
+<p>上面的可以看到能够缓存文件到目录</p>
+<h3 id="第二次读取"><a href="#第二次读取" class="headerlink" title="第二次读取"></a>第二次读取</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># cat  /var/log/ceph/ceph-client.rgw.lab201.log |grep -i d3n</span><br>2025-04-02T17:52:29.311+0800 7f850de7b640 20 req 10062238110711655751 0.004000050s s3:get_obj D3nDataCache::get_obj_iterate_cb(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__multipart_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1, is_head_obj=0, obj-ofs=0, read_ofs=0, len=4194304<br>2025-04-02T17:52:29.311+0800 7f850de7b640 20 req 10062238110711655751 0.004000050s s3:get_obj D3nDataCache: get_obj_iterate_cb(): READ FROM CACHE: oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__multipart_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1, obj-ofs=0, read_ofs=0, len=4194304<br>2025-04-02T17:52:29.311+0800 7f850de7b640 20 req 10062238110711655751 0.004000050s s3:get_obj D3nDataCache: file_aio_read_abstract(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__multipart_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1<br>2025-04-02T17:52:29.311+0800 7f850de7b640 20 req 10062238110711655751 0.004000050s s3:get_obj D3nDataCache: async_read(): location=/mnt/nvme0/rgw_datacache//16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__multipart_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1<br>2025-04-02T17:52:29.311+0800 7f850de7b640 20 req 10062238110711655751 0.004000050s s3:get_obj D3nDataCache: init_async_read(): location=/mnt/nvme0/rgw_datacache//16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__multipart_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1<br>2025-04-02T17:52:29.312+0800 7f850de7b640 20 req 10062238110711655751 0.005000062s s3:get_obj D3nDataCache: async_read(): ::aio_read(), ret=0<br>2025-04-02T17:52:29.312+0800 7f850de7b640 20 req 10062238110711655751 0.005000062s s3:get_obj D3nDataCache::get_obj_iterate_cb(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1, is_head_obj=0, obj-ofs=4194304, read_ofs=0, len=4194304<br>2025-04-02T17:52:29.312+0800 7f850de7b640 20 req 10062238110711655751 0.005000062s s3:get_obj D3nDataCache: get_obj_iterate_cb(): READ FROM CACHE: oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1, obj-ofs=4194304, read_ofs=0, len=4194304<br>2025-04-02T17:52:29.312+0800 7f850de7b640 20 req 10062238110711655751 0.005000062s s3:get_obj D3nDataCache: file_aio_read_abstract(): oid=16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1<br>2025-04-02T17:52:29.312+0800 7f850de7b640 20 req 10062238110711655751 0.005000062s s3:get_obj D3nDataCache: async_read(): location=/mnt/nvme0/rgw_datacache//16e7b827-16ac-471c-a407-ef1872bd0058.34134.1__shadow_testfile8M.2~PGlAYwIJKyDrpFDYY4WWQJ1c_E0eVWV.1_1<br></code></pre></td></tr></table></figure>
+
+<p>可以看到从本地磁盘读取的</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>d3n功能非常适合作为读取的场景的使用，直接从本地盘的缓存读取，能够加速并且能够降低内部的网络消耗</p>
+<h2 id="附加"><a href="#附加" class="headerlink" title="附加"></a>附加</h2><p>后面还有个D4N，这个功能多了一个write-back，从数据安全性角度来看，读取的不会破坏存储的当前的稳定性，带写入的，这个就需要多考虑下了，后面稳定了再看看,写缓存涉及的东西就多了，缓存什么时候下刷，什么时候清理，满了怎么处理客户端io，维持一个什么缓存数目，等等，需要调测的东西比较多</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ceph/" class="print-no-link">#ceph</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>rgw的d3n功能配置</div>
+      <div>https://zphj1987.com/2025/04/02/rgw的d3n功能配置/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zphj1987</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/19/kvm%E4%B8%8B%E7%9A%84ceph%E4%B8%BB%E6%9C%BA%E5%90%AF%E5%8A%A8io%E8%AF%B7%E6%B1%82%E7%BB%9F%E8%AE%A1/" title="kvm下的ceph主机启动io请求统计">
+                        <span class="hidden-mobile">kvm下的ceph主机启动io请求统计</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

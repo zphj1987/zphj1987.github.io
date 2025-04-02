@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2025/04/02/rgw%E7%9A%84d3n%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/" target="_self">
+          <img src="/images/blog/d3n.png" srcset="/img/loading.gif" lazyload alt="rgw的d3n功能配置">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/04/02/rgw%E7%9A%84d3n%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/" target="_self">
+          rgw的d3n功能配置
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2025/04/02/rgw%E7%9A%84d3n%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/" target="_self">
+        <div>
+          背景最近在看缓存相关，文件系统可以通过fscache加速，加速的效果就是读取的时候能够缓存，原理是在网关的地方加入一个高速缓存盘，这样在后续读取的时候，能够直接从缓存盘读取，这样能够减少与集群的交互，从而提供更大的性能，并且这个是缓存读取，所以数据安全性没有问题 rgw的d3n这个功能就是给rgw的网关加入了一个缓存盘，指定一个目录，然后能够缓存数据到目录 版本要求12[root@lab201 ~
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-04-02 17:44" pubdate>
+              2025-04-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2025/02/19/kvm%E4%B8%8B%E7%9A%84ceph%E4%B8%BB%E6%9C%BA%E5%90%AF%E5%8A%A8io%E8%AF%B7%E6%B1%82%E7%BB%9F%E8%AE%A1/" target="_self">
           <img src="/images/blog/kvm.png" srcset="/img/loading.gif" lazyload alt="kvm下的ceph主机启动io请求统计">
         </a>
@@ -790,73 +857,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E7%A3%81%E7%9B%98%E7%9B%B8%E5%85%B3/">#磁盘相关</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/12/16/esxi%E5%85%8B%E9%9A%86%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%96%B9%E6%B3%95/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="esxi克隆虚拟机方法">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/12/16/esxi%E5%85%8B%E9%9A%86%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%96%B9%E6%B3%95/" target="_self">
-          esxi克隆虚拟机方法
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/12/16/esxi%E5%85%8B%E9%9A%86%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%96%B9%E6%B3%95/" target="_self">
-        <div>
-          背景内网搭建了一套esxi做测试的机器，没有用vcenter，管理平台没有克隆的操作的地方 方法最开始使用的是平台的存储浏览的复制功能这个里面有个问题是，复制的很慢，并且精简配置的属性没有保留，占用了过多的空间这个地方可以后台通过命令行操作，也比较简单 后台操作123456789101112131415161718192021[root@nucesxi:/vmfs/volumes/6730898e
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-12-16 11:45" pubdate>
-              2024-12-16
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" class="category-chain-item">虚拟化</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/exsi/">#exsi</a>
             
           </div>
         

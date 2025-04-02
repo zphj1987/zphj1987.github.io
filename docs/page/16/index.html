@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/09/02/CTDB%E4%BD%BF%E7%94%A8radosobject%E4%BD%9C%E4%B8%BAlockfile/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="CTDB使用radosobject作为lockfile">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/09/02/CTDB%E4%BD%BF%E7%94%A8radosobject%E4%BD%9C%E4%B8%BAlockfile/" target="_self">
+          CTDB使用radosobject作为lockfile
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2019/09/02/CTDB%E4%BD%BF%E7%94%A8radosobject%E4%BD%9C%E4%B8%BAlockfile/" target="_self">
+        <div>
+          前言服务器的服务做HA有很多种方式，其中有一种就是是用CTDB，之前这个是独立的软件来做HA的，现在已经跟着SAMBA主线里面了，也就是跟着samba发行包一起发行 之前CTDB的模式是需要有一个共享文件系统，并且在这个共享文件系统里面所有的节点都去访问同一个文件，会有一个Master会获得这个文件的锁 在cephfs的使用场景中可以用cephfs的目录作为这个锁文件的路径，这个有个问题就是一旦有
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-09-02 08:01" pubdate>
+              2019-09-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2019/09/02/ceph%20luminous%20bluestore%E7%83%AD%E6%8F%92%E6%8B%94%E5%AE%9E%E7%8E%B0/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph luminous bluestore热插拔实现">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2018-12-19 12:05" pubdate>
               2018-12-19
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2018/08/19/cephfs%E6%A0%B9%E6%8D%AE%E5%AD%98%E5%82%A8%E6%B1%A0%E6%98%BE%E7%A4%BAdf%E5%AE%B9%E9%87%8F/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="cephfs根据存储池显示df容量">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2018/08/19/cephfs%E6%A0%B9%E6%8D%AE%E5%AD%98%E5%82%A8%E6%B1%A0%E6%98%BE%E7%A4%BAdf%E5%AE%B9%E9%87%8F/" target="_self">
-          cephfs根据存储池显示df容量
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2018/08/19/cephfs%E6%A0%B9%E6%8D%AE%E5%AD%98%E5%82%A8%E6%B1%A0%E6%98%BE%E7%A4%BAdf%E5%AE%B9%E9%87%8F/" target="_self">
-        <div>
-          前言如果用cephfs比较多，应该都知道，在cephfs的客户端进行mount以后，看到的容量显示的是集群的总的容量，也就是你的总的磁盘空间是多少这个地方显示的就是多少 这个一直都是这样显示的，我们之前在hammer版本的时候，阿茂和大黄一起在公司内部实现了这个功能，社区会慢慢的集成一些类似的面向面向商业用户的需求 社区已经开发了一个版本，接口都做的差不多了，那么稍微改改，就能实现想要的需求的 本
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-08-19 11:29" pubdate>
-              2018-08-19
             </time>
           </div>
         

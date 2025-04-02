@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2018/01/05/Kernel%20RBD%E7%9A%84QOS%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Kernel RBD的QOS配置方案">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2018/01/05/Kernel%20RBD%E7%9A%84QOS%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/" target="_self">
+          Kernel RBD的QOS配置方案
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2018/01/05/Kernel%20RBD%E7%9A%84QOS%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/" target="_self">
+        <div>
+          前言关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入 cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-01-05 15:23" pubdate>
+              2018-01-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2018/01/02/Ceph%E5%AF%B9%E8%B1%A1%E4%B8%BB%E6%9C%AC%E6%8D%9F%E5%9D%8F%E7%9A%84%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph对象主本损坏的修复方法">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-08-19 23:08" pubdate>
               2017-08-19
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/08/10/%E5%A6%82%E4%BD%95%E6%B5%8B%E9%87%8FCeph%20OSD%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="如何测量Ceph OSD内存占用">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/08/10/%E5%A6%82%E4%BD%95%E6%B5%8B%E9%87%8FCeph%20OSD%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8/" target="_self">
-          如何测量Ceph OSD内存占用
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/08/10/%E5%A6%82%E4%BD%95%E6%B5%8B%E9%87%8FCeph%20OSD%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8/" target="_self">
-        <div>
-          前言这个工具我第一次看到是在填坑群里面看到，是由研发-北京-蓝星同学分享的，看到比较有趣，就写一篇相关的记录下用法 火焰图里面也可以定位内存方面的问题，那个是通过一段时间的统计，以一个汇总的方式来查看内存在哪个地方可能出了问题  本篇是另外一个工具，这个工具的好处是有很清晰的图表操作，以及基于时间线的统计，下面来看下这个工具怎么使用的 本篇对具体的内存函数的调用占用不会做更具体的分析，这里是提供一
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-08-10 16:55" pubdate>
-              2017-08-10
             </time>
           </div>
         

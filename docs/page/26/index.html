@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/09/20/Ceph%E7%9A%84Mon%E6%95%B0%E6%8D%AE%E9%87%8D%E6%96%B0%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph的Mon数据重新构建工具">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/09/20/Ceph%E7%9A%84Mon%E6%95%B0%E6%8D%AE%E9%87%8D%E6%96%B0%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7/" target="_self">
+          Ceph的Mon数据重新构建工具
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/09/20/Ceph%E7%9A%84Mon%E6%95%B0%E6%8D%AE%E9%87%8D%E6%96%B0%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7/" target="_self">
+        <div>
+          关于mon的数据的问题，一般正常情况下都是配置的3个mon的，但是还是有人会担心 Mon 万一三个同时都挂掉了怎么办，那么集群所有的数据是不是都丢了，关于后台真实数据恢复，有去后台取对象，然后一个个拼接起来的方案，这个是确定可以成功的，但是这个方法对于生产的集群耗时巨大，并且需要导出数据，然后又配置新的集群，工程比较耗大，考虑到这个问题，Ceph 的中国（Redhat）的一位开发者 tchaiko
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-09-20 17:41" pubdate>
+              2016-09-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2016/09/19/%E6%9B%BF%E6%8D%A2OSD%E6%93%8D%E4%BD%9C%E7%9A%84%E4%BC%98%E5%8C%96%E4%B8%8E%E5%88%86%E6%9E%90/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="替换OSD操作的优化与分析">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2016-07-26 17:30" pubdate>
               2016-07-26
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/07/24/modprobe_cephnotfound%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Module ceph not found解决办法">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/07/24/modprobe_cephnotfound%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
-          Module ceph not found解决办法
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/07/24/modprobe_cephnotfound%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
-        <div>
-          问题有可能你在进行 Ceph 文件系统挂载的时候出现下面的提示：  modprobe: FATAL: Module ceph not found.mount.ceph: modprobe failed, exit status 1mount error: ceph filesystem not supported by the system  这个是因为你的内核当中没有cephfs的相关模块，这个
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-07-24 17:29" pubdate>
-              2016-07-24
             </time>
           </div>
         

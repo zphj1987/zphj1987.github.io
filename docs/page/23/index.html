@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/01/05/Ceph%E7%BC%96%E8%AF%91%E5%8A%A0%E9%80%9F%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph编译加速的小技巧">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/01/05/Ceph%E7%BC%96%E8%AF%91%E5%8A%A0%E9%80%9F%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/" target="_self">
+          Ceph编译加速的小技巧
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/01/05/Ceph%E7%BC%96%E8%AF%91%E5%8A%A0%E9%80%9F%E7%9A%84%E5%B0%8F%E6%8A%80%E5%B7%A7/" target="_self">
+        <div>
+          总结了几个小技巧，用于在ceph编译过程中，能够更快一点 修改clone的地址 git clone  https://github.com/ceph/ceph.git  可以修改成  git clone  git:&#x2F;&#x2F;github.com&#x2F;ceph&#x2F;ceph.git  某些时候可能可以加快一些  根据需要下载分支假如现在想看10.2.5版本的代码 常规做法先
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-01-05 18:37" pubdate>
+              2017-01-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2017/01/03/rbd%E7%9A%84image%E5%AF%B9%E8%B1%A1%E6%95%B0%E4%B8%8E%E8%83%BD%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rbd的image对象数与能写入文件数的关系">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2016-12-07 18:10" pubdate>
               2016-12-07
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/11/29/The%20Dos%20and%20Don&#39;ts%20for%20Ceph%20for%20OpenStack/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="The Dos and Don&#39;ts for Ceph for OpenStack">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/11/29/The%20Dos%20and%20Don&#39;ts%20for%20Ceph%20for%20OpenStack/" target="_self">
-          The Dos and Don&#39;ts for Ceph for OpenStack
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/11/29/The%20Dos%20and%20Don&#39;ts%20for%20Ceph%20for%20OpenStack/" target="_self">
-        <div>
-          Ceph和OpenStack是一个非常有用和非常受欢迎的组合。 不过，部署Ceph &#x2F; OpenStack经常会有一些容易避免的缺点 - 我们将帮助你解决它们   使用 show_image_direct_url and the Glance v2 API使用ceph的RBD（RADOS Block Device）,你可以创建克隆,你可以将克隆理解为可写的快照（快照通常是只读的）。克隆只
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-11-29 18:09" pubdate>
-              2016-11-29
             </time>
           </div>
         

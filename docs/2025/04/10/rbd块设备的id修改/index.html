@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zphj1987.com/images/blog/rbdsize.png">
 <meta property="article:published_time" content="2025-04-10T06:20:01.000Z">
-<meta property="article:modified_time" content="2025-04-10T06:28:33.776Z">
+<meta property="article:modified_time" content="2025-04-10T06:35:41.414Z">
 <meta property="article:author" content="zphj1987">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://zphj1987.com/images/blog/rbdsize.png">
@@ -408,7 +408,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab103 ~]<span class="hljs-comment"># rbd ls</span><br>testrbd<br>zp<br>[root@lab103 ~]<span class="hljs-comment"># rbd map testrbd</span><br>/dev/rbd0<br>[root@lab103 ~]<span class="hljs-comment"># mount /dev/rbd0 /mnt</span><br>[root@lab103 ~]<span class="hljs-comment"># rbd info testrbd</span><br>rbd image <span class="hljs-string">&#x27;testrbd&#x27;</span>:<br>    size 1 TiB <span class="hljs-keyword">in</span> 262144 objects<br>    order 22 (4 MiB objects)<br>    snapshot_count: 0<br>    <span class="hljs-built_in">id</span>: 5f57abc3f24c<br>    block_name_prefix: rbd_data.5f57abc3f24c<br>    format: 2<br>    features: layering, exclusive-lock, object-map, fast-diff, deep-flatten<br>    op_features:<br>    flags:<br>    create_timestamp: Thu Apr 10 11:07:17 2025<br>    access_timestamp: Thu Apr 10 11:07:17 2025<br>    modify_timestamp: Thu Apr 10 11:07:17 2025<br>[root@lab103 ~]<span class="hljs-comment"># df -h /mnt</span><br>Filesystem      Size  Used Avail Use% Mounted on<br>/dev/rbd0       1.0T  7.2G 1017G   1% /mnt<br></code></pre></td></tr></table></figure>
 
 <p>可以看到可以挂载，文件系统还在</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过上面的一系列的操作，我们可以看到这个id是可以更改的，这个地方对元数据的控制能够让我们在面对极端故障的时候能够更好的挽回数据，比如元数据对象丢失，就需要我们去重构下这个数据了，以上操作是操作的一个没有比较原始的rbd的，没有做快照，没有克隆的场景，如果有用到，需要对更多信息进行修改<br>大致上说就是该两部分数据</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过上面的一系列的操作，我们可以看到这个id是可以更改的，这个地方对元数据的控制能够让我们在面对极端故障的时候能够更好的挽回数据，比如元数据对象丢失，就需要我们去重构下这个数据了，以上操作是操作的一个比较原始使用场景的rbd，没有做快照，没有克隆，如果有用到，需要对更多信息进行修改<br>大致上说就是该两部分数据:</p>
 <ul>
 <li>通过echo修改omap的数据</li>
 <li>通过vim编辑二进制对象的数据</li>

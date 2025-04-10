@@ -6,7 +6,7 @@
   <link href="https://zphj1987.com/atom.xml" rel="self"/>
   
   <link href="https://zphj1987.com/"/>
-  <updated>2025-04-02T10:25:12.429Z</updated>
+  <updated>2025-04-10T06:28:33.776Z</updated>
   <id>https://zphj1987.com/</id>
   
   <author>
@@ -15,6 +15,52 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>rbd块设备的id修改</title>
+    <link href="https://zphj1987.com/2025/04/10/rbd%E5%9D%97%E8%AE%BE%E5%A4%87%E7%9A%84id%E4%BF%AE%E6%94%B9/"/>
+    <id>https://zphj1987.com/2025/04/10/rbd%E5%9D%97%E8%AE%BE%E5%A4%87%E7%9A%84id%E4%BF%AE%E6%94%B9/</id>
+    <published>2025-04-10T06:20:01.000Z</published>
+    <updated>2025-04-10T06:28:33.776Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>tidb数据库的恢复操作</title>
+    <link href="https://zphj1987.com/2025/04/09/tidb%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%81%A2%E5%A4%8D%E6%93%8D%E4%BD%9C/"/>
+    <id>https://zphj1987.com/2025/04/09/tidb%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%81%A2%E5%A4%8D%E6%93%8D%E4%BD%9C/</id>
+    <published>2025-04-09T08:29:15.000Z</published>
+    <updated>2025-04-09T08:47:28.184Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="数据库" scheme="https://zphj1987.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+    <category term="tidb" scheme="https://zphj1987.com/tags/tidb/"/>
+    
+  </entry>
   
   <entry>
     <title>rgw的d3n功能配置</title>
@@ -67,7 +113,7 @@
     <link href="https://zphj1987.com/2025/02/18/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%BC%95%E8%B5%B7%E7%9A%84nvme%E7%A3%81%E7%9B%98%E4%B8%8D%E8%AF%86%E5%88%AB/"/>
     <id>https://zphj1987.com/2025/02/18/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%BC%95%E8%B5%B7%E7%9A%84nvme%E7%A3%81%E7%9B%98%E4%B8%8D%E8%AF%86%E5%88%AB/</id>
     <published>2025-02-18T03:39:17.000Z</published>
-    <updated>2025-03-28T04:07:58.480Z</updated>
+    <updated>2025-04-07T02:15:29.952Z</updated>
     
     
       
@@ -468,57 +514,6 @@
     
     
     <category term="docker" scheme="https://zphj1987.com/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>cephfs统计稀疏文件大小的脚本</title>
-    <link href="https://zphj1987.com/2024/11/07/cephfs%E7%BB%9F%E8%AE%A1%E7%A8%80%E7%96%8F%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E8%84%9A%E6%9C%AC/"/>
-    <id>https://zphj1987.com/2024/11/07/cephfs%E7%BB%9F%E8%AE%A1%E7%A8%80%E7%96%8F%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E8%84%9A%E6%9C%AC/</id>
-    <published>2024-11-07T02:44:17.000Z</published>
-    <updated>2025-02-13T07:21:00.950Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
-    
-    
-    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>iis无法访问samba的文件的问题</title>
-    <link href="https://zphj1987.com/2024/11/07/iis%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AEsamba%E7%9A%84%E6%96%87%E4%BB%B6%E7%9A%84%E9%97%AE%E9%A2%98/"/>
-    <id>https://zphj1987.com/2024/11/07/iis%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AEsamba%E7%9A%84%E6%96%87%E4%BB%B6%E7%9A%84%E9%97%AE%E9%A2%98/</id>
-    <published>2024-11-07T02:29:42.000Z</published>
-    <updated>2025-02-13T07:21:00.959Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;配置iis的数据目录为samba的共享目录，目录可以访问，文件不能访问&lt;/p&gt;
-&lt;h2 id=&quot;处理方法&quot;&gt;&lt;a href=&quot;#处理方法&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
-    
-    
-    <category term="samba" scheme="https://zphj1987.com/tags/samba/"/>
     
   </entry>
   

@@ -226,6 +226,140 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/04/27/%E5%85%B3%E4%BA%8Ebackfill%E5%8F%82%E6%95%B0%E5%BB%BA%E8%AE%AE/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="关于backfill参数建议">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/04/27/%E5%85%B3%E4%BA%8Ebackfill%E5%8F%82%E6%95%B0%E5%BB%BA%E8%AE%AE/" target="_self">
+          关于backfill参数建议
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/04/27/%E5%85%B3%E4%BA%8Ebackfill%E5%8F%82%E6%95%B0%E5%BB%BA%E8%AE%AE/" target="_self">
+        <div>
+          前言在做一个比较满的集群的扩容的时候，遇到了一些问题，在这里做下总结，一般来说很难遇到，扩容要趁早，不然出的问题都是稀奇古怪的一些问题 建议环境一般来说在70%左右就需要考虑扩容了，这个时候的扩容数据迁移的少，遇到的问题自然会少很多，所谓的参数设置并不是一个单纯的参数的设置，所以一般来说在调优参数的时候，个人觉得只有适配硬件进行调优，所以本篇的参数同样是一个组合形式的 首先罗列出本篇涉及的所有参数
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-04-27 18:20" pubdate>
+              2017-04-27
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/04/26/rados%20put%20striper%E5%8A%9F%E8%83%BD%E7%9A%84%E8%B0%83%E8%AF%95/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rados put striper功能的调试">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/04/26/rados%20put%20striper%E5%8A%9F%E8%83%BD%E7%9A%84%E8%B0%83%E8%AF%95/" target="_self">
+          rados put striper功能的调试
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/04/26/rados%20put%20striper%E5%8A%9F%E8%83%BD%E7%9A%84%E8%B0%83%E8%AF%95/" target="_self">
+        <div>
+          前言之前对于striper这个地方的功能并没研究太多，只是知道这个里面可以以条带方式并行的去写对象，从而加大并发性来提高性能，而默认的条带数目为1，也就是以对象大小去写，并没有条带，所以不是很好感觉到差别，今天就尝试下用rados命令来看下这个条带是怎么回事  实践过程最开始我的集群是用rpm包进行安装的，这个可以做一些常规的测试，如果需要改动一些代码的话，就比较麻烦了，本文后面会讲述怎么改动一点
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-04-26 18:19" pubdate>
+              2017-04-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2017/04/20/Cephfs%E7%9A%84%E6%96%87%E4%BB%B6%E5%AD%98%E5%88%B0%E5%93%AA%E9%87%8C%E4%BA%86/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Cephfs的文件存到哪里了">
         </a>
@@ -721,140 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-03-22 18:04" pubdate>
               2017-03-22
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/03/16/%E5%9F%BA%E4%BA%8EDocker%20UI%20%E9%85%8D%E7%BD%AEceph%E9%9B%86%E7%BE%A4/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="基于Docker UI 配置ceph集群">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/03/16/%E5%9F%BA%E4%BA%8EDocker%20UI%20%E9%85%8D%E7%BD%AEceph%E9%9B%86%E7%BE%A4/" target="_self">
-          基于Docker UI 配置ceph集群
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/03/16/%E5%9F%BA%E4%BA%8EDocker%20UI%20%E9%85%8D%E7%BD%AEceph%E9%9B%86%E7%BE%A4/" target="_self">
-        <div>
-          前言前一篇介绍了docker在命令行下面进行的ceph部署，本篇用docker的UI进行ceph的部署，目前来说市面上还没有一款能够比较简单就能直接在OS上面去部署Ceph的管理平台，这是因为OS的环境差异化太大，并且包的版本，以及各种软件的适配都可能造成失败，而docker比较固化环境，因此即使一个通用的UI也能很方便的部署出一个Cpeh集群 本篇就是对Docker UI部署集群做一个实践，对c
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-03-16 17:54" pubdate>
-              2017-03-16
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/03/15/%E5%9F%BA%E4%BA%8Edocker%E9%83%A8%E7%BD%B2ceph%E4%BB%A5%E5%8F%8A%E4%BF%AE%E6%94%B9docker%20image/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="基于docker部署ceph以及修改docker image">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/03/15/%E5%9F%BA%E4%BA%8Edocker%E9%83%A8%E7%BD%B2ceph%E4%BB%A5%E5%8F%8A%E4%BF%AE%E6%94%B9docker%20image/" target="_self">
-          基于docker部署ceph以及修改docker image
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/03/15/%E5%9F%BA%E4%BA%8Edocker%E9%83%A8%E7%BD%B2ceph%E4%BB%A5%E5%8F%8A%E4%BF%AE%E6%94%B9docker%20image/" target="_self">
-        <div>
-          前言容器和ceph的结合已经在一些生产环境当中做了尝试，容器的好处就是对运行环境的一个封装，传统的方式是集成为ISO，这个需要一定的维护量，而容器的相关操作会简单很多，也就有了一些尝试，个人觉得如果玩的转容器可以考虑，当然得懂ceph，不然两套系统在一起，问题都不知道是哪个的，就比较麻烦了 本篇是基于之前我的填坑群里面的牛鹏举的一个问题，他的环境出现了创建osd的时候权限问题，我这边没遇到，现在实
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-03-15 17:51" pubdate>
-              2017-03-15
             </time>
           </div>
         

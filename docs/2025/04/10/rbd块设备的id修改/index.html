@@ -1,0 +1,750 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/logo.jpeg">
+  <link rel="icon" href="/img/logo.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zphj1987">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景看到有这个需求，具体碰到什么场景了不太清楚，之前做过rbd的重构的研究，既然能重构，那么修改应该是比重构还要简单一点的，我们具体看下怎么操作 数据结构分析rbd的元数据信息1234567891011121314151617181920212223242526272829303132[root@lab104 ~]# rbd create testrbd --size 1T[root@lab104">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rbd块设备的id修改">
+<meta property="og:url" content="https://zphj1987.com/2025/04/10/rbd%E5%9D%97%E8%AE%BE%E5%A4%87%E7%9A%84id%E4%BF%AE%E6%94%B9/index.html">
+<meta property="og:site_name" content="磨磨的技术笔记">
+<meta property="og:description" content="背景看到有这个需求，具体碰到什么场景了不太清楚，之前做过rbd的重构的研究，既然能重构，那么修改应该是比重构还要简单一点的，我们具体看下怎么操作 数据结构分析rbd的元数据信息1234567891011121314151617181920212223242526272829303132[root@lab104 ~]# rbd create testrbd --size 1T[root@lab104">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zphj1987.com/images/blog/rbdsize.png">
+<meta property="article:published_time" content="2025-04-10T06:20:01.000Z">
+<meta property="article:modified_time" content="2025-04-10T06:28:33.776Z">
+<meta property="article:author" content="zphj1987">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://zphj1987.com/images/blog/rbdsize.png">
+  
+  
+  
+  <title>rbd块设备的id修改 - 磨磨的技术笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"zphj1987.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="磨磨的技术笔记" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>磨磨的技术笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/blog/rbdsize.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.8)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="rbd块设备的id修改"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-04-10 14:20" pubdate>
+          2025年4月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">rbd块设备的id修改</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>看到有这个需求，具体碰到什么场景了不太清楚，之前做过rbd的重构的研究，既然能重构，那么修改应该是比重构还要简单一点的，我们具体看下怎么操作</p>
+<h2 id="数据结构分析"><a href="#数据结构分析" class="headerlink" title="数据结构分析"></a>数据结构分析</h2><h3 id="rbd的元数据信息"><a href="#rbd的元数据信息" class="headerlink" title="rbd的元数据信息"></a>rbd的元数据信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rbd create testrbd --size 1T</span><br>[root@lab104 ~]<span class="hljs-comment"># rbd info testrbd</span><br>rbd image <span class="hljs-string">&#x27;testrbd&#x27;</span>:<br>    size 1 TiB <span class="hljs-keyword">in</span> 262144 objects<br>    order 22 (4 MiB objects)<br>    snapshot_count: 0<br>    <span class="hljs-built_in">id</span>: 5f0c22d39dda<br>    block_name_prefix: rbd_data.5f0c22d39dda<br>    format: 2<br>    features: layering, exclusive-lock, object-map, fast-diff, deep-flatten<br>    op_features:<br>    flags:<br>    create_timestamp: Thu Apr 10 11:01:08 2025<br>    access_timestamp: Thu Apr 10 11:01:08 2025<br>    modify_timestamp: Thu Apr 10 11:01:08 2025<br>[root@lab104 ~]<span class="hljs-comment"># rbd rm testrbd</span><br>Removing image: 100% complete...done.<br>[root@lab104 ~]<span class="hljs-comment"># rbd create testrbd --size 1T</span><br>[root@lab104 ~]<span class="hljs-comment"># rbd info testrbd</span><br>rbd image <span class="hljs-string">&#x27;testrbd&#x27;</span>:<br>    size 1 TiB <span class="hljs-keyword">in</span> 262144 objects<br>    order 22 (4 MiB objects)<br>    snapshot_count: 0<br>    <span class="hljs-built_in">id</span>: 5f57bde3f24c<br>    block_name_prefix: rbd_data.5f57bde3f24c<br>    format: 2<br>    features: layering, exclusive-lock, object-map, fast-diff, deep-flatten<br>    op_features:<br>    flags:<br>    create_timestamp: Thu Apr 10 11:07:17 2025<br>    access_timestamp: Thu Apr 10 11:07:17 2025<br>    modify_timestamp: Thu Apr 10 11:07:17 2025<br></code></pre></td></tr></table></figure>
+
+
+<p>这个id信息就是那个block_name_prefix里面的，可以看到，同样的名称同样的大小，重建一次，这个信息就发生了改变了，说明这个信息是随机性的，并没有固定算法，这些信息是在几个地方有记录的我们把这几个地方找出来</p>
+<h3 id="rbd相关的对象"><a href="#rbd相关的对象" class="headerlink" title="rbd相关的对象"></a>rbd相关的对象</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">rbd_id.testrbd<br>rbd_directory<br>rbd_header.5f57bde3f24c<br>rbd_object_map.5f57bde3f24c<br></code></pre></td></tr></table></figure>
+
+<p>这几个是元数据的对象,其它就是数据的信息，我们假如要改id名称，需要先处理元数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rbd_data.5f57bde3f24c.xxxxxxxx<br></code></pre></td></tr></table></figure>
+
+<p>数据存储是这样的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rados -p rbd listomapvals rbd_directory</span><br>id_5f57bde3f24c<br>value (11 bytes) :<br>00000000  07 00 00 00 74 65 73 74  72 62 64                 |....testrbd|<br>0000000b<br><br>name_testrbd<br>value (16 bytes) :<br>00000000  0c 00 00 00 35 66 35 37  62 64 65 33 66 32 34 63  |....5f57bde3f24c|<br>00000010<br></code></pre></td></tr></table></figure>
+
+<p>rbd_directory通过omap老存储id和名称的对应关系</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rados -p rbd listomapvals rbd_header.5f57bde3f24c</span><br>access_timestamp<br>value (8 bytes) :<br>00000000  e5 35 f7 67 95 6f 07 08                           |.5.g.o..|<br>00000008<br><br>create_timestamp<br>value (8 bytes) :<br>00000000  e5 35 f7 67 95 6f 07 08                           |.5.g.o..|<br>00000008<br><br>features<br>value (8 bytes) :<br>00000000  3d 00 00 00 00 00 00 00                           |=.......|<br>00000008<br><br>modify_timestamp<br>value (8 bytes) :<br>00000000  e5 35 f7 67 95 6f 07 08                           |.5.g.o..|<br>00000008<br><br>object_prefix<br>value (25 bytes) :<br>00000000  15 00 00 00 72 62 64 5f  64 61 74 61 2e 35 66 35  |....rbd_data.5f5|<br>00000010  37 62 64 65 33 66 32 34  63                       |7bde3f24c|<br>00000019<br><br>order<br>value (1 bytes) :<br>00000000  16                                                |.|<br>00000001<br><br>size<br>value (8 bytes) :<br>00000000  00 00 00 00 00 01 00 00                           |........|<br>00000008<br><br>snap_seq<br>value (8 bytes) :<br>00000000  00 00 00 00 00 00 00 00                           |........|<br>00000008<br></code></pre></td></tr></table></figure>
+
+<p>rbd_header.5f57bde3f24c 这个存储的是这个对象的rbd info看到的一些信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rados -p  rbd get  rbd_id.testrbd rbd_id.testrbd</span><br>[root@lab104 ~]<span class="hljs-comment"># cat rbd_id.testrbd</span><br>5f57bde3f24c[root@lab104 ~]<br></code></pre></td></tr></table></figure>
+<p>rbd_id.testrbd是用实体数据存储的rbd的id信息</p>
+<p>rbd_object_map.5f57bde3f24c这个可以忽略先，这个是支持重建的</p>
+<h2 id="操作实践"><a href="#操作实践" class="headerlink" title="操作实践"></a>操作实践</h2><h3 id="修改-rbd-directory-的omap信息"><a href="#修改-rbd-directory-的omap信息" class="headerlink" title="修改 rbd_directory 的omap信息"></a>修改 rbd_directory 的omap信息</h3><p>我们先修改 rbd_directory 的信息</p>
+<p>存在两组关系</p>
+<ul>
+<li>id_5f57bde3f24c   对应  |….testrbd|</li>
+<li>name_testrbd     对应|….5f57bde3f24c|</li>
+</ul>
+<p>这里我们任意指定一个名称，这个应该是16进制的，所以注意字母不要超过f</p>
+<p>我们改掉中间的一部分</p>
+<blockquote>
+<p>id_5f57bde3f24c  改成id_5f57abc3f24c</p>
+</blockquote>
+<p>那么新的对应关系是</p>
+<ul>
+<li>id_5f57abc3f24c 对应  |….testrbd|</li>
+<li>name_testrbd  对应 |….5f57bde3f24c|</li>
+</ul>
+<p>那么就是一个改val 一个改key了 ，rados没有rename key val的接口。那么只能set操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> -en \\x07\\x00\\x00\\x00\\x74\\x65\\x73\\x74\\x72\\x62\\x64 |rados -p rbd setomapval rbd_directory id_5f57abc3f24c<br></code></pre></td></tr></table></figure>
+
+<p>这个val直接取上面查询到的val即可了，这个是没变的</p>
+<p>我们检查效果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rados -p rbd listomapvals rbd_directory</span><br>id_5f57abc3f24c<br>value (11 bytes) :<br>00000000  07 00 00 00 74 65 73 74  72 62 64                 |....testrbd|<br>0000000b<br><br>id_5f57bde3f24c<br>value (11 bytes) :<br>00000000  07 00 00 00 74 65 73 74  72 62 64                 |....testrbd|<br>0000000b<br></code></pre></td></tr></table></figure>
+
+<p>可以看到完整的复刻了，那么我们可以删除老的key了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rados -p rbd rmomapkey rbd_directory id_5f57bde3f24<br></code></pre></td></tr></table></figure>
+
+<p>再修改name里面的val的信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rados -p rbd listomapvals rbd_directory</span><br><br><br>name_testrbd<br>value (16 bytes) :<br>00000000  0c 00 00 00 35 66 35 37  62 64 65 33 66 32 34 63  |....5f57bde3f24c|<br>00000010<br></code></pre></td></tr></table></figure>
+
+<p>这个里面左边的就是表示右边的内容的，这个是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">35 66 35 37：分别是 ASCII 字符 `<span class="hljs-string">&#x27;5&#x27;</span> <span class="hljs-string">&#x27;f&#x27;</span> <span class="hljs-string">&#x27;5&#x27;</span> <span class="hljs-string">&#x27;7&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/images/blog/Pasted%20image%2020250410114044.png" srcset="/img/loading.gif" lazyload></p>
+<p>那么我们反向计算<br>5f57bde3f24c这个我们改成的是5f57abc3f24c<br>那么对应左边的值就是</p>
+<p><img src="/images/blog/Pasted%20image%2020250410114331.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">0c 00 00 00 35 66 35 37 61 62 63 33 66 32 34 63<br></code></pre></td></tr></table></figure>
+
+<p>先删除之前的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rados -p rbd rmomapkey rbd_directory name_testrbd<br></code></pre></td></tr></table></figure>
+
+<p>然后设置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> -en \\x0c\\x00\\x00\\x00\\x35\\x66\\x35\\x37\\x61\\x62\\x63\\x33\\x66\\x32\\x34\\x63|rados -p rbd setomapval rbd_directory name_testrbd<br></code></pre></td></tr></table></figure>
+
+<p>检查</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rados -p rbd listomapvals rbd_directory</span><br>id_5f57abc3f24c<br>value (11 bytes) :<br>00000000  07 00 00 00 74 65 73 74  72 62 64                 |....testrbd|<br>0000000b<br><br>name_testrbd<br>value (16 bytes) :<br>00000000  0c 00 00 00 35 66 35 37  61 62 63 33 66 32 34 63  |....5f57abc3f24c|<br>00000010<br></code></pre></td></tr></table></figure>
+
+<p>可以看到已经修改好了 </p>
+<h3 id="修改rbd-id-testrbd二进制"><a href="#修改rbd-id-testrbd二进制" class="headerlink" title="修改rbd_id.testrbd二进制"></a>修改rbd_id.testrbd二进制</h3><p>再改动rbd_id.testrbd信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># hexdump -C rbd_id.testrbd</span><br>00000000  0c 00 00 00 35 66 35 37  62 64 65 33 66 32 34 63  |....5f57bde3f24c|<br>00000010<br></code></pre></td></tr></table></figure>
+
+<p>可以看到这是一个二进制的文件，那么我们手动编辑了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim -b rbd_id.testrbd<br>文本转16进制编辑<br>:%!xxd<br></code></pre></td></tr></table></figure>
+
+<p>内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">0000000: 0c00 0000 3566 3537 6264 6533 6632 3463  ....5f57bde3f24c<br></code></pre></td></tr></table></figure>
+
+<p>我们改成</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">0000000: 0c00 0000 3566 3537 6162 6333 6632 3463  ....5f57abc3f24c<br></code></pre></td></tr></table></figure>
+<p>上面已经计算过了，直接套用即可</p>
+<p>16进制编辑还原成文本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">:%!xxd -r<br></code></pre></td></tr></table></figure>
+
+<p>检查</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># hexdump -C rbd_id.testrbd</span><br>00000000  0c 00 00 00 35 66 35 37  61 62 63 33 66 32 34 63  |....5f57abc3f24c|<br>00000010<br></code></pre></td></tr></table></figure>
+
+<p>没有问题，可以把对象覆盖回去了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rados -p rbd put rbd_id.testrbd rbd_id.testrbd<br></code></pre></td></tr></table></figure>
+
+
+<h3 id="修改rbd-header的omap信息"><a href="#修改rbd-header的omap信息" class="headerlink" title="修改rbd_header的omap信息"></a>修改rbd_header的omap信息</h3><p>还剩最后一个了rbd_header.5f57bde3f24c</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rados -p rbd <span class="hljs-built_in">cp</span> rbd_header.5f57bde3f24c rbd_header.5f57abc3f24c<br></code></pre></td></tr></table></figure>
+
+<p>复制下对象后，检查下相关的信息是否复制过来了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rados -p rbd listomapvals rbd_header.5f57abc3f24c</span><br>access_timestamp<br>value (8 bytes) :<br>00000000  e5 35 f7 67 95 6f 07 08                           |.5.g.o..|<br>00000008<br><br>create_timestamp<br>value (8 bytes) :<br>00000000  e5 35 f7 67 95 6f 07 08                           |.5.g.o..|<br>00000008<br><br>features<br>value (8 bytes) :<br>00000000  3d 00 00 00 00 00 00 00                           |=.......|<br>00000008<br><br>modify_timestamp<br>value (8 bytes) :<br>00000000  e5 35 f7 67 95 6f 07 08                           |.5.g.o..|<br>00000008<br><br>object_prefix<br>value (25 bytes) :<br>00000000  15 00 00 00 72 62 64 5f  64 61 74 61 2e 35 66 35  |....rbd_data.5f5|<br>00000010  37 62 64 65 33 66 32 34  63                       |7bde3f24c|<br>00000019<br><br>order<br>value (1 bytes) :<br>00000000  16                                                |.|<br>00000001<br><br>size<br>value (8 bytes) :<br>00000000  00 00 00 00 00 01 00 00                           |........|<br>00000008<br><br>snap_seq<br>value (8 bytes) :<br>00000000  00 00 00 00 00 00 00 00                           |........|<br>00000008<br></code></pre></td></tr></table></figure>
+
+<p>这个里面只有一条信息需要修改object_prefix</p>
+<p><img src="/images/blog/Pasted%20image%2020250410115828.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">object_prefix<br>value (25 bytes) :<br>00000000  15 00 00 00 72 62 64 5f  64 61 74 61 2e 35 66 35  |....rbd_data.5f5|<br>00000010  37 62 64 65 33 66 32 34  63                       |7bde3f24c|<br>00000019<br></code></pre></td></tr></table></figure>
+
+<p>可以看到这个地方的对应关系是这样转换的，我们还是反向转换一下即可</p>
+<p><img src="/images/blog/Pasted%20image%2020250410115930.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rbd_data.5f57abc3f24c 对应为72 62 64 5f 64 61 74 61 2e 35 66 35 37 61 62 63 33 66 32 34 63<br></code></pre></td></tr></table></figure>
+
+
+<p>我们设置下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">rados -p rbd rmomapkey rbd_header.5f57abc3f24c  object_prefix<br><span class="hljs-built_in">echo</span> -en \\x15\\x00\\x00\\x00\\x72\\x62\\x64\\x5f\\x64\\x61\\x74\\x61\\x2e\\x35\\x66\\x35\\x37\\x61\\x62\\x63\\x33\\x66\\x32\\x34\\x63|rados -p rbd setomapval rbd_header.5f57abc3f24c object_prefix<br></code></pre></td></tr></table></figure>
+<p>注意前面的<code>\\x15\\x00\\x00\\x00</code>前缀不要漏了</p>
+<p>查看信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rados -p rbd listomapvals rbd_header.5f57abc3f24c</span><br>access_timestamp<br>value (8 bytes) :<br>00000000  e5 35 f7 67 95 6f 07 08                           |.5.g.o..|<br>00000008<br><br>create_timestamp<br>value (8 bytes) :<br>00000000  e5 35 f7 67 95 6f 07 08                           |.5.g.o..|<br>00000008<br><br>features<br>value (8 bytes) :<br>00000000  3d 00 00 00 00 00 00 00                           |=.......|<br>00000008<br><br>modify_timestamp<br>value (8 bytes) :<br>00000000  e5 35 f7 67 95 6f 07 08                           |.5.g.o..|<br>00000008<br><br>object_prefix<br>value (25 bytes) :<br>00000000  15 00 00 00 72 62 64 5f  64 61 74 61 2e 35 66 35  |....rbd_data.5f5|<br>00000010  37 61 62 63 33 66 32 34  63                       |7abc3f24c|<br>00000019<br></code></pre></td></tr></table></figure>
+
+<p>可以看到已经改好了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rbd info testrbd</span><br>rbd image <span class="hljs-string">&#x27;testrbd&#x27;</span>:<br>    size 1 TiB <span class="hljs-keyword">in</span> 262144 objects<br>    order 22 (4 MiB objects)<br>    snapshot_count: 0<br>    <span class="hljs-built_in">id</span>: 5f57abc3f24c<br>    block_name_prefix: rbd_data.5f57abc3f24c<br>    format: 2<br>    features: layering, exclusive-lock, object-map, fast-diff, deep-flatten<br>    op_features:<br>    flags:<br>    create_timestamp: Thu Apr 10 11:07:17 2025<br>    access_timestamp: Thu Apr 10 11:07:17 2025<br>    modify_timestamp: Thu Apr 10 11:07:17 2025<br></code></pre></td></tr></table></figure>
+
+<p>可以看到已经可以查询到信息了，并且prefix已经改好了，我们还需要处理数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rados -p rbd <span class="hljs-built_in">ls</span>|grep rbd_data.5f57bde3f24c &gt; obj.list<br></code></pre></td></tr></table></figure>
+
+<p>我们需要把这些对象全部复制一份</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">for</span> obj <span class="hljs-keyword">in</span> `<span class="hljs-built_in">cat</span> obj.list`;<span class="hljs-keyword">do</span> target=`<span class="hljs-built_in">echo</span> <span class="hljs-variable">$obj</span>|sed <span class="hljs-string">&#x27;s/\(rbd_data\.\)[^.]*\(\..*\)/\15f57abc3f24c\2/&#x27;</span>`;<span class="hljs-built_in">echo</span> <span class="hljs-variable">$obj</span>;<span class="hljs-built_in">echo</span> <span class="hljs-variable">$target</span>;rados  -p rbd <span class="hljs-built_in">cp</span> <span class="hljs-variable">$obj</span> <span class="hljs-variable">$target</span>   ;<span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure>
+
+<p>这个就是把数据改掉prefix后全部复制了一遍</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># for obj in `cat obj.list`;do rados  -p rbd rm  $obj ;done</span><br></code></pre></td></tr></table></figure>
+<p>确认没问题就可以删掉了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rados -p rbd ls|grep rbd_objec</span><br>rbd_object_map.5f57bde3f24c<br></code></pre></td></tr></table></figure>
+<h3 id="重建object-map"><a href="#重建object-map" class="headerlink" title="重建object-map"></a>重建object-map</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab104 ~]<span class="hljs-comment"># rbd  object-map rebuild testrbd</span><br>2025-04-10T12:11:16.762+0800 7f601b7fe700 -1 librbd::object_map::RefreshRequest: failed to load object map: rbd_object_map.5f57abc3f24c<br>2025-04-10T12:11:16.773+0800 7f601b7fe700 -1 librbd::object_map::InvalidateRequest: 0x7f600c00c560 invalidating object map in-memory<br>2025-04-10T12:11:16.773+0800 7f601b7fe700 -1 librbd::object_map::InvalidateRequest: 0x7f600c00c560 invalidating object map on-disk<br>2025-04-10T12:11:16.774+0800 7f601b7fe700 -1 librbd::object_map::InvalidateRequest: 0x7f600c00c560 should_complete: r=0<br>Object Map Rebuild: 100% complete...done.<br>[root@lab104 ~]<span class="hljs-comment"># rados -p rbd ls|grep rbd_objec</span><br>rbd_object_map.5f57abc3f24c<br>rbd_object_map.5f57bde3f24c<br><br>[root@lab104 ~]<span class="hljs-comment"># rados -p rbd rm rbd_object_map.5f57bde3f24c</span><br></code></pre></td></tr></table></figure>
+
+<p>老的可以清理了</p>
+<h3 id="数据访问确认"><a href="#数据访问确认" class="headerlink" title="数据访问确认"></a>数据访问确认</h3><p>到这里工作就都完成了，我们需要去确认下我们的数据是不是完整的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab103 ~]<span class="hljs-comment"># rbd ls</span><br>testrbd<br>zp<br>[root@lab103 ~]<span class="hljs-comment"># rbd map testrbd</span><br>/dev/rbd0<br>[root@lab103 ~]<span class="hljs-comment"># mount /dev/rbd0 /mnt</span><br>[root@lab103 ~]<span class="hljs-comment"># rbd info testrbd</span><br>rbd image <span class="hljs-string">&#x27;testrbd&#x27;</span>:<br>    size 1 TiB <span class="hljs-keyword">in</span> 262144 objects<br>    order 22 (4 MiB objects)<br>    snapshot_count: 0<br>    <span class="hljs-built_in">id</span>: 5f57abc3f24c<br>    block_name_prefix: rbd_data.5f57abc3f24c<br>    format: 2<br>    features: layering, exclusive-lock, object-map, fast-diff, deep-flatten<br>    op_features:<br>    flags:<br>    create_timestamp: Thu Apr 10 11:07:17 2025<br>    access_timestamp: Thu Apr 10 11:07:17 2025<br>    modify_timestamp: Thu Apr 10 11:07:17 2025<br>[root@lab103 ~]<span class="hljs-comment"># df -h /mnt</span><br>Filesystem      Size  Used Avail Use% Mounted on<br>/dev/rbd0       1.0T  7.2G 1017G   1% /mnt<br></code></pre></td></tr></table></figure>
+
+<p>可以看到可以挂载，文件系统还在</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过上面的一系列的操作，我们可以看到这个id是可以更改的，这个地方对元数据的控制能够让我们在面对极端故障的时候能够更好的挽回数据，比如元数据对象丢失，就需要我们去重构下这个数据了，以上操作是操作的一个没有比较原始的rbd的，没有做快照，没有克隆的场景，如果有用到，需要对更多信息进行修改<br>大致上说就是该两部分数据</p>
+<ul>
+<li>通过echo修改omap的数据</li>
+<li>通过vim编辑二进制对象的数据</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>rbd块设备的id修改</div>
+      <div>https://zphj1987.com/2025/04/10/rbd块设备的id修改/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zphj1987</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/04/09/tidb%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%81%A2%E5%A4%8D%E6%93%8D%E4%BD%9C/" title="tidb数据库的恢复操作">
+                        <span class="hidden-mobile">tidb数据库的恢复操作</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

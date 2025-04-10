@@ -226,6 +226,140 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" target="_self">
+          <img src="/images/blog/networkudp.png" srcset="/img/loading.gif" lazyload alt="udp服务器和客户端">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" target="_self">
+          udp服务器和客户端
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" target="_self">
+        <div>
+          需求背景线上的项目有使用lvs作为端口转发，使用的是udp的端口转发服务，想在测试环境下面模拟一个高并发的udp的服务器和客户端的环境，现成的没有相关的软件，那么就用两个脚本进行实现 要实现这个服务，需要准备一个服务端的脚本，和客户端的脚本，服务端使用用本地文件对外提供服务，客户端请求数据流并保存到本地 需求分析考虑高并发，所以需要对软件进行一下限速，然后尽量高的并发的，一个端口响应一个请求，并发
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-08-14 11:09" pubdate>
+              2024-08-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" class="category-chain-item">系统服务</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%B5%8B%E8%AF%95%E7%9B%B8%E5%85%B3/">#测试相关</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" target="_self">
+          <img src="/images/blog/locklogo.png" srcset="/img/loading.gif" lazyload alt="限制rbd只能在一台机器上面挂载">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" target="_self">
+          限制rbd只能在一台机器上面挂载
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/07/01/%E9%99%90%E5%88%B6rbd%E5%8F%AA%E8%83%BD%E5%9C%A8%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%8A%E9%9D%A2%E6%8C%82%E8%BD%BD/" target="_self">
+        <div>
+          需求rbd是ceph的块接口，我们可以把设备map到服务器上面，然后当磁盘进行访问，有的软件能够基于块设备再做上层的高可用的写入的，所以，从软件来说，同一个设备在两台机器同时挂载，没有什么问题，但是如果应用层不加锁，随意的写入就可能破坏了数据，造成磁盘无法访问，那么这里就是利用ceph本身的功能来实现排它的挂载 也就是同一时刻，同一个rbd，只能被一个设备挂载 配置查看rbd的属性 1234567
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-01 18:12" pubdate>
+              2024-07-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/06/27/%E5%88%A9%E7%94%A8Clonezilla%E8%BF%9B%E8%A1%8Cwindows%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%A4%8D%E5%88%B6/" target="_self">
           <img src="/images/blog/clonezilla-live.png" srcset="/img/loading.gif" lazyload alt="利用Clonezilla进行windows的系统复制">
         </a>
@@ -753,133 +887,6 @@
               <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/">#网络配置</a>
             
           </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/03/21/%E4%B8%80%E4%B8%AA%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E6%80%A7%E8%83%BD%E5%A4%A7%E5%B9%85%E4%B8%8B%E9%99%8D/" target="_self">
-          <img src="/images/blog/compile.png" srcset="/img/loading.gif" lazyload alt="一个编译参数引起的ceph性能大幅下降">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/03/21/%E4%B8%80%E4%B8%AA%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E6%80%A7%E8%83%BD%E5%A4%A7%E5%B9%85%E4%B8%8B%E9%99%8D/" target="_self">
-          一个编译参数引起的ceph性能大幅下降
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/03/21/%E4%B8%80%E4%B8%AA%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E6%80%A7%E8%83%BD%E5%A4%A7%E5%B9%85%E4%B8%8B%E9%99%8D/" target="_self">
-        <div>
-          背景最近翻ceph的官方的博客，发现了一篇博客提到了一个ubuntu下面的编译参数引起的rocksdb的性能下降，这个地方应该是ceph官方代码的参数没生效 受影响的系统  P版本之前的ceph版本 操作系统是ubuntu的 某些ceph版本  这个要素比较多，所以运行的环境并不一定受到影响，那么我们看下，收到影响的版本是哪些,非ubuntu的系统可以忽略这个问题 我对15的版本比较熟，就以这个版
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-21 17:22" pubdate>
-              2024-03-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ceph/">#ceph</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/03/20/storecli%E7%AE%A1%E7%90%86raid/" target="_self">
-          <img src="/images/blog/raiddisk.png" srcset="/img/loading.gif" lazyload alt="storecli管理raid">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/03/20/storecli%E7%AE%A1%E7%90%86raid/" target="_self">
-          storecli管理raid
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/03/20/storecli%E7%AE%A1%E7%90%86raid/" target="_self">
-        <div>
-          前言本篇记录一些常用的配置raid的命令 安装下载storcli管理软件 1wget https://docs.broadcom.com/docs-and-downloads/raid-controllers/raid-controllers-common-files/1.21.16_StorCLI.zip 常用操作查询控制器信息123456root@ubuntu:~# storcli show-
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-20 14:18" pubdate>
-              2024-03-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
         
       </div>
     </article>

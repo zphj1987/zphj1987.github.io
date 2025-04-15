@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/04/27/Ceph%E6%A0%B9%E6%8D%AECrush%E4%BD%8D%E7%BD%AE%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph根据Crush位置读取数据">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/04/27/Ceph%E6%A0%B9%E6%8D%AECrush%E4%BD%8D%E7%BD%AE%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE/" target="_self">
+          Ceph根据Crush位置读取数据
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/04/27/Ceph%E6%A0%B9%E6%8D%AECrush%E4%BD%8D%E7%BD%AE%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE/" target="_self">
+        <div>
+          前言在ceph研发群里面看到一个cepher在问关于怎么读取ceph的副本的问题，这个功能应该在2012年的时候,我们公司的研发就修改了代码去实现这个功能，只是当时的硬件条件所限，以及本身的稳定性问题，后来没有在生产当中使用 我们都知道ceph在写数据的时候，是先写主本，然后去写副本，而读取的时候，实际上只有主本能够提供服务，这对于磁盘的整体带宽来说，并没有充分的发挥其性能，所以能够读取副本当然是
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-04-27 18:21" pubdate>
+              2017-04-27
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2017/04/27/%E5%85%B3%E4%BA%8Ebackfill%E5%8F%82%E6%95%B0%E5%BB%BA%E8%AE%AE/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="关于backfill参数建议">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-03-23 18:07" pubdate>
               2017-03-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/03/22/Ceph%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E7%9A%84&#39;%E4%B8%8D%E6%8B%86%E5%88%86&#39;/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph实现数据的&#39;不拆分&#39;">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/03/22/Ceph%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E7%9A%84&#39;%E4%B8%8D%E6%8B%86%E5%88%86&#39;/" target="_self">
-          Ceph实现数据的&#39;不拆分&#39;
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/03/22/Ceph%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E7%9A%84&#39;%E4%B8%8D%E6%8B%86%E5%88%86&#39;/" target="_self">
-        <div>
-          前言之前看过一个朋友一篇文章，讲述的是Vsan为什么使用的是两副本，而ceph则大多数情况下需要三副本，当时个人观点是这个并不是关键点，但是在仔细考虑了问题的出发点以后，这个也可以说是其中的一个点 一个集群数据丢失可以从多方面去看  发生丢失数据的事件，这个来说，出现这个事件的概率是一致的，同等硬件情况下没有谁的系统能够说在两副本情况下把这个出现坏盘概率做的比其他系统更低 发生坏盘事件以后，数据丢
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-03-22 18:04" pubdate>
-              2017-03-22
             </time>
           </div>
         

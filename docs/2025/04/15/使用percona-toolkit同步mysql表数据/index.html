@@ -19,23 +19,24 @@
   <meta name="author" content="zphj1987">
   <meta name="keywords" content="">
   
-    <meta name="description" content="端口转发配置">
+    <meta name="description" content="背景做了主备mysql的配置以后，可能因为切换过程造成不一致的情况，这个时候可以处理的方式是全量导入再导出，这个有个问题就是操作的数据太多了我们只需要数据补全同步即可 mysql的同步是基于binlog的，如果没有记录的部分的数据，这个是无法同步的，就需要手动处理 或者就是两个数据库，定期手动同步到另外一个数据库，这个都可以使用这个工具 工具下载下载网址  https:&#x2F;&#x2F;www.percona.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="端口转发配置">
-<meta property="og:url" content="https://zphj1987.com/2023/01/31/%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:title" content="使用percona-toolkit同步mysql表数据">
+<meta property="og:url" content="https://zphj1987.com/2025/04/15/%E4%BD%BF%E7%94%A8percona-toolkit%E5%90%8C%E6%AD%A5mysql%E8%A1%A8%E6%95%B0%E6%8D%AE/index.html">
 <meta property="og:site_name" content="磨磨的技术笔记">
-<meta property="og:description" content="端口转发配置">
+<meta property="og:description" content="背景做了主备mysql的配置以后，可能因为切换过程造成不一致的情况，这个时候可以处理的方式是全量导入再导出，这个有个问题就是操作的数据太多了我们只需要数据补全同步即可 mysql的同步是基于binlog的，如果没有记录的部分的数据，这个是无法同步的，就需要手动处理 或者就是两个数据库，定期手动同步到另外一个数据库，这个都可以使用这个工具 工具下载下载网址  https:&#x2F;&#x2F;www.percona.">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zphj1987.com/media/16633019023390/16633021891118.jpg">
-<meta property="article:published_time" content="2023-01-31T09:55:46.000Z">
-<meta property="article:modified_time" content="2025-02-13T07:21:00.992Z">
+<meta property="og:image" content="https://zphj1987.com/images/blog/percona.png">
+<meta property="article:published_time" content="2025-04-15T08:33:18.000Z">
+<meta property="article:modified_time" content="2025-04-15T09:36:49.123Z">
 <meta property="article:author" content="zphj1987">
+<meta property="article:tag" content="数据库">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://zphj1987.com/media/16633019023390/16633021891118.jpg">
+<meta name="twitter:image" content="https://zphj1987.com/images/blog/percona.png">
   
   
   
-  <title>端口转发配置 - 磨磨的技术笔记</title>
+  <title>使用percona-toolkit同步mysql表数据 - 磨磨的技术笔记</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,13 +197,13 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+     style="background: url('/images/blog/percona.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.8)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="端口转发配置"></span>
+            <span id="subtitle" data-typed-text="使用percona-toolkit同步mysql表数据"></span>
           
         </div>
 
@@ -213,8 +214,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-01-31 17:55" pubdate>
-          2023年1月31日 下午
+        <time datetime="2025-04-15 16:33" pubdate>
+          2025年4月15日 下午
         </time>
       </span>
     
@@ -225,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          456 字
+          517 字
         
       </span>
     
@@ -236,7 +237,7 @@
         
         
         
-          4 分钟
+          5 分钟
         
       </span>
     
@@ -273,41 +274,30 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">端口转发配置</h1>
+            <h1 id="seo-header">使用percona-toolkit同步mysql表数据</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="端口转发配置"><a href="#端口转发配置" class="headerlink" title="端口转发配置"></a>端口转发配置</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>有的时候机器有一台网关机器，需要做端口转发的工作，那么可以使用iptables或者使用firwalld进行配置，firewalld底层也是调用的跟iptables一样的内核模块的，只是命令的不同</p>
-<span id="more"></span>
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>做了主备mysql的配置以后，可能因为切换过程造成不一致的情况，这个时候可以处理的方式是全量导入再导出，这个有个问题就是操作的数据太多了<br>我们只需要数据补全同步即可</p>
+<p>mysql的同步是基于binlog的，如果没有记录的部分的数据，这个是无法同步的，就需要手动处理</p>
+<p>或者就是两个数据库，定期手动同步到另外一个数据库，这个都可以使用这个工具</p>
+<h2 id="工具下载"><a href="#工具下载" class="headerlink" title="工具下载"></a>工具下载</h2><p>下载网址</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.percona.com/percona-toolkit">https://www.percona.com/percona-toolkit</a></p>
+</blockquote>
+<p>我的环境是centos7的，那么使用的就是3.6.0版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://downloads.percona.com/downloads/percona-toolkit/3.6.0/binary/redhat/7/x86_64/percona-toolkit-3.6.0-1.el7.x86_64.rpm<br></code></pre></td></tr></table></figure>
+<p>下载完成后安装即可</p>
+<h2 id="同步数据"><a href="#同步数据" class="headerlink" title="同步数据"></a>同步数据</h2><p>同步这个需要数据库和表都存在，这个如果缺少的，需要处理下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab102 ~]<span class="hljs-comment"># pt-table-sync --print  --ignore-databases=mysql   h=192.168.0.101,u=root,p=&#x27;password&#x27;   h=192.168.0.103,u=root,p=&#x27;password&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>这个是打印准备处理的sql语句，用于检查，避免操作错误<br>上面的前面的是主，让后面的跟前面的同步，也就是让192.168.0.103的数据跟192.168.0.101的数据一致<br>确认没有问题后再执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab102 ~]<span class="hljs-comment"># pt-table-sync --execute  --ignore-databases=mysql   h=192.168.0.101,u=root,p=&#x27;password&#x27;   h=192.168.0.103,u=root,p=&#x27;password&#x27;</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="环境说明"><a href="#环境说明" class="headerlink" title="环境说明"></a>环境说明</h3><p><img src="/media/16633019023390/16633021891118.jpg" srcset="/img/loading.gif" lazyload></p>
-<ul>
-<li><p>机器A</p>
-<ul>
-<li>外网IP：192.168.0.85</li>
-<li>内网IP：192.168.1.103</li>
-</ul>
-</li>
-<li><p>机器B</p>
-<ul>
-<li>内网IP：192.168.1.102</li>
-</ul>
-</li>
-<li><p>机器C</p>
-<ul>
-<li>内网IP：192.168.1.101</li>
-</ul>
-</li>
-</ul>
-<p>配置访问192.168.0.85端口44561映射到192.168.1.102的4456端口<br>配置访问192.168.0.85端口44562映射到192.168.1.101的4456端口</p>
-<h3 id="通用配置"><a href="#通用配置" class="headerlink" title="通用配置"></a>通用配置</h3><p>开启内核转发功能</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab103 ~]<span class="hljs-comment"># cat /etc/sysctl.conf |grep forwa</span><br>net.ipv4.ip_forward = 1<br>[root@lab103 ~]<span class="hljs-comment"># sysctl -p</span><br></code></pre></td></tr></table></figure>
-
-<h3 id="使用iptable配置"><a href="#使用iptable配置" class="headerlink" title="使用iptable配置"></a>使用iptable配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br>IPT=<span class="hljs-string">&quot;/sbin/iptables&quot;</span><br>/bin/echo <span class="hljs-string">&quot;1&quot;</span> &gt; /proc/sys/net/ipv4/ip_forward<br>/sbin/modprobe ip_tables<br>/sbin/modprobe iptable_filter<br>/sbin/modprobe iptable_nat<br>/sbin/modprobe ip_conntrack<br>/sbin/modprobe ip_conntrack_ftp<br>/sbin/modprobe ip_nat_ftp<br><span class="hljs-variable">$IPT</span> -F<br><span class="hljs-variable">$IPT</span> -t nat -F<br><span class="hljs-variable">$IPT</span> -X<br><span class="hljs-variable">$IPT</span> -t nat -X<br><span class="hljs-variable">$IPT</span> -Z<br><span class="hljs-variable">$IPT</span> -t nat -Z<br>iptables -t filter -P FORWARD  ACCEPT<br><span class="hljs-comment">#DNAT 做端口转发 lab102</span><br><span class="hljs-variable">$IPT</span> -t nat -A PREROUTING -d 192.168.0.85 -p tcp --dport 44561 -j DNAT --to-destination 192.168.1.102:4456<br><span class="hljs-comment">#SNAT 做端口转发</span><br><span class="hljs-variable">$IPT</span> -t nat -A POSTROUTING -p tcp -d 192.168.1.102 --dport 4456 -j SNAT --to-source 192.168.1.103<br><br><br><span class="hljs-comment">#DNAT 做端口转发 lab1021</span><br><span class="hljs-variable">$IPT</span> -t nat -A PREROUTING -d 192.168.0.85 -p tcp --dport 44562 -j DNAT --to-destination 192.168.1.101:4456<br><span class="hljs-comment">#SNAT 做端口转发</span><br><span class="hljs-variable">$IPT</span> -t nat -A POSTROUTING -p tcp -d 192.168.1.101 --dport 4456 -j SNAT --to-source 192.168.1.103<br></code></pre></td></tr></table></figure>
-<p>上面的注意下那个to-source后面应该接上转发机器的内网的IP的地址，如果错了就有问题</p>
-<h3 id="使用firewalld配置"><a href="#使用firewalld配置" class="headerlink" title="使用firewalld配置"></a>使用firewalld配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/sh</span><br>firewall-cmd --add-masquerade --permanent<br>firewall-cmd --add-port=44561/tcp --permanent<br>firewall-cmd --add-port=44562/tcp --permanent<br>firewall-cmd --add-forward-port=port=44561:proto=tcp:toport=4456:toaddr=192.168.1.102 --permanent<br>firewall-cmd --add-forward-port=port=44562:proto=tcp:toport=4456:toaddr=192.168.1.101 --permanent<br>firewall-cmd --reload<br>firewall-cmd --list-all<br></code></pre></td></tr></table></figure>
-<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><p>上面的配置好转发以后都不要在转发的机器本机进行测试，本机上直接测试会不通，这个需要在外部进行访问转发机器进行验证</p>
+<p>执行完就会开始执行同步的操作</p>
+<h2 id="pt-slave-find查找副本的结构"><a href="#pt-slave-find查找副本的结构" class="headerlink" title="pt-slave-find查找副本的结构"></a>pt-slave-find查找副本的结构</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab102 percona]<span class="hljs-comment"># pt-slave-find h=192.168.0.101,u=root,p=&#x27;password&#x27;</span><br>192.168.0.101<br>Version         8.0.30<br>Server ID       1<br>Uptime          01:56:19 (started 2025-04-15T15:11:29)<br>Replication     Is not a slave, has 1 slaves connected, is not read_only<br>Filters         binlog_ignore_db=mysql,sys,information_schema,performance_schema<br>Binary logging  MIXED<br>Slave status<br>Slave mode      STRICT<br>Auto-increment  increment 1, offset 1<br>InnoDB version  8.0.30<br>+- 192.168.0.102<br>   Version         8.0.30<br>   Server ID       2<br>   Uptime          06:20 (started 2025-04-15T17:01:28)<br>   Replication     Is a slave, has 0 slaves connected, is read_only<br>   Filters         binlog_ignore_db=mysql,sys,information_schema,performance_schema<br>   Binary logging  MIXED<br>   Slave status    0 seconds behind, running, no errors<br>   Slave mode      STRICT<br>   Auto-increment  increment 1, offset 1<br>   InnoDB version  8.0.30<br></code></pre></td></tr></table></figure>
+<p>可以拿到一些信息，主本的信息，副本的节点的信息,这个用来做监控不错</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个工具应该还有其它功能，目前只用到这一个，后续再继续看看</p>
 
                 
               </div>
@@ -316,6 +306,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="print-no-link">#数据库</a>
+      
+    </div>
   
 </div>
 
@@ -325,8 +343,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>端口转发配置</div>
-      <div>https://zphj1987.com/2023/01/31/端口转发配置/</div>
+      <div>使用percona-toolkit同步mysql表数据</div>
+      <div>https://zphj1987.com/2025/04/15/使用percona-toolkit同步mysql表数据/</div>
     </div>
     <div class="license-meta">
       
@@ -338,7 +356,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年1月31日</div>
+          <div>2025年4月15日</div>
         </div>
       
       
@@ -370,18 +388,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/01/31/%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81rbd%E7%9A%84tgt/" title="打包一个支持rbd的tgt">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">打包一个支持rbd的tgt</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/01/31/%E8%84%9A%E6%9C%AC%E7%A6%81%E6%AD%A2%E7%99%BB%E5%BD%95%E5%B0%9D%E8%AF%95/" title="脚本禁止登录尝试">
-                        <span class="hidden-mobile">脚本禁止登录尝试</span>
+                      <a href="/2025/04/10/rbd%E5%9D%97%E8%AE%BE%E5%A4%87%E7%9A%84id%E4%BF%AE%E6%94%B9/" title="rbd块设备的id修改">
+                        <span class="hidden-mobile">rbd块设备的id修改</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

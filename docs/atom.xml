@@ -6,7 +6,7 @@
   <link href="https://zphj1987.com/atom.xml" rel="self"/>
   
   <link href="https://zphj1987.com/"/>
-  <updated>2025-04-10T06:35:41.414Z</updated>
+  <updated>2025-04-15T09:36:49.123Z</updated>
   <id>https://zphj1987.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用percona-toolkit同步mysql表数据</title>
+    <link href="https://zphj1987.com/2025/04/15/%E4%BD%BF%E7%94%A8percona-toolkit%E5%90%8C%E6%AD%A5mysql%E8%A1%A8%E6%95%B0%E6%8D%AE/"/>
+    <id>https://zphj1987.com/2025/04/15/%E4%BD%BF%E7%94%A8percona-toolkit%E5%90%8C%E6%AD%A5mysql%E8%A1%A8%E6%95%B0%E6%8D%AE/</id>
+    <published>2025-04-15T08:33:18.000Z</published>
+    <updated>2025-04-15T09:36:49.123Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="数据库" scheme="https://zphj1987.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
   
   <entry>
     <title>rbd块设备的id修改</title>
@@ -488,32 +513,6 @@
     
     
     <category term="内存管理" scheme="https://zphj1987.com/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>docker配置代理下载镜像</title>
-    <link href="https://zphj1987.com/2024/11/11/docker%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F/"/>
-    <id>https://zphj1987.com/2024/11/11/docker%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F/</id>
-    <published>2024-11-11T09:12:20.000Z</published>
-    <updated>2025-02-13T07:21:00.956Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;需要下载镜像，但是无法下载&lt;/p&gt;
-&lt;h2 id=&quot;处理方法&quot;&gt;&lt;a href=&quot;#处理方法&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="系统服务" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/"/>
-    
-    
-    <category term="docker" scheme="https://zphj1987.com/tags/docker/"/>
     
   </entry>
   

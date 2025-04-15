@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" target="_self">
+          <img src="/images/blog/sector.png" srcset="/img/loading.gif" lazyload alt="定位读写的扇区的编号">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" target="_self">
+          定位读写的扇区的编号
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" target="_self">
+        <div>
+          背景最近有碰到扇区的错误，引起osd的无法启动，经过处理，系统可以恢复了，但是扇区的错误为什么导致了osd down，怎么去模拟这个删除的问题，就需要做一些定位的工作了 我们需要模拟扇区的问题，就需要去精确的模拟到损坏的扇区，也就是比如我需要模拟某个文件的扇区损坏，那么就需要定位到这个文件属于哪些扇区 方法定位扇区通过blktrace进行模拟，这个操作是去读取文件就行，”C”是完成的请求，下面是过
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-08-19 10:17" pubdate>
+              2024-08-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/" class="category-chain-item">问题处理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/">#存储相关</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/08/14/udp%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF/" target="_self">
           <img src="/images/blog/networkudp.png" srcset="/img/loading.gif" lazyload alt="udp服务器和客户端">
         </a>
@@ -818,73 +885,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/ceph/">#ceph</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/04/17/vmware%E5%B9%B3%E5%8F%B0%E4%B8%8BIPv6%E4%B8%A2%E5%8C%85/" target="_self">
-          <img src="/images/blog/ipv6.png" srcset="/img/loading.gif" lazyload alt="vmware平台下IPv6丢包">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/04/17/vmware%E5%B9%B3%E5%8F%B0%E4%B8%8BIPv6%E4%B8%A2%E5%8C%85/" target="_self">
-          vmware平台下IPv6丢包
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/04/17/vmware%E5%B9%B3%E5%8F%B0%E4%B8%8BIPv6%E4%B8%A2%E5%8C%85/" target="_self">
-        <div>
-          问题现象在vmware的平台下的虚拟机里面配置了IPv6，然后测试的时候发现丢包严重，引起带宽非常低 问题Esxi虚拟机采用的是vmxnet3 driver，底层在处理IPv6的包的时候，额外加上了一些信息所以默认的1500的MTU无法处理完整的包，也就需要丢弃一些，然后造成了需要重传，带宽就低了 MTU调整为1515之后，问题消失，带宽恢复正常 这个只在IPv6使用的时候有这个问题，应该是跟这个
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-04-17 10:15" pubdate>
-              2024-04-17
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/">#网络配置</a>
             
           </div>
         

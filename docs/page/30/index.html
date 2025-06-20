@@ -226,6 +226,408 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/03/31/ceph%E5%9C%A8centos7%E4%B8%8B%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%AE%B9%E6%98%93%E5%8F%91%E7%8E%B0%E7%9A%84%E6%94%B9%E5%8F%98/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph在centos7下一个不容易发现的改变">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/03/31/ceph%E5%9C%A8centos7%E4%B8%8B%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%AE%B9%E6%98%93%E5%8F%91%E7%8E%B0%E7%9A%84%E6%94%B9%E5%8F%98/" target="_self">
+          ceph在centos7下一个不容易发现的改变
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/03/31/ceph%E5%9C%A8centos7%E4%B8%8B%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%AE%B9%E6%98%93%E5%8F%91%E7%8E%B0%E7%9A%84%E6%94%B9%E5%8F%98/" target="_self">
+        <div>
+          在centos6以及以前的osd版本，在启动osd的时候，回去根据ceph.conf的配置文件进行挂载osd，然后进行进程的启动，这个格式是这样的 123[osd.0]host = hostnamedevs=/dev/sdb1 启动的时候就会把sdb1盘符挂载到0的目录里面去了 然后在centos7的版本的时候，发现居然不写配置文件也能够自动挂载启动，这个地方是什么地方发生了变化，在做了一些日志的
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-03-31 16:45" pubdate>
+              2016-03-31
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/03/30/rbd-mirror%E6%96%B0%E5%8A%9F%E8%83%BD/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rbd-mirror新功能">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/03/30/rbd-mirror%E6%96%B0%E5%8A%9F%E8%83%BD/" target="_self">
+          rbd-mirror新功能
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/03/30/rbd-mirror%E6%96%B0%E5%8A%9F%E8%83%BD/" target="_self">
+        <div>
+          RBD 的 mirroring 功能将会在下一个稳定版本Jewel中实现，这个Jewel版本已经发布了第一个版本10.1.0,这个功能已经在这个发布的版本中实现了 一、基本原理我们试图解决的或者至少需要克服的问题是，ceph在内部是强一致性的，这个对于跨区域的情况数据同步是无法接受的，一个请求需要异地返回再确认完成，这个在性能上肯定是无法接受的，这就是为什么基本上无法部署跨区域的ceph集群 因此
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-03-30 16:40" pubdate>
+              2016-03-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/03/24/ceph%E6%9F%A5%E8%AF%A2rbd%E7%9A%84%E4%BD%BF%E7%94%A8%E5%AE%B9%E9%87%8F%EF%BC%88%E5%BF%AB%E9%80%9F%EF%BC%89/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph查询rbd的使用容量（快速）">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/03/24/ceph%E6%9F%A5%E8%AF%A2rbd%E7%9A%84%E4%BD%BF%E7%94%A8%E5%AE%B9%E9%87%8F%EF%BC%88%E5%BF%AB%E9%80%9F%EF%BC%89/" target="_self">
+          ceph查询rbd的使用容量（快速）
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/03/24/ceph%E6%9F%A5%E8%AF%A2rbd%E7%9A%84%E4%BD%BF%E7%94%A8%E5%AE%B9%E9%87%8F%EF%BC%88%E5%BF%AB%E9%80%9F%EF%BC%89/" target="_self">
+        <div>
+          ceph在Infernalis加入了一个功能是查询rbd的块设备的使用的大小，默认是可以查询的，但是无法快速查询，那么我们来看看这个功能是怎么开启的  ceph版本12root@lab8107:~/ceph# ceph -vceph version 9.2.0 (bb2ecea240f3a1d525bcb35670cb07bd1f0ca299) 创建RBD设备我们先来创建一个rbd 1234567
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-03-24 16:37" pubdate>
+              2016-03-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/03/24/Ceph%20Bluestore%E9%A6%96%E6%B5%8B/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph Bluestore首测">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/03/24/Ceph%20Bluestore%E9%A6%96%E6%B5%8B/" target="_self">
+          Ceph Bluestore首测
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/03/24/Ceph%20Bluestore%E9%A6%96%E6%B5%8B/" target="_self">
+        <div>
+          Bluestore 作为 Ceph Jewel 版本推出的一个重大的更新，提供了一种之前没有的存储形式，一直以来ceph的存储方式一直是以filestore的方式存储的，也就是对象是以文件方式存储在osd的磁盘上的，pg是以目录的方式存在于osd的磁盘上的在发展过程中，中间出现了kvstore，这个还是存储在文件系统之上，以leveldb或者rocksdb的方式存储对象数据，这个也没有推广开来，性
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-03-24 16:19" pubdate>
+              2016-03-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/03/24/%E8%AE%A9%E7%A3%81%E7%9B%98%E7%A1%AC%E7%9B%98%E7%81%AF%E5%B8%B8%E9%97%AA%E5%AE%9A%E4%BD%8D%E7%9B%98/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="让磁盘硬盘灯常闪定位盘">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/03/24/%E8%AE%A9%E7%A3%81%E7%9B%98%E7%A1%AC%E7%9B%98%E7%81%AF%E5%B8%B8%E9%97%AA%E5%AE%9A%E4%BD%8D%E7%9B%98/" target="_self">
+          让磁盘硬盘灯常闪定位盘
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/03/24/%E8%AE%A9%E7%A3%81%E7%9B%98%E7%A1%AC%E7%9B%98%E7%81%AF%E5%B8%B8%E9%97%AA%E5%AE%9A%E4%BD%8D%E7%9B%98/" target="_self">
+        <div>
+          通过dd来读取让硬盘灯闪来定位磁盘的位置 123456#!/bin/bashhd=$1for num in &#123;1..5&#125;;do        dd if=&quot;$hd&quot; of=&quot;/dev/null&quot; bs=4M count=1000 iflag=direct conv=noerror &gt;/dev/null 2&gt;&amp;1
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-03-24 12:03" pubdate>
+              2016-03-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/03/03/%E4%B8%A2%E4%BA%86ceph.mon.keying%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="丢了ceph.mon.keying解决办法">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/03/03/%E4%B8%A2%E4%BA%86ceph.mon.keying%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
+          丢了ceph.mon.keying解决办法
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/03/03/%E4%B8%A2%E4%BA%86ceph.mon.keying%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
+        <div>
+          在linux操作系统下，可能因为一些很小的误操作，都会造成非常重要的文件的丢失，而文件的备份并不是每时每刻都会注意到，一般是等到文件丢失了才会去想办法，这里讲下ceph.mon.keyring丢失的解决办法 1、没有启用部署认证的 auth_cluster_required &#x3D;none  在进行部署的时候 ceph-deploy new 以后会生成ceph.mon.keyring文件,内
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-03-03 16:18" pubdate>
+              2016-03-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2016/03/03/%E5%BF%AB%E9%80%9F%E5%A2%9E%E5%8A%A0osdmap%E7%9A%84epoch/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="快速增加osdmap的epoch">
         </a>
@@ -490,413 +892,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/01/27/ubuntu%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E8%87%AA%E5%8A%A8%E4%BA%A4%E4%BA%92/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ubuntu安装软件自动交互">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/01/27/ubuntu%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E8%87%AA%E5%8A%A8%E4%BA%A4%E4%BA%92/" target="_self">
-          ubuntu安装软件自动交互
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/01/27/ubuntu%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E8%87%AA%E5%8A%A8%E4%BA%A4%E4%BA%92/" target="_self">
-        <div>
-          在ubuntu下安装软件过程中可能会出现需要你输入密码或者其他的一些交互类的操作，这样在脚本安装的时候就可能出现阻断，这个在ubuntu里面已经考虑到了这个情况，以前我在安装这个的时候，通过的是脚本传递参数的方式，这里介绍的是原生的控制方式，这个方式更好 以安装mariadb-server-5.5为例 1、查询需要应答的问题首先通过命令查询这个软件需要问答什么问题 12345678910root@
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-01-27 16:14" pubdate>
-              2016-01-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/01/25/mon%E7%A3%81%E7%9B%98%E6%BB%A1%E9%87%8D%E5%90%AF%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="mon磁盘满重启的问题">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/01/25/mon%E7%A3%81%E7%9B%98%E6%BB%A1%E9%87%8D%E5%90%AF%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-          mon磁盘满重启的问题
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/01/25/mon%E7%A3%81%E7%9B%98%E6%BB%A1%E9%87%8D%E5%90%AF%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-        <div>
-          问题Ceph monitors 100% full filesystem, refusing start 问题原文I have an issue with a (not in production!) Ceph cluster which I’mtrying to resolve. 分析这是作者在使用多个mon的时候，数据出现了磁盘满的情况，然后重启mon进行压缩的时候，发现这个到了mon的最小空
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-01-25 16:10" pubdate>
-              2016-01-25
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/01/25/ceph-deploy%20%E9%83%A8%E7%BD%B2%E5%8A%A0%E5%AF%86osd%E5%BC%82%E5%B8%B8%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph-deploy 部署加密osd异常的问题">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/01/25/ceph-deploy%20%E9%83%A8%E7%BD%B2%E5%8A%A0%E5%AF%86osd%E5%BC%82%E5%B8%B8%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-          ceph-deploy 部署加密osd异常的问题
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/01/25/ceph-deploy%20%E9%83%A8%E7%BD%B2%E5%8A%A0%E5%AF%86osd%E5%BC%82%E5%B8%B8%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-        <div>
-          问题解析问题journal encryption with dmcrypt （Reno Rainz） 问题原文：I’m trying to setup a cluster with encryption on osd data and journal.To do  that I use ceph-deploy with this 2 options –dmcrypt–dmcrypt-key-dir
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-01-25 16:07" pubdate>
-              2016-01-25
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/01/25/CephFS%E7%94%A8%E6%88%B7%E8%AE%A4%E8%AF%81%E6%A0%BC%E5%BC%8F%E5%86%99%E9%94%99%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="CephFS用户认证格式写错的问题">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/01/25/CephFS%E7%94%A8%E6%88%B7%E8%AE%A4%E8%AF%81%E6%A0%BC%E5%BC%8F%E5%86%99%E9%94%99%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-          CephFS用户认证格式写错的问题
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/01/25/CephFS%E7%94%A8%E6%88%B7%E8%AE%A4%E8%AF%81%E6%A0%BC%E5%BC%8F%E5%86%99%E9%94%99%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-        <div>
-          问题三：CephFS（James Gallagher） 问题原文Hi,I’m looking to implement the CephFS on my Firefly release (v0.80) with an XFS native file system, but so far I’m having some difficulties. After following the ceph&#
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-01-25 16:04" pubdate>
-              2016-01-25
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/01/25/ceph-fuse%E5%8D%A1%E9%A1%BF%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph-fuse卡顿无法写入的问题">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/01/25/ceph-fuse%E5%8D%A1%E9%A1%BF%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-          ceph-fuse卡顿无法写入的问题
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/01/25/ceph-fuse%E5%8D%A1%E9%A1%BF%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-        <div>
-          问题ceph fuse closing stale session while still   operable （Oliver Dzombic） 问题原文：Hi,i am testing on centos 6 x64 minimal install.i am mounting successfully:ceph-fuse -m 10.0.0.1:6789,10.0.0.2:6789,10.0.
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-01-25 15:52" pubdate>
-              2016-01-25
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph使用memdisk做journal">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/" target="_self">
-          ceph使用memdisk做journal
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/" target="_self">
-        <div>
-          记得在很久很久以前，ceph当时的版本是有提供使用内存做journal的配置的，当时是使用的tmpfs，但是现在的版本在搜资料的时候，发现关于这个的没怎么找到资料，邮件列表里面有人有提到怎么做，看了下大致的原理，然后还是自己来实践一次 预备知识：首先需要知道的是什么是内存盘，内存盘就是划分了一个内存空间来当磁盘使用来进行加速的，这个在某些操作系统里面会把&#x2F;tmp&#x2F;分区挂载到tm
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-01-14 15:37" pubdate>
-              2016-01-14
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/29/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/#board">28</a><a class="page-number" href="/page/29/#board">29</a><span class="page-number current">30</span><a class="page-number" href="/page/31/#board">31</a><a class="page-number" href="/page/32/#board">32</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/#board">39</a><a class="extend next" rel="next" href="/page/31/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/29/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/#board">28</a><a class="page-number" href="/page/29/#board">29</a><span class="page-number current">30</span><a class="page-number" href="/page/31/#board">31</a><a class="page-number" href="/page/32/#board">32</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/#board">40</a><a class="extend next" rel="next" href="/page/31/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

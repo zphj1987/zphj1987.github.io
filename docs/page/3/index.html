@@ -226,6 +226,408 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/" target="_self">
+          <img src="/images/blog/s3forheader.png" srcset="/img/loading.gif" lazyload alt="rgw追加写功能测试验证">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/" target="_self">
+          rgw追加写功能测试验证
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/" target="_self">
+        <div>
+          背景aws的s3以前是不支持追加写这个功能的  这个存储类型大概是2023年发布的，这个文章是2024年11月21日发布的 找到功能的发布大概时间我们看下boto3的工具是什么时候集成进去的就知道这个功能发布的大概的时间 1WriteOffsetBytes aws里面使用这个参数去控制追加写的偏移量的，我们根据这个关键字去找 找到botcore的代码，使用git下载下来 1cd  botocore
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-13 17:24" pubdate>
+              2024-12-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/" class="category-chain-item">存储系统</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/12/11/%E7%BA%A0%E5%88%A0%E7%A0%81%E4%B8%AD%E9%97%B4%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E4%B8%A2%E5%A4%B1%E5%BC%95%E8%B5%B7osd%E7%9A%84%E5%B4%A9%E6%BA%83/" target="_self">
+          <img src="/images/blog/crashstorage.png" srcset="/img/loading.gif" lazyload alt="纠删码中间对象属性丢失引起osd的崩溃">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/12/11/%E7%BA%A0%E5%88%A0%E7%A0%81%E4%B8%AD%E9%97%B4%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E4%B8%A2%E5%A4%B1%E5%BC%95%E8%B5%B7osd%E7%9A%84%E5%B4%A9%E6%BA%83/" target="_self">
+          纠删码中间对象属性丢失引起osd的崩溃
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/12/11/%E7%BA%A0%E5%88%A0%E7%A0%81%E4%B8%AD%E9%97%B4%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E4%B8%A2%E5%A4%B1%E5%BC%95%E8%B5%B7osd%E7%9A%84%E5%B4%A9%E6%BA%83/" target="_self">
+        <div>
+          背景迁移的时候出现osd的崩溃，然后进行pg的备份的时候出现了无法获取属性的情况，本篇记录问题和解决的方法 问题1234567891011Error getting attr on : 2.7s2_head,2#2:f7d032a7:::rbd_data.1.101a6b8b4567.00000000000000a1:head#f6, (61) No data availableError get
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-11 15:31" pubdate>
+              2024-12-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/" class="category-chain-item">存储系统</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/12/11/%E5%BF%AB%E7%85%A7%E5%8E%9F%E5%A7%8B%E5%AF%B9%E8%B1%A1%E7%BC%BA%E5%A4%B1%E5%BC%95%E8%B5%B7%E7%9A%84osd%E5%B4%A9%E6%BA%83/" target="_self">
+          <img src="/images/blog/crashstorage.png" srcset="/img/loading.gif" lazyload alt="快照原始对象缺失引起的osd崩溃">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/12/11/%E5%BF%AB%E7%85%A7%E5%8E%9F%E5%A7%8B%E5%AF%B9%E8%B1%A1%E7%BC%BA%E5%A4%B1%E5%BC%95%E8%B5%B7%E7%9A%84osd%E5%B4%A9%E6%BA%83/" target="_self">
+          快照原始对象缺失引起的osd崩溃
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/12/11/%E5%BF%AB%E7%85%A7%E5%8E%9F%E5%A7%8B%E5%AF%B9%E8%B1%A1%E7%BC%BA%E5%A4%B1%E5%BC%95%E8%B5%B7%E7%9A%84osd%E5%B4%A9%E6%BA%83/" target="_self">
+        <div>
+          问题 修复pg的时候出现了 unexpected clone  可以看到这个对象后面有编号，这个编号有两种情况  快照的对象(snapid) 纠删对象的中间版本（对应是generation）  1&#123;&quot;oid&quot;:&quot;rbd_data.1.101a6b8b4567.00000000000000b3&quot;,&quot;key&quot;:&quot;&quot
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-11 11:09" pubdate>
+              2024-12-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/" class="category-chain-item">存储系统</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/" target="_self">
+          <img src="/images/blog/diskcrash.png" srcset="/img/loading.gif" lazyload alt="为什么只坏了一个盘集群无法读写">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/" target="_self">
+          为什么只坏了一个盘集群无法读写
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/" target="_self">
+        <div>
+          背景我们拿到故障环境，看到环境就坏一个osd，但是环境还是处于卡着的状态，这个时候客户肯定会问，怎么就坏一个盘，还无法用了，不是都配置了冗余么 这个地方我们来分析下这个问题的原因，坏一个osd只是结果，不是过程，我们看下过程发生了哪些状况 中间过程这个中间过程我们用图来说过程比较清晰一些  上面是时间线上的三个阶段的情况  阶段一：数据完整，没有任何问题，数据写三份，分布到三台机器  阶段二：主机
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-04 14:53" pubdate>
+              2024-12-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/11/21/device-health-metrics%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%88%A0%E9%99%A4%E6%96%B9%E6%B3%95/" target="_self">
+          <img src="/images/blog/deletepool.png" srcset="/img/loading.gif" lazyload alt="device_health_metrics正确的删除方法">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/11/21/device-health-metrics%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%88%A0%E9%99%A4%E6%96%B9%E6%B3%95/" target="_self">
+          device_health_metrics正确的删除方法
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/11/21/device-health-metrics%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%88%A0%E9%99%A4%E6%96%B9%E6%B3%95/" target="_self">
+        <div>
+          问题描述1234567891011121314151617181920[root@lab103 ceph]# ceph -s  cluster:    id:     4f5ce868-8389-489a-bd96-f2754ed6fa2f    health: HEALTH_ERR            mon is allowing insecure global_id reclaim
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-11-21 15:10" pubdate>
+              2024-11-21
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/11/14/earlyoom%E9%A2%84%E9%98%B2%E6%9C%BA%E5%99%A8%E5%8D%A1%E6%AD%BB/" target="_self">
+          <img src="/images/blog/earlyoomyufang.png" srcset="/img/loading.gif" lazyload alt="earlyoom预防机器卡死">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/11/14/earlyoom%E9%A2%84%E9%98%B2%E6%9C%BA%E5%99%A8%E5%8D%A1%E6%AD%BB/" target="_self">
+          earlyoom预防机器卡死
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/11/14/earlyoom%E9%A2%84%E9%98%B2%E6%9C%BA%E5%99%A8%E5%8D%A1%E6%AD%BB/" target="_self">
+        <div>
+          背景机器还没来得及oom，机器就出现挂死的状态，swap无法交换出，或者直接挂死 这个问题比较好复现在机器上面一直进行内存的申请即可 1python3 memory.py 100 40000  这个在x86上面做测试的时候，系统能够比较快的oom，但是这个板卡的系统盘本身慢，这个就可能出现卡顿的情况了 系统的oom，需要进行一些计算和系统处理，并且有个问题是，很多进程都不杀，因为都是系统进程，很多
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-11-14 15:25" pubdate>
+              2024-11-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">#内存管理</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/11/11/docker%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F/" target="_self">
           <img src="/images/blog/dockerdocker.png" srcset="/img/loading.gif" lazyload alt="docker配置代理下载镜像">
         </a>
@@ -490,385 +892,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/09/24/systemd%E7%97%85%E6%AF%92%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%A4%84%E7%90%86/" target="_self">
-          <img src="/images/blog/virus.png" srcset="/img/loading.gif" lazyload alt="systemd病毒定位和处理">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/09/24/systemd%E7%97%85%E6%AF%92%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%A4%84%E7%90%86/" target="_self">
-          systemd病毒定位和处理
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/09/24/systemd%E7%97%85%E6%AF%92%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%A4%84%E7%90%86/" target="_self">
-        <div>
-          背景内网测试环境出现一台机器上面的systemd返回值异常，其它都正常，具体的现象如下 1systemctl restart smb;echo $? 这个返回的是1，正常执行完毕应该是0 问题定位开始的时候以为是网络的问题，通过执行本地的命令发现，任何systemd的执行命令返回的都是1，但是实际成功了开始并没有往病毒方面想，系统没有定时任务，没有异常的cpu负载 1[root@lab103 ~]
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-09-24 16:45" pubdate>
-              2024-09-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">#异常处理</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/09/23/%E8%8E%B7%E5%8F%96docker%E7%9A%84%E9%95%9C%E5%83%8F%E7%9A%84%E6%96%B9%E6%B3%95/" target="_self">
-          <img src="/images/blog/dockerpull.png" srcset="/img/loading.gif" lazyload alt="获取docker的镜像的方法">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/09/23/%E8%8E%B7%E5%8F%96docker%E7%9A%84%E9%95%9C%E5%83%8F%E7%9A%84%E6%96%B9%E6%B3%95/" target="_self">
-          获取docker的镜像的方法
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/09/23/%E8%8E%B7%E5%8F%96docker%E7%9A%84%E9%95%9C%E5%83%8F%E7%9A%84%E6%96%B9%E6%B3%95/" target="_self">
-        <div>
-          背景需要下载一个mysql的docker的镜像，但是遇到了问题，这里把相关的方法记录下 问题123[root@lab103 data]# docker pull mysql:8.0Trying to pull repository docker.io/library/mysql ...Get https://registry-1.docker.io/v2/: net/http: request c
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-09-23 15:43" pubdate>
-              2024-09-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/docker/">#docker</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/09/11/%E4%BD%BF%E7%94%A8qemu%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAloongarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/" target="_self">
-          <img src="/images/blog/qemuimage.png" srcset="/img/loading.gif" lazyload alt="使用qemu构建一个loongarch64虚拟机">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/09/11/%E4%BD%BF%E7%94%A8qemu%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAloongarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/" target="_self">
-          使用qemu构建一个loongarch64虚拟机
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/09/11/%E4%BD%BF%E7%94%A8qemu%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAloongarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/" target="_self">
-        <div>
-          背景国产化的平台目前主要用到的有飞腾和龙芯，飞腾的是arm64架构，这个使用的比较多，龙芯的架构之前是mips架构，最新的硬件的架构已经发生了改变，现在是loongarch64架构，这个算比较新的架构，所以硬件就比较难获得，如果又有适配的需求，这个时候通过虚拟机启动环境是一个比较好的方式 虚拟机有两种方式：  一种是在相同架构下开虚拟机，这个比较简单，一般的操作系统内都带了kvm的相关的软件，直接
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-09-11 16:55" pubdate>
-              2024-09-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/" target="_self">
-          <img src="/images/blog/policyimage.png" srcset="/img/loading.gif" lazyload alt="ceph-radosgw配置bucket的policy">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/" target="_self">
-          ceph-radosgw配置bucket的policy
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/" target="_self">
-        <div>
-          背景ceph通过radosgw对外提供了s3功能，这个能够提供一个s3接口供外部使用，s3的功能选项很多，本篇记录的是policy的功能配置 配置方法配置policy可以通过s3cmd，或者windows的s3客户端都可以，这里我们使用s3cmd进行配置 安装配置s3cmd下载客户端 1[root@lab101 ceph]# yum install s3cmd  配置s3cmd 123456789
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-09-05 10:59" pubdate>
-              2024-09-05
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ceph/">#ceph</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/08/28/questdb%E5%9C%A8opencloudos%E4%B8%8B%E7%9A%84%E6%89%93%E5%8C%85%E6%80%BB%E7%BB%93/" target="_self">
-          <img src="/images/blog/questdb.png" srcset="/img/loading.gif" lazyload alt="questdb在opencloudos下的打包总结">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/08/28/questdb%E5%9C%A8opencloudos%E4%B8%8B%E7%9A%84%E6%89%93%E5%8C%85%E6%80%BB%E7%BB%93/" target="_self">
-          questdb在opencloudos下的打包总结
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/08/28/questdb%E5%9C%A8opencloudos%E4%B8%8B%E7%9A%84%E6%89%93%E5%8C%85%E6%80%BB%E7%BB%93/" target="_self">
-        <div>
-          背景最近看到opencloudos社区有一些公开的任务可以做，尝试了做其中的一个打包的任务，整个任务的执行周期超过预期，但是中间还是掌握了一些新的东西本篇文章就是总结这些新的知识点 具体过程打包环境问题以前的打包经验是从官网找到source的rpm包，然后本地解压，然后对着spec文件进行rpmbuild -bb即可生成当前系统的包但是这个环境是需要使用mock跑一遍的,这个之前确实没接触过，只是
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-08-28 18:45" pubdate>
-              2024-08-28
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" target="_self">
-          <img src="/images/blog/synctune.png" srcset="/img/loading.gif" lazyload alt="海量文件的rsync同步方案">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" target="_self">
-          海量文件的rsync同步方案
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" target="_self">
-        <div>
-          背景如果一个环境需要对文件系统进行系统备份，文件系统内的文件数目是10亿级别的，那么直接通过一个rsync进行同步肯定是不太好的，如果出现中断，那么再次启动后的遍历的时间成本太高了 分析rsync的同步原理是，启动同步的时候，会对源端进行一个全量的扫描，构建一个incremental file list，然后开始同步，如果是系统本地的目录进行同步我们可以看到三个进程一个是生成器，一个是发送方，一个
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-08-23 14:58" pubdate>
-              2024-08-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/">#数据管理</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/2/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/#board">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/#board">4</a><a class="page-number" href="/page/5/#board">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/#board">39</a><a class="extend next" rel="next" href="/page/4/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/2/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/#board">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/#board">4</a><a class="page-number" href="/page/5/#board">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/#board">40</a><a class="extend next" rel="next" href="/page/4/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

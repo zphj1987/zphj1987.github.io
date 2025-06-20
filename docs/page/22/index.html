@@ -226,6 +226,408 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/04/19/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%A0%E9%99%A4%E7%9A%84Ceph%E5%AF%B9%E8%B1%A1%E8%BF%98%E8%83%BDget/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="为什么删除的Ceph对象还能get">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/04/19/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%A0%E9%99%A4%E7%9A%84Ceph%E5%AF%B9%E8%B1%A1%E8%BF%98%E8%83%BDget/" target="_self">
+          为什么删除的Ceph对象还能get
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/04/19/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%A0%E9%99%A4%E7%9A%84Ceph%E5%AF%B9%E8%B1%A1%E8%BF%98%E8%83%BDget/" target="_self">
+        <div>
+          前言在很久以前在研究一套文件系统的时候，当时发现一个比较奇怪的现象，没有文件存在，磁盘容量还在增加，在研究了一段时间后，发现这里面有一种比较奇特的处理逻辑 这套文件系统在处理一个文件的时候放入的是一个临时目录，最开始在发送第一个写请求后，在操作系统层面马上进行了一个delete操作，而写还在继续，并且需要处理这个数据的进程一直占着的，一旦使用完这个文件，不需要做处理，这个文件就会自动释放掉，而无需
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-04-19 18:17" pubdate>
+              2017-04-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/04/19/Ceph%E5%88%A0%E9%99%A4OSD%E4%B8%8A%E4%B8%80%E4%B8%AA%E5%BC%82%E5%B8%B8object/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph删除OSD上一个异常object">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/04/19/Ceph%E5%88%A0%E9%99%A4OSD%E4%B8%8A%E4%B8%80%E4%B8%AA%E5%BC%82%E5%B8%B8object/" target="_self">
+          Ceph删除OSD上一个异常object
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/04/19/Ceph%E5%88%A0%E9%99%A4OSD%E4%B8%8A%E4%B8%80%E4%B8%AA%E5%BC%82%E5%B8%B8object/" target="_self">
+        <div>
+          前言ceph里面的数据是以对象的形式存储在OSD当中的，有的时候因为磁盘的损坏或者其它的一些特殊情况，会引起集群当中的某一个对象的异常，那么我们需要对这个对象进行处理 在对象损坏的情况下，启动OSD有的时候都会有问题，那么通过rados rm的方式是没法发送到这个无法启动的OSD的，也就无法删除，所以需要用其他的办法来处理这个情况 处理步骤查找对象的路径12[root@lab8106 ~]# ce
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-04-19 18:15" pubdate>
+              2017-04-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/04/13/%E6%9F%A5%E7%9C%8Bceph%E9%9B%86%E7%BE%A4%E8%A2%AB%E5%93%AA%E4%BA%9B%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="查看ceph集群被哪些客户端连接">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/04/13/%E6%9F%A5%E7%9C%8Bceph%E9%9B%86%E7%BE%A4%E8%A2%AB%E5%93%AA%E4%BA%9B%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5/" target="_self">
+          查看ceph集群被哪些客户端连接
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/04/13/%E6%9F%A5%E7%9C%8Bceph%E9%9B%86%E7%BE%A4%E8%A2%AB%E5%93%AA%E4%BA%9B%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5/" target="_self">
+        <div>
+          前言我们在使用集群的时候，一般来说比较关注的是后台的集群的状态，但是在做一些更人性化的管理功能的时候，就需要考虑到更多的细节 本篇就是其中的一个点，查询ceph被哪些客户端连接了 实践从接口上来说，ceph提供了文件，块，和对象的接口，所以不同的接口需要不同的查询方式，因为我接触文件和块比较多，并且文件和块存储属于长连接类型，对象属于请求类型，所以主要关注文件和块存储的连接信息查询 我的集群状态如
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-04-13 18:14" pubdate>
+              2017-04-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/03/29/Ceph%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%A8%AA%E5%90%91%E6%89%A9%E5%B1%95/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph如何实现文件系统的横向扩展">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/03/29/Ceph%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%A8%AA%E5%90%91%E6%89%A9%E5%B1%95/" target="_self">
+          Ceph如何实现文件系统的横向扩展
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/03/29/Ceph%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%A8%AA%E5%90%91%E6%89%A9%E5%B1%95/" target="_self">
+        <div>
+          前言在跟一个朋友聊天的时候，聊到一个技术问题，他们的一个环境上面小文件巨多，是我目前知道的集群里面规模算非常大的了，但是目前有个问题，一方面会进行一倍的硬件的扩容，而文件的数量也在剧烈的增长着，所以有没有什么办法来 缓解这个增长的压力 当时也没想到太多的办法,只是觉得这么用下去风险太大 后来在思考了一段时间后，大概有了一个想法，这个就要看是否能把方案做下去，如果是我自己在用的集群，而非客户，我会这
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-03-29 18:12" pubdate>
+              2017-03-29
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/03/24/%E5%B0%8F%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="小文件测试数据准备">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/03/24/%E5%B0%8F%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87/" target="_self">
+          小文件测试数据准备
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/03/24/%E5%B0%8F%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87/" target="_self">
+        <div>
+          前言在看一个Linux Vault 2017的资料的时候，看到红帽分享的一个测试的过程，里面关于小文件元数据性能测试的，环境准备的还比较好,可以作为一种测试模型 测试用例测试用例一： 使用find -name 测试 find -size 测试 测试用例二： 使用find -name 测试 find -size 测试 测试用例三： 使用rmdir进行测试 总结本篇就是记录一个测试模型 变更记录
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-03-24 18:09" pubdate>
+              2017-03-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/03/23/%E7%BC%96%E8%AF%91%E7%9A%84Ceph%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="编译的Ceph二进制文件过大问题">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/03/23/%E7%BC%96%E8%AF%91%E7%9A%84Ceph%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98/" target="_self">
+          编译的Ceph二进制文件过大问题
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/03/23/%E7%BC%96%E8%AF%91%E7%9A%84Ceph%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98/" target="_self">
+        <div>
+          前言在ceph的研发群里看到一个cepher提出一个问题，编译的ceph的二进制文件过大，因为我一直用的打包好的rpm包，没有关注这个问题，重新编译了一遍发现确实有这个问题 本篇就是记录如何解决这个问题的 打rpm包的方式用我自己的环境编译的时候发现一个问题，编译出来的rpm包还是很大，开始怀疑是机器的原因，换了一台发现二进制包就很小了，然后查询了很多资料以后，找到了问题所在 在打rpm包的时候可
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-03-23 18:07" pubdate>
+              2017-03-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2017/03/22/Ceph%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E7%9A%84&#39;%E4%B8%8D%E6%8B%86%E5%88%86&#39;/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph实现数据的&#39;不拆分&#39;">
         </a>
@@ -490,413 +892,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/02/28/python%E6%89%A7%E8%A1%8Crados%E5%91%BD%E4%BB%A4%E4%BE%8B%E5%AD%90/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="python执行rados命令例子">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/02/28/python%E6%89%A7%E8%A1%8Crados%E5%91%BD%E4%BB%A4%E4%BE%8B%E5%AD%90/" target="_self">
-          python执行rados命令例子
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/02/28/python%E6%89%A7%E8%A1%8Crados%E5%91%BD%E4%BB%A4%E4%BE%8B%E5%AD%90/" target="_self">
-        <div>
-          前言我们以前的管理平台在python平台下面做的，内部做的一些操作采用的是命令执行，然后解析的方式去做的，ceph自身有python的rados接口，可以直接调用原生接口，然后直接解析json的方式，这样更靠近底层 在看ceph-dash内部的实现的时候，发现里面的获取集群信息的代码可以留存备用 代码实例123456789101112131415161718192021222324#!/usr/b
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-02-28 17:48" pubdate>
-              2017-02-28
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/02/24/%E8%AE%B0%E6%9C%80%E8%BF%91%E4%B8%80%E6%AC%A1ceph%E6%95%85%E9%9A%9C%E4%BF%AE%E5%A4%8D/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="记最近一次ceph故障修复">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/02/24/%E8%AE%B0%E6%9C%80%E8%BF%91%E4%B8%80%E6%AC%A1ceph%E6%95%85%E9%9A%9C%E4%BF%AE%E5%A4%8D/" target="_self">
-          记最近一次ceph故障修复
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/02/24/%E8%AE%B0%E6%9C%80%E8%BF%91%E4%B8%80%E6%AC%A1ceph%E6%95%85%E9%9A%9C%E4%BF%AE%E5%A4%8D/" target="_self">
-        <div>
-          前言所谓吃一堑长一智，每次面对问题才是最好的学习机会，在面对问题的时候，尽量是能够自己去解决，或者去尝试能够最接近答案，确实无法解决再去寻求他人帮助，这样成长的会更快一些，在学校读书做题的时候，老师也是经常告诉我们要忍住，不要去直接翻答案，在当今的互联网飞速的发展下，在google的帮助下，基本上90%的问题都能找到正确的答案，而我们其实真正需要锻炼的是实践能力和甄别的能力 去年一年给不少的生产环
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-02-24 17:46" pubdate>
-              2017-02-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/02/08/%E9%A2%84%E4%BC%B0ceph%E7%9A%84%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E9%87%8F/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="预估ceph的迁移数据量">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/02/08/%E9%A2%84%E4%BC%B0ceph%E7%9A%84%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E9%87%8F/" target="_self">
-          预估ceph的迁移数据量
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/02/08/%E9%A2%84%E4%BC%B0ceph%E7%9A%84%E8%BF%81%E7%A7%BB%E6%95%B0%E6%8D%AE%E9%87%8F/" target="_self">
-        <div>
-          引言我们在进行 ceph 的 osd 的增加和减少的维护的时候，会碰到迁移数据，但是我们平时会怎么去回答关于迁移数据量的问题，一般来说，都是说很多，或者说根据环境来看，有没有精确的一个说法，到底要迁移多少数据?这个我以前也有思考过这个问题，当时想是对比前后的pg的分布，然后进行计算，正好在翻一些资料的时候，看到有alram写的一篇博客，alram是Inktank的程序员，也就是sage所在的公司，
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-02-08 17:45" pubdate>
-              2017-02-08
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/01/24/Linux%20%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8%E5%BC%80%E5%90%AF%20TCP%20BBR%20%E6%9C%89%E5%A4%9A%E5%A4%A7%E5%A5%BD%E5%A4%84/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Linux 升级内核开启 TCP BBR 有多大好处">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/01/24/Linux%20%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8%E5%BC%80%E5%90%AF%20TCP%20BBR%20%E6%9C%89%E5%A4%9A%E5%A4%A7%E5%A5%BD%E5%A4%84/" target="_self">
-          Linux 升级内核开启 TCP BBR 有多大好处
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/01/24/Linux%20%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8%E5%BC%80%E5%90%AF%20TCP%20BBR%20%E6%9C%89%E5%A4%9A%E5%A4%A7%E5%A5%BD%E5%A4%84/" target="_self">
-        <div>
-          前言如果你有订阅一些科技新闻，应该会有看过内核在4.9当中加入了一个新的算法，来解决在有一定的丢包率的情况下的带宽稳定的问题，这个是谷歌为我们带来的干货，新的 TCP 拥塞控制算法 BBR (Bottleneck Bandwidth and RTT)，谷歌一向的做法是，先上生产，然后发论文，然后有可能开源，所以这个已经合并到了内核4.9分支当中，算法带来的改变在出的测试报告当中有很详细的数据展示，
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-01-24 17:43" pubdate>
-              2017-01-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/01/22/rbd-mirror%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97-%E5%8D%95%E5%90%91%E5%A4%87%E4%BB%BD/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rbd-mirror配置指南-单向备份">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/01/22/rbd-mirror%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97-%E5%8D%95%E5%90%91%E5%A4%87%E4%BB%BD/" target="_self">
-          rbd-mirror配置指南-单向备份
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/01/22/rbd-mirror%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97-%E5%8D%95%E5%90%91%E5%A4%87%E4%BB%BD/" target="_self">
-        <div>
-          前言RBD 的 mirroring 功能将在Jewel中实现的，这个Jewel版本已经发布了很久了,这个功能已经在这个发布的版本中实现了，本来之前写过一篇文章，但是有几个朋友根据文档配置后，发现还是有问题，自己在进行再次配置的时候也发现有些地方没讲清楚，容易造成误解，这里对文档进行再一次的梳理 基本原理我们试图解决的或者至少需要克服的问题是，ceph在内部是强一致性的，这个对于跨区域的情况数据同步
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-01-22 17:38" pubdate>
-              2017-01-22
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/01/19/ceph%E7%9A%84rbd%E5%A4%87%E4%BB%BD%E8%BD%AF%E4%BB%B6ceph-backup/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph的rbd备份软件ceph-backup">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/01/19/ceph%E7%9A%84rbd%E5%A4%87%E4%BB%BD%E8%BD%AF%E4%BB%B6ceph-backup/" target="_self">
-          ceph的rbd备份软件ceph-backup
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/01/19/ceph%E7%9A%84rbd%E5%A4%87%E4%BB%BD%E8%BD%AF%E4%BB%B6ceph-backup/" target="_self">
-        <div>
-          teralytics是一家国外的大数据公司，这个是他们开源的ceph的备份的工具，在twitter上搜索相关信息的时候看到，觉得不错就拿来试用一番 这是个什么软件一个用来备份 ceph 的 rbd 的image的开源软件，提供了两种模式增量：在给定备份时间窗口内基于 rbd 快照的增量备份完全：完整镜像导出时不包含快照  注意一致性：此工具可以生成 rbd 镜像的快照，而不会感知到它们的文件系统的
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-01-19 17:36" pubdate>
-              2017-01-19
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/21/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/#board">20</a><a class="page-number" href="/page/21/#board">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/#board">23</a><a class="page-number" href="/page/24/#board">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/#board">39</a><a class="extend next" rel="next" href="/page/23/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/21/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/#board">20</a><a class="page-number" href="/page/21/#board">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/#board">23</a><a class="page-number" href="/page/24/#board">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/#board">40</a><a class="extend next" rel="next" href="/page/23/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

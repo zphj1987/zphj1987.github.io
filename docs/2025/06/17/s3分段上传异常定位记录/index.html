@@ -1,0 +1,685 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/logo.jpeg">
+  <link rel="icon" href="/img/logo.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zphj1987">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景内部定位一个分段上传的异常，原因是一个参数的设置异常，定位过程中用到了几个脚本，这里记录下 定位过程怀疑请求42min超时经过多次上传，观察到文件在上传42分钟左右的时候会提示失败了，初步怀疑是后台是否有超时参数，上传超过42分钟会失败 慢速上传验证这里通过一个s3cmd，上传一个相同大小的大文件，并且把时间控制到更长，超过42min 1time s3cmd put --limit-rate&#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="s3分段上传异常定位记录">
+<meta property="og:url" content="https://zphj1987.com/2025/06/17/s3%E5%88%86%E6%AE%B5%E4%B8%8A%E4%BC%A0%E5%BC%82%E5%B8%B8%E5%AE%9A%E4%BD%8D%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="磨磨的技术笔记">
+<meta property="og:description" content="背景内部定位一个分段上传的异常，原因是一个参数的设置异常，定位过程中用到了几个脚本，这里记录下 定位过程怀疑请求42min超时经过多次上传，观察到文件在上传42分钟左右的时候会提示失败了，初步怀疑是后台是否有超时参数，上传超过42分钟会失败 慢速上传验证这里通过一个s3cmd，上传一个相同大小的大文件，并且把时间控制到更长，超过42min 1time s3cmd put --limit-rate&#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zphj1987.com/images/blog/s3error.png">
+<meta property="article:published_time" content="2025-06-17T03:11:04.000Z">
+<meta property="article:modified_time" content="2025-06-20T01:49:35.823Z">
+<meta property="article:author" content="zphj1987">
+<meta property="article:tag" content="ceph">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://zphj1987.com/images/blog/s3error.png">
+  
+  
+  
+  <title>s3分段上传异常定位记录 - 磨磨的技术笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"zphj1987.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="磨磨的技术笔记" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>磨磨的技术笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/blog/s3error.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.8)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="s3分段上传异常定位记录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-17 11:11" pubdate>
+          2025年6月17日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          10 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">s3分段上传异常定位记录</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>内部定位一个分段上传的异常，原因是一个参数的设置异常，定位过程中用到了几个脚本，这里记录下</p>
+<h2 id="定位过程"><a href="#定位过程" class="headerlink" title="定位过程"></a>定位过程</h2><h3 id="怀疑请求42min超时"><a href="#怀疑请求42min超时" class="headerlink" title="怀疑请求42min超时"></a>怀疑请求42min超时</h3><p>经过多次上传，观察到文件在上传42分钟左右的时候会提示失败了，初步怀疑是后台是否有超时参数，上传超过42分钟会失败</p>
+<h4 id="慢速上传验证"><a href="#慢速上传验证" class="headerlink" title="慢速上传验证"></a>慢速上传验证</h4><p>这里通过一个s3cmd，上传一个相同大小的大文件，并且把时间控制到更长，超过42min</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">time s3cmd put --limit-rate=3m   --multipart-chunk-size-mb=6 big12G s3://testput/big12G <br></code></pre></td></tr></table></figure>
+
+<p>测试发现没有问题，这个地方排除了</p>
+<ul>
+<li>文件大小问题</li>
+<li>文件上传时间问题</li>
+</ul>
+<h3 id="怀疑多网关的问题"><a href="#怀疑多网关的问题" class="headerlink" title="怀疑多网关的问题"></a>怀疑多网关的问题</h3><p>因为对着多网关的发分片数据，怀疑是不是A网关发了，B网关请求的时候没有同步一些元数据,这里使用一个模拟程序来进行分片的多网关上传</p>
+<p>多网关上传脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab103 data]<span class="hljs-comment"># cat upload.py</span><br>import boto3<br>import random<br>import os<br>import time<br>from botocore.client import Config<br><br><span class="hljs-comment"># 配置</span><br>ACCESS_KEY = <span class="hljs-string">&#x27;test1&#x27;</span><br>SECRET_KEY = <span class="hljs-string">&#x27;test1&#x27;</span><br>GATEWAYS = [<span class="hljs-string">&#x27;http://192.168.0.101:7480&#x27;</span>, <span class="hljs-string">&#x27;http://192.168.0.102:7480&#x27;</span>]<br>BUCKET_NAME = <span class="hljs-string">&#x27;testput&#x27;</span><br>LOCAL_FILE_PATH = <span class="hljs-string">&#x27;12G&#x27;</span>  <span class="hljs-comment"># 本地文件路径</span><br>OBJECT_NAME = os.path.basename(LOCAL_FILE_PATH)<br>PART_SIZE = 6 * 1024 * 1024  <span class="hljs-comment"># 6MB 分片</span><br><br><span class="hljs-comment"># 创建 S3 客户端连接</span><br>def create_s3_client(endpoint_url):<br>    <span class="hljs-built_in">return</span> boto3.client(<br>        <span class="hljs-string">&#x27;s3&#x27;</span>,<br>        aws_access_key_id=ACCESS_KEY,<br>        aws_secret_access_key=SECRET_KEY,<br>        endpoint_url=endpoint_url,<br>        config=Config(signature_version=<span class="hljs-string">&#x27;s3v4&#x27;</span>),<br>        region_name=<span class="hljs-string">&#x27;us-east-1&#x27;</span>,<br>    )<br><br>def upload_multipart():<br>    <span class="hljs-comment"># 用第一个网关初始化上传</span><br>    init_client = create_s3_client(GATEWAYS[0])<br>    response = init_client.create_multipart_upload(Bucket=BUCKET_NAME, Key=OBJECT_NAME)<br>    upload_id = response[<span class="hljs-string">&#x27;UploadId&#x27;</span>]<br>    <span class="hljs-built_in">print</span>(f<span class="hljs-string">&quot;Initiated multipart upload with ID: &#123;upload_id&#125;&quot;</span>)<br><br>    parts = []<br>    part_number = 1<br>    try:<br>        with open(LOCAL_FILE_PATH, <span class="hljs-string">&#x27;rb&#x27;</span>) as f:<br>            <span class="hljs-keyword">while</span> True:<br>                data = f.read(PART_SIZE)<br>                <span class="hljs-keyword">if</span> not data:<br>                    <span class="hljs-built_in">break</span><br><br>                gateway = random.choice(GATEWAYS)<br>                client = create_s3_client(gateway)<br><br>                <span class="hljs-built_in">print</span>(f<span class="hljs-string">&quot;Uploading part &#123;part_number&#125; via &#123;gateway&#125;...&quot;</span>)<br>                part = client.upload_part(<br>                    Bucket=BUCKET_NAME,<br>                    Key=OBJECT_NAME,<br>                    PartNumber=part_number,<br>                    UploadId=upload_id,<br>                    Body=data<br>                )<br>                parts.append(&#123;<span class="hljs-string">&#x27;ETag&#x27;</span>: part[<span class="hljs-string">&#x27;ETag&#x27;</span>], <span class="hljs-string">&#x27;PartNumber&#x27;</span>: part_number&#125;)<br>                <span class="hljs-built_in">print</span>(f<span class="hljs-string">&quot;Uploaded part &#123;part_number&#125; via &#123;gateway&#125;, ETag: &#123;part[&#x27;ETag&#x27;]&#125;&quot;</span>)<br>                part_number += 1<br><br>                <span class="hljs-comment">#time.sleep(1)  # 停止 1 秒</span><br><br>        <span class="hljs-comment"># 完成分段上传</span><br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Completing multipart upload...&quot;</span>)<br>        init_client.complete_multipart_upload(<br>            Bucket=BUCKET_NAME,<br>            Key=OBJECT_NAME,<br>            UploadId=upload_id,<br>            MultipartUpload=&#123;<span class="hljs-string">&#x27;Parts&#x27;</span>: parts&#125;<br>        )<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Upload complete.&quot;</span>)<br>    except Exception as e:<br>        <span class="hljs-built_in">print</span>(f<span class="hljs-string">&quot;Error occurred: &#123;e&#125;&quot;</span>)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Aborting upload...&quot;</span>)<br>        init_client.abort_multipart_upload(Bucket=BUCKET_NAME, Key=OBJECT_NAME, UploadId=upload_id)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    upload_multipart()<br></code></pre></td></tr></table></figure>
+
+<p>这个地方经过验证，没有问题，排除了这个问题</p>
+<p>查看日志出现</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">total parts mismatch: have: 167 expected: 1872<br></code></pre></td></tr></table></figure>
+<p>这个地方看到一个关键信息，分片需要1872，只有167</p>
+<h4 id="查看分片情况的脚本"><a href="#查看分片情况的脚本" class="headerlink" title="查看分片情况的脚本"></a>查看分片情况的脚本</h4><p>我们查看分片</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@fiel-03 ceph]<span class="hljs-comment"># cat zp1.py </span><br>import boto3<br><br>s3 = boto3.client(<br>    <span class="hljs-string">&#x27;s3&#x27;</span>,<br>    endpoint_url=<span class="hljs-string">&#x27;http://ip:7480&#x27;</span>,<br>    aws_access_key_id=<span class="hljs-string">&#x27;access&#x27;</span>,<br>    aws_secret_access_key=<span class="hljs-string">&#x27;key&#x27;</span><br>)<br><br>bucket = <span class="hljs-string">&#x27;mybucket&#x27;</span><br>key = <span class="hljs-string">&#x27;objectname&#x27;</span><br>upload_id = <span class="hljs-string">&#x27;myuploadid&#x27;</span><br><br>part_number_marker = 0<br>is_truncated = True<br><br><span class="hljs-keyword">while</span> is_truncated:<br>    response = s3.list_parts(<br>        Bucket=bucket,<br>        Key=key,<br>        UploadId=upload_id,<br>        PartNumberMarker=part_number_marker<br>    )<br><br><br>    <span class="hljs-keyword">for</span> part <span class="hljs-keyword">in</span> response[<span class="hljs-string">&#x27;Parts&#x27;</span>]:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Part &#123;&#125; - Size: &#123;&#125; - ETag: &#123;&#125;&quot;</span>.format(<br>            part[<span class="hljs-string">&#x27;PartNumber&#x27;</span>], part[<span class="hljs-string">&#x27;Size&#x27;</span>], part[<span class="hljs-string">&#x27;ETag&#x27;</span>]))<br><br>    is_truncated = response.get(<span class="hljs-string">&#x27;IsTruncated&#x27;</span>, False)<br>    <span class="hljs-keyword">if</span> is_truncated:<br>        part_number_marker = response[<span class="hljs-string">&#x27;NextPartNumberMarker&#x27;</span>]<br></code></pre></td></tr></table></figure>
+
+<p>用这个检查，发现确实是有问题，分片不见了，但是查看后台，分片的文件还在，说明是记录被清除了，之前查看了bucket的生命周期没有问题的</p>
+<h4 id="查看生命周期的脚本"><a href="#查看生命周期的脚本" class="headerlink" title="查看生命周期的脚本"></a>查看生命周期的脚本</h4><p>查看生命周期</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs bash">import boto3<br>from botocore.exceptions import ClientError<br><br><span class="hljs-comment"># 创建 S3 客户端</span><br>s3 = boto3.client(<br>    <span class="hljs-string">&#x27;s3&#x27;</span>,<br>    endpoint_url=<span class="hljs-string">&#x27;http://ip:7480&#x27;</span>,<br>    aws_access_key_id=<span class="hljs-string">&#x27;access&#x27;</span>,<br>    aws_secret_access_key=<span class="hljs-string">&#x27;key&#x27;</span><br>)<br><br>bucket_name = <span class="hljs-string">&#x27;bucket&#x27;</span><br><br>try:<br>    response = s3.get_bucket_lifecycle_configuration(Bucket=bucket_name)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Lifecycle Rules:&quot;</span>)<br>    <span class="hljs-keyword">for</span> rule <span class="hljs-keyword">in</span> response[<span class="hljs-string">&#x27;Rules&#x27;</span>]:<br>        <span class="hljs-built_in">print</span>(rule)<br><br>except ClientError as e:<br>    <span class="hljs-keyword">if</span> e.response[<span class="hljs-string">&#x27;Error&#x27;</span>][<span class="hljs-string">&#x27;Code&#x27;</span>] == <span class="hljs-string">&#x27;NoSuchLifecycleConfiguration&#x27;</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Bucket &#x27;&#123;&#125;&#x27; has no lifecycle configuration.&quot;</span>.format(bucket_name))<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Error getting lifecycle configuration: &#123;&#125;&quot;</span>.format(e))<br><br></code></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">&#123;<span class="hljs-string">&#x27;Status&#x27;</span>: <span class="hljs-string">&#x27;Enabled&#x27;</span>, <span class="hljs-string">&#x27;AbortIncompleteMultipartUpload&#x27;</span>: &#123;<span class="hljs-string">&#x27;DaysAfterInitiation&#x27;</span>: 7&#125;, <span class="hljs-string">&#x27;Prefix&#x27;</span>: <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-string">&#x27;ID&#x27;</span>: <span class="hljs-string">&#x27;abort multipart upload object clean&#x27;</span>&#125;<br></code></pre></td></tr></table></figure>
+<p>可以看到设置的是7天，没有问题</p>
+<h3 id="调试生命周期参数"><a href="#调试生命周期参数" class="headerlink" title="调试生命周期参数"></a>调试生命周期参数</h3><p>有一个参数是可以缩短生命周期<br>默认值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-string">&quot;rgw_lc_debug_interval&quot;</span>: <span class="hljs-string">&quot;-1&quot;</span>,<br></code></pre></td></tr></table></figure>
+<p>有一个是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-string">&quot;rgw_lc_debug_interval&quot;</span>: <span class="hljs-string">&quot;300&quot;</span>,<br></code></pre></td></tr></table></figure>
+<p>这个意思是一天换算成300秒，那么我们设置的7天就是设置的2100秒，大概是35min，这个就是35分钟以上的，就开始执行回收，这样每次超过35分钟的，前面的肯定被回收，当前的上一个对象有概率被回收，也就出现404的情况了，这里把参数调整以后，再次验证上传没有问题了</p>
+<h4 id="调整调试参数"><a href="#调整调试参数" class="headerlink" title="调整调试参数"></a>调整调试参数</h4><p>这个支持在线调整，下个上传即可生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ceph daemon /var/run/ceph/ceph-client.rgw.asok config <span class="hljs-built_in">set</span> rgw_lc_debug_interval -1<br></code></pre></td></tr></table></figure>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>通过调整参数后，环境上传分片恢复正常</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ceph/" class="print-no-link">#ceph</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>s3分段上传异常定位记录</div>
+      <div>https://zphj1987.com/2025/06/17/s3分段上传异常定位记录/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zphj1987</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/06/18/%E6%89%B9%E9%87%8F%E6%89%A7%E8%A1%8C%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E7%9A%84%E8%84%9A%E6%9C%AC/" title="批量执行远程命令的脚本">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">批量执行远程命令的脚本</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/09/%E6%B5%8B%E8%AF%95%E8%B7%AF%E7%94%B1%E8%BD%AC%E5%8F%91%E6%9C%80%E5%A4%A7%E8%BF%9E%E6%8E%A5%E6%95%B0%E8%84%9A%E6%9C%AC/" title="测试路由转发最大连接数脚本">
+                        <span class="hidden-mobile">测试路由转发最大连接数脚本</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

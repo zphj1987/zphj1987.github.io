@@ -226,6 +226,408 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/01/03/rbd%E7%9A%84image%E5%AF%B9%E8%B1%A1%E6%95%B0%E4%B8%8E%E8%83%BD%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rbd的image对象数与能写入文件数的关系">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/01/03/rbd%E7%9A%84image%E5%AF%B9%E8%B1%A1%E6%95%B0%E4%B8%8E%E8%83%BD%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" target="_self">
+          rbd的image对象数与能写入文件数的关系
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/01/03/rbd%E7%9A%84image%E5%AF%B9%E8%B1%A1%E6%95%B0%E4%B8%8E%E8%83%BD%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" target="_self">
+        <div>
+          前言收到一个问题如下：  一个300TB 的RBD，只有7800万的objects，如果存储小文件的话，感觉不够用   对于这个问题，我原来的理解是：对象默认设置的大小是4M一个，存储下去的数据，如果小于4M，就会占用一个小于4M的对象，如果超过4M，那么存储的数据就会进行拆分成多个4M，这个地方其实是不严谨的 对于rados接口来说，数据是多大对象put进去就是多大的对象，并没有进行拆分，进行拆
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-01-03 18:37" pubdate>
+              2017-01-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/12/26/%E5%A4%84%E7%90%86Ceph%20osd%E7%9A%84journal%E7%9A%84uuid%E9%97%AE%E9%A2%98/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="处理Ceph osd的journal的uuid问题">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/12/26/%E5%A4%84%E7%90%86Ceph%20osd%E7%9A%84journal%E7%9A%84uuid%E9%97%AE%E9%A2%98/" target="_self">
+          处理Ceph osd的journal的uuid问题
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/12/26/%E5%A4%84%E7%90%86Ceph%20osd%E7%9A%84journal%E7%9A%84uuid%E9%97%AE%E9%A2%98/" target="_self">
+        <div>
+          前言之前有一篇文章介绍的是，在centos7的jewel下面如果自己做的分区如何处理自动挂载的问题，当时的环境对journal的地方采取的是文件的形式处理的，这样就没有了重启后journal的磁盘偏移的问题 如果采用的是ceph自带的deploy去做分区的处理的时候，是调用的sgdisk去对磁盘做了一些处理的，然后deploy能够识别一些特殊的标记，然后去做了一些其他的工作，而自己分区的时候，是没
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-12-26 18:36" pubdate>
+              2016-12-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/12/23/%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8DCephfs%E8%A2%AB%E5%AE%8C%E5%85%A8%E6%AF%81%E6%8E%89/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="如何避免Cephfs被完全毁掉">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/12/23/%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8DCephfs%E8%A2%AB%E5%AE%8C%E5%85%A8%E6%AF%81%E6%8E%89/" target="_self">
+          如何避免Cephfs被完全毁掉
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/12/23/%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8DCephfs%E8%A2%AB%E5%AE%8C%E5%85%A8%E6%AF%81%E6%8E%89/" target="_self">
+        <div>
+          前提一套系统的最低要求是可恢复，也就是数据不丢失，但是在各种各样的原因下，整套系统都有被毁掉的可能，一直以来有个观点就是存储是需要两套的，一般情况下很难实现，但是如何把故障发生的概率降低到最低，这个是我们需要考虑的问题  最近在社区群里面又听闻一个案例，一套系统的文件系统被重置掉了，也就是fs被重建了，实际上这属于一个不应该有的操作，但是已经发生的事情，就看怎么样能在下次避免或者把损失降到最低，对
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-12-23 18:35" pubdate>
+              2016-12-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/12/22/Ceph%E6%95%B0%E6%8D%AE%E7%9B%98%E6%80%8E%E6%A0%B7%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph数据盘怎样实现自动挂载">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/12/22/Ceph%E6%95%B0%E6%8D%AE%E7%9B%98%E6%80%8E%E6%A0%B7%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" target="_self">
+          Ceph数据盘怎样实现自动挂载
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/12/22/Ceph%E6%95%B0%E6%8D%AE%E7%9B%98%E6%80%8E%E6%A0%B7%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" target="_self">
+        <div>
+          前言在Centos7 下，现在采用了 systemctl来控制服务，这个刚开始用起来可能不太习惯，不过这个服务比之前的服务控制要强大的多，可以做更多的控制，本节将来介绍下关于 Ceph的 osd 磁盘挂载的问题 很多人部署以后，发现在Centos7下用Jewel的时候没有去写fstab也没有写配置文件，重启服务器一样能够挂载起来了，关于这个有另外一篇文章：「ceph在centos7下一个不容易发现
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-12-22 18:34" pubdate>
+              2016-12-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/12/18/cephonebox%E5%8F%91%E5%B8%83/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="cephonebox发布">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/12/18/cephonebox%E5%8F%91%E5%B8%83/" target="_self">
+          cephonebox发布
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/12/18/cephonebox%E5%8F%91%E5%B8%83/" target="_self">
+        <div>
+          前言现在已经是2016年收官的一个月了，之前一直想做一个calamari的集成版本，之所以有这个想法，是因为，即使在已经打好包的情况下，因为各种软件版本的原因，造成很多人无法配置成功，calamari发布以后，因为版本的更迭，经常出现软件版本引起的BUG 这里直接把需要的软件集成在一起了，按照本篇指导，一步一步是能够很简单的配置起来的，并且提供了一个视频的指导，应该能够很大程度上降低calamar
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-12-18 18:15" pubdate>
+              2016-12-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/12/14/rbd%E7%9A%84image%E5%BF%AB%E7%85%A7%E4%B8%8EPool%E5%BF%AB%E7%85%A7/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rbd的image快照与Pool快照">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/12/14/rbd%E7%9A%84image%E5%BF%AB%E7%85%A7%E4%B8%8EPool%E5%BF%AB%E7%85%A7/" target="_self">
+          rbd的image快照与Pool快照
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/12/14/rbd%E7%9A%84image%E5%BF%AB%E7%85%A7%E4%B8%8EPool%E5%BF%AB%E7%85%A7/" target="_self">
+        <div>
+          前言这个问题是不久前在ceph社区群里看到的，创建image的时候，当时的报错如下：  2016-12-13 23:13:10.266865 7efbfb7fe700 -1 librbd::image::CreateRequest: pool not configured for self-managed RBD snapshot supportrbd: create error: (22) In
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-12-14 18:13" pubdate>
+              2016-12-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2016/12/13/Cephfs%E7%9A%84%E5%BF%AB%E7%85%A7%E5%8A%9F%E8%83%BD/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Cephfs的快照功能">
         </a>
@@ -490,413 +892,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/11/23/fio%E6%B5%8B%E8%AF%95ceph%E7%9A%84filestore/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="fio测试ceph的filestore">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/11/23/fio%E6%B5%8B%E8%AF%95ceph%E7%9A%84filestore/" target="_self">
-          fio测试ceph的filestore
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/11/23/fio%E6%B5%8B%E8%AF%95ceph%E7%9A%84filestore/" target="_self">
-        <div>
-          前言fio是一个适应性非常强的软件，基本上能够模拟所有的IO请求，是目前最全面的一款测试软件，之前在看德国电信的一篇分享的时候，里面就提到了，如果需要测试存储性能，尽量只用一款软件，这样从上层测试到底层去，才能更好的去比较差别 fio对于ceph来说，可以测试文件系统，基于文件系统之上测试，可以测试内核rbd，将rbdmap到本地格式化以后进行测试，或者基于librbd直接对rbd进行测试，这个是
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-11-23 17:59" pubdate>
-              2016-11-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/11/16/%E6%9F%A5%E8%AF%A2OSD%E8%BF%90%E8%A1%8C%E5%9C%A8%E5%93%AA%E4%BA%9Bcpu%E4%B8%8A/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="查询OSD运行在哪些cpu上">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/11/16/%E6%9F%A5%E8%AF%A2OSD%E8%BF%90%E8%A1%8C%E5%9C%A8%E5%93%AA%E4%BA%9Bcpu%E4%B8%8A/" target="_self">
-          查询OSD运行在哪些cpu上
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/11/16/%E6%9F%A5%E8%AF%A2OSD%E8%BF%90%E8%A1%8C%E5%9C%A8%E5%93%AA%E4%BA%9Bcpu%E4%B8%8A/" target="_self">
-        <div>
-          前言在看CPU相关的文章的时候，想起来之前有文章讨论是否要做CPU绑定，这个有说绑定的也有说不绑定的，然后就想到一个问题，有去观测这些OSD到底运行在哪些CPU上面么,有问题就好解决了，现在就是要查下机器上的OSD运行在哪些CPU上 代码这里直接上代码了，最近学习python在，就用python来实现 123456789101112131415161718192021222324252627282
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-11-16 17:57" pubdate>
-              2016-11-16
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/11/14/yum%E5%AE%89%E8%A3%85Ceph%E6%8C%87%E5%AE%9AJewel%E7%89%88%E6%9C%AC/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="yum安装Ceph指定Jewel版本">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/11/14/yum%E5%AE%89%E8%A3%85Ceph%E6%8C%87%E5%AE%9AJewel%E7%89%88%E6%9C%AC/" target="_self">
-          yum安装Ceph指定Jewel版本
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/11/14/yum%E5%AE%89%E8%A3%85Ceph%E6%8C%87%E5%AE%9AJewel%E7%89%88%E6%9C%AC/" target="_self">
-        <div>
-          前言通过yum安装指定的rpm包，这个一般是  yum –showduplicates list ceph | expand ,然后去通过yum安装指定的版本即可，这个在hammer下是没有问题的，但是在Jewel下进行安装的时候却出现了问题，我们来看下怎么解决这个问题的  实践过程我们需要安装  ceph-10.2.0-0.el7  这个版本的，根据之前的方法 12345678910111213
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-11-14 17:57" pubdate>
-              2016-11-14
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/11/14/%E5%A4%84%E7%90%86stale%E7%9A%84pg/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="处理stale的pg">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/11/14/%E5%A4%84%E7%90%86stale%E7%9A%84pg/" target="_self">
-          处理stale的pg
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/11/14/%E5%A4%84%E7%90%86stale%E7%9A%84pg/" target="_self">
-        <div>
-          前言在某些场景下Ceph集群会出现stale的情况，也就是ceph集群PG的僵死状态，这个状态实际上是无法处理新的请求了，新的请求过来只会block，那么我们如何去恢复环境 实践过程首先模拟stale环境，这个比较好模拟  设置副本2，然后同时关闭两个OSD（不同故障域上），然后删除这两个OSD  集群这个时候就会出现stale的情况了，因为两份数据都丢了，在一些环境下，数据本身就是临时的或者不是
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-11-14 17:55" pubdate>
-              2016-11-14
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/11/10/%E9%A2%84%E4%BC%B0Ceph%E9%9B%86%E7%BE%A4%E6%81%A2%E5%A4%8D%E6%97%B6%E9%97%B4/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="预估Ceph集群恢复时间">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/11/10/%E9%A2%84%E4%BC%B0Ceph%E9%9B%86%E7%BE%A4%E6%81%A2%E5%A4%8D%E6%97%B6%E9%97%B4/" target="_self">
-          预估Ceph集群恢复时间
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/11/10/%E9%A2%84%E4%BC%B0Ceph%E9%9B%86%E7%BE%A4%E6%81%A2%E5%A4%8D%E6%97%B6%E9%97%B4/" target="_self">
-        <div>
-          一、前言本章很简单，就是预估集群恢复的时间,这个地方是简单的通过计算来预估需要恢复的实际，动态的显示   二、代码12345678910111213141516171819202122232425262728293031323334353637#!/usr/bin/env python# -*- coding: UTF-8 -*-import osimport sysimport commands
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-11-10 17:54" pubdate>
-              2016-11-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/11/07/CephFS%20cache%20tier%E5%AE%9E%E8%B7%B5/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="CephFS cache tier实践">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/11/07/CephFS%20cache%20tier%E5%AE%9E%E8%B7%B5/" target="_self">
-          CephFS cache tier实践
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/11/07/CephFS%20cache%20tier%E5%AE%9E%E8%B7%B5/" target="_self">
-        <div>
-          这是一篇分享文，作者因为最近想深入研究下ceph的cache pool，作者写的文章非常的好，这里先直接翻译这篇文章，然后再加入我自己的相关数据 blog原文作者想启动blog写下自己的Openstack和Ceph的相关经验，第一个话题就选择了 Ceph cache tiering , 作者的使用场景为短时间的虚拟机，用来跑测试的，这种场景他们准备用Nvme做一个缓冲池来加速的虚拟机 cache
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-11-07 17:51" pubdate>
-              2016-11-07
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/23/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/#board">22</a><a class="page-number" href="/page/23/#board">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/#board">25</a><a class="page-number" href="/page/26/#board">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/#board">39</a><a class="extend next" rel="next" href="/page/25/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/23/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/#board">22</a><a class="page-number" href="/page/23/#board">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/#board">25</a><a class="page-number" href="/page/26/#board">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/#board">40</a><a class="extend next" rel="next" href="/page/25/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

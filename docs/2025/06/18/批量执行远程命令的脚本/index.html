@@ -1,0 +1,661 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/logo.jpeg">
+  <link rel="icon" href="/img/logo.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zphj1987">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景最近有机器需要进行检查，看上面的服务是否正常，需要执行大量的机器，可以拿到ip.list,以万为单位的，如果一个个去执行就非常的慢了这里我们采用一个脚本进行执行，就快很多了 相关脚本12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758">
+<meta property="og:type" content="article">
+<meta property="og:title" content="批量执行远程命令的脚本">
+<meta property="og:url" content="https://zphj1987.com/2025/06/18/%E6%89%B9%E9%87%8F%E6%89%A7%E8%A1%8C%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E7%9A%84%E8%84%9A%E6%9C%AC/index.html">
+<meta property="og:site_name" content="磨磨的技术笔记">
+<meta property="og:description" content="背景最近有机器需要进行检查，看上面的服务是否正常，需要执行大量的机器，可以拿到ip.list,以万为单位的，如果一个个去执行就非常的慢了这里我们采用一个脚本进行执行，就快很多了 相关脚本12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zphj1987.com/images/blog/topcommand.png">
+<meta property="article:published_time" content="2025-06-18T07:59:48.000Z">
+<meta property="article:modified_time" content="2025-06-20T01:48:01.091Z">
+<meta property="article:author" content="zphj1987">
+<meta property="article:tag" content="批量执行">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://zphj1987.com/images/blog/topcommand.png">
+  
+  
+  
+  <title>批量执行远程命令的脚本 - 磨磨的技术笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"zphj1987.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="磨磨的技术笔记" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>磨磨的技术笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/blog/topcommand.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.8)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="批量执行远程命令的脚本"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-18 15:59" pubdate>
+          2025年6月18日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          502 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          5 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">批量执行远程命令的脚本</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近有机器需要进行检查，看上面的服务是否正常，需要执行大量的机器，可以拿到ip.list,以万为单位的，如果一个个去执行就非常的慢了<br>这里我们采用一个脚本进行执行，就快很多了</p>
+<h2 id="相关脚本"><a href="#相关脚本" class="headerlink" title="相关脚本"></a>相关脚本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#! /usr/bin/env python3</span><br><span class="hljs-keyword">import</span> paramiko<br><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor, as_completed<br><span class="hljs-keyword">import</span> os<br><br><span class="hljs-comment"># 参数配置</span><br>ip_file = <span class="hljs-string">&quot;ip.list&quot;</span><br>username = <span class="hljs-string">&quot;root&quot;</span><br>password = <span class="hljs-string">&quot;123456&quot;</span><br>command = <span class="hljs-string">&quot;hostname&quot;</span><br>max_workers = <span class="hljs-number">50</span>  <span class="hljs-comment"># 并发线程数</span><br><br><span class="hljs-comment"># 从文件读取 IP 列表</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">load_ip_list</span>(<span class="hljs-params">filepath</span>):<br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(filepath, <span class="hljs-string">&quot;r&quot;</span>) <span class="hljs-keyword">as</span> f:<br>            <span class="hljs-keyword">return</span> [line.strip() <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> f <span class="hljs-keyword">if</span> line.strip()]<br>    <span class="hljs-keyword">except</span> FileNotFoundError:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;IP 列表文件 &#x27;<span class="hljs-subst">&#123;filepath&#125;</span>&#x27; 不存在&quot;</span>)<br>        exit(<span class="hljs-number">1</span>)<br><br><span class="hljs-comment"># 单个 IP 执行命令</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run_command</span>(<span class="hljs-params">ip</span>):<br>    <span class="hljs-keyword">try</span>:<br>        ssh = paramiko.SSHClient()<br>        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())<br>        ssh.connect(ip, username=username, password=password, timeout=<span class="hljs-number">5</span>)<br><br>        stdin, stdout, stderr = ssh.exec_command(command)<br>        result = stdout.read().decode().strip()<br>        error = stderr.read().decode().strip()<br>        ssh.close()<br><br>        <span class="hljs-keyword">return</span> (ip, result <span class="hljs-keyword">if</span> result <span class="hljs-keyword">else</span> error)<br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        <span class="hljs-keyword">return</span> (ip, <span class="hljs-string">f&quot;连接失败: <span class="hljs-subst">&#123;e&#125;</span>&quot;</span>)<br><br><span class="hljs-comment"># 主函数：多线程并发执行</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_completed_ips</span>(<span class="hljs-params">filepath</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;从result.list中读取已完成的IP&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> os.path.exists(filepath):<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">set</span>()<br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(filepath, <span class="hljs-string">&quot;r&quot;</span>) <span class="hljs-keyword">as</span> f:<br>        <span class="hljs-keyword">return</span> &#123;line.split(<span class="hljs-string">&quot;=&gt;&quot;</span>)[<span class="hljs-number">0</span>].strip() <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> f <span class="hljs-keyword">if</span> <span class="hljs-string">&quot;=&gt;&quot;</span> <span class="hljs-keyword">in</span> line&#125;<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    ip_list = load_ip_list(ip_file)<br>    completed_ips = get_completed_ips(<span class="hljs-string">&quot;result.list&quot;</span>)<br>    ip_list_to_run = [ip <span class="hljs-keyword">for</span> ip <span class="hljs-keyword">in</span> ip_list <span class="hljs-keyword">if</span> ip <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> completed_ips]<br><br>    total = <span class="hljs-built_in">len</span>(ip_list)<br>    to_run = <span class="hljs-built_in">len</span>(ip_list_to_run)<br>    <span class="hljs-keyword">if</span> to_run == <span class="hljs-number">0</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;所有 IP 已完成，无需重复执行&quot;</span>)<br>        <span class="hljs-keyword">return</span><br><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;共 <span class="hljs-subst">&#123;total&#125;</span> 个 IP，已完成 <span class="hljs-subst">&#123;total - to_run&#125;</span> 个，剩余 <span class="hljs-subst">&#123;to_run&#125;</span> 个待执行\n&quot;</span>)<br><br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;result.list&quot;</span>, <span class="hljs-string">&quot;a&quot;</span>) <span class="hljs-keyword">as</span> good_file, <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;badip.list&quot;</span>, <span class="hljs-string">&quot;a&quot;</span>) <span class="hljs-keyword">as</span> bad_file:<br>        <span class="hljs-keyword">with</span> ThreadPoolExecutor(max_workers=max_workers) <span class="hljs-keyword">as</span> executor:<br>            future_to_ip = &#123;executor.submit(run_command, ip): ip <span class="hljs-keyword">for</span> ip <span class="hljs-keyword">in</span> ip_list_to_run&#125;<br>            finished = <span class="hljs-number">0</span><br>            <span class="hljs-keyword">for</span> future <span class="hljs-keyword">in</span> as_completed(future_to_ip):<br>                ip, output = future.result()<br><br>                <span class="hljs-keyword">if</span> output.startswith(<span class="hljs-string">&quot;连接失败&quot;</span>):<br>                    bad_file.write(<span class="hljs-string">f&quot;<span class="hljs-subst">&#123;ip&#125;</span>\n&quot;</span>)<br>                <span class="hljs-keyword">else</span>:<br>                    single_line_output = <span class="hljs-string">&quot; &quot;</span>.join(line.strip() <span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> output.splitlines())<br>                    good_file.write(<span class="hljs-string">f&quot;<span class="hljs-subst">&#123;ip&#125;</span> =&gt; <span class="hljs-subst">&#123;single_line_output&#125;</span>\n&quot;</span>)<br><br>                finished += <span class="hljs-number">1</span><br>                <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;[<span class="hljs-subst">&#123;finished&#125;</span>/<span class="hljs-subst">&#123;to_run&#125;</span>] 已完成 <span class="hljs-subst">&#123;ip&#125;</span>&quot;</span>)<br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    main()<br></code></pre></td></tr></table></figure>
+
+
+<p>脚本功能说明：</p>
+<ul>
+<li>支持50个并发，执行下来效果还是很快</li>
+<li>支持中断后继续执行</li>
+<li>支持记录异常的ip（有无法连接的也正常）</li>
+<li>输出的结果以ip为行，放到本地的文本里面，供后续的检查</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%89%B9%E9%87%8F%E6%89%A7%E8%A1%8C/" class="print-no-link">#批量执行</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>批量执行远程命令的脚本</div>
+      <div>https://zphj1987.com/2025/06/18/批量执行远程命令的脚本/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zphj1987</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/06/20/bluestack%E6%A8%A1%E6%8B%9F%E5%99%A8macos%E7%89%88%E6%9C%AC%E8%8E%B7%E5%8F%96root%E6%9D%83%E9%99%90%E7%9A%84%E6%96%B9%E6%B3%95/" title="bluestack模拟器macos版本获取root权限的方法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">bluestack模拟器macos版本获取root权限的方法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/17/s3%E5%88%86%E6%AE%B5%E4%B8%8A%E4%BC%A0%E5%BC%82%E5%B8%B8%E5%AE%9A%E4%BD%8D%E8%AE%B0%E5%BD%95/" title="s3分段上传异常定位记录">
+                        <span class="hidden-mobile">s3分段上传异常定位记录</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

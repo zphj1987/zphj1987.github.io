@@ -226,6 +226,408 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/09/02/ceph%20luminous%20bluestore%E7%83%AD%E6%8F%92%E6%8B%94%E5%AE%9E%E7%8E%B0/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph luminous bluestore热插拔实现">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/09/02/ceph%20luminous%20bluestore%E7%83%AD%E6%8F%92%E6%8B%94%E5%AE%9E%E7%8E%B0/" target="_self">
+          ceph luminous bluestore热插拔实现
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2019/09/02/ceph%20luminous%20bluestore%E7%83%AD%E6%8F%92%E6%8B%94%E5%AE%9E%E7%8E%B0/" target="_self">
+        <div>
+          需求描述在某些测试场景下面，需要满足能够拔盘以后在插入的时候能够自动上线磁盘，这个需求实际在生产中是不建议使用的，原因是插入的磁盘如果本身存在问题，那么拉起的操作可能会破坏了本身集群的稳定性，所以这个算是一个测试相关的功能，但是做这个功能的前提是我们不要去影响了正常的环境的逻辑 类似的功能的开发都是应该去在外面做触发的也就是能够很方便的开启和关闭功能，整个功能也是集成到原来的环境当中的，原来怎么用
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-09-02 08:01" pubdate>
+              2019-09-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/09/02/http%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%87%E4%BB%B6%E5%90%8D%E5%A4%A7%E5%B0%8F%E5%86%99%E5%BF%BD%E7%95%A5/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="http服务器文件名大小写忽略">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/09/02/http%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%87%E4%BB%B6%E5%90%8D%E5%A4%A7%E5%B0%8F%E5%86%99%E5%BF%BD%E7%95%A5/" target="_self">
+          http服务器文件名大小写忽略
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2019/09/02/http%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%96%87%E4%BB%B6%E5%90%8D%E5%A4%A7%E5%B0%8F%E5%86%99%E5%BF%BD%E7%95%A5/" target="_self">
+        <div>
+          问题文件从windows里面放到nginx里面去的时候，文件在windows下面是大小写忽略，也就是不论大小写都可以匹配的，而到linux下面的时候，因为linux是区分大小写的，也就是会出现无法忽略大小写的访问 调研通过nginx里面目前还没有找到实现的方式，通过插件的方式也只是能把大小写全部转换成小写，这样要让存储的文件的名称全部改成小写，这个不太适合去改变用户的文件 而apache里面有模块
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-09-02 08:01" pubdate>
+              2019-09-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/09/01/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%80%89%E6%8B%A9/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Linux操作系统选择">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/09/01/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%80%89%E6%8B%A9/" target="_self">
+          Linux操作系统选择
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2019/09/01/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%80%89%E6%8B%A9/" target="_self">
+        <div>
+          主流的操作系统 ubuntu centos debian oracle linux  主要使用的操作系统就是上面几个，主要是ubuntu和centos，debian是基于ubuntu改的，oracle linux是基于centos改的 操作系统介绍ubuntu操作系统ubuntu操作系统是主打桌面的一个操作系统，软件包的更新比较快，内核的版本用的比较新，如果软件系统都是采用的比较新的库和新的内核，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-09-01 08:01" pubdate>
+              2019-09-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/09/01/iscsi%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="iscsi客户端常用操作">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/09/01/iscsi%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" target="_self">
+          iscsi客户端常用操作
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2019/09/01/iscsi%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" target="_self">
+        <div>
+          说明本篇主要记录iscsi的客户端的一些常用的一些操作 iscsi服务端常用操作删除一个lun 1tgtadm --lld iscsi --mode logicalunit --op delete  --tid 2  --lun 1  新增一个lun 1tgtadm --lld iscsi --mode logicalunit --op new --tid 2 --lun 1 --backing-
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-09-01 08:01" pubdate>
+              2019-09-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/07/26/bluestore%E5%AF%B9%E8%B1%A1%E6%8C%82%E8%BD%BD%E5%88%B0%E7%B3%BB%E7%BB%9F%E8%BF%9B%E8%A1%8C%E6%8F%90%E5%8F%96/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="bluestore对象挂载到系统进行提取">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/07/26/bluestore%E5%AF%B9%E8%B1%A1%E6%8C%82%E8%BD%BD%E5%88%B0%E7%B3%BB%E7%BB%9F%E8%BF%9B%E8%A1%8C%E6%8F%90%E5%8F%96/" target="_self">
+          bluestore对象挂载到系统进行提取
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2019/07/26/bluestore%E5%AF%B9%E8%B1%A1%E6%8C%82%E8%BD%BD%E5%88%B0%E7%B3%BB%E7%BB%9F%E8%BF%9B%E8%A1%8C%E6%8F%90%E5%8F%96/" target="_self">
+        <div>
+          前言之前在filestore里面，pg是直接暴露到文件系统的，也就是可以直接进去查看或者拷贝，在极端情况下，多个osd无法启动，pg无法导出的时候，那么对pg内部对象的操作处理，是可以作为最后恢复数据的一种方式的 这个在bluestore里面就没那么直接了，之前也碰到过一次，osd无法启动，内部死循环，pg无法export，osd就僵死在那里了，实际上，bluestore也提供了接口把对象能够直接
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-07-26 11:06" pubdate>
+              2019-07-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/03/22/%E6%85%A2%E8%AF%9Dcrush-%E5%90%84%E7%A7%8Dcrush%E7%BB%84%E5%90%88/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="慢话crush-各种crush组合">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/03/22/%E6%85%A2%E8%AF%9Dcrush-%E5%90%84%E7%A7%8Dcrush%E7%BB%84%E5%90%88/" target="_self">
+          慢话crush-各种crush组合
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2019/03/22/%E6%85%A2%E8%AF%9Dcrush-%E5%90%84%E7%A7%8Dcrush%E7%BB%84%E5%90%88/" target="_self">
+        <div>
+          前言ceph已经是一个比较成熟的开源的分布式存储了，从功能角度上来说，目前的功能基本能够覆盖大部分场景，而社区的工作基本上是在加入企业级的功能和易用性还有性能等方面在发力在，不管你是新手还是老手，都绕不开的一个问题就是crush，而crush是决定着数据的分布的，很多人并不理解为什么会有这个crush，这个算法到底是怎么去计算的，本篇是从更偏向用户层来对这个分布做一个解释，以及我们该怎么去动这个c
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-03-22 16:35" pubdate>
+              2019-03-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2019/03/08/ceph%E7%9A%84pg%E7%9A%84%E5%88%86%E5%B8%83%E7%9A%84%E5%BF%AB%E9%80%9F%E6%9F%A5%E7%9C%8B/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph的pg的分布的快速查看">
         </a>
@@ -490,413 +892,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2018/07/17/%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BAceph%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="快速构建ceph可视化监控系统">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2018/07/17/%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BAceph%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F/" target="_self">
-          快速构建ceph可视化监控系统
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2018/07/17/%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BAceph%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F/" target="_self">
-        <div>
-          前言ceph的可视化方案很多，本篇介绍的是比较简单的一种方式，并且对包都进行了二次封装，所以能够在极短的时间内构建出一个可视化的监控系统 本系统组件如下：  ceph-jewel版本 ceph_exporter的jewel版本 prometheus的2.3.2版本 grafana的grafana-5.2.1版本 Ceph grafana的插件- Clusterby Cristian Calin
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-07-17 18:50" pubdate>
-              2018-07-17
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2018/06/27/%E5%88%A9%E7%94%A8s3-test%E8%BF%9B%E8%A1%8Cceph%E7%9A%84%E6%8E%A5%E5%8F%A3%E5%85%BC%E5%AE%B9%E6%80%A7%E6%B5%8B%E8%AF%95/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="利用s3-test进行ceph的接口兼容性测试">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2018/06/27/%E5%88%A9%E7%94%A8s3-test%E8%BF%9B%E8%A1%8Cceph%E7%9A%84%E6%8E%A5%E5%8F%A3%E5%85%BC%E5%AE%B9%E6%80%A7%E6%B5%8B%E8%AF%95/" target="_self">
-          利用s3-test进行ceph的接口兼容性测试
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2018/06/27/%E5%88%A9%E7%94%A8s3-test%E8%BF%9B%E8%A1%8Cceph%E7%9A%84%E6%8E%A5%E5%8F%A3%E5%85%BC%E5%AE%B9%E6%80%A7%E6%B5%8B%E8%AF%95/" target="_self">
-        <div>
-          前言ceph的rgw能够提供一个兼容性的s3的接口，既然是兼容性，当然不可能是所有接口都会兼容，那么我们需要有一个工具来进行接口的验证以及测试，这个在其他测试工具里面有类似的posix接口验证工具，这类的工具就是跑测试用例，来输出通过或者不通过的列表 用此类的工具有个好的地方就是，能够对接口进行验证，来避免版本的更新带来的接口破坏 安装直接对官方的分支进行clone下来，总文件数不多，下载很快 1
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-06-27 17:17" pubdate>
-              2018-06-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2018/06/12/ceph%20erasure%E9%BB%98%E8%AE%A4%E7%9A%84min_size%E5%88%86%E6%9E%90/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph erasure默认的min_size分析">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2018/06/12/ceph%20erasure%E9%BB%98%E8%AE%A4%E7%9A%84min_size%E5%88%86%E6%9E%90/" target="_self">
-          ceph erasure默认的min_size分析
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2018/06/12/ceph%20erasure%E9%BB%98%E8%AE%A4%E7%9A%84min_size%E5%88%86%E6%9E%90/" target="_self">
-        <div>
-          引言最近接触了两个集群都使用到了erasure code,一个集群是hammer版本的，一个环境是luminous版本的，两个环境都出现了incomplete，触发的原因有类似的地方，都是有osd的离线的问题 准备在本地环境进行复验的时候，发现了一个跟之前接触的erasure不同的地方，这里做个记录，以防后面出现同样的问题 分析过程准备了一个luminous的集群，使用默认的erasure的pro
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-06-12 10:43" pubdate>
-              2018-06-12
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2018/05/29/cephfs%E5%85%83%E6%95%B0%E6%8D%AE%E6%B1%A0%E6%95%85%E9%9A%9C%E7%9A%84%E6%81%A2%E5%A4%8D/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="cephfs元数据池故障的恢复">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2018/05/29/cephfs%E5%85%83%E6%95%B0%E6%8D%AE%E6%B1%A0%E6%95%85%E9%9A%9C%E7%9A%84%E6%81%A2%E5%A4%8D/" target="_self">
-          cephfs元数据池故障的恢复
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2018/05/29/cephfs%E5%85%83%E6%95%B0%E6%8D%AE%E6%B1%A0%E6%95%85%E9%9A%9C%E7%9A%84%E6%81%A2%E5%A4%8D/" target="_self">
-        <div>
-          前言cephfs 在L版本已经比较稳定了，这个稳定的意义个人觉得是在其故障恢复方面的成熟，一个文件系统可恢复是其稳定必须具备的属性，本篇就是根据官网的文档来实践下这个恢复的过程 实践过程部署一个ceph  Luminous集群12[root@lab102 ~]# ceph -vceph version 12.2.5 (cad919881333ac92274171586c827e01f554a70a
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-05-29 23:37" pubdate>
-              2018-05-29
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2018/04/12/cosbench%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="cosbench使用方法">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2018/04/12/cosbench%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" target="_self">
-          cosbench使用方法
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2018/04/12/cosbench%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" target="_self">
-        <div>
-          ##前言cosbench的功能很强大，但是配置起来可能就有点不是太清楚怎么配置了，本篇将梳理一下这个测试的配置过程，以及一些测试注意项目，以免无法完成自己配置模型的情况 ##安装cosbench模式是一个控制端控制几个driver向后端rgw发起请求 下载最新版本  https://github.com/intel-cloud/cosbench/releases/download/v0.4.2.c
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-04-12 01:18" pubdate>
-              2018-04-12
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2018/04/11/ceph%E7%9A%84ISCSI%20GATEWAY/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph的ISCSI GATEWAY">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2018/04/11/ceph%E7%9A%84ISCSI%20GATEWAY/" target="_self">
-          ceph的ISCSI GATEWAY
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2018/04/11/ceph%E7%9A%84ISCSI%20GATEWAY/" target="_self">
-        <div>
-          前言最开始接触这个是在L版本的监控平台里面看到的，有个iscsi网关，但是没看到有类似的介绍，然后通过接口查询到了一些资料，当时由于有比较多的东西需要新内核，新版本的支持，所以并没有配置出来，由于内核已经更新迭代了几个小版本了，经过测试验证可以跑起来了，这里只是把东西跑起来，性能相关的对比需要根据去做 实践过程架构图 这个图是引用的红帽的架构图，可以理解为一个多路径的实现方式，那么这个跟之前的有什
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-04-11 14:57" pubdate>
-              2018-04-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/16/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/#board">15</a><a class="page-number" href="/page/16/#board">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/#board">18</a><a class="page-number" href="/page/19/#board">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/#board">39</a><a class="extend next" rel="next" href="/page/18/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/16/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/#board">15</a><a class="page-number" href="/page/16/#board">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/#board">18</a><a class="page-number" href="/page/19/#board">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/#board">40</a><a class="extend next" rel="next" href="/page/18/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

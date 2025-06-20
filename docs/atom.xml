@@ -6,7 +6,7 @@
   <link href="https://zphj1987.com/atom.xml" rel="self"/>
   
   <link href="https://zphj1987.com/"/>
-  <updated>2025-04-15T09:36:49.123Z</updated>
+  <updated>2025-06-20T04:14:47.398Z</updated>
   <id>https://zphj1987.com/</id>
   
   <author>
@@ -15,6 +15,153 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>bluestack模拟器macos版本获取root权限的方法</title>
+    <link href="https://zphj1987.com/2025/06/20/bluestack%E6%A8%A1%E6%8B%9F%E5%99%A8macos%E7%89%88%E6%9C%AC%E8%8E%B7%E5%8F%96root%E6%9D%83%E9%99%90%E7%9A%84%E6%96%B9%E6%B3%95/"/>
+    <id>https://zphj1987.com/2025/06/20/bluestack%E6%A8%A1%E6%8B%9F%E5%99%A8macos%E7%89%88%E6%9C%AC%E8%8E%B7%E5%8F%96root%E6%9D%83%E9%99%90%E7%9A%84%E6%96%B9%E6%B3%95/</id>
+    <published>2025-06-20T04:10:31.000Z</published>
+    <updated>2025-06-20T04:14:47.398Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="安卓" scheme="https://zphj1987.com/tags/%E5%AE%89%E5%8D%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>批量执行远程命令的脚本</title>
+    <link href="https://zphj1987.com/2025/06/18/%E6%89%B9%E9%87%8F%E6%89%A7%E8%A1%8C%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E7%9A%84%E8%84%9A%E6%9C%AC/"/>
+    <id>https://zphj1987.com/2025/06/18/%E6%89%B9%E9%87%8F%E6%89%A7%E8%A1%8C%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E7%9A%84%E8%84%9A%E6%9C%AC/</id>
+    <published>2025-06-18T07:59:48.000Z</published>
+    <updated>2025-06-20T01:48:01.091Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="批量执行" scheme="https://zphj1987.com/tags/%E6%89%B9%E9%87%8F%E6%89%A7%E8%A1%8C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>s3分段上传异常定位记录</title>
+    <link href="https://zphj1987.com/2025/06/17/s3%E5%88%86%E6%AE%B5%E4%B8%8A%E4%BC%A0%E5%BC%82%E5%B8%B8%E5%AE%9A%E4%BD%8D%E8%AE%B0%E5%BD%95/"/>
+    <id>https://zphj1987.com/2025/06/17/s3%E5%88%86%E6%AE%B5%E4%B8%8A%E4%BC%A0%E5%BC%82%E5%B8%B8%E5%AE%9A%E4%BD%8D%E8%AE%B0%E5%BD%95/</id>
+    <published>2025-06-17T03:11:04.000Z</published>
+    <updated>2025-06-20T01:49:35.823Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;内部定位一个分段上传的异常，原因是一个参数的设置异常，定位过程中用到了几个脚本，这里记录下&lt;/p&gt;
+&lt;h2 id=&quot;定位过程&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>测试路由转发最大连接数脚本</title>
+    <link href="https://zphj1987.com/2025/06/09/%E6%B5%8B%E8%AF%95%E8%B7%AF%E7%94%B1%E8%BD%AC%E5%8F%91%E6%9C%80%E5%A4%A7%E8%BF%9E%E6%8E%A5%E6%95%B0%E8%84%9A%E6%9C%AC/"/>
+    <id>https://zphj1987.com/2025/06/09/%E6%B5%8B%E8%AF%95%E8%B7%AF%E7%94%B1%E8%BD%AC%E5%8F%91%E6%9C%80%E5%A4%A7%E8%BF%9E%E6%8E%A5%E6%95%B0%E8%84%9A%E6%9C%AC/</id>
+    <published>2025-06-09T10:14:08.000Z</published>
+    <updated>2025-06-20T01:54:02.398Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>mysql数据库无法备份的问题</title>
+    <link href="https://zphj1987.com/2025/06/04/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%97%A0%E6%B3%95%E5%A4%87%E4%BB%BD%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+    <id>https://zphj1987.com/2025/06/04/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%97%A0%E6%B3%95%E5%A4%87%E4%BB%BD%E7%9A%84%E9%97%AE%E9%A2%98/</id>
+    <published>2025-06-04T02:21:59.000Z</published>
+    <updated>2025-06-04T02:38:23.830Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;环境采用的是mysql的数据库版本为8.0.30，这个版本使用xtrabackup进行备份的时候，有个redo</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="数据库" scheme="https://zphj1987.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mysql数据库重配置主从配置</title>
+    <link href="https://zphj1987.com/2025/06/04/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E9%87%8D%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8E%E9%85%8D%E7%BD%AE/"/>
+    <id>https://zphj1987.com/2025/06/04/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E9%87%8D%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8E%E9%85%8D%E7%BD%AE/</id>
+    <published>2025-06-04T01:55:09.000Z</published>
+    <updated>2025-06-04T02:21:33.623Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="数据库" scheme="https://zphj1987.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
   
   <entry>
     <title>使用percona-toolkit同步mysql表数据</title>
@@ -361,158 +508,6 @@
     
     
     <category term="exsi" scheme="https://zphj1987.com/tags/exsi/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>rgw追加写功能测试验证</title>
-    <link href="https://zphj1987.com/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/"/>
-    <id>https://zphj1987.com/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/</id>
-    <published>2024-12-13T09:24:30.000Z</published>
-    <updated>2025-02-13T07:21:00.971Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;aws的s3以前是不支持追加写这个功能的&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="存储系统" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>纠删码中间对象属性丢失引起osd的崩溃</title>
-    <link href="https://zphj1987.com/2024/12/11/%E7%BA%A0%E5%88%A0%E7%A0%81%E4%B8%AD%E9%97%B4%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E4%B8%A2%E5%A4%B1%E5%BC%95%E8%B5%B7osd%E7%9A%84%E5%B4%A9%E6%BA%83/"/>
-    <id>https://zphj1987.com/2024/12/11/%E7%BA%A0%E5%88%A0%E7%A0%81%E4%B8%AD%E9%97%B4%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E4%B8%A2%E5%A4%B1%E5%BC%95%E8%B5%B7osd%E7%9A%84%E5%B4%A9%E6%BA%83/</id>
-    <published>2024-12-11T07:31:29.000Z</published>
-    <updated>2025-02-13T07:21:00.999Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;迁移的时候出现osd的崩溃，然后进行pg的备份的时候出现了无法获取属性的情况，本篇记录问题和解决的方法&lt;/p&gt;
-&lt;h2</summary>
-        
-      
-    
-    
-    
-    <category term="存储系统" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>快照原始对象缺失引起的osd崩溃</title>
-    <link href="https://zphj1987.com/2024/12/11/%E5%BF%AB%E7%85%A7%E5%8E%9F%E5%A7%8B%E5%AF%B9%E8%B1%A1%E7%BC%BA%E5%A4%B1%E5%BC%95%E8%B5%B7%E7%9A%84osd%E5%B4%A9%E6%BA%83/"/>
-    <id>https://zphj1987.com/2024/12/11/%E5%BF%AB%E7%85%A7%E5%8E%9F%E5%A7%8B%E5%AF%B9%E8%B1%A1%E7%BC%BA%E5%A4%B1%E5%BC%95%E8%B5%B7%E7%9A%84osd%E5%B4%A9%E6%BA%83/</id>
-    <published>2024-12-11T03:09:42.000Z</published>
-    <updated>2025-02-13T07:21:00.999Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;/images/blog/unexpectedclone.png&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="存储系统" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>为什么只坏了一个盘集群无法读写</title>
-    <link href="https://zphj1987.com/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/"/>
-    <id>https://zphj1987.com/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/</id>
-    <published>2024-12-04T06:53:45.000Z</published>
-    <updated>2025-02-13T07:21:00.999Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
-    
-    
-    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>device_health_metrics正确的删除方法</title>
-    <link href="https://zphj1987.com/2024/11/21/device-health-metrics%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%88%A0%E9%99%A4%E6%96%B9%E6%B3%95/"/>
-    <id>https://zphj1987.com/2024/11/21/device-health-metrics%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%88%A0%E9%99%A4%E6%96%B9%E6%B3%95/</id>
-    <published>2024-11-21T07:10:47.000Z</published>
-    <updated>2025-02-13T07:21:00.955Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h2&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
-        
-      
-    
-    
-    
-    <category term="存储相关" scheme="https://zphj1987.com/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/"/>
-    
-    
-    <category term="ceph" scheme="https://zphj1987.com/tags/ceph/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>earlyoom预防机器卡死</title>
-    <link href="https://zphj1987.com/2024/11/14/earlyoom%E9%A2%84%E9%98%B2%E6%9C%BA%E5%99%A8%E5%8D%A1%E6%AD%BB/"/>
-    <id>https://zphj1987.com/2024/11/14/earlyoom%E9%A2%84%E9%98%B2%E6%9C%BA%E5%99%A8%E5%8D%A1%E6%AD%BB/</id>
-    <published>2024-11-14T07:25:29.000Z</published>
-    <updated>2025-02-13T07:21:00.957Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
-    
-    
-    <category term="内存管理" scheme="https://zphj1987.com/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
     
   </entry>
   

@@ -226,6 +226,408 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2018/01/02/Ceph%E5%AF%B9%E8%B1%A1%E4%B8%BB%E6%9C%AC%E6%8D%9F%E5%9D%8F%E7%9A%84%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph对象主本损坏的修复方法">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2018/01/02/Ceph%E5%AF%B9%E8%B1%A1%E4%B8%BB%E6%9C%AC%E6%8D%9F%E5%9D%8F%E7%9A%84%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
+          Ceph对象主本损坏的修复方法
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2018/01/02/Ceph%E5%AF%B9%E8%B1%A1%E4%B8%BB%E6%9C%AC%E6%8D%9F%E5%9D%8F%E7%9A%84%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
+        <div>
+          前言问题的触发是在进行一个目录的查询的时候，osd就会挂掉，开始以为是osd操作超时了，后来发现每次访问这个对象都有问题 12log [WRN] ： slow request 60.793196 seconds old, received at osd_op(mds.0.188:728345234100006c6ddc.00000000 [o map-get-header 0-0,omap-get
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-01-02 22:22" pubdate>
+              2018-01-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/12/04/mds%E7%9A%84cpu%E5%8D%A0%E7%94%A8%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90%E4%BB%A5%E5%8F%8A%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="mds的cpu占用问题分析以及解决办法">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/12/04/mds%E7%9A%84cpu%E5%8D%A0%E7%94%A8%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90%E4%BB%A5%E5%8F%8A%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
+          mds的cpu占用问题分析以及解决办法
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/12/04/mds%E7%9A%84cpu%E5%8D%A0%E7%94%A8%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90%E4%BB%A5%E5%8F%8A%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
+        <div>
+          前言mds是ceph里面处理文件接口的组件，一旦使用文件系统，不可避免的会出现一种场景就是目录很多，目录里面的文件很多，而mds是一个单进程的组件，现在虽然有了muti mds，但稳定的使用的大部分场景还是单acitve mds的 这就会出现一种情况，一旦一个目录里面有很多文件的时候，去查询这个目录里的文件就会在当前目录做一次遍历，这个需要一个比较长的时间，如果能比较好的缓存文件信息，也能避免一些
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-12-04 22:48" pubdate>
+              2017-12-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="CentOS GRUB损坏修复方法">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
+          CentOS GRUB损坏修复方法
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
+        <div>
+          前言博客很久没有更新了，一个原因就是原来存放部署博客的环境坏了，硬盘使用的是SSD，只要读取到某个文件，整个磁盘就直接识别不到了，还好博客环境之前有做备份，最近一直没有把部署环境做下恢复，今天抽空把环境做下恢复并且记录一篇基础的GRUB的处理文档 这两天正好碰到GRUB损坏的事，很久前处理过，但是没留下文档，正好现在把流程梳理一下，来解决grub.cfg损坏的情况,或者无法启动的情况 实践步骤安装
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-11-30 22:52" pubdate>
+              2017-11-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/09/27/%E6%8E%89%E7%94%B5%E5%90%8Eosdmap%E4%B8%A2%E5%A4%B1%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8osd%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="掉电后osdmap丢失无法启动osd的解决方案">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/09/27/%E6%8E%89%E7%94%B5%E5%90%8Eosdmap%E4%B8%A2%E5%A4%B1%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8osd%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" target="_self">
+          掉电后osdmap丢失无法启动osd的解决方案
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/09/27/%E6%8E%89%E7%94%B5%E5%90%8Eosdmap%E4%B8%A2%E5%A4%B1%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8osd%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" target="_self">
+        <div>
+          前言本篇讲述的是一个比较极端的故障的恢复场景，在整个集群全部服务器突然掉电的时候，osd里面的osdmap可能会出现没刷到磁盘上的情况，这个时候osdmap的最新版本为空或者为没有这个文件 还有一种情况就是机器宕机了，没有马上处理，等了一段时间以后，服务器机器启动了起来，而这个时候osdmap已经更新了，全局找不到需要的旧版本的osdmap和incmap，osd无法启动 一般情况下能找到的就直接从
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-09-27 14:03" pubdate>
+              2017-09-27
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/09/07/%E6%80%8E%E6%A0%B7%E7%A6%81%E6%AD%A2Ceph%20OSD%E7%9A%84%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="怎样禁止Ceph OSD的自动挂载">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/09/07/%E6%80%8E%E6%A0%B7%E7%A6%81%E6%AD%A2Ceph%20OSD%E7%9A%84%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" target="_self">
+          怎样禁止Ceph OSD的自动挂载
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/09/07/%E6%80%8E%E6%A0%B7%E7%A6%81%E6%AD%A2Ceph%20OSD%E7%9A%84%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/" target="_self">
+        <div>
+          前言本篇来源于群里一个人的问题，有没有办法让ceph的磁盘不自动挂载，一般人的问题都是怎样让ceph能够自动挂载，在centos 7 平台下 ceph jewel版本以后都是有自动挂载的处理的，这个我之前也写过两篇文章《ceph在centos7下一个不容易发现的改变》和《Ceph数据盘怎样实现自动挂载》，来讲述这个自动挂载的 这里讲下流程：  开机后 udev 匹配 95-ceph-osd.rul
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-09-07 00:30" pubdate>
+              2017-09-07
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/09/06/Ceph%20OSD%E6%9C%8D%E5%8A%A1%E5%A4%B1%E6%95%88%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E6%8E%A7%E5%88%B6/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph OSD服务失效自动启动控制">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/09/06/Ceph%20OSD%E6%9C%8D%E5%8A%A1%E5%A4%B1%E6%95%88%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E6%8E%A7%E5%88%B6/" target="_self">
+          Ceph OSD服务失效自动启动控制
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/09/06/Ceph%20OSD%E6%9C%8D%E5%8A%A1%E5%A4%B1%E6%95%88%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E6%8E%A7%E5%88%B6/" target="_self">
+        <div>
+          前言服务器上面的服务会因为各种各样的原因失败，磁盘故障，权限问题，或者是服务过载引起超时，这些都可能引起 这个在ceph里面systemctl unit 默认有个on-fail restart,默认的可能并不适合所有的场景，所以自动化的服务应该是尽量去适配你手动处理的过程，手动怎么处理的，就怎么去设置 启动分析如果有osd失败了，一般上去会先启动一次，尽快让服务启动，然后去检查是否有故障，如果失败
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-09-06 12:33" pubdate>
+              2017-09-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2017/09/04/osd%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E8%B6%B3%E5%A4%9F%E6%97%A0%E6%B3%95%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="osd磁盘空间足够无法写入数据的分析与解决">
         </a>
@@ -490,413 +892,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/08/10/Ceph%20recover%E7%9A%84%E9%80%9F%E5%BA%A6%E6%8E%A7%E5%88%B6/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph recover的速度控制">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/08/10/Ceph%20recover%E7%9A%84%E9%80%9F%E5%BA%A6%E6%8E%A7%E5%88%B6/" target="_self">
-          Ceph recover的速度控制
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/08/10/Ceph%20recover%E7%9A%84%E9%80%9F%E5%BA%A6%E6%8E%A7%E5%88%B6/" target="_self">
-        <div>
-          前言磁盘损坏对于一个大集群来说，可以说是必然发生的事情，即使再小的概率，磁盘量上去，总会坏那么几块盘，这个时候就会触发内部的修复过程，修复就是让不满足副本要求的PG，恢复到满足的情况 一般是踢掉坏盘和增加新盘会触发这个修复过程，或者对磁盘的权重做了修改，也会触发这个迁移的过程，本篇是用剔除OSD的方式来对这个修复的控制做一个探索 大部分场景下要求的是不能影响前端的业务，而加速迁移，忽略迁移影响不在
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-08-10 14:54" pubdate>
-              2017-08-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/08/10/Ceph%20S3%20%E5%9F%BA%E4%BA%8ENGINX%E7%9A%84%E9%9B%86%E7%BE%A4%E5%A4%8D%E5%88%B6%E6%96%B9%E6%A1%88/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph S3 基于NGINX的集群复制方案">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/08/10/Ceph%20S3%20%E5%9F%BA%E4%BA%8ENGINX%E7%9A%84%E9%9B%86%E7%BE%A4%E5%A4%8D%E5%88%B6%E6%96%B9%E6%A1%88/" target="_self">
-          Ceph S3 基于NGINX的集群复制方案
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/08/10/Ceph%20S3%20%E5%9F%BA%E4%BA%8ENGINX%E7%9A%84%E9%9B%86%E7%BE%A4%E5%A4%8D%E5%88%B6%E6%96%B9%E6%A1%88/" target="_self">
-        <div>
-          前言ceph的s3数据的同步可以通过radosgw-agent进行同步，同region可以同步data和metadata，不同region只能同步metadata，这个地方可以参考下秦牧羊梳理的 ceph radosgw 多集群同步部署流程，本篇讲述的方案与radosgw-agent的复制方案不同在于,这个属于前端复制，后端相当于透明的两个相同集群，在入口层面就将数据进行了复制分流 在某些场景下，
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-08-10 09:37" pubdate>
-              2017-08-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/07/27/RBD%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4%E7%9A%84%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90%E4%B8%8E%E6%94%B9%E8%BF%9B/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="RBD快速删除的方法分析与改进">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/07/27/RBD%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4%E7%9A%84%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90%E4%B8%8E%E6%94%B9%E8%BF%9B/" target="_self">
-          RBD快速删除的方法分析与改进
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/07/27/RBD%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4%E7%9A%84%E6%96%B9%E6%B3%95%E5%88%86%E6%9E%90%E4%B8%8E%E6%94%B9%E8%BF%9B/" target="_self">
-        <div>
-          前言这个问题在很久以前就有一篇文章进行过讨论 remove-big-rbd,这个文章写的比较清楚了，并且对不同的方法做了分析，这里先把结论说下      rbd类型 rbd rm 方法 rados -p rm方法    未填充很多 慢 快   已填充很多 快 慢   在rbd进行删除的时候，即使内部没有对象数据，也一样需要一个个对象去发请求，即使对象不存在，这个可以开日志看到 实验过程开启日志的方
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-07-27 22:20" pubdate>
-              2017-07-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/07/22/%E4%BB%8Eceph%E5%AF%B9%E8%B1%A1%E4%B8%AD%E6%8F%90%E5%8F%96RBD%E4%B8%AD%E7%9A%84%E6%8C%87%E5%AE%9A%E6%96%87%E4%BB%B6/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="从ceph对象中提取RBD中的指定文件">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/07/22/%E4%BB%8Eceph%E5%AF%B9%E8%B1%A1%E4%B8%AD%E6%8F%90%E5%8F%96RBD%E4%B8%AD%E7%9A%84%E6%8C%87%E5%AE%9A%E6%96%87%E4%BB%B6/" target="_self">
-          从ceph对象中提取RBD中的指定文件
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/07/22/%E4%BB%8Eceph%E5%AF%B9%E8%B1%A1%E4%B8%AD%E6%8F%90%E5%8F%96RBD%E4%B8%AD%E7%9A%84%E6%8C%87%E5%AE%9A%E6%96%87%E4%BB%B6/" target="_self">
-        <div>
-          前言之前有个想法，是不是有办法找到rbd中的文件与对象的关系，想了很久但是一直觉得文件系统比较复杂，在fs 层的东西对ceph来说是透明的，并且对象大小是4M，而文件很小，可能在fs层进行了合并，应该很难找到对应关系，最近看到小胖有提出这个问题，那么就再次尝试了，现在就是把这个实现方法记录下来  这个提取的作用个人觉得最大的好处就是一个rbd设备，在文件系统层被破坏以后，还能够从rbd提取出文件，
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-07-22 23:25" pubdate>
-              2017-07-22
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/07/18/%E5%88%A9%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E5%88%86%E6%9E%90ceph%20pg%E5%88%86%E5%B8%83/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="利用火焰图分析ceph pg分布">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/07/18/%E5%88%A9%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E5%88%86%E6%9E%90ceph%20pg%E5%88%86%E5%B8%83/" target="_self">
-          利用火焰图分析ceph pg分布
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/07/18/%E5%88%A9%E7%94%A8%E7%81%AB%E7%84%B0%E5%9B%BE%E5%88%86%E6%9E%90ceph%20pg%E5%88%86%E5%B8%83/" target="_self">
-        <div>
-          前言性能优化大神Brendan Gregg发明了火焰图来定位性能问题，通过图表就可以发现问题出在哪里，通过svg矢量图来查看性能卡在哪个点，哪个操作占用的资源最多 在查看了原始数据后，这个分析的原理是按层级来对调用进行一个计数，然后以层级去做比对，来看横向的占用的比例情况 基于这个原理，把osd tree的数据和pg数据可以做一个层级的组合，从而可以很方便的看出pg的分布情况，主机的分布情况，还可
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-07-18 13:56" pubdate>
-              2017-07-18
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/07/13/Cephfs%20%E6%93%8D%E4%BD%9C%E8%BE%93%E5%87%BA%E5%88%B0%E6%97%A5%E5%BF%97%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Cephfs 操作输出到日志查询系统">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/07/13/Cephfs%20%E6%93%8D%E4%BD%9C%E8%BE%93%E5%87%BA%E5%88%B0%E6%97%A5%E5%BF%97%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F/" target="_self">
-          Cephfs 操作输出到日志查询系统
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/07/13/Cephfs%20%E6%93%8D%E4%BD%9C%E8%BE%93%E5%87%BA%E5%88%B0%E6%97%A5%E5%BF%97%E6%9F%A5%E8%AF%A2%E7%B3%BB%E7%BB%9F/" target="_self">
-        <div>
-          前言文件系统当中如果某些文件不见了，有什么办法判断是删除了还是自己不见了，这个就需要去日志里面定位了，通常情况下是去翻日志，而日志是会进行压缩的，并且查找起来非常的不方便,还有可能并没有开启 这个时候就需要日志系统了，最近正好看到一篇最佳日志实践（v2.0），一篇非常好的文章，本篇日志属于文章里面所提到的统计日志，统计客户端做了什么操作 对于日志系统来说，很重要的一点，能够很方便的进行查询，这就需
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-07-13 11:32" pubdate>
-              2017-07-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/18/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/#board">17</a><a class="page-number" href="/page/18/#board">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/#board">20</a><a class="page-number" href="/page/21/#board">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/39/#board">39</a><a class="extend next" rel="next" href="/page/20/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/18/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/#board">17</a><a class="page-number" href="/page/18/#board">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/#board">20</a><a class="page-number" href="/page/21/#board">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/#board">40</a><a class="extend next" rel="next" href="/page/20/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

@@ -226,6 +226,207 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/06/25/ceph%20luminous%20%E6%96%B0%E5%8A%9F%E8%83%BD%E4%B9%8B%E5%86%85%E7%BD%AEdashboard/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph luminous 新功能之内置dashboard">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/06/25/ceph%20luminous%20%E6%96%B0%E5%8A%9F%E8%83%BD%E4%B9%8B%E5%86%85%E7%BD%AEdashboard/" target="_self">
+          ceph luminous 新功能之内置dashboard
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/06/25/ceph%20luminous%20%E6%96%B0%E5%8A%9F%E8%83%BD%E4%B9%8B%E5%86%85%E7%BD%AEdashboard/" target="_self">
+        <div>
+          前言ceph luminous版本新增加了很多有意思的功能，这个也是一个长期支持版本，所以这些新功能的特性还是很值得期待的，从底层的存储改造，消息方式的改变，以及一些之前未实现的功能的完成，都让ceph变得更强，这里面有很多核心模块来自中国的开发者，在这里准备用一系列的文章对这些新功能进行一个简单的介绍，也是自己的一个学习的过程 相关配置配置ceph国内源修改 &#x2F;etc&#x2F;yum
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-06-25 18:38" pubdate>
+              2017-06-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/06/14/%E8%B0%83%E6%95%B4PG%E5%88%86%E5%A4%9A%E6%AC%A1%E8%B0%83%E6%95%B4%E5%92%8C%E4%B8%80%E6%AC%A1%E5%88%B0%E4%BD%8D%E7%9A%84%E8%BF%81%E7%A7%BB%E5%B7%AE%E5%88%AB%E5%88%86%E6%9E%90/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="调整PG分多次调整和一次到位的迁移差别分析">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/06/14/%E8%B0%83%E6%95%B4PG%E5%88%86%E5%A4%9A%E6%AC%A1%E8%B0%83%E6%95%B4%E5%92%8C%E4%B8%80%E6%AC%A1%E5%88%B0%E4%BD%8D%E7%9A%84%E8%BF%81%E7%A7%BB%E5%B7%AE%E5%88%AB%E5%88%86%E6%9E%90/" target="_self">
+          调整PG分多次调整和一次到位的迁移差别分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/06/14/%E8%B0%83%E6%95%B4PG%E5%88%86%E5%A4%9A%E6%AC%A1%E8%B0%83%E6%95%B4%E5%92%8C%E4%B8%80%E6%AC%A1%E5%88%B0%E4%BD%8D%E7%9A%84%E8%BF%81%E7%A7%BB%E5%B7%AE%E5%88%AB%E5%88%86%E6%9E%90/" target="_self">
+        <div>
+          前言这个问题来源于我们研发的一个问题，在进行pg调整的时候，是一次调整到位好，还是分多次调整比较好，分多次调整的时候会不会出现某个pg反复挪动的问题，造成整体迁移量大于一次调整的 最近自己的项目上也有pg调整的需求，这个需求一般来源于pg规划好了，后期出现节点扩容的情况，需要对pg进行增加的调整 本篇用具体的数据来分析两种方式的差别 因为本篇的篇幅较长，直接先把结论拿出来 数据结论   调整pg
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-06-14 18:37" pubdate>
+              2017-06-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/06/09/%E4%BD%BF%E7%94%A8%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9Fgraylog%E8%8E%B7%E5%8F%96Ceph%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="使用日志系统graylog获取Ceph集群状态">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/06/09/%E4%BD%BF%E7%94%A8%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9Fgraylog%E8%8E%B7%E5%8F%96Ceph%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81/" target="_self">
+          使用日志系统graylog获取Ceph集群状态
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/06/09/%E4%BD%BF%E7%94%A8%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9Fgraylog%E8%8E%B7%E5%8F%96Ceph%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81/" target="_self">
+        <div>
+          前言在看集群的配置文件的时候看到ceph里面有一个graylog的输出选择，目前看到的是可以收集mon日志和clog，osd单个的日志没有看到，Elasticsearch有整套的日志收集系统，可以很方便的将所有日志汇总到一起，这个graylog的收集采用的是自有的udp协议，从配置上来说可以很快的完成，这里只做一个最基本的实践 系统实践graylog日志系统主要由三个组件组成的  MongoDB
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-06-09 18:31" pubdate>
+              2017-06-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2017/06/06/Ceph%E9%83%A8%E7%BD%B2mon%E5%87%BA%E7%8E%B00.0.0.0%E5%9C%B0%E5%9D%80/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph部署mon出现0.0.0.0地址">
         </a>
@@ -654,207 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-04-27 18:21" pubdate>
               2017-04-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/04/27/%E5%85%B3%E4%BA%8Ebackfill%E5%8F%82%E6%95%B0%E5%BB%BA%E8%AE%AE/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="关于backfill参数建议">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/04/27/%E5%85%B3%E4%BA%8Ebackfill%E5%8F%82%E6%95%B0%E5%BB%BA%E8%AE%AE/" target="_self">
-          关于backfill参数建议
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/04/27/%E5%85%B3%E4%BA%8Ebackfill%E5%8F%82%E6%95%B0%E5%BB%BA%E8%AE%AE/" target="_self">
-        <div>
-          前言在做一个比较满的集群的扩容的时候，遇到了一些问题，在这里做下总结，一般来说很难遇到，扩容要趁早，不然出的问题都是稀奇古怪的一些问题 建议环境一般来说在70%左右就需要考虑扩容了，这个时候的扩容数据迁移的少，遇到的问题自然会少很多，所谓的参数设置并不是一个单纯的参数的设置，所以一般来说在调优参数的时候，个人觉得只有适配硬件进行调优，所以本篇的参数同样是一个组合形式的 首先罗列出本篇涉及的所有参数
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-04-27 18:20" pubdate>
-              2017-04-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/04/26/rados%20put%20striper%E5%8A%9F%E8%83%BD%E7%9A%84%E8%B0%83%E8%AF%95/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rados put striper功能的调试">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/04/26/rados%20put%20striper%E5%8A%9F%E8%83%BD%E7%9A%84%E8%B0%83%E8%AF%95/" target="_self">
-          rados put striper功能的调试
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/04/26/rados%20put%20striper%E5%8A%9F%E8%83%BD%E7%9A%84%E8%B0%83%E8%AF%95/" target="_self">
-        <div>
-          前言之前对于striper这个地方的功能并没研究太多，只是知道这个里面可以以条带方式并行的去写对象，从而加大并发性来提高性能，而默认的条带数目为1，也就是以对象大小去写，并没有条带，所以不是很好感觉到差别，今天就尝试下用rados命令来看下这个条带是怎么回事  实践过程最开始我的集群是用rpm包进行安装的，这个可以做一些常规的测试，如果需要改动一些代码的话，就比较麻烦了，本文后面会讲述怎么改动一点
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-04-26 18:19" pubdate>
-              2017-04-26
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/04/20/Cephfs%E7%9A%84%E6%96%87%E4%BB%B6%E5%AD%98%E5%88%B0%E5%93%AA%E9%87%8C%E4%BA%86/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Cephfs的文件存到哪里了">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/04/20/Cephfs%E7%9A%84%E6%96%87%E4%BB%B6%E5%AD%98%E5%88%B0%E5%93%AA%E9%87%8C%E4%BA%86/" target="_self">
-          Cephfs的文件存到哪里了
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/04/20/Cephfs%E7%9A%84%E6%96%87%E4%BB%B6%E5%AD%98%E5%88%B0%E5%93%AA%E9%87%8C%E4%BA%86/" target="_self">
-        <div>
-          前言在ceph里面使用rbd接口的时候，存储的数据在后台是以固定的prifix的对象存在的，这样就能根据相同的前缀对象去对image文件进行拼接或者修复 在文件系统里面这一块就要复杂一些，本篇就写的关于这个，文件和对象的对应关系是怎样的，用系统命令怎么定位，又是怎么得到这个路径的 实践根据系统命令进行文件的定位写入测试文件 1dd if=/dev/zero of=/mnt/testfile bs=
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-04-20 18:18" pubdate>
-              2017-04-20
             </time>
           </div>
         

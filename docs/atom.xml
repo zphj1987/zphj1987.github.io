@@ -6,7 +6,7 @@
   <link href="https://zphj1987.com/atom.xml" rel="self"/>
   
   <link href="https://zphj1987.com/"/>
-  <updated>2025-06-20T04:14:47.398Z</updated>
+  <updated>2025-07-17T09:25:02.930Z</updated>
   <id>https://zphj1987.com/</id>
   
   <author>
@@ -15,6 +15,82 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>windowsserver2012安装vmxnet3网卡驱动</title>
+    <link href="https://zphj1987.com/2025/07/17/windowsserver2012%E5%AE%89%E8%A3%85vmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/"/>
+    <id>https://zphj1987.com/2025/07/17/windowsserver2012%E5%AE%89%E8%A3%85vmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/</id>
+    <published>2025-07-17T09:18:55.000Z</published>
+    <updated>2025-07-17T09:25:02.930Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="驱动安装" scheme="https://zphj1987.com/tags/%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>qemu-kvm开启vmxnet3网卡驱动</title>
+    <link href="https://zphj1987.com/2025/07/17/qemu-kvm%E5%BC%80%E5%90%AFvmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/"/>
+    <id>https://zphj1987.com/2025/07/17/qemu-kvm%E5%BC%80%E5%90%AFvmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/</id>
+    <published>2025-07-17T08:53:35.000Z</published>
+    <updated>2025-07-17T09:27:36.853Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="虚拟化" scheme="https://zphj1987.com/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Almalinux9开启VNC桌面</title>
+    <link href="https://zphj1987.com/2025/07/15/Almalinux9%E5%BC%80%E5%90%AFVNC%E6%A1%8C%E9%9D%A2/"/>
+    <id>https://zphj1987.com/2025/07/15/Almalinux9%E5%BC%80%E5%90%AFVNC%E6%A1%8C%E9%9D%A2/</id>
+    <published>2025-07-15T07:23:59.000Z</published>
+    <updated>2025-07-15T07:38:02.592Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;安装了一台Almalinux9需要启动vnc的桌面连接&lt;/p&gt;
+&lt;h2 id=&quot;配置步骤&quot;&gt;&lt;a href=&quot;#配置步骤&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="系统配置" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/"/>
+    
+    
+    <category term="远程桌面" scheme="https://zphj1987.com/tags/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2/"/>
+    
+  </entry>
   
   <entry>
     <title>bluestack模拟器macos版本获取root权限的方法</title>
@@ -431,83 +507,6 @@
     
     
     <category term="iscsi相关" scheme="https://zphj1987.com/tags/iscsi%E7%9B%B8%E5%85%B3/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>centos7过期源添加</title>
-    <link href="https://zphj1987.com/2024/12/18/centos7%E8%BF%87%E6%9C%9F%E6%BA%90%E6%B7%BB%E5%8A%A0/"/>
-    <id>https://zphj1987.com/2024/12/18/centos7%E8%BF%87%E6%9C%9F%E6%BA%90%E6%B7%BB%E5%8A%A0/</id>
-    <published>2024-12-18T03:55:26.000Z</published>
-    <updated>2025-02-13T07:21:00.947Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;centos7的支持已经没有了，源也移动到其它的路径，还是有环境需要用&lt;/p&gt;
-&lt;h2 id=&quot;源内容&quot;&gt;&lt;a href=&quot;#源内容&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
-    
-    
-    <category term="操作系统" scheme="https://zphj1987.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>nvme电源控制引起的nvme磁盘离线</title>
-    <link href="https://zphj1987.com/2024/12/17/nvme%E8%83%BD%E6%BA%90%E6%8E%A7%E5%88%B6%E5%BC%95%E8%B5%B7%E7%9A%84nvme%E7%A3%81%E7%9B%98%E7%A6%BB%E7%BA%BF/"/>
-    <id>https://zphj1987.com/2024/12/17/nvme%E8%83%BD%E6%BA%90%E6%8E%A7%E5%88%B6%E5%BC%95%E8%B5%B7%E7%9A%84nvme%E7%A3%81%E7%9B%98%E7%A6%BB%E7%BA%BF/</id>
-    <published>2024-12-17T06:46:52.000Z</published>
-    <updated>2025-03-28T04:07:41.329Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;故障信息&quot;&gt;&lt;a href=&quot;#故障信息&quot; class=&quot;headerlink&quot; title=&quot;故障信息&quot;&gt;&lt;/a&gt;故障信息&lt;/h2&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
-        
-      
-    
-    
-    
-    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
-    
-    
-    <category term="磁盘相关" scheme="https://zphj1987.com/tags/%E7%A3%81%E7%9B%98%E7%9B%B8%E5%85%B3/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>esxi克隆虚拟机方法</title>
-    <link href="https://zphj1987.com/2024/12/16/esxi%E5%85%8B%E9%9A%86%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%96%B9%E6%B3%95/"/>
-    <id>https://zphj1987.com/2024/12/16/esxi%E5%85%8B%E9%9A%86%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%96%B9%E6%B3%95/</id>
-    <published>2024-12-16T03:45:00.000Z</published>
-    <updated>2025-02-13T07:21:00.957Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;内网搭建了一套esxi做测试的机器，没有用vcenter，管理平台没有克隆的操作的地方&lt;/p&gt;
-&lt;h2 id=&quot;方法&quot;&gt;&lt;a</summary>
-        
-      
-    
-    
-    
-    <category term="虚拟化" scheme="https://zphj1987.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/"/>
-    
-    
-    <category term="exsi" scheme="https://zphj1987.com/tags/exsi/"/>
     
   </entry>
   

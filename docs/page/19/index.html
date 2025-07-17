@@ -226,6 +226,207 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2018/02/10/REDHAT%207.5beta%20%E6%96%B0%E6%8E%A8%E5%87%BA%E7%9A%84VDO%E5%8A%9F%E8%83%BD/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="REDHAT 7.5beta 新推出的VDO功能">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2018/02/10/REDHAT%207.5beta%20%E6%96%B0%E6%8E%A8%E5%87%BA%E7%9A%84VDO%E5%8A%9F%E8%83%BD/" target="_self">
+          REDHAT 7.5beta 新推出的VDO功能
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2018/02/10/REDHAT%207.5beta%20%E6%96%B0%E6%8E%A8%E5%87%BA%E7%9A%84VDO%E5%8A%9F%E8%83%BD/" target="_self">
+        <div>
+          前言关于VDOVDO的技术来源于收购的Permabit公司，一个专门从事重删技术的公司，所以技术可靠性是没有问题的 VDO是一个内核模块，目的是通过重删减少磁盘的空间占用，以及减少复制带宽，VDO是基于块设备层之上的，也就是在原设备基础上映射出mapper虚拟设备，然后直接使用即可，功能的实现主要基于以下技术：  零区块的排除： 在初始化阶段，整块为0的会被元数据记录下来，这个可以用水杯里面的水和
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-02-10 16:26" pubdate>
+              2018-02-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2018/01/16/%E5%AE%9A%E4%BD%8D%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E5%BC%82%E5%B8%B8/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="定位一个网络问题引起的ceph异常">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2018/01/16/%E5%AE%9A%E4%BD%8D%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E5%BC%82%E5%B8%B8/" target="_self">
+          定位一个网络问题引起的ceph异常
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2018/01/16/%E5%AE%9A%E4%BD%8D%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E5%BC%82%E5%B8%B8/" target="_self">
+        <div>
+          前言有一个ceph环境出现了异常，状态就是恢复异常的慢，但是所有数据又都在走，只是非常的慢，本篇将记录探测出问题的过程，以便以后处理类似的问题有个思路 处理过程问题的现象是恢复的很慢，但是除此以外并没有其它的异常，通过iostat监控磁盘，也没有出现异常的100%的情况，暂时排除了是osd底层慢的问题 检测整体写入的速度通过rados bench写入 1rados -p rbd bench 5 w
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-01-16 23:10" pubdate>
+              2018-01-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2018/01/05/Kernel%20RBD%E7%9A%84QOS%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Kernel RBD的QOS配置方案">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2018/01/05/Kernel%20RBD%E7%9A%84QOS%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/" target="_self">
+          Kernel RBD的QOS配置方案
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2018/01/05/Kernel%20RBD%E7%9A%84QOS%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/" target="_self">
+        <div>
+          前言关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入 cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-01-05 15:23" pubdate>
+              2018-01-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2018/01/02/Ceph%E5%AF%B9%E8%B1%A1%E4%B8%BB%E6%9C%AC%E6%8D%9F%E5%9D%8F%E7%9A%84%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph对象主本损坏的修复方法">
         </a>
@@ -654,207 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-09-04 23:06" pubdate>
               2017-09-04
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/08/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%B3%E4%B8%8D%E6%8E%89%E6%89%80%E6%9C%89%E7%9A%84OSD/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="为什么关不掉所有的OSD">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/08/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%B3%E4%B8%8D%E6%8E%89%E6%89%80%E6%9C%89%E7%9A%84OSD/" target="_self">
-          为什么关不掉所有的OSD
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/08/21/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%B3%E4%B8%8D%E6%8E%89%E6%89%80%E6%9C%89%E7%9A%84OSD/" target="_self">
-        <div>
-          前言碰到一个cepher问了一个问题：  为什么我的OSD关闭到最后有92个OSD无法关闭,总共的OSD有300个左右  想起来在很久以前帮人处理过一次问题，当时环境是遇上了一个BUG，需要升级到新版本进行解决，然后当时我来做操作，升级以后，发现osd无法启动，进程在，状态无法更新，当时又回滚回去，就可以了，当时好像是K版本升级到J版本，想起来之前看过这个版本里面有数据结构的变化，需要把osd全部
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-08-21 13:39" pubdate>
-              2017-08-21
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/08/19/%E5%85%B3%E4%BA%8Escrub%E7%9A%84%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E5%92%8C%E5%BB%BA%E8%AE%AE/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="关于scrub的详细分析和建议">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/08/19/%E5%85%B3%E4%BA%8Escrub%E7%9A%84%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E5%92%8C%E5%BB%BA%E8%AE%AE/" target="_self">
-          关于scrub的详细分析和建议
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/08/19/%E5%85%B3%E4%BA%8Escrub%E7%9A%84%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E5%92%8C%E5%BB%BA%E8%AE%AE/" target="_self">
-        <div>
-          前言关于scrub这块一直想写一篇文章的，这个在很久前，就做过一次测试，当时是看这个scrub到底有多大的影响，当时看到的是磁盘读占很高，启动deep-scrub后会有大量的读,前端可能会出现 slow request,这个是当时测试看到的现象，一个比较简单的处理办法就是直接给scrub关掉了，当然关掉了就无法检测底层到底有没有对象不一致的问题关于这个scrub生产上是否开启，仁者见仁，智者见智，
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-08-19 23:08" pubdate>
-              2017-08-19
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/08/10/%E5%A6%82%E4%BD%95%E6%B5%8B%E9%87%8FCeph%20OSD%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="如何测量Ceph OSD内存占用">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/08/10/%E5%A6%82%E4%BD%95%E6%B5%8B%E9%87%8FCeph%20OSD%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8/" target="_self">
-          如何测量Ceph OSD内存占用
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/08/10/%E5%A6%82%E4%BD%95%E6%B5%8B%E9%87%8FCeph%20OSD%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8/" target="_self">
-        <div>
-          前言这个工具我第一次看到是在填坑群里面看到，是由研发-北京-蓝星同学分享的，看到比较有趣，就写一篇相关的记录下用法 火焰图里面也可以定位内存方面的问题，那个是通过一段时间的统计，以一个汇总的方式来查看内存在哪个地方可能出了问题  本篇是另外一个工具，这个工具的好处是有很清晰的图表操作，以及基于时间线的统计，下面来看下这个工具怎么使用的 本篇对具体的内存函数的调用占用不会做更具体的分析，这里是提供一
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-08-10 16:55" pubdate>
-              2017-08-10
             </time>
           </div>
         

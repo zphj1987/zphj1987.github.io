@@ -226,6 +226,207 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/01/03/vdbench%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%97%B6%E5%8F%AF%E8%A7%86%E5%8C%96%E6%98%BE%E7%A4%BA/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="vdbench测试实时可视化显示">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2019/01/03/vdbench%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%97%B6%E5%8F%AF%E8%A7%86%E5%8C%96%E6%98%BE%E7%A4%BA/" target="_self">
+          vdbench测试实时可视化显示
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2019/01/03/vdbench%E6%B5%8B%E8%AF%95%E5%AE%9E%E6%97%B6%E5%8F%AF%E8%A7%86%E5%8C%96%E6%98%BE%E7%A4%BA/" target="_self">
+        <div>
+          前言前一段时间碰到一个系统，用rados bench 去跑都还比较正常，但是一跑数据库就非常慢，测试工具会抛出延时过大的提示，经过排查发现，云平台中有一台虚拟机还运行着备份数据库的服务，而这个备份软件是需要反复写一个标记文件的，因为这个标记文件只对应了一个对象，一个对象对应了一个pg，一个pg对应到固定的ssd上面，那个ssd的io几乎被这一个操作给打满了，然后全局的请求到了这个osd上面的时候，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-01-03 22:56" pubdate>
+              2019-01-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2018/12/19/%E5%A4%84%E7%90%86ceph%20incompelete%E7%9A%84%E7%BB%8F%E9%AA%8C/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="处理ceph incompelete的经验">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2018/12/19/%E5%A4%84%E7%90%86ceph%20incompelete%E7%9A%84%E7%BB%8F%E9%AA%8C/" target="_self">
+          处理ceph incompelete的经验
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2018/12/19/%E5%A4%84%E7%90%86ceph%20incompelete%E7%9A%84%E7%BB%8F%E9%AA%8C/" target="_self">
+        <div>
+          前言最近已经见到几个环境出现过incompelete了，这个在很久以前Jewel正在合入mark-complete工具的时候就有做过类似的处理，但是随着处理的环境越来越多，这个地方还是有些需要注意的，本篇是写一些需要注意的点 一般来说是环境有多个机器同时坏盘或者掉电，或者掉主机引起的 处理流程拿到环境第一时间是对环境标记noout，这个操作是为了防止集群的环境反复震荡，标记noout没有osd标记
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-12-19 12:05" pubdate>
+              2018-12-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2018/08/19/cephfs%E6%A0%B9%E6%8D%AE%E5%AD%98%E5%82%A8%E6%B1%A0%E6%98%BE%E7%A4%BAdf%E5%AE%B9%E9%87%8F/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="cephfs根据存储池显示df容量">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2018/08/19/cephfs%E6%A0%B9%E6%8D%AE%E5%AD%98%E5%82%A8%E6%B1%A0%E6%98%BE%E7%A4%BAdf%E5%AE%B9%E9%87%8F/" target="_self">
+          cephfs根据存储池显示df容量
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2018/08/19/cephfs%E6%A0%B9%E6%8D%AE%E5%AD%98%E5%82%A8%E6%B1%A0%E6%98%BE%E7%A4%BAdf%E5%AE%B9%E9%87%8F/" target="_self">
+        <div>
+          前言如果用cephfs比较多，应该都知道，在cephfs的客户端进行mount以后，看到的容量显示的是集群的总的容量，也就是你的总的磁盘空间是多少这个地方显示的就是多少 这个一直都是这样显示的，我们之前在hammer版本的时候，阿茂和大黄一起在公司内部实现了这个功能，社区会慢慢的集成一些类似的面向面向商业用户的需求 社区已经开发了一个版本，接口都做的差不多了，那么稍微改改，就能实现想要的需求的 本
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-08-19 11:29" pubdate>
+              2018-08-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2018/07/17/%E5%BF%AB%E9%80%9F%E6%9E%84%E5%BB%BAceph%E5%8F%AF%E8%A7%86%E5%8C%96%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="快速构建ceph可视化监控系统">
         </a>
@@ -654,207 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2018-03-23 23:54" pubdate>
               2018-03-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2018/02/10/REDHAT%207.5beta%20%E6%96%B0%E6%8E%A8%E5%87%BA%E7%9A%84VDO%E5%8A%9F%E8%83%BD/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="REDHAT 7.5beta 新推出的VDO功能">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2018/02/10/REDHAT%207.5beta%20%E6%96%B0%E6%8E%A8%E5%87%BA%E7%9A%84VDO%E5%8A%9F%E8%83%BD/" target="_self">
-          REDHAT 7.5beta 新推出的VDO功能
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2018/02/10/REDHAT%207.5beta%20%E6%96%B0%E6%8E%A8%E5%87%BA%E7%9A%84VDO%E5%8A%9F%E8%83%BD/" target="_self">
-        <div>
-          前言关于VDOVDO的技术来源于收购的Permabit公司，一个专门从事重删技术的公司，所以技术可靠性是没有问题的 VDO是一个内核模块，目的是通过重删减少磁盘的空间占用，以及减少复制带宽，VDO是基于块设备层之上的，也就是在原设备基础上映射出mapper虚拟设备，然后直接使用即可，功能的实现主要基于以下技术：  零区块的排除： 在初始化阶段，整块为0的会被元数据记录下来，这个可以用水杯里面的水和
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-02-10 16:26" pubdate>
-              2018-02-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2018/01/16/%E5%AE%9A%E4%BD%8D%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E5%BC%82%E5%B8%B8/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="定位一个网络问题引起的ceph异常">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2018/01/16/%E5%AE%9A%E4%BD%8D%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E5%BC%82%E5%B8%B8/" target="_self">
-          定位一个网络问题引起的ceph异常
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2018/01/16/%E5%AE%9A%E4%BD%8D%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%BC%95%E8%B5%B7%E7%9A%84ceph%E5%BC%82%E5%B8%B8/" target="_self">
-        <div>
-          前言有一个ceph环境出现了异常，状态就是恢复异常的慢，但是所有数据又都在走，只是非常的慢，本篇将记录探测出问题的过程，以便以后处理类似的问题有个思路 处理过程问题的现象是恢复的很慢，但是除此以外并没有其它的异常，通过iostat监控磁盘，也没有出现异常的100%的情况，暂时排除了是osd底层慢的问题 检测整体写入的速度通过rados bench写入 1rados -p rbd bench 5 w
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-01-16 23:10" pubdate>
-              2018-01-16
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2018/01/05/Kernel%20RBD%E7%9A%84QOS%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Kernel RBD的QOS配置方案">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2018/01/05/Kernel%20RBD%E7%9A%84QOS%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/" target="_self">
-          Kernel RBD的QOS配置方案
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2018/01/05/Kernel%20RBD%E7%9A%84QOS%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88/" target="_self">
-        <div>
-          前言关于qos的讨论有很多，ceph内部也正在实现着一整套的基于dmclock的qos的方案，这个不是本篇的内容，之前在社区的邮件列表看过有研发在聊qos的相关的实现的，当时一个研发就提出了在使用kernel rbd的时候，可以直接使用linux的操作系统qos来实现，也就是cgroup来控制读取写入 cgroup之前也有接触过，主要测试了限制cpu和内存相关的，没有做io相关的测试，这个当然可以
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2018-01-05 15:23" pubdate>
-              2018-01-05
             </time>
           </div>
         

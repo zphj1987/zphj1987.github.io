@@ -226,6 +226,207 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2025/07/17/windowsserver2012%E5%AE%89%E8%A3%85vmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/" target="_self">
+          <img src="/images/blog/vmxnet3.png" srcset="/img/loading.gif" lazyload alt="windowsserver2012安装vmxnet3网卡驱动">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/07/17/windowsserver2012%E5%AE%89%E8%A3%85vmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/" target="_self">
+          windowsserver2012安装vmxnet3网卡驱动
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2025/07/17/windowsserver2012%E5%AE%89%E8%A3%85vmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/" target="_self">
+        <div>
+          背景kvm支持了vmxnet3驱动，虚拟机里面还是需要安装下驱动的在计算机管理里面可以看到，驱动就完全没有，这个地方我们需要去vmware里面提取驱动 处理方法安装一模一样的系统，然后vmware网卡调成vmxnet3，然后安装vmtool ，驱动就会自动安装 用管理员执行这个 1dism /online /export-driver /destination:C:\vmxnet3driver 这
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-07-17 17:18" pubdate>
+              2025-07-17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">#驱动安装</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2025/07/17/qemu-kvm%E5%BC%80%E5%90%AFvmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/" target="_self">
+          <img src="/images/blog/kvmvmxnet3.png" srcset="/img/loading.gif" lazyload alt="qemu-kvm开启vmxnet3网卡驱动">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/07/17/qemu-kvm%E5%BC%80%E5%90%AFvmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/" target="_self">
+          qemu-kvm开启vmxnet3网卡驱动
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2025/07/17/qemu-kvm%E5%BC%80%E5%90%AFvmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/" target="_self">
+        <div>
+          背景默认系统安装的包里面没有vmxnet3的网卡驱动，这个可以通过重新打包的方式把驱动打进去，同样的也可以开启其它更多的驱动标准包为了稳定性方面不会把全部的功能都打进去 网卡支持查询12345678910[root@lab4 qemu-kvm]#  /usr/libexec/qemu-kvm -net nic,model=?Available NIC models for this configu
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-07-17 16:53" pubdate>
+              2025-07-17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2025/07/15/Almalinux9%E5%BC%80%E5%90%AFVNC%E6%A1%8C%E9%9D%A2/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Almalinux9开启VNC桌面">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/07/15/Almalinux9%E5%BC%80%E5%90%AFVNC%E6%A1%8C%E9%9D%A2/" target="_self">
+          Almalinux9开启VNC桌面
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2025/07/15/Almalinux9%E5%BC%80%E5%90%AFVNC%E6%A1%8C%E9%9D%A2/" target="_self">
+        <div>
+          背景安装了一台Almalinux9需要启动vnc的桌面连接 配置步骤安装tigervnc1yum dnf install tigervnc-server  配置vnc密码1vncpasswd  配置vnc服务12345678910111213[root@lab4 ~]# cat /root/.vnc/config## Supported server options to pass to vncs
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-07-15 15:23" pubdate>
+              2025-07-15
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" class="category-chain-item">系统配置</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2/">#远程桌面</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2025/06/20/bluestack%E6%A8%A1%E6%8B%9F%E5%99%A8macos%E7%89%88%E6%9C%AC%E8%8E%B7%E5%8F%96root%E6%9D%83%E9%99%90%E7%9A%84%E6%96%B9%E6%B3%95/" target="_self">
           <img src="/images/blog/bluestack.png" srcset="/img/loading.gif" lazyload alt="bluestack模拟器macos版本获取root权限的方法">
         </a>
@@ -656,179 +857,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">#数据库</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2025/04/10/rbd%E5%9D%97%E8%AE%BE%E5%A4%87%E7%9A%84id%E4%BF%AE%E6%94%B9/" target="_self">
-          <img src="/images/blog/rbdsize.png" srcset="/img/loading.gif" lazyload alt="rbd块设备的id修改">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/04/10/rbd%E5%9D%97%E8%AE%BE%E5%A4%87%E7%9A%84id%E4%BF%AE%E6%94%B9/" target="_self">
-          rbd块设备的id修改
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2025/04/10/rbd%E5%9D%97%E8%AE%BE%E5%A4%87%E7%9A%84id%E4%BF%AE%E6%94%B9/" target="_self">
-        <div>
-          背景看到有这个需求，具体碰到什么场景了不太清楚，之前做过rbd的重构的研究，既然能重构，那么修改应该是比重构还要简单一点的，我们具体看下怎么操作 数据结构分析rbd的元数据信息1234567891011121314151617181920212223242526272829303132[root@lab104 ~]# rbd create testrbd --size 1T[root@lab104
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-04-10 14:20" pubdate>
-              2025-04-10
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2025/04/09/tidb%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%81%A2%E5%A4%8D%E6%93%8D%E4%BD%9C/" target="_self">
-          <img src="/images/blog/tidb.jpeg" srcset="/img/loading.gif" lazyload alt="tidb数据库的恢复操作">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/04/09/tidb%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%81%A2%E5%A4%8D%E6%93%8D%E4%BD%9C/" target="_self">
-          tidb数据库的恢复操作
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2025/04/09/tidb%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%81%A2%E5%A4%8D%E6%93%8D%E4%BD%9C/" target="_self">
-        <div>
-          背景tidb数据库是多副本的一个集群数据库，类似ceph，三节点出现两节点的时候也是无法选举，以及内部数据的leader不同，会出现无法访问的情况，本篇就是基于这个来进行恢复的实践  三节点坏两个，做恢复 备份了一个节点数据，三个节点都坏了  这两个场景基本一致的 相关操作清理集群 1tiup cluster destroy tidb-test 关闭顺序 tidb  tikv  pd   初始化集
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-04-09 16:29" pubdate>
-              2025-04-09
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="category-chain-item">数据库</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/tidb/">#tidb</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2025/04/02/rgw%E7%9A%84d3n%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/" target="_self">
-          <img src="/images/blog/d3n.png" srcset="/img/loading.gif" lazyload alt="rgw的d3n功能配置">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/04/02/rgw%E7%9A%84d3n%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/" target="_self">
-          rgw的d3n功能配置
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2025/04/02/rgw%E7%9A%84d3n%E5%8A%9F%E8%83%BD%E9%85%8D%E7%BD%AE/" target="_self">
-        <div>
-          背景最近在看缓存相关，文件系统可以通过fscache加速，加速的效果就是读取的时候能够缓存，原理是在网关的地方加入一个高速缓存盘，这样在后续读取的时候，能够直接从缓存盘读取，这样能够减少与集群的交互，从而提供更大的性能，并且这个是缓存读取，所以数据安全性没有问题 rgw的d3n这个功能就是给rgw的网关加入了一个缓存盘，指定一个目录，然后能够缓存数据到目录 版本要求12[root@lab201 ~
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-04-02 17:44" pubdate>
-              2025-04-02
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ceph/">#ceph</a>
             
           </div>
         

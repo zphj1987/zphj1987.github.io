@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/03/22/Ceph%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E7%9A%84&#39;%E4%B8%8D%E6%8B%86%E5%88%86&#39;/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph实现数据的&#39;不拆分&#39;">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/03/22/Ceph%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E7%9A%84&#39;%E4%B8%8D%E6%8B%86%E5%88%86&#39;/" target="_self">
+          Ceph实现数据的&#39;不拆分&#39;
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/03/22/Ceph%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E7%9A%84&#39;%E4%B8%8D%E6%8B%86%E5%88%86&#39;/" target="_self">
+        <div>
+          前言之前看过一个朋友一篇文章，讲述的是Vsan为什么使用的是两副本，而ceph则大多数情况下需要三副本，当时个人观点是这个并不是关键点，但是在仔细考虑了问题的出发点以后，这个也可以说是其中的一个点 一个集群数据丢失可以从多方面去看  发生丢失数据的事件，这个来说，出现这个事件的概率是一致的，同等硬件情况下没有谁的系统能够说在两副本情况下把这个出现坏盘概率做的比其他系统更低 发生坏盘事件以后，数据丢
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-03-22 18:04" pubdate>
+              2017-03-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2017/03/16/%E5%9F%BA%E4%BA%8EDocker%20UI%20%E9%85%8D%E7%BD%AEceph%E9%9B%86%E7%BE%A4/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="基于Docker UI 配置ceph集群">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-01-19 17:36" pubdate>
               2017-01-19
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/01/12/sortbitwise%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="sortbitwise是什么意思">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/01/12/sortbitwise%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D/" target="_self">
-          sortbitwise是什么意思
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/01/12/sortbitwise%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D/" target="_self">
-        <div>
-          问题flag sortbitwise 在ceph中是什么意思,在Jewel版本下可以看到多了这个flags 1234567891011[root@lab8106 current]# ceph -s    cluster ffe7a8db-c671-4b45-a784-ddb41e633905     health HEALTH_OK     monmap e1: 1 mons at &#123;l
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-01-12 17:35" pubdate>
-              2017-01-12
             </time>
           </div>
         

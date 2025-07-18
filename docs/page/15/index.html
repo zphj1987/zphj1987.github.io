@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/09/09/%E5%85%B3%E4%BA%8Evm.min_free_kbytes%E7%9A%84%E5%90%88%E7%90%86%E8%AE%BE%E7%BD%AE%E6%8E%A8%E6%B5%8B/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="关于vm.min_free_kbytes的合理设置推测">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/09/09/%E5%85%B3%E4%BA%8Evm.min_free_kbytes%E7%9A%84%E5%90%88%E7%90%86%E8%AE%BE%E7%BD%AE%E6%8E%A8%E6%B5%8B/" target="_self">
+          关于vm.min_free_kbytes的合理设置推测
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/09/09/%E5%85%B3%E4%BA%8Evm.min_free_kbytes%E7%9A%84%E5%90%88%E7%90%86%E8%AE%BE%E7%BD%AE%E6%8E%A8%E6%B5%8B/" target="_self">
+        <div>
+          前言之前系统出现过几次hung住的情况，没有oom，也没有其它内存相关的信息，而linux设计就是去尽量吃满内存，然后再回收清理的机制 探讨目前这个参数还没有找到合适的处理这个预留的参数，一般也没有去调整的系统是默认根据物理内存进行计算得到一个数值得 12sysctl -a|grep min_free_kbytesvm.min_free_kbytes = 45056 查看内核参数，这个小环境是保留
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-09-09 16:45" pubdate>
+              2020-09-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/09/09/rbd%E7%9A%84%E5%88%A0%E9%99%A4%E5%9B%9E%E6%94%B6%E7%AB%99%E5%8A%9F%E8%83%BD/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rbd的删除回收站功能">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2020-07-14 16:33" pubdate>
               2020-07-14
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/06/17/ceph%E7%9A%84pg%E5%B9%B3%E8%A1%A1%E6%8F%92%E4%BB%B6balancer/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph的pg平衡插件balancer">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2020/06/17/ceph%E7%9A%84pg%E5%B9%B3%E8%A1%A1%E6%8F%92%E4%BB%B6balancer/" target="_self">
-          ceph的pg平衡插件balancer
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2020/06/17/ceph%E7%9A%84pg%E5%B9%B3%E8%A1%A1%E6%8F%92%E4%BB%B6balancer/" target="_self">
-        <div>
-          前言ceph比较老的版本使用的reweight或者osd weight来调整平衡的，本篇介绍的是ceph新的自带的插件balancer的使用，官网有比较详细的操作手册可以查询 使用方法查询插件的开启情况 1234567891011121314151617[root@node1 ceph]# ceph mgr module ls&#123;    &quot;enabled_modules&quot
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-06-17 15:04" pubdate>
-              2020-06-17
             </time>
           </div>
         

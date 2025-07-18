@@ -1,0 +1,699 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/logo.jpeg">
+  <link rel="icon" href="/img/logo.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zphj1987">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景ceph在后期进行了容器化部署,主推这个模式，容器是部署容易，出问题的时候就黑盒了，特别对于不熟悉容器内部的情况下很容易陷入一种循环，不启动容器看不到故障，启动容器又拉不起来容器是在系统之上的，只要找到相关的对应关系都好处理 搭建一个容器的集群安装部署相关12yum install cephadmyum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器部署ceph如何使用ceph-objectstore-tool修复">
+<meta property="og:url" content="https://zphj1987.com/2025/07/18/%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2ceph%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8ceph-objectstore-tool%E4%BF%AE%E5%A4%8D/index.html">
+<meta property="og:site_name" content="磨磨的技术笔记">
+<meta property="og:description" content="背景ceph在后期进行了容器化部署,主推这个模式，容器是部署容易，出问题的时候就黑盒了，特别对于不熟悉容器内部的情况下很容易陷入一种循环，不启动容器看不到故障，启动容器又拉不起来容器是在系统之上的，只要找到相关的对应关系都好处理 搭建一个容器的集群安装部署相关12yum install cephadmyum-config-manager --add-repo http:&#x2F;&#x2F;mirrors.aliy">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zphj1987.com/images/blog/dockerceph.png">
+<meta property="article:published_time" content="2025-07-18T08:10:22.000Z">
+<meta property="article:modified_time" content="2025-07-18T08:33:18.753Z">
+<meta property="article:author" content="zphj1987">
+<meta property="article:tag" content="ceph">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://zphj1987.com/images/blog/dockerceph.png">
+  
+  
+  
+  <title>容器部署ceph如何使用ceph-objectstore-tool修复 - 磨磨的技术笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"zphj1987.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="磨磨的技术笔记" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>磨磨的技术笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/blog/dockerceph.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.8)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="容器部署ceph如何使用ceph-objectstore-tool修复"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-07-18 16:10" pubdate>
+          2025年7月18日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">容器部署ceph如何使用ceph-objectstore-tool修复</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>ceph在后期进行了容器化部署,主推这个模式，容器是部署容易，出问题的时候就黑盒了，特别对于不熟悉容器内部的情况下<br>很容易陷入一种循环，不启动容器看不到故障，启动容器又拉不起来<br>容器是在系统之上的，只要找到相关的对应关系都好处理</p>
+<h2 id="搭建一个容器的集群"><a href="#搭建一个容器的集群" class="headerlink" title="搭建一个容器的集群"></a>搭建一个容器的集群</h2><h3 id="安装部署相关"><a href="#安装部署相关" class="headerlink" title="安装部署相关"></a>安装部署相关</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install cephadm<br>yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo<br></code></pre></td></tr></table></figure>
+<h3 id="添加源"><a href="#添加源" class="headerlink" title="添加源"></a>添加源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># cephadm add-repo --version 15.2.17</span><br><br>这个会添加<br>/etc/yum.repos.d/epel.repo<br>和<br>/etc/yum.repos.d/ceph.repo<br></code></pre></td></tr></table></figure>
+<p>可以修改里面的改成国内源即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl start docker<br></code></pre></td></tr></table></figure>
+
+
+<h3 id="下载指定版本的镜像"><a href="#下载指定版本的镜像" class="headerlink" title="下载指定版本的镜像"></a>下载指定版本的镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker pull quay.io/ceph/ceph:v15.2.17<br></code></pre></td></tr></table></figure>
+
+<h3 id="创建mon"><a href="#创建mon" class="headerlink" title="创建mon"></a>创建mon</h3><p>指定了镜像和指定了版本，以及指定了mon的ip</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs bash"> cephadm --image quay.io/ceph/ceph:v15.2.17 bootstrap  --mon-ip 192.168.0.201<br><br> Generating a dashboard self-signed certificate...<br>Creating initial admin user...<br>Fetching dashboard port number...<br>Ceph Dashboard is now available at:<br><br>         URL: https://lab201:8443/<br>        User: admin<br>    Password: dx56afg2dp<br><br>You can access the Ceph CLI with:<br><br>    sudo /usr/sbin/cephadm shell --fsid 1c74efac-63a5-11f0-89e0-525400a61fc0 -c /etc/ceph/ceph.conf -k /etc/ceph/ceph.client.admin.keyring<br><br>Please consider enabling telemetry to <span class="hljs-built_in">help</span> improve Ceph:<br><br>    ceph telemetry on<br><br>For more information see:<br><br>    https://docs.ceph.com/docs/master/mgr/telemetry/<br><br>Bootstrap complete.<br><br></code></pre></td></tr></table></figure>
+
+<p>查看状态<br>可以看到启动了容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># docker ps</span><br>CONTAINER ID   IMAGE                                     COMMAND                  CREATED              STATUS              PORTS     NAMES<br>820f6c901c94   quay.io/ceph/ceph:v15.2.17                <span class="hljs-string">&quot;/usr/bin/ceph-crash…&quot;</span>   38 seconds ago       Up 37 seconds                 ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-crash.lab201<br>6c9590aa6486   quay.io/prometheus/alertmanager:v0.20.0   <span class="hljs-string">&quot;/bin/alertmanager -…&quot;</span>   39 seconds ago       Up 38 seconds                 ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-alertmanager.lab201<br>4a83d225a254   quay.io/ceph/ceph:v15.2.17                <span class="hljs-string">&quot;/usr/bin/ceph-mgr -…&quot;</span>   About a minute ago   Up About a minute             ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-mgr.lab201.nzkrry<br>cc8444b630fa   quay.io/ceph/ceph:v15.2.17                <span class="hljs-string">&quot;/usr/bin/ceph-mon -…&quot;</span>   About a minute ago   Up About a minute             ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-mon.lab201<br></code></pre></td></tr></table></figure>
+
+
+<p>这个就可以进去执行ceph命令了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/usr/sbin/cephadm shell --fsid 1c74efac-63a5-11f0-89e0-525400a61fc0 -c /etc/ceph/ceph.conf -k /etc/ceph/ceph.client.admin.keyring<br></code></pre></td></tr></table></figure>
+<p>因为容器共用了配置文件，所以系统上如果安装了ceph的包，那么也可以直接使用命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># ceph -s</span><br>  cluster:<br>    <span class="hljs-built_in">id</span>:     1c74efac-63a5-11f0-89e0-525400a61fc0<br>    health: HEALTH_WARN<br>            OSD count 0 &lt; osd_pool_default_size 3<br><br>  services:<br>    mon: 1 daemons, quorum lab201 (age 2m)<br>    mgr: lab201.nzkrry(active, since 114s)<br>    osd: 0 osds: 0 up, 0 <span class="hljs-keyword">in</span><br><br>  data:<br>    pools:   0 pools, 0 pgs<br>    objects: 0 objects, 0 B<br>    usage:   0 B used, 0 B / 0 B avail<br>    pgs:<br></code></pre></td></tr></table></figure>
+
+<h3 id="添加osd"><a href="#添加osd" class="headerlink" title="添加osd"></a>添加osd</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># ceph orch daemon add osd lab201:/dev/vdb</span><br>Created osd(s) 0 on host <span class="hljs-string">&#x27;lab201&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>放一点数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">ceph osd pool create rbd 8<br>ceph osd pool <span class="hljs-built_in">set</span> rbd size 1<br>rados -p rbd put anaconda-ks.cfg anaconda-ks.cfg<br></code></pre></td></tr></table></figure>
+
+<p>查看状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># ceph -s</span><br>  cluster:<br>    <span class="hljs-built_in">id</span>:     1c74efac-63a5-11f0-89e0-525400a61fc0<br>    health: HEALTH_WARN<br>            1 pool(s) <span class="hljs-keyword">do</span> not have an application enabled<br>            2 pool(s) have no replicas configured<br>            OSD count 1 &lt; osd_pool_default_size 3<br><br>  services:<br>    mon: 1 daemons, quorum lab201 (age 13m)<br>    mgr: lab201.nzkrry(active, since 13m)<br>    osd: 1 osds: 1 up (since 12m), 1 <span class="hljs-keyword">in</span> (since 12m)<br><br>  data:<br>    pools:   2 pools, 33 pgs<br>    objects: 1 objects, 1.6 KiB<br>    usage:   1.0 GiB used, 79 GiB / 80 GiB avail<br>    pgs:     33 active+clean<br></code></pre></td></tr></table></figure>
+
+
+<h3 id="模拟异常"><a href="#模拟异常" class="headerlink" title="模拟异常"></a>模拟异常</h3><p>集群搭建好了后我们尝试停止一个osd</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># systemctl status ceph-1c74efac-63a5-11f0-89e0-525400a61fc0@osd.0.service</span><br>● ceph-1c74efac-63a5-11f0-89e0-525400a61fc0@osd.0.service - Ceph osd.0 <span class="hljs-keyword">for</span> 1c74efac-63a5-11f0-89e0-525400a61fc0<br>   Loaded: loaded (/etc/systemd/system/ceph-1c74efac-63a5-11f0-89e0-525400a61fc0@.service; enabled; vendor preset: disabled)<br>   Active: active (running) since Fri 2025-07-18 15:33:54 CST; 26s ago<br>  Process: 8549 ExecStopPost=/bin/bash /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/%i/unit.poststop (code=exited, status=0/SUCCESS)<br>  Process: 8543 ExecStop=/bin/docker stop ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-%i (code=exited, status=1/FAILURE)<br> Main PID: 9326 (bash)<br>   CGroup: /system.slice/system-ceph\x2d1c74efac\x2d63a5\x2d11f0\x2d89e0\x2d525400a61fc0.slice/ceph-1c74efac-63a5-11f0-89e0-525400a61fc0@osd.0.service<br>           ├─9326 /bin/bash /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/osd.0/unit.run<br>           └─9539 /bin/docker run --<span class="hljs-built_in">rm</span> --ipc=host --net=host --entrypoint /usr/bin/ceph-osd --privileged --group-add=disk --name ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-osd.0 -e CONTAINER_IMAGE=quay.i...<br></code></pre></td></tr></table></figure>
+
+<p>我们模拟这个osd停止了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl stop ceph-1c74efac-63a5-11f0-89e0-525400a61fc0@osd.0.service<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><p>我们在部署容器的时候，系统上面一般不会准备一个ceph环境，但是这个其实可以提前准备一个，方便维护，容器出故障的时候好处理<br>那么本篇我们基于宿主机有ceph环境和没ceph环境两种情况下进行实践</p>
+<h3 id="纯容器环境"><a href="#纯容器环境" class="headerlink" title="纯容器环境"></a>纯容器环境</h3><p>osd的启动脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># cat /etc/systemd/system/ceph-1c74efac-63a5-11f0-89e0-525400a61fc0@.service</span><br><span class="hljs-comment"># generated by cephadm</span><br>[Unit]<br>Description=Ceph %i <span class="hljs-keyword">for</span> 1c74efac-63a5-11f0-89e0-525400a61fc0<br><br><span class="hljs-comment"># According to:</span><br><span class="hljs-comment">#   http://www.freedesktop.org/wiki/Software/systemd/NetworkTarget</span><br><span class="hljs-comment"># these can be removed once ceph-mon will dynamically change network</span><br><span class="hljs-comment"># configuration.</span><br>After=network-online.target local-fs.target time-sync.target docker.service<br>Wants=network-online.target local-fs.target time-sync.target<br>Requires=docker.service<br><br><br>PartOf=ceph-1c74efac-63a5-11f0-89e0-525400a61fc0.target<br>Before=ceph-1c74efac-63a5-11f0-89e0-525400a61fc0.target<br><br>[Service]<br>LimitNOFILE=1048576<br>LimitNPROC=1048576<br>EnvironmentFile=-/etc/environment<br>ExecStart=/bin/bash /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/%i/unit.run<br>ExecStop=-/bin/docker stop ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-%i<br>ExecStopPost=-/bin/bash /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/%i/unit.poststop<br></code></pre></td></tr></table></figure>
+<p>就是启动ceph osd容器的过程</p>
+<p>再看这个脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># cat /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/osd.0/unit.run</span><br><span class="hljs-built_in">set</span> -e<br>/bin/install -d -m0770 -o 167 -g 167 /var/run/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0<br><span class="hljs-comment"># LVM OSDs use ceph-volume lvm activate</span><br>! /bin/docker <span class="hljs-built_in">rm</span> -f ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-osd.0-activate 2&gt; /dev/null<br>/bin/docker run --<span class="hljs-built_in">rm</span> --ipc=host --net=host --entrypoint /usr/sbin/ceph-volume --privileged --group-add=disk --name ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-osd.0-activate -e CONTAINER_IMAGE=quay.io/ceph/ceph:v15.2.17 -e NODE_NAME=lab201 -v /var/run/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0:/var/run/ceph:z -v /var/log/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0:/var/log/ceph:z -v /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/crash:/var/lib/ceph/crash:z -v /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/osd.0:/var/lib/ceph/osd/ceph-0:z -v /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/osd.0/config:/etc/ceph/ceph.conf:z -v /dev:/dev -v /run/udev:/run/udev -v /sys:/sys -v /run/lvm:/run/lvm -v /run/lock/lvm:/run/lock/lvm -v /:/rootfs quay.io/ceph/ceph:v15.2.17 lvm activate 0 77520224-b55e-4c71-bf94-605707caaa95 --no-systemd<br><span class="hljs-comment"># osd.0</span><br>! /bin/docker <span class="hljs-built_in">rm</span> -f ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-osd.0 2&gt; /dev/null<br>/bin/docker run --<span class="hljs-built_in">rm</span> --ipc=host --net=host --entrypoint /usr/bin/ceph-osd --privileged --group-add=disk --name ceph-1c74efac-63a5-11f0-89e0-525400a61fc0-osd.0 -e CONTAINER_IMAGE=quay.io/ceph/ceph:v15.2.17 -e NODE_NAME=lab201 -v /var/run/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0:/var/run/ceph:z -v /var/log/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0:/var/log/ceph:z -v /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/crash:/var/lib/ceph/crash:z -v /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/osd.0:/var/lib/ceph/osd/ceph-0:z -v /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/osd.0/config:/etc/ceph/ceph.conf:z -v /dev:/dev -v /run/udev:/run/udev -v /sys:/sys -v /run/lvm:/run/lvm -v /run/lock/lvm:/run/lock/lvm -v /:/rootfs quay.io/ceph/ceph:v15.2.17 -n osd.0 -f --setuser ceph --setgroup ceph --default-log-to-file=<span class="hljs-literal">false</span> --default-log-to-stderr=<span class="hljs-literal">true</span> <span class="hljs-string">&#x27;--default-log-stderr-prefix=debug &#x27;</span><br></code></pre></td></tr></table></figure>
+<p>上面实际有两步，一个是lvm的activate，然后才是start</p>
+<p>可以看到，实际上是每次启动的时候去绑定的磁盘和容器的关系的，这里我们找到这个osd对应的物理盘</p>
+<p>这个lvm实际在系统盘上面有的，这个地方有个问题是，ceph的osd如果异常，那么osd就无法启动的，无法启动就无法去容器内操作，成了循环了</p>
+<p>进入容器但是不启动osd<br>因为ceph的容器每次停止都是销毁的，我们需要一个临时容器与数据交互<br>我们参考这个  &#x2F;var&#x2F;lib&#x2F;ceph&#x2F;1c74efac-63a5-11f0-89e0-525400a61fc0&#x2F;osd.0&#x2F;unit.run 启动一个容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -it --<span class="hljs-built_in">rm</span> --privileged \<br>  --name ceph-dev \<br>  -e NODE_NAME=lab201 \<br>  -v /dev:/dev \<br>  -v /run/udev:/run/udev \<br>  -v /sys:/sys \<br>  -v /run/lvm:/run/lvm \<br>  -v /run/lock/lvm:/run/lock/lvm \<br>  -v /:/rootfs \<br>  -v /var/run/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0:/var/run/ceph:z \<br>  -v /var/log/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0:/var/log/ceph:z \<br>  -v /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/crash:/var/lib/ceph/crash:z \<br>  -v /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/osd.0:/var/lib/ceph/osd/ceph-0:z \<br>  -v /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/osd.0/config:/etc/ceph/ceph.conf:z \<br>  quay.io/ceph/ceph:v15.2.17 \<br>  /bin/bash<br></code></pre></td></tr></table></figure>
+<p>然后进去操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@1fda8a9031c7 /]<span class="hljs-comment"># ceph-objectstore-tool --data /var/lib/ceph/osd/ceph-0/ --op list</span><br>[<span class="hljs-string">&quot;2.4&quot;</span>,&#123;<span class="hljs-string">&quot;oid&quot;</span>:<span class="hljs-string">&quot;anaconda-ks.cfg&quot;</span>,<span class="hljs-string">&quot;key&quot;</span>:<span class="hljs-string">&quot;&quot;</span>,<span class="hljs-string">&quot;snapid&quot;</span>:-2,<span class="hljs-string">&quot;hash&quot;</span>:3896821636,<span class="hljs-string">&quot;max&quot;</span>:0,<span class="hljs-string">&quot;pool&quot;</span>:2,<span class="hljs-string">&quot;namespace&quot;</span>:<span class="hljs-string">&quot;&quot;</span>,<span class="hljs-string">&quot;max&quot;</span>:0&#125;]<br></code></pre></td></tr></table></figure>
+<p>这个就可以在容器内操作了，命令在容器内都自带了</p>
+<h3 id="宿主机上面操作"><a href="#宿主机上面操作" class="headerlink" title="宿主机上面操作"></a>宿主机上面操作</h3><p>安装好同版本的ceph后，直接在系统上面操作即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab201 ~]<span class="hljs-comment"># ceph-objectstore-tool --data  /var/lib/ceph/1c74efac-63a5-11f0-89e0-525400a61fc0/osd.0/ --op list</span><br>[<span class="hljs-string">&quot;2.4&quot;</span>,&#123;<span class="hljs-string">&quot;oid&quot;</span>:<span class="hljs-string">&quot;anaconda-ks.cfg&quot;</span>,<span class="hljs-string">&quot;key&quot;</span>:<span class="hljs-string">&quot;&quot;</span>,<span class="hljs-string">&quot;snapid&quot;</span>:-2,<span class="hljs-string">&quot;hash&quot;</span>:3896821636,<span class="hljs-string">&quot;max&quot;</span>:0,<span class="hljs-string">&quot;pool&quot;</span>:2,<span class="hljs-string">&quot;namespace&quot;</span>:<span class="hljs-string">&quot;&quot;</span>,<span class="hljs-string">&quot;max&quot;</span>:0&#125;]<br></code></pre></td></tr></table></figure>
+
+<p>这个就注意下，还是在&#x2F;var&#x2F;lib&#x2F;ceph下面，多了一个字符串id，再下一层才是数据</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本篇记录了两种方式的ceph的修复方式，上面的操作只是启用了修复，具体的怎么修复就不同情况不同处理了</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ceph/" class="print-no-link">#ceph</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>容器部署ceph如何使用ceph-objectstore-tool修复</div>
+      <div>https://zphj1987.com/2025/07/18/容器部署ceph如何使用ceph-objectstore-tool修复/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zphj1987</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年7月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/07/17/windowsserver2012%E5%AE%89%E8%A3%85vmxnet3%E7%BD%91%E5%8D%A1%E9%A9%B1%E5%8A%A8/" title="windowsserver2012安装vmxnet3网卡驱动">
+                        <span class="hidden-mobile">windowsserver2012安装vmxnet3网卡驱动</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

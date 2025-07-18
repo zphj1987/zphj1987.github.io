@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/11/11/docker%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F/" target="_self">
+          <img src="/images/blog/dockerdocker.png" srcset="/img/loading.gif" lazyload alt="docker配置代理下载镜像">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/11/11/docker%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F/" target="_self">
+          docker配置代理下载镜像
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/11/11/docker%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F/" target="_self">
+        <div>
+          背景需要下载镜像，但是无法下载 处理方法在macos上面开启端口转发1socat TCP4-LISTEN:25433,fork TCP4:127.0.0.1:25432  在需要下载的机器上面配置docker代理123456vim /lib/systemd/system/docker.service[Service]Environment=&quot;HTTP_PROXY=http://192.1
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-11-11 17:12" pubdate>
+              2024-11-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1/" class="category-chain-item">系统服务</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/docker/">#docker</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/11/07/cephfs%E7%BB%9F%E8%AE%A1%E7%A8%80%E7%96%8F%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E7%9A%84%E8%84%9A%E6%9C%AC/" target="_self">
           <img src="/images/blog/filesize.png" srcset="/img/loading.gif" lazyload alt="cephfs统计稀疏文件大小的脚本">
         </a>
@@ -790,73 +857,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/">#数据管理</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" target="_self">
-          <img src="/images/blog/sector.png" srcset="/img/loading.gif" lazyload alt="定位读写的扇区的编号">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" target="_self">
-          定位读写的扇区的编号
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/08/19/%E5%AE%9A%E4%BD%8D%E8%AF%BB%E5%86%99%E7%9A%84%E6%89%87%E5%8C%BA%E7%9A%84%E7%BC%96%E5%8F%B7/" target="_self">
-        <div>
-          背景最近有碰到扇区的错误，引起osd的无法启动，经过处理，系统可以恢复了，但是扇区的错误为什么导致了osd down，怎么去模拟这个删除的问题，就需要做一些定位的工作了 我们需要模拟扇区的问题，就需要去精确的模拟到损坏的扇区，也就是比如我需要模拟某个文件的扇区损坏，那么就需要定位到这个文件属于哪些扇区 方法定位扇区通过blktrace进行模拟，这个操作是去读取文件就行，”C”是完成的请求，下面是过
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-08-19 10:17" pubdate>
-              2024-08-19
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/" class="category-chain-item">问题处理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/">#存储相关</a>
             
           </div>
         

@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/11/14/earlyoom%E9%A2%84%E9%98%B2%E6%9C%BA%E5%99%A8%E5%8D%A1%E6%AD%BB/" target="_self">
+          <img src="/images/blog/earlyoomyufang.png" srcset="/img/loading.gif" lazyload alt="earlyoom预防机器卡死">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/11/14/earlyoom%E9%A2%84%E9%98%B2%E6%9C%BA%E5%99%A8%E5%8D%A1%E6%AD%BB/" target="_self">
+          earlyoom预防机器卡死
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/11/14/earlyoom%E9%A2%84%E9%98%B2%E6%9C%BA%E5%99%A8%E5%8D%A1%E6%AD%BB/" target="_self">
+        <div>
+          背景机器还没来得及oom，机器就出现挂死的状态，swap无法交换出，或者直接挂死 这个问题比较好复现在机器上面一直进行内存的申请即可 1python3 memory.py 100 40000  这个在x86上面做测试的时候，系统能够比较快的oom，但是这个板卡的系统盘本身慢，这个就可能出现卡顿的情况了 系统的oom，需要进行一些计算和系统处理，并且有个问题是，很多进程都不杀，因为都是系统进程，很多
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-11-14 15:25" pubdate>
+              2024-11-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">#内存管理</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/11/11/docker%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F/" target="_self">
           <img src="/images/blog/dockerdocker.png" srcset="/img/loading.gif" lazyload alt="docker配置代理下载镜像">
         </a>
@@ -792,73 +859,6 @@
           </div>
         
         
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" target="_self">
-          <img src="/images/blog/synctune.png" srcset="/img/loading.gif" lazyload alt="海量文件的rsync同步方案">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" target="_self">
-          海量文件的rsync同步方案
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/08/23/%E6%B5%B7%E9%87%8F%E6%96%87%E4%BB%B6%E7%9A%84rsync%E5%90%8C%E6%AD%A5%E6%96%B9%E6%A1%88/" target="_self">
-        <div>
-          背景如果一个环境需要对文件系统进行系统备份，文件系统内的文件数目是10亿级别的，那么直接通过一个rsync进行同步肯定是不太好的，如果出现中断，那么再次启动后的遍历的时间成本太高了 分析rsync的同步原理是，启动同步的时候，会对源端进行一个全量的扫描，构建一个incremental file list，然后开始同步，如果是系统本地的目录进行同步我们可以看到三个进程一个是生成器，一个是发送方，一个
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-08-23 14:58" pubdate>
-              2024-08-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/">#数据管理</a>
-            
-          </div>
         
       </div>
     </article>

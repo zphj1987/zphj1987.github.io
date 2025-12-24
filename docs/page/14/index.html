@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/10/26/ceph%E6%89%A9%E5%B1%95bluestore%E7%9A%84db%E5%88%86%E5%8C%BA/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph扩展bluestore的db分区">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/10/26/ceph%E6%89%A9%E5%B1%95bluestore%E7%9A%84db%E5%88%86%E5%8C%BA/" target="_self">
+          ceph扩展bluestore的db分区
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/10/26/ceph%E6%89%A9%E5%B1%95bluestore%E7%9A%84db%E5%88%86%E5%8C%BA/" target="_self">
+        <div>
+          前言在ceph 14版本里面才加入了bluefs-bdev-migrate，分区迁移相关的命令，那么在12版本里面其实也是可以扩展分区的测试的版本 12[root@lab102 ceph-0]# ceph -vceph version 12.2.13 (584a20eb0237c657dc0567da126be145106aa47e) luminous (stable)  操作方法如果db分区之前
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-26 16:27" pubdate>
+              2020-10-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/10/12/%E9%87%8D%E6%9E%84%E5%85%8B%E9%9A%86rbd%E7%9A%84%E6%95%B0%E6%8D%AE/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="重构克隆rbd的数据">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2020-09-11 10:40" pubdate>
               2020-09-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/09/10/%E9%85%8D%E7%BD%AE%E5%86%85%E7%BD%91%E8%AE%BF%E9%97%AE%E7%9A%84TV/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="配置内网访问的TV">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2020/09/10/%E9%85%8D%E7%BD%AE%E5%86%85%E7%BD%91%E8%AE%BF%E9%97%AE%E7%9A%84TV/" target="_self">
-          配置内网访问的TV
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2020/09/10/%E9%85%8D%E7%BD%AE%E5%86%85%E7%BD%91%E8%AE%BF%E9%97%AE%E7%9A%84TV/" target="_self">
-        <div>
-          前言通过内网模式访问tv远程机器 方法云主机配置一台云主机，云主机申请两个公网IP 云主机启动两个frps进程绑定到两个内网的ip 客户端配置远程一台linux跳板机运行frpc，启动两个进程，分别访问不同的公网IP 12345[tv]type = tcplocal_ip = 192.168.1.118local_port = 5938remote_port = 5938 绑定好端口5938 开启
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-09-10 20:30" pubdate>
-              2020-09-10
             </time>
           </div>
         

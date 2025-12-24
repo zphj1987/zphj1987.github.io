@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph使用memdisk做journal">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/" target="_self">
+          ceph使用memdisk做journal
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/01/14/ceph%E4%BD%BF%E7%94%A8memdisk%E5%81%9Ajournal/" target="_self">
+        <div>
+          记得在很久很久以前，ceph当时的版本是有提供使用内存做journal的配置的，当时是使用的tmpfs，但是现在的版本在搜资料的时候，发现关于这个的没怎么找到资料，邮件列表里面有人有提到怎么做，看了下大致的原理，然后还是自己来实践一次 预备知识：首先需要知道的是什么是内存盘，内存盘就是划分了一个内存空间来当磁盘使用来进行加速的，这个在某些操作系统里面会把&#x2F;tmp&#x2F;分区挂载到tm
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-01-14 15:37" pubdate>
+              2016-01-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2016/01/14/ceph%E5%8D%95%E6%9C%BA%E5%A4%9Amon%E7%9A%84%E5%AE%9E%E7%8E%B0/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph单机多mon的实现">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2015-11-18 18:29" pubdate>
               2015-11-18
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2015/11/16/%E9%AA%8C%E8%AF%81rbd%E7%9A%84%E7%BC%93%E5%AD%98%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="验证rbd的缓存是否开启">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2015/11/16/%E9%AA%8C%E8%AF%81rbd%E7%9A%84%E7%BC%93%E5%AD%98%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF/" target="_self">
-          验证rbd的缓存是否开启
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2015/11/16/%E9%AA%8C%E8%AF%81rbd%E7%9A%84%E7%BC%93%E5%AD%98%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF/" target="_self">
-        <div>
-          简单快速的在客户端验证rbd的cache是否开启首先修改配置文件 在ceph.conf中添加： 123[client]rbd cache = truerbd cache writethrough until flush = true 开启以后，在这台机器上进行测试 1234[root@node8109 ~]# rbd -p rbd bench-write zp  --io-size 4096 --
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2015-11-16 18:27" pubdate>
-              2015-11-16
             </time>
           </div>
         

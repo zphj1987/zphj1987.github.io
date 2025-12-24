@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/04/27/mdsjournalFAILEDassert%E8%A7%A3%E5%86%B3/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="mdsjournalFAILEDassert解决">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/04/27/mdsjournalFAILEDassert%E8%A7%A3%E5%86%B3/" target="_self">
+          mdsjournalFAILEDassert解决
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/04/27/mdsjournalFAILEDassert%E8%A7%A3%E5%86%B3/" target="_self">
+        <div>
+          前言在处理一个其他双活MDS无法启动环境的时候，查看mds的日志看到了这个错误mds&#x2F;journal.cc: 2929: FAILED assert(mds-&gt;sessionmap.get_version() &#x3D;&#x3D; cmapv)，在查询资料以后，暂时得到了解决,在生产环境下还是不建议使用双活MDS 处理步骤这个是双MDS多活情况下出现的一个问题，在什么情况下出现
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-04-27 18:23" pubdate>
+              2017-04-27
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2017/04/27/Ceph%E6%A0%B9%E6%8D%AECrush%E4%BD%8D%E7%BD%AE%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph根据Crush位置读取数据">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-03-24 18:09" pubdate>
               2017-03-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/03/23/%E7%BC%96%E8%AF%91%E7%9A%84Ceph%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="编译的Ceph二进制文件过大问题">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/03/23/%E7%BC%96%E8%AF%91%E7%9A%84Ceph%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98/" target="_self">
-          编译的Ceph二进制文件过大问题
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/03/23/%E7%BC%96%E8%AF%91%E7%9A%84Ceph%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%E8%BF%87%E5%A4%A7%E9%97%AE%E9%A2%98/" target="_self">
-        <div>
-          前言在ceph的研发群里看到一个cepher提出一个问题，编译的ceph的二进制文件过大，因为我一直用的打包好的rpm包，没有关注这个问题，重新编译了一遍发现确实有这个问题 本篇就是记录如何解决这个问题的 打rpm包的方式用我自己的环境编译的时候发现一个问题，编译出来的rpm包还是很大，开始怀疑是机器的原因，换了一台发现二进制包就很小了，然后查询了很多资料以后，找到了问题所在 在打rpm包的时候可
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-03-23 18:07" pubdate>
-              2017-03-23
             </time>
           </div>
         

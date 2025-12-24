@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/01/12/%E7%AE%80%E5%8D%95%E7%9A%84%E7%BB%9F%E8%AE%A1%E5%89%A9%E4%BD%99ceph%E8%BF%81%E7%A7%BB%E6%97%B6%E9%97%B4/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="简单的统计剩余ceph迁移时间">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2021/01/12/%E7%AE%80%E5%8D%95%E7%9A%84%E7%BB%9F%E8%AE%A1%E5%89%A9%E4%BD%99ceph%E8%BF%81%E7%A7%BB%E6%97%B6%E9%97%B4/" target="_self">
+          简单的统计剩余ceph迁移时间
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2021/01/12/%E7%AE%80%E5%8D%95%E7%9A%84%E7%BB%9F%E8%AE%A1%E5%89%A9%E4%BD%99ceph%E8%BF%81%E7%A7%BB%E6%97%B6%E9%97%B4/" target="_self">
+        <div>
+          需求由于迁移忽快忽慢，需要知道大概的迁移的时间，做了一个简单的统计脚本，可能不准，大概能够知道在什么范围内 脚本1234567891011121314151617181920#! /bin/shwhile ( 2&gt;1 )do start=`ceph -s|grep pgs|grep mis|awk &#x27;&#123;print $2&#125;&#x27;|cut -d / -f 1`
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-01-12 10:57" pubdate>
+              2021-01-12
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/12/18/%E9%80%9A%E8%BF%87shell%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%B2%BE%E5%87%86%E8%B0%83%E6%95%B4%E6%97%B6%E9%97%B4/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="通过shell命令行精准调整时间">
         </a>
@@ -787,73 +854,6 @@
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
             <time datetime="2020-10-26 17:20" pubdate>
-              2020-10-26
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/10/26/ceph%E6%89%A9%E5%B1%95bluestore%E7%9A%84db%E5%88%86%E5%8C%BA/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph扩展bluestore的db分区">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2020/10/26/ceph%E6%89%A9%E5%B1%95bluestore%E7%9A%84db%E5%88%86%E5%8C%BA/" target="_self">
-          ceph扩展bluestore的db分区
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2020/10/26/ceph%E6%89%A9%E5%B1%95bluestore%E7%9A%84db%E5%88%86%E5%8C%BA/" target="_self">
-        <div>
-          前言在ceph 14版本里面才加入了bluefs-bdev-migrate，分区迁移相关的命令，那么在12版本里面其实也是可以扩展分区的测试的版本 12[root@lab102 ceph-0]# ceph -vceph version 12.2.13 (584a20eb0237c657dc0567da126be145106aa47e) luminous (stable)  操作方法如果db分区之前
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-10-26 16:27" pubdate>
               2020-10-26
             </time>
           </div>

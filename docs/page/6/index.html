@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/04/30/%E5%BC%80%E5%90%AFs3%E7%9A%84https%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
+          <img src="/images/blog/s3new.jpeg" srcset="/img/loading.gif" lazyload alt="开启s3的https客户端无法使用的问题">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/04/30/%E5%BC%80%E5%90%AFs3%E7%9A%84https%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
+          开启s3的https客户端无法使用的问题
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/04/30/%E5%BC%80%E5%90%AFs3%E7%9A%84https%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
+        <div>
+          问题描述在内网部署的https的时候，我们采用的是自签名的ssl证书，内网的这个证书是无法被客户端认证通过的，这个地方主要体现在下面几个现象可以看到 chrome下的表现 s3cmd下面的表现 s3browser下的表现 这些共同的表现就是无法建立信任的关系 这里我们实际要解决的问题就是，内网是可以绕过这个证书的检测的 不同客户端的处理s3cmd的处理1[root@lab103 ~]# s3cmd
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-04-30 10:28" pubdate>
+              2024-04-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/04/17/vmware%E5%B9%B3%E5%8F%B0%E4%B8%8BIPv6%E4%B8%A2%E5%8C%85/" target="_self">
           <img src="/images/blog/ipv6.png" srcset="/img/loading.gif" lazyload alt="vmware平台下IPv6丢包">
         </a>
@@ -776,73 +843,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/">#系统配置</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/02/23/fio%E7%9A%84%E8%81%94%E6%9C%BA%E6%A8%A1%E5%BC%8F/" target="_self">
-          <img src="/images/blog/bench.jpg" srcset="/img/loading.gif" lazyload alt="fio的联机模式">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/02/23/fio%E7%9A%84%E8%81%94%E6%9C%BA%E6%A8%A1%E5%BC%8F/" target="_self">
-          fio的联机模式
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/02/23/fio%E7%9A%84%E8%81%94%E6%9C%BA%E6%A8%A1%E5%BC%8F/" target="_self">
-        <div>
-          需求通过fio控制多台同时测试，让io并发 使用方法在受控客户端每台机器上面执行 1fio --server  运行测试执行命令 1[root@node232 testnvme]# fio --client=host.list  fio1.job 测试主机配置文件 123[root@node232 testnvme]# cat host.list192.168.122.2192.168.122.1
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-02-23 10:09" pubdate>
-              2024-02-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7/" class="category-chain-item">测试工具</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%B5%8B%E8%AF%95/">#测试</a>
             
           </div>
         

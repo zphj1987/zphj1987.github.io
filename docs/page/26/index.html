@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/11/07/CephFS%20cache%20tier%E5%AE%9E%E8%B7%B5/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="CephFS cache tier实践">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/11/07/CephFS%20cache%20tier%E5%AE%9E%E8%B7%B5/" target="_self">
+          CephFS cache tier实践
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/11/07/CephFS%20cache%20tier%E5%AE%9E%E8%B7%B5/" target="_self">
+        <div>
+          这是一篇分享文，作者因为最近想深入研究下ceph的cache pool，作者写的文章非常的好，这里先直接翻译这篇文章，然后再加入我自己的相关数据 blog原文作者想启动blog写下自己的Openstack和Ceph的相关经验，第一个话题就选择了 Ceph cache tiering , 作者的使用场景为短时间的虚拟机，用来跑测试的，这种场景他们准备用Nvme做一个缓冲池来加速的虚拟机 cache
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-11-07 17:51" pubdate>
+              2016-11-07
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2016/11/04/ceph%20unfound%20objects%20%E5%A4%84%E7%90%86/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph unfound objects 处理">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2016-10-13 17:45" pubdate>
               2016-10-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/10/12/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%87%AA%E5%AE%9A%E4%B9%89%E5%90%8D%E7%A7%B0%E7%9A%84Ceph%E9%9B%86%E7%BE%A4/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="创建一个自定义名称的Ceph集群">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/10/12/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%87%AA%E5%AE%9A%E4%B9%89%E5%90%8D%E7%A7%B0%E7%9A%84Ceph%E9%9B%86%E7%BE%A4/" target="_self">
-          创建一个自定义名称的Ceph集群
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/10/12/%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%87%AA%E5%AE%9A%E4%B9%89%E5%90%8D%E7%A7%B0%E7%9A%84Ceph%E9%9B%86%E7%BE%A4/" target="_self">
-        <div>
-          前言这里有个条件，系统环境是Centos 7 ,Ceph 的版本为Jewel版本，因为这个组合下是由systemctl来进行服务控制的，所以需要做稍微的改动即可实现  准备工作部署mon的时候需要修改这个几个文件 1234/usr/lib/systemd/system/ceph-mon@.service/usr/lib/systemd/system/ceph-create-keys@.servic
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-10-12 17:45" pubdate>
-              2016-10-12
             </time>
           </div>
         

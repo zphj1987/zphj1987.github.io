@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/03/04/%E7%AE%80%E5%8D%95%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEmariadb/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="简单安装配置mariadb">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2021/03/04/%E7%AE%80%E5%8D%95%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEmariadb/" target="_self">
+          简单安装配置mariadb
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2021/03/04/%E7%AE%80%E5%8D%95%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEmariadb/" target="_self">
+        <div>
+          前言记录mariadb的安装配置方法 安装1234[root@lab101 bacula]# yum install mariadb-server[root@lab101 bacula]# systemctl start mariadb[root@lab101 bacula]# systemctl enable mariadbCreated symlink from /etc/systemd/sy
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-04 15:01" pubdate>
+              2021-03-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/02/23/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3%E6%8B%9B%E8%81%98%E4%BF%A1%E6%81%AF-%E9%95%BF%E6%9C%9F/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="存储相关招聘信息-长期">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2021-01-13 12:40" pubdate>
               2021-01-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2021/01/12/%E7%AE%80%E5%8D%95%E7%9A%84%E7%BB%9F%E8%AE%A1%E5%89%A9%E4%BD%99ceph%E8%BF%81%E7%A7%BB%E6%97%B6%E9%97%B4/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="简单的统计剩余ceph迁移时间">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2021/01/12/%E7%AE%80%E5%8D%95%E7%9A%84%E7%BB%9F%E8%AE%A1%E5%89%A9%E4%BD%99ceph%E8%BF%81%E7%A7%BB%E6%97%B6%E9%97%B4/" target="_self">
-          简单的统计剩余ceph迁移时间
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2021/01/12/%E7%AE%80%E5%8D%95%E7%9A%84%E7%BB%9F%E8%AE%A1%E5%89%A9%E4%BD%99ceph%E8%BF%81%E7%A7%BB%E6%97%B6%E9%97%B4/" target="_self">
-        <div>
-          需求由于迁移忽快忽慢，需要知道大概的迁移的时间，做了一个简单的统计脚本，可能不准，大概能够知道在什么范围内 脚本1234567891011121314151617181920#! /bin/shwhile ( 2&gt;1 )do start=`ceph -s|grep pgs|grep mis|awk &#x27;&#123;print $2&#125;&#x27;|cut -d / -f 1`
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-01-12 10:57" pubdate>
-              2021-01-12
             </time>
           </div>
         

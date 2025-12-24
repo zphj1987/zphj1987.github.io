@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2018/04/11/ceph%E7%9A%84ISCSI%20GATEWAY/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph的ISCSI GATEWAY">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2018/04/11/ceph%E7%9A%84ISCSI%20GATEWAY/" target="_self">
+          ceph的ISCSI GATEWAY
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2018/04/11/ceph%E7%9A%84ISCSI%20GATEWAY/" target="_self">
+        <div>
+          前言最开始接触这个是在L版本的监控平台里面看到的，有个iscsi网关，但是没看到有类似的介绍，然后通过接口查询到了一些资料，当时由于有比较多的东西需要新内核，新版本的支持，所以并没有配置出来，由于内核已经更新迭代了几个小版本了，经过测试验证可以跑起来了，这里只是把东西跑起来，性能相关的对比需要根据去做 实践过程架构图 这个图是引用的红帽的架构图，可以理解为一个多路径的实现方式，那么这个跟之前的有什
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-04-11 14:57" pubdate>
+              2018-04-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2018/03/23/parted%E4%BC%9A%E5%90%AF%E5%8A%A8%E4%BD%A0%E7%9A%84ceph%20osd%EF%BC%8C%E6%84%8F%E5%A4%96%E4%B8%8D%EF%BC%9F/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="parted会启动你的ceph osd，意外不？">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-09-07 00:30" pubdate>
               2017-09-07
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/09/06/Ceph%20OSD%E6%9C%8D%E5%8A%A1%E5%A4%B1%E6%95%88%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E6%8E%A7%E5%88%B6/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph OSD服务失效自动启动控制">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/09/06/Ceph%20OSD%E6%9C%8D%E5%8A%A1%E5%A4%B1%E6%95%88%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E6%8E%A7%E5%88%B6/" target="_self">
-          Ceph OSD服务失效自动启动控制
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/09/06/Ceph%20OSD%E6%9C%8D%E5%8A%A1%E5%A4%B1%E6%95%88%E8%87%AA%E5%8A%A8%E5%90%AF%E5%8A%A8%E6%8E%A7%E5%88%B6/" target="_self">
-        <div>
-          前言服务器上面的服务会因为各种各样的原因失败，磁盘故障，权限问题，或者是服务过载引起超时，这些都可能引起 这个在ceph里面systemctl unit 默认有个on-fail restart,默认的可能并不适合所有的场景，所以自动化的服务应该是尽量去适配你手动处理的过程，手动怎么处理的，就怎么去设置 启动分析如果有osd失败了，一般上去会先启动一次，尽快让服务启动，然后去检查是否有故障，如果失败
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-09-06 12:33" pubdate>
-              2017-09-06
             </time>
           </div>
         

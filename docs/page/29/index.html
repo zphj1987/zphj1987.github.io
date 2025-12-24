@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/06/19/rgw%E5%AE%9E%E7%8E%B0nfs%E7%9A%84%E9%A6%96%E6%B5%8B/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rgw实现nfs的首测">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/06/19/rgw%E5%AE%9E%E7%8E%B0nfs%E7%9A%84%E9%A6%96%E6%B5%8B/" target="_self">
+          rgw实现nfs的首测
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/06/19/rgw%E5%AE%9E%E7%8E%B0nfs%E7%9A%84%E9%A6%96%E6%B5%8B/" target="_self">
+        <div>
+          功能介绍关于rgw实现nfs接口这个，刚接触的人可能并不清楚这个是个什么样的服务架构，rgw是ceph里面的对象存储接口，而nfs则是纯正的网络文件系统接口，这二者如何结合在一起,关于这个,有几个相关的链接供大家了解  ceph官方的RGW_NFS项目规划 麦子迈关于RGW_NFS的文章  之所以这个功能能实现这么快，原因是nfs-ganesha的开发者Matt Benjamin加入到了Redha
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-06-19 17:22" pubdate>
+              2016-06-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2016/06/13/CPU%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AD%A6%E4%B9%A0/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="CPU相关的学习">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2016-04-27 17:06" pubdate>
               2016-04-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/04/25/mon%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E9%97%AE%E9%A2%98/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="mon的稳定性问题">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/04/25/mon%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E9%97%AE%E9%A2%98/" target="_self">
-          mon的稳定性问题
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/04/25/mon%E7%9A%84%E7%A8%B3%E5%AE%9A%E6%80%A7%E9%97%AE%E9%A2%98/" target="_self">
-        <div>
-          MON的稳定性问题： mon的选举风暴影响客户端IO LevelDB的暴涨 频繁的客户端请求的DDOS  mon选举风暴：monmap会因为mon之间或者mon与客户端之间网络的影响或者消息传递的异常发生变化,从而触发选举会造成客户端的请求变慢或者锁住 LevelDB的暴涨：LevelDB的大小会涨到几十GB然后影响了osd的请求会造成客户端的请求变慢或者锁住 频繁的客户端请求的DDOS：mon的
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-04-25 17:04" pubdate>
-              2016-04-25
             </time>
           </div>
         

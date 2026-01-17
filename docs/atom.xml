@@ -6,7 +6,7 @@
   <link href="https://zphj1987.com/atom.xml" rel="self"/>
   
   <link href="https://zphj1987.com/"/>
-  <updated>2025-12-24T02:57:21.691Z</updated>
+  <updated>2026-01-17T07:26:59.536Z</updated>
   <id>https://zphj1987.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>多对多的线程的iperf测试-双服务器模拟</title>
+    <link href="https://zphj1987.com/2026/01/17/%E5%A4%9A%E5%AF%B9%E5%A4%9A%E7%9A%84%E7%BA%BF%E7%A8%8B%E7%9A%84iperf%E6%B5%8B%E8%AF%95-%E5%8F%8C%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%A8%A1%E6%8B%9F/"/>
+    <id>https://zphj1987.com/2026/01/17/%E5%A4%9A%E5%AF%B9%E5%A4%9A%E7%9A%84%E7%BA%BF%E7%A8%8B%E7%9A%84iperf%E6%B5%8B%E8%AF%95-%E5%8F%8C%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%A8%A1%E6%8B%9F/</id>
+    <published>2026-01-17T07:25:33.000Z</published>
+    <updated>2026-01-17T07:26:59.536Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;我们需要模拟一个服务器作为下载服务器，然后客户端模拟大量的下载的，我们的环境可能没有那么多的机器，不是很好准备环境&lt;/p&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="系统管理" scheme="https://zphj1987.com/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    
+    
+    <category term="测速" scheme="https://zphj1987.com/tags/%E6%B5%8B%E9%80%9F/"/>
+    
+  </entry>
   
   <entry>
     <title>搭建一个librespeed测速服务器</title>
@@ -477,32 +503,6 @@
     
     
     <category term="deepseek" scheme="https://zphj1987.com/tags/deepseek/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>小电视屏幕拉伸问题解决</title>
-    <link href="https://zphj1987.com/2024/12/31/%E5%B0%8F%E7%94%B5%E8%A7%86%E5%B1%8F%E5%B9%95%E6%8B%89%E4%BC%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/"/>
-    <id>https://zphj1987.com/2024/12/31/%E5%B0%8F%E7%94%B5%E8%A7%86%E5%B1%8F%E5%B9%95%E6%8B%89%E4%BC%B8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</id>
-    <published>2024-12-31T06:59:35.000Z</published>
-    <updated>2025-02-13T07:21:00.998Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;最近在看3D打印的东西，看到一个模型不错就拿来打了&lt;/p&gt;
-&lt;p&gt;&lt;a</summary>
-        
-      
-    
-    
-    
-    <category term="3D打印" scheme="https://zphj1987.com/categories/3D%E6%89%93%E5%8D%B0/"/>
-    
-    
-    <category term="问题处理" scheme="https://zphj1987.com/tags/%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/"/>
     
   </entry>
   

@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/10/26/ceph%20bluestore%E7%9A%84db%E5%88%86%E5%8C%BA%E5%BA%94%E8%AF%A5%E9%A2%84%E7%95%99%E5%A4%9A%E5%A4%A7%E7%9A%84%E7%A9%BA%E9%97%B4/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph bluestore的db分区应该预留多大的空间">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2020/10/26/ceph%20bluestore%E7%9A%84db%E5%88%86%E5%8C%BA%E5%BA%94%E8%AF%A5%E9%A2%84%E7%95%99%E5%A4%9A%E5%A4%A7%E7%9A%84%E7%A9%BA%E9%97%B4/" target="_self">
+          ceph bluestore的db分区应该预留多大的空间
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2020/10/26/ceph%20bluestore%E7%9A%84db%E5%88%86%E5%8C%BA%E5%BA%94%E8%AF%A5%E9%A2%84%E7%95%99%E5%A4%9A%E5%A4%A7%E7%9A%84%E7%A9%BA%E9%97%B4/" target="_self">
+        <div>
+          前言关于bluestore的db应该预留多少空间，网上有很多资料如果采用默认的  write_buffer_size&#x3D;268435456  大小的话那么几个rocksdb的数据等级是 12345L0: in memoryL1: 256MBL2: 2.56 GBL3: 25.6 GBL4: 256 GB 设置L4那么大的ssd可以给一个osd使用有点不划算，那么空间一般计算就是L1+L2+
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-26 17:20" pubdate>
+              2020-10-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/10/26/ceph%E6%89%A9%E5%B1%95bluestore%E7%9A%84db%E5%88%86%E5%8C%BA/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph扩展bluestore的db分区">
         </a>
@@ -825,78 +892,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/09/11/rgw%E5%89%8D%E7%AB%AF%E6%9B%BF%E6%8D%A2civetweb%E4%B8%BAbeast/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rgw前端替换civetweb为beast">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2020/09/11/rgw%E5%89%8D%E7%AB%AF%E6%9B%BF%E6%8D%A2civetweb%E4%B8%BAbeast/" target="_self">
-          rgw前端替换civetweb为beast
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2020/09/11/rgw%E5%89%8D%E7%AB%AF%E6%9B%BF%E6%8D%A2civetweb%E4%B8%BAbeast/" target="_self">
-        <div>
-          前言ceph的rgw现在提供了两种前端， civetweb和beast 配置修改配置文件 1rgw_frontends = civetweb port=7481 为 1rgw frontends = beast  port=7481 然后重启rgw进程，查看日志 1234567892020-09-11 10:23:52.117738 7f90b45f8000  0 ceph version 12.
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-09-11 10:40" pubdate>
-              2020-09-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/13/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/#board">12</a><a class="page-number" href="/page/13/#board">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/#board">15</a><a class="page-number" href="/page/16/#board">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/#board">40</a><a class="extend next" rel="next" href="/page/15/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/13/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/#board">12</a><a class="page-number" href="/page/13/#board">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/#board">15</a><a class="page-number" href="/page/16/#board">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/#board">41</a><a class="extend next" rel="next" href="/page/15/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

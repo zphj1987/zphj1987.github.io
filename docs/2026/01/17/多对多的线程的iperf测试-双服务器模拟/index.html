@@ -1,0 +1,669 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/logo.jpeg">
+  <link rel="icon" href="/img/logo.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="zphj1987">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景我们需要模拟一个服务器作为下载服务器，然后客户端模拟大量的下载的，我们的环境可能没有那么多的机器，不是很好准备环境 模拟环境这个我们只需要准备两台大容量的服务器，然后其中一台作为服务器，另外一台作为客户端，客户端可以生成很多虚拟的网卡，然后通过虚拟ip绑定iperf来1对1的测试 环境准备服务器准备一个虚拟IP 1ip addr add 192.168.1.5&#x2F;24 dev eth0  这个最">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多对多的线程的iperf测试-双服务器模拟">
+<meta property="og:url" content="https://zphj1987.com/2026/01/17/%E5%A4%9A%E5%AF%B9%E5%A4%9A%E7%9A%84%E7%BA%BF%E7%A8%8B%E7%9A%84iperf%E6%B5%8B%E8%AF%95-%E5%8F%8C%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%A8%A1%E6%8B%9F/index.html">
+<meta property="og:site_name" content="磨磨的技术笔记">
+<meta property="og:description" content="背景我们需要模拟一个服务器作为下载服务器，然后客户端模拟大量的下载的，我们的环境可能没有那么多的机器，不是很好准备环境 模拟环境这个我们只需要准备两台大容量的服务器，然后其中一台作为服务器，另外一台作为客户端，客户端可以生成很多虚拟的网卡，然后通过虚拟ip绑定iperf来1对1的测试 环境准备服务器准备一个虚拟IP 1ip addr add 192.168.1.5&#x2F;24 dev eth0  这个最">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zphj1987.com/images/blog/z.png">
+<meta property="article:published_time" content="2026-01-17T07:25:33.000Z">
+<meta property="article:modified_time" content="2026-01-17T07:26:59.536Z">
+<meta property="article:author" content="zphj1987">
+<meta property="article:tag" content="测速">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://zphj1987.com/images/blog/z.png">
+  
+  
+  
+  <title>多对多的线程的iperf测试-双服务器模拟 - 磨磨的技术笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"zphj1987.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="磨磨的技术笔记" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>磨磨的技术笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/blog/z.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.8)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="多对多的线程的iperf测试-双服务器模拟"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-01-17 15:25" pubdate>
+          2026年1月17日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">多对多的线程的iperf测试-双服务器模拟</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>我们需要模拟一个服务器作为下载服务器，然后客户端模拟大量的下载的，我们的环境可能没有那么多的机器，不是很好准备环境</p>
+<h2 id="模拟环境"><a href="#模拟环境" class="headerlink" title="模拟环境"></a>模拟环境</h2><p>这个我们只需要准备两台大容量的服务器，然后其中一台作为服务器，另外一台作为客户端，客户端可以生成很多虚拟的网卡，然后通过虚拟ip绑定iperf来1对1的测试</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>服务器准备一个虚拟IP</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ip addr add 192.168.1.5/24 dev eth0<br></code></pre></td></tr></table></figure>
+
+<p>这个最好用一个新网段，这样可以占用大量的ip</p>
+<p>客户端生成多IP</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">seq 101 199 |xargs -i ip addr add 192.168.1.&#123;&#125;/24 dev eth0 label eth0:&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="服务器脚本"><a href="#服务器脚本" class="headerlink" title="服务器脚本"></a>服务器脚本</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@lab211 iperf]# cat startiperf.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/bash</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">startiperf.sh</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">iperf3 server 批量启动（多端口 + 实时日志）</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">配置</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br>LOG_BASE_DIR=&quot;$(pwd)/iperf_logs&quot;<br>IPERF_CMD=&quot;iperf3&quot;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">颜色</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br>RED=&#x27;\033[0;31m&#x27;<br>GREEN=&#x27;\033[0;32m&#x27;<br>YELLOW=&#x27;\033[1;33m&#x27;<br>BLUE=&#x27;\033[0;34m&#x27;<br>NC=&#x27;\033[0m&#x27;<br><br>info() &#123; echo -e &quot;$&#123;BLUE&#125;[INFO]$&#123;NC&#125; $1&quot;; &#125;<br>ok()   &#123; echo -e &quot;$&#123;GREEN&#125;[OK]$&#123;NC&#125; $1&quot;; &#125;<br>warn() &#123; echo -e &quot;$&#123;YELLOW&#125;[WARN]$&#123;NC&#125; $1&quot;; &#125;<br>err()  &#123; echo -e &quot;$&#123;RED&#125;[ERR]$&#123;NC&#125; $1&quot;; &#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">检查环境</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br>command -v iperf3 &gt;/dev/null || &#123; err &quot;iperf3 未安装&quot;; exit 1; &#125;<br>command -v stdbuf &gt;/dev/null || &#123; err &quot;stdbuf 未安装&quot;; exit 1; &#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">读取当前配置</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br>current_log_dir() &#123;<br>    [ -f &quot;$&#123;LOG_BASE_DIR&#125;/current_config&quot; ] &amp;&amp; \<br>        source &quot;$&#123;LOG_BASE_DIR&#125;/current_config&quot; &amp;&amp; \<br>        echo &quot;$CURRENT_LOG_DIR&quot;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">启动</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br>start_servers() &#123;<br>    local START=$1<br>    local END=$2<br><br>    mkdir -p &quot;$LOG_BASE_DIR&quot;<br>    TS=$(date +%Y%m%d_%H%M%S)<br>    LOG_DIR=&quot;$&#123;LOG_BASE_DIR&#125;/iperf_$&#123;START&#125;_$&#123;END&#125;_$&#123;TS&#125;&quot;<br>    mkdir -p &quot;$LOG_DIR&quot;<br><br>    info &quot;日志目录: $LOG_DIR&quot;<br>    info &quot;端口范围: $&#123;START&#125;-$&#123;END&#125;&quot;<br><br>    local ok_cnt=0<br><br>    for port in $(seq &quot;$START&quot; &quot;$END&quot;); do<br>        log=&quot;$&#123;LOG_DIR&#125;/port_$&#123;port&#125;.log&quot;<br>        pidf=&quot;$&#123;LOG_DIR&#125;/pid_$&#123;port&#125;&quot;<br><br>        if ss -lnt | awk &#x27;&#123;print $4&#125;&#x27; | grep -q &quot;:$&#123;port&#125;$&quot;; then<br>            warn &quot;端口 $&#123;port&#125; 已占用，跳过&quot;<br>            continue<br>        fi<br><br>        echo &quot;[`date &#x27;+%F %T&#x27;`] START iperf3 -s -p $&#123;port&#125;&quot; &gt; &quot;$log&quot;<br><br>        stdbuf -oL -eL iperf3 -s -p &quot;$port&quot; &gt;&gt; &quot;$log&quot; 2&gt;&amp;1 &amp;<br>        pid=$!<br><br>        sleep 0.1<br>        if kill -0 &quot;$pid&quot; 2&gt;/dev/null; then<br>            echo &quot;$pid&quot; &gt; &quot;$pidf&quot;<br>            ok &quot;端口 $&#123;port&#125; 启动成功 (PID $pid)&quot;<br>            ((ok_cnt++))<br>        else<br>            err &quot;端口 $&#123;port&#125; 启动失败&quot;<br>        fi<br>    done<br><br>    cat &gt; &quot;$&#123;LOG_BASE_DIR&#125;/current_config&quot; &lt;&lt;EOF<br>CURRENT_LOG_DIR=&quot;$LOG_DIR&quot;<br>START_PORT=$START<br>END_PORT=$END<br>START_TIME=&quot;$(date)&quot;<br>EOF<br><br>    info &quot;启动完成：$&#123;ok_cnt&#125;/$((END-START+1))&quot;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">停止</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br>stop_servers() &#123;<br>    LOG_DIR=$(current_log_dir)<br>    [ -z &quot;$LOG_DIR&quot; ] &amp;&amp; &#123; info &quot;没有运行实例&quot;; return; &#125;<br><br>    for f in &quot;$LOG_DIR&quot;/pid_*; do<br>        pid=$(cat &quot;$f&quot;)<br>        kill &quot;$pid&quot; 2&gt;/dev/null &amp;&amp; ok &quot;停止 PID $pid&quot;<br>    done<br><br>    rm -f &quot;$&#123;LOG_BASE_DIR&#125;/current_config&quot;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">状态</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br>status_servers() &#123;<br>    LOG_DIR=$(current_log_dir)<br>    [ -z &quot;$LOG_DIR&quot; ] &amp;&amp; &#123; info &quot;无运行实例&quot;; return; &#125;<br><br>    for f in &quot;$LOG_DIR&quot;/pid_*; do<br>        port=$(basename &quot;$f&quot; | cut -d_ -f2)<br>        pid=$(cat &quot;$f&quot;)<br>        kill -0 &quot;$pid&quot; 2&gt;/dev/null \<br>            &amp;&amp; echo &quot;端口 $&#123;port&#125;: RUNNING (PID $&#123;pid&#125;)&quot; \<br>            || echo &quot;端口 $&#123;port&#125;: DEAD&quot;<br>    done<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">main</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###################################</span></span><br>case &quot;$1&quot; in<br>    start)  start_servers &quot;$2&quot; &quot;$3&quot; ;;<br>    stop)   stop_servers ;;<br>    status) status_servers ;;<br>    *) echo &quot;用法: $0 start &lt;s&gt; &lt;e&gt; | stop | status&quot; ;;<br>esac<br></code></pre></td></tr></table></figure>
+
+<p>使用方法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">bash  startiperf.sh  start 5101 5200<br></code></pre></td></tr></table></figure>
+
+<p>这个就是会启动100个进程，启动了5101到5200一共100个端口的iperf</p>
+<h2 id="客户端脚本"><a href="#客户端脚本" class="headerlink" title="客户端脚本"></a>客户端脚本</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br><span class="line">560</span><br><span class="line">561</span><br><span class="line">562</span><br><span class="line">563</span><br><span class="line">564</span><br><span class="line">565</span><br><span class="line">566</span><br><span class="line">567</span><br><span class="line">568</span><br><span class="line">569</span><br><span class="line">570</span><br><span class="line">571</span><br><span class="line">572</span><br><span class="line">573</span><br><span class="line">574</span><br><span class="line">575</span><br><span class="line">576</span><br><span class="line">577</span><br><span class="line">578</span><br><span class="line">579</span><br><span class="line">580</span><br><span class="line">581</span><br><span class="line">582</span><br><span class="line">583</span><br><span class="line">584</span><br><span class="line">585</span><br><span class="line">586</span><br><span class="line">587</span><br><span class="line">588</span><br><span class="line">589</span><br><span class="line">590</span><br><span class="line">591</span><br><span class="line">592</span><br><span class="line">593</span><br><span class="line">594</span><br><span class="line">595</span><br><span class="line">596</span><br><span class="line">597</span><br><span class="line">598</span><br><span class="line">599</span><br><span class="line">600</span><br><span class="line">601</span><br><span class="line">602</span><br><span class="line">603</span><br><span class="line">604</span><br><span class="line">605</span><br><span class="line">606</span><br><span class="line">607</span><br><span class="line">608</span><br><span class="line">609</span><br><span class="line">610</span><br><span class="line">611</span><br><span class="line">612</span><br><span class="line">613</span><br><span class="line">614</span><br><span class="line">615</span><br><span class="line">616</span><br><span class="line">617</span><br><span class="line">618</span><br><span class="line">619</span><br><span class="line">620</span><br><span class="line">621</span><br><span class="line">622</span><br><span class="line">623</span><br><span class="line">624</span><br><span class="line">625</span><br><span class="line">626</span><br><span class="line">627</span><br><span class="line">628</span><br><span class="line">629</span><br><span class="line">630</span><br><span class="line">631</span><br><span class="line">632</span><br><span class="line">633</span><br><span class="line">634</span><br><span class="line">635</span><br><span class="line">636</span><br><span class="line">637</span><br><span class="line">638</span><br><span class="line">639</span><br><span class="line">640</span><br><span class="line">641</span><br><span class="line">642</span><br><span class="line">643</span><br><span class="line">644</span><br><span class="line">645</span><br><span class="line">646</span><br><span class="line">647</span><br><span class="line">648</span><br><span class="line">649</span><br><span class="line">650</span><br><span class="line">651</span><br><span class="line">652</span><br><span class="line">653</span><br><span class="line">654</span><br><span class="line">655</span><br><span class="line">656</span><br><span class="line">657</span><br><span class="line">658</span><br><span class="line">659</span><br><span class="line">660</span><br><span class="line">661</span><br><span class="line">662</span><br><span class="line">663</span><br><span class="line">664</span><br><span class="line">665</span><br><span class="line">666</span><br><span class="line">667</span><br><span class="line">668</span><br><span class="line">669</span><br><span class="line">670</span><br><span class="line">671</span><br><span class="line">672</span><br><span class="line">673</span><br><span class="line">674</span><br><span class="line">675</span><br><span class="line">676</span><br><span class="line">677</span><br><span class="line">678</span><br><span class="line">679</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@lab212 iperf]# cat iperf-client.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/bash</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">文件名: iperf_client.sh</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">功能: 并发iperf客户端测试工具（客户端IP与服务器端口一对一映射）</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">用法:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">  启动: ./iperf_client.sh start 服务器IP 服务器端口开始 服务器端口结束 客户端IP开始 客户端IP结束 测试时间 [并发数]</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">  停止: ./iperf_client.sh stop</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">  状态: ./iperf_client.sh status</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">示例:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">  ./iperf_client.sh start 192.168.1.5 5101 5109 192.168.1.101 192.168.1.109 60 5</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">  ./iperf_client.sh stop</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">  ./iperf_client.sh status</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">颜色定义</span><br>RED=&#x27;\033[0;31m&#x27;<br>GREEN=&#x27;\033[0;32m&#x27;<br>YELLOW=&#x27;\033[1;33m&#x27;<br>BLUE=&#x27;\033[0;34m&#x27;<br>PURPLE=&#x27;\033[0;35m&#x27;<br>NC=&#x27;\033[0m&#x27; # No Color<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">打印函数</span><br>print_info() &#123; echo -e &quot;$&#123;BLUE&#125;[INFO]$&#123;NC&#125; $1&quot;; &#125;<br>print_success() &#123; echo -e &quot;$&#123;GREEN&#125;[SUCCESS]$&#123;NC&#125; $1&quot;; &#125;<br>print_warning() &#123; echo -e &quot;$&#123;YELLOW&#125;[WARNING]$&#123;NC&#125; $1&quot;; &#125;<br>print_error() &#123; echo -e &quot;$&#123;RED&#125;[ERROR]$&#123;NC&#125; $1&quot;; &#125;<br>print_header() &#123; echo -e &quot;$&#123;PURPLE&#125;$1$&#123;NC&#125;&quot;; &#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">检查参数</span><br>check_start_args() &#123;<br>    if [ $# -lt 7 ] || [ $# -gt 8 ]; then<br>        print_error &quot;启动参数错误&quot;<br>        echo &quot;用法: $0 start 服务器IP 服务器端口开始 服务器端口结束 客户端IP开始 客户端IP结束 测试时间 [并发数]&quot;<br>        echo &quot;示例: $0 start 192.168.1.5 5101 5109 192.168.1.101 192.168.1.109 60 5&quot;<br>        echo &quot;说明: 每个客户端IP对应一个服务器端口，一对一并发测试&quot;<br>        exit 1<br>    fi<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">检查iperf</span><br>check_iperf() &#123;<br>    if ! command -v iperf3 &amp;&gt; /dev/null; then<br>        if ! command -v iperf &amp;&gt; /dev/null; then<br>            print_error &quot;未找到iperf或iperf3&quot;<br>            exit 1<br>        fi<br>        IPERF=&quot;iperf&quot;<br>    else<br>        IPERF=&quot;iperf3&quot;<br>    fi<br>    print_info &quot;使用iperf命令: $IPERF&quot;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">IP递增函数</span><br>next_ip() &#123;<br>    echo $1 | awk -F. &#x27;&#123;<br>        if ($4 &lt; 255) &#123;<br>            $4++<br>        &#125; else if ($3 &lt; 255) &#123;<br>            $4=0<br>            $3++<br>        &#125; else if ($2 &lt; 255) &#123;<br>            $4=0; $3=0<br>            $2++<br>        &#125; else if ($1 &lt; 255) &#123;<br>            $4=0; $3=0; $2=0<br>            $1++<br>        &#125;<br>        print $1&quot;.&quot;$2&quot;.&quot;$3&quot;.&quot;$4<br>    &#125;&#x27;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">生成IP列表</span><br>generate_ip_list() &#123;<br>    local start_ip=&quot;$1&quot;<br>    local end_ip=&quot;$2&quot;<br>    local ip_list=()<br>    local current_ip=&quot;$start_ip&quot;<br><br>    while true; do<br>        ip_list+=(&quot;$current_ip&quot;)<br><br>        if [ &quot;$current_ip&quot; = &quot;$end_ip&quot; ]; then<br>            break<br>        fi<br><br>        current_ip=$(next_ip &quot;$current_ip&quot;)<br>    done<br><br>    echo &quot;$&#123;ip_list[@]&#125;&quot;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">验证IP和端口数量匹配</span><br>validate_mapping() &#123;<br>    local server_port_start=&quot;$1&quot;<br>    local server_port_end=&quot;$2&quot;<br>    local client_start=&quot;$3&quot;<br>    local client_end=&quot;$4&quot;<br><br>    # 计算端口数量<br>    local port_count=$((server_port_end - server_port_start + 1))<br><br>    # 计算IP数量<br>    local start_ip_int=$(echo &quot;$client_start&quot; | awk -F. &#x27;&#123;print $1 * 256^3 + $2 * 256^2 + $3 * 256 + $4&#125;&#x27;)<br>    local end_ip_int=$(echo &quot;$client_end&quot; | awk -F. &#x27;&#123;print $1 * 256^3 + $2 * 256^2 + $3 * 256 + $4&#125;&#x27;)<br>    local ip_count=$((end_ip_int - start_ip_int + 1))<br><br>    if [ $port_count -ne $ip_count ]; then<br>        print_error &quot;端口数量($port_count)与客户端IP数量($ip_count)不匹配！&quot;<br>        print_error &quot;必须一对一映射，请确保数量相同&quot;<br>        return 1<br>    fi<br><br>    return 0<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">启动测试</span><br>start_test() &#123;<br>    local server_ip=&quot;$1&quot;<br>    local server_port_start=&quot;$2&quot;<br>    local server_port_end=&quot;$3&quot;<br>    local client_start=&quot;$4&quot;<br>    local client_end=&quot;$5&quot;<br>    local duration=&quot;$6&quot;<br>    local parallel=&quot;$&#123;7:-1&#125;&quot;  # 默认并发数为1<br><br>    print_header &quot;====== 启动iperf客户端测试 ======&quot;<br><br>    # 验证IP和端口数量匹配<br>    if ! validate_mapping &quot;$server_port_start&quot; &quot;$server_port_end&quot; &quot;$client_start&quot; &quot;$client_end&quot;; then<br>        exit 1<br>    fi<br><br>    # 检查并创建日志目录<br>    LOG_DIR=&quot;iperf_client_$(date +%Y%m%d_%H%M%S)&quot;<br>    PID_DIR=&quot;$LOG_DIR/pids&quot;<br>    mkdir -p &quot;$PID_DIR&quot;<br><br>    CONFIG_FILE=&quot;$LOG_DIR/config.txt&quot;<br>    SUMMARY_FILE=&quot;$LOG_DIR/summary.txt&quot;<br>    RUNNING_FILE=&quot;$LOG_DIR/running.txt&quot;<br>    PORT_MAP_FILE=&quot;$LOG_DIR/port_map.txt&quot;<br><br>    # 生成客户端IP列表<br>    print_info &quot;生成客户端IP列表...&quot;<br>    local client_ips=($(generate_ip_list &quot;$client_start&quot; &quot;$client_end&quot;))<br>    local client_count=$&#123;#client_ips[@]&#125;<br><br>    # 生成服务器端口列表<br>    local server_ports=()<br>    for port in $(seq &quot;$server_port_start&quot; &quot;$server_port_end&quot;); do<br>        server_ports+=(&quot;$port&quot;)<br>    done<br><br>    # 保存配置<br>    &#123;<br>        echo &quot;服务器IP: $server_ip&quot;<br>        echo &quot;服务器端口范围: $server_port_start - $server_port_end&quot;<br>        echo &quot;客户端IP范围: $client_start - $client_end&quot;<br>        echo &quot;客户端数量: $client_count&quot;<br>        echo &quot;测试时长: $&#123;duration&#125;秒&quot;<br>        echo &quot;并发数: $parallel&quot;<br>        echo &quot;开始时间: $(date)&quot;<br>        echo &quot;日志目录: $LOG_DIR&quot;<br>        echo &quot;进程目录: $PID_DIR&quot;<br>        echo &quot;&quot;<br>        echo &quot;端口映射关系:&quot;<br>    &#125; &gt; &quot;$CONFIG_FILE&quot;<br><br>    # 显示配置<br>    print_info &quot;配置信息:&quot;<br>    print_info &quot;  服务器IP: $server_ip&quot;<br>    print_info &quot;  服务器端口: $server_port_start - $server_port_end&quot;<br>    print_info &quot;  客户端IP: $client_start - $client_end&quot;<br>    print_info &quot;  客户端数量: $client_count&quot;<br>    print_info &quot;  测试时长: $&#123;duration&#125;秒&quot;<br>    print_info &quot;  并发数: $parallel&quot;<br>    print_info &quot;  日志目录: $LOG_DIR&quot;<br><br>    # 显示端口映射<br>    print_info &quot;&quot;<br>    print_info &quot;端口映射关系:&quot;<br><br>    # 创建映射数组<br>    local mapping_index=0<br>    for ((i=0; i&lt;client_count; i++)); do<br>        local client_ip=&quot;$&#123;client_ips[i]&#125;&quot;<br>        local server_port=&quot;$&#123;server_ports[i]&#125;&quot;<br><br>        print_info &quot;  客户端 $client_ip -&gt; 服务器 $server_ip:$server_port&quot;<br>        echo &quot;  $client_ip -&gt; $server_ip:$server_port&quot; &gt;&gt; &quot;$CONFIG_FILE&quot;<br>        echo &quot;$client_ip:$server_port&quot; &gt;&gt; &quot;$PORT_MAP_FILE&quot;<br>    done<br><br>    # 估计总时间<br>    local estimated_time=$(( (client_count + parallel - 1) / parallel * duration ))<br>    print_warning &quot;预计总时间: $&#123;estimated_time&#125;秒 (~$(($estimated_time/60))分钟)&quot;<br><br>    read -p &quot;是否开始测试? (y/N): &quot; -n 1 -r<br>    echo<br>    if [[ ! $REPLY =~ ^[Yy]$ ]]; then<br>        print_info &quot;用户取消操作&quot;<br>        rm -rf &quot;$LOG_DIR&quot;<br>        exit 0<br>    fi<br><br>    # 开始时间<br>    local start_time=$(date +%s)<br>    echo &quot;$start_time&quot; &gt; &quot;$LOG_DIR/start_time.txt&quot;<br>    echo &quot;$server_ip&quot; &gt; &quot;$LOG_DIR/server_ip.txt&quot;<br><br>    # 计数器<br>    local test_count=0<br>    local success_count=0<br>    local fail_count=0<br><br>    # 启动信号量控制<br>    if [ &quot;$parallel&quot; -gt 1 ]; then<br>        # 创建命名管道作为信号量<br>        SEMAPHORE=&quot;/tmp/iperf_semaphore_$$&quot;<br>        mkfifo &quot;$SEMAPHORE&quot;<br><br>        # 初始化信号量<br>        for ((i=0; i&lt;parallel; i++)); do<br>            echo &gt; &quot;$SEMAPHORE&quot; &amp;<br>        done<br><br>        # 为信号量打开文件描述符<br>        exec 3&lt;&gt; &quot;$SEMAPHORE&quot;<br>    fi<br><br>    # 启动测试（一对一映射）<br>    for ((i=0; i&lt;client_count; i++)); do<br>        test_count=$((test_count + 1))<br>        local client_ip=&quot;$&#123;client_ips[i]&#125;&quot;<br>        local server_port=&quot;$&#123;server_ports[i]&#125;&quot;<br><br>        # 并发控制<br>        if [ &quot;$parallel&quot; -gt 1 ]; then<br>            # 获取信号量<br>            read -u 3<br>        fi<br><br>        # 执行单个测试（后台运行）<br>        run_single_test &quot;$server_ip&quot; &quot;$server_port&quot; &quot;$client_ip&quot; &quot;$duration&quot; &quot;$LOG_DIR&quot; &quot;$PID_DIR&quot; &quot;$test_count&quot; &quot;$client_count&quot; &amp;<br><br>        # 记录进程<br>        local pid=$!<br>        echo &quot;$pid:$client_ip:$server_port&quot; &gt;&gt; &quot;$RUNNING_FILE&quot;<br>        echo &quot;$pid&quot; &gt; &quot;$PID_DIR/$pid.pid&quot;<br><br>        # 控制并发数量<br>        if [ &quot;$parallel&quot; -gt 1 ]; then<br>            # 后台释放信号量<br>            &#123;<br>                wait $pid<br>                echo &gt;&amp;3<br>            &#125; &amp;<br>        fi<br><br>        print_info &quot;启动测试 [$test_count/$client_count]: 客户端 $client_ip -&gt; 服务器 $server_ip:$server_port (PID: $pid)&quot;<br><br>        # 短暂延迟避免同时启动过多<br>        sleep 0.1<br>    done<br><br>    # 等待所有后台进程<br>    if [ &quot;$parallel&quot; -gt 1 ]; then<br>        # 等待所有信号量释放<br>        for ((i=0; i&lt;parallel; i++)); do<br>            read -u 3<br>        done<br>        exec 3&lt;&amp;-<br>        rm -f &quot;$SEMAPHORE&quot;<br>    else<br>        # 串行等待<br>        wait<br>    fi<br><br>    # 结束时间<br>    local end_time=$(date +%s)<br>    local total_time=$((end_time - start_time))<br><br>    # 统计结果<br>    if [ -f &quot;$LOG_DIR/results.txt&quot; ]; then<br>        success_count=$(grep -c &quot;成功&quot; &quot;$LOG_DIR/results.txt&quot; 2&gt;/dev/null || echo 0)<br>        fail_count=$(grep -c &quot;失败&quot; &quot;$LOG_DIR/results.txt&quot; 2&gt;/dev/null || echo 0)<br>    fi<br><br>    # 生成报告<br>    print_header &quot;====== 测试完成 ======&quot;<br>    print_info &quot;完成时间: $(date)&quot;<br>    print_info &quot;总耗时: $&#123;total_time&#125;秒&quot;<br>    print_info &quot;总测试数: $test_count&quot;<br>    print_info &quot;成功: $success_count&quot;<br>    print_info &quot;失败: $fail_count&quot;<br><br>    if [ $test_count -gt 0 ]; then<br>        local success_rate=$(echo &quot;scale=2; $success_count * 100 / $test_count&quot; | bc)<br>        print_success &quot;成功率: $&#123;success_rate&#125;%&quot;<br>    fi<br><br>    print_info &quot;日志目录: $LOG_DIR&quot;<br><br>    # 生成详细报告<br>    generate_report &quot;$LOG_DIR&quot; &quot;$test_count&quot; &quot;$success_count&quot; &quot;$fail_count&quot; &quot;$start_time&quot; &quot;$end_time&quot;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">执行单个测试</span><br>run_single_test() &#123;<br>    local server_ip=&quot;$1&quot;<br>    local server_port=&quot;$2&quot;<br>    local client_ip=&quot;$3&quot;<br>    local duration=&quot;$4&quot;<br>    local log_dir=&quot;$5&quot;<br>    local pid_dir=&quot;$6&quot;<br>    local test_num=&quot;$7&quot;<br>    local total_tests=&quot;$8&quot;<br><br>    local log_file=&quot;$log_dir/client_$&#123;client_ip&#125;_port_$&#123;server_port&#125;.log&quot;<br>    local summary_file=&quot;$log_dir/summary.txt&quot;<br><br>    # 记录开始<br>    &#123;<br>        echo &quot;========================================&quot;<br>        echo &quot;测试 [$test_num/$total_tests]&quot;<br>        echo &quot;时间: $(date &#x27;+%Y-%m-%d %H:%M:%S&#x27;)&quot;<br>        echo &quot;客户端IP: $client_ip&quot;<br>        echo &quot;服务器IP: $server_ip&quot;<br>        echo &quot;服务器端口: $server_port&quot;<br>        echo &quot;时长: $&#123;duration&#125;秒&quot;<br>        echo &quot;----------------------------------------&quot;<br>    &#125; &gt; &quot;$log_file&quot;<br><br>    echo &quot;[$(date &#x27;+%Y-%m-%d %H:%M:%S&#x27;)] 开始测试: 客户端 $client_ip -&gt; 服务器 $server_ip:$server_port&quot; &gt;&gt; &quot;$summary_file&quot;<br><br>    # 执行iperf测试<br>    local cmd=&quot;$IPERF -c $server_ip -p $server_port -R -B $client_ip -t $duration&quot;<br>    echo &quot;执行命令: $cmd&quot; &gt;&gt; &quot;$log_file&quot;<br>    echo &quot;&quot; &gt;&gt; &quot;$log_file&quot;<br><br>    if timeout $((duration + 10)) $cmd &gt;&gt; &quot;$log_file&quot; 2&gt;&amp;1; then<br>        echo &quot;[$(date &#x27;+%Y-%m-%d %H:%M:%S&#x27;)] ✓ 测试成功: 客户端 $client_ip -&gt; 服务器 $server_ip:$server_port&quot; &gt;&gt; &quot;$summary_file&quot;<br>        echo &quot;成功&quot; &gt;&gt; &quot;$log_dir/results.txt&quot;<br>        echo -e &quot;\n✅ 测试成功!&quot; &gt;&gt; &quot;$log_file&quot;<br>    else<br>        local exit_code=$?<br>        echo &quot;[$(date &#x27;+%Y-%m-%d %H:%M:%S&#x27;)] ✗ 测试失败: 客户端 $client_ip -&gt; 服务器 $server_ip:$server_port (退出码: $exit_code)&quot; &gt;&gt; &quot;$summary_file&quot;<br>        echo &quot;失败&quot; &gt;&gt; &quot;$log_dir/results.txt&quot;<br>        echo -e &quot;\n❌ 测试失败! 退出码: $exit_code&quot; &gt;&gt; &quot;$log_file&quot;<br>    fi<br><br>    # 清理PID文件<br>    rm -f &quot;$pid_dir/$$.pid&quot; 2&gt;/dev/null<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">停止测试</span><br>stop_test() &#123;<br>    print_header &quot;====== 停止iperf测试 ======&quot;<br><br>    # 查找最近的日志目录<br>    local latest_dir=$(ls -d iperf_client_* 2&gt;/dev/null | sort -r | head -1)<br><br>    if [ -z &quot;$latest_dir&quot; ]; then<br>        print_error &quot;未找到运行中的iperf测试&quot;<br>        return 1<br>    fi<br><br>    print_info &quot;找到测试目录: $latest_dir&quot;<br><br>    # 检查PID目录<br>    local pid_dir=&quot;$latest_dir/pids&quot;<br><br>    # 停止所有记录的进程<br>    local stop_count=0<br><br>    if [ -f &quot;$latest_dir/running.txt&quot; ]; then<br>        while IFS=&#x27;:&#x27; read -r pid client_ip port; do<br>            if [ -n &quot;$pid&quot; ] &amp;&amp; kill -0 &quot;$pid&quot; 2&gt;/dev/null; then<br>                print_info &quot;停止进程: $pid (客户端: $client_ip, 端口: $port)&quot;<br>                kill &quot;$pid&quot; 2&gt;/dev/null<br>                ((stop_count++))<br>            fi<br>        done &lt; &quot;$latest_dir/running.txt&quot;<br>    fi<br><br>    # 停止所有iperf客户端进程<br>    local iperf_pids=$(pgrep -f &quot;iperf.*-c&quot;)<br>    for pid in $iperf_pids; do<br>        if kill -0 &quot;$pid&quot; 2&gt;/dev/null; then<br>            print_info &quot;停止iperf进程: $pid&quot;<br>            kill &quot;$pid&quot; 2&gt;/dev/null<br>            ((stop_count++))<br>        fi<br>    done<br><br>    # 等待进程结束<br>    sleep 2<br><br>    # 强制终止残留进程<br>    local remaining=$(pgrep -f &quot;iperf.*-c&quot;)<br>    if [ -n &quot;$remaining&quot; ]; then<br>        print_warning &quot;强制终止残留进程...&quot;<br>        for pid in $remaining; do<br>            kill -9 &quot;$pid&quot; 2&gt;/dev/null<br>            ((stop_count++))<br>        done<br>    fi<br><br>    # 清理PID目录<br>    if [ -d &quot;$pid_dir&quot; ]; then<br>        rm -rf &quot;$pid_dir&quot;<br>    fi<br><br>    print_success &quot;已停止 $stop_count 个进程&quot;<br><br>    # 记录停止时间<br>    echo &quot;停止时间: $(date)&quot; &gt;&gt; &quot;$latest_dir/config.txt&quot;<br>    echo &quot;测试被手动停止&quot; &gt;&gt; &quot;$latest_dir/summary.txt&quot;<br><br>    print_info &quot;测试已停止，日志保存在: $latest_dir&quot;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">查看状态</span><br>show_status() &#123;<br>    print_header &quot;====== iperf测试状态 ======&quot;<br><br>    # 查找最新的测试目录<br>    local latest_dir=$(ls -d iperf_client_* 2&gt;/dev/null | sort -r | head -1)<br><br>    if [ -z &quot;$latest_dir&quot; ]; then<br>        print_info &quot;没有运行中的iperf测试&quot;<br>        return 0<br>    fi<br><br>    print_info &quot;测试目录: $latest_dir&quot;<br><br>    # 读取配置<br>    if [ -f &quot;$latest_dir/config.txt&quot; ]; then<br>        echo &quot;&quot;<br>        print_info &quot;配置信息:&quot;<br>        grep -E &quot;^(服务器IP|服务器端口范围|客户端IP范围|客户端数量|测试时长|并发数|开始时间):&quot; &quot;$latest_dir/config.txt&quot; | while read line; do<br>            print_info &quot;  $line&quot;<br>        done<br>    fi<br><br>    # 检查是否在运行<br>    local running_count=0<br>    if [ -f &quot;$latest_dir/running.txt&quot; ]; then<br>        while IFS=&#x27;:&#x27; read -r pid client_ip port; do<br>            if [ -n &quot;$pid&quot; ] &amp;&amp; kill -0 &quot;$pid&quot; 2&gt;/dev/null; then<br>                ((running_count++))<br>            fi<br>        done &lt; &quot;$latest_dir/running.txt&quot;<br>    fi<br><br>    # 检查iperf进程<br>    local iperf_processes=$(pgrep -c -f &quot;iperf.*-c&quot; 2&gt;/dev/null || echo 0)<br><br>    if [ $running_count -gt 0 ] || [ $iperf_processes -gt 0 ]; then<br>        print_success &quot;状态: 运行中&quot;<br>        print_info &quot;  活动进程: $running_count&quot;<br>        print_info &quot;  iperf进程: $iperf_processes&quot;<br><br>        # 显示正在运行的测试<br>        if [ -f &quot;$latest_dir/running.txt&quot; ] &amp;&amp; [ $running_count -gt 0 ]; then<br>            echo &quot;&quot;<br>            print_info &quot;运行中的测试:&quot;<br>            while IFS=&#x27;:&#x27; read -r pid client_ip port; do<br>                if [ -n &quot;$pid&quot; ] &amp;&amp; kill -0 &quot;$pid&quot; 2&gt;/dev/null; then<br>                    print_info &quot;  PID $pid: 客户端 $client_ip -&gt; 服务器端口 $port&quot;<br>                fi<br>            done &lt; &quot;$latest_dir/running.txt&quot;<br>        fi<br><br>        # 显示进度<br>        if [ -f &quot;$latest_dir/results.txt&quot; ]; then<br>            local completed=$(wc -l &lt; &quot;$latest_dir/results.txt&quot; 2&gt;/dev/null || echo 0)<br>            if [ -f &quot;$latest_dir/config.txt&quot; ]; then<br>                local total=$(grep &quot;客户端数量:&quot; &quot;$latest_dir/config.txt&quot; | awk &#x27;&#123;print $2&#125;&#x27;)<br>                if [ -n &quot;$total&quot; ] &amp;&amp; [ &quot;$total&quot; -gt 0 ]; then<br>                    local progress=$((completed * 100 / total))<br>                    print_info &quot;  进度: $completed/$total ($&#123;progress&#125;%)&quot;<br>                fi<br>            fi<br>        fi<br>    else<br>        print_info &quot;状态: 已停止&quot;<br><br>        # 显示统计结果<br>        if [ -f &quot;$latest_dir/results.txt&quot; ]; then<br>            local success=$(grep -c &quot;成功&quot; &quot;$latest_dir/results.txt&quot; 2&gt;/dev/null || echo 0)<br>            local fail=$(grep -c &quot;失败&quot; &quot;$latest_dir/results.txt&quot; 2&gt;/dev/null || echo 0)<br>            local total=$((success + fail))<br><br>            if [ $total -gt 0 ]; then<br>                echo &quot;&quot;<br>                print_info &quot;测试结果:&quot;<br>                print_info &quot;  总测试数: $total&quot;<br>                print_info &quot;  成功: $success&quot;<br>                print_info &quot;  失败: $fail&quot;<br><br>                local success_rate=$(echo &quot;scale=2; $success * 100 / $total&quot; | bc)<br>                print_success &quot;  成功率: $&#123;success_rate&#125;%&quot;<br>            fi<br>        fi<br><br>        # 显示映射关系<br>        if [ -f &quot;$latest_dir/port_map.txt&quot; ]; then<br>            echo &quot;&quot;<br>            print_info &quot;端口映射:&quot;<br>            while IFS=&#x27;:&#x27; read -r client_ip server_port; do<br>                local result=&quot;&quot;<br>                if [ -f &quot;$latest_dir/results.txt&quot; ]; then<br>                    local test_result=$(grep -q &quot;成功&quot; &quot;$latest_dir/results.txt&quot; 2&gt;/dev/null &amp;&amp; echo &quot;✓&quot; || echo &quot;✗&quot;)<br>                    result=&quot; $test_result&quot;<br>                fi<br>                print_info &quot;  客户端 $client_ip -&gt; 端口 $server_port$result&quot;<br>            done &lt; &quot;$latest_dir/port_map.txt&quot;<br>        fi<br>    fi<br><br>    echo &quot;&quot;<br>    print_info &quot;命令:&quot;<br>    print_info &quot;  $0 stop     # 停止测试&quot;<br>    print_info &quot;  $0 status   # 查看状态&quot;<br>    print_info &quot;  $0 logs     # 查看日志&quot;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">查看日志</span><br>show_logs() &#123;<br>    local latest_dir=$(ls -d iperf_client_* 2&gt;/dev/null | sort -r | head -1)<br><br>    if [ -z &quot;$latest_dir&quot; ]; then<br>        print_error &quot;没有找到测试日志&quot;<br>        return 1<br>    fi<br><br>    print_header &quot;====== 测试日志 ======&quot;<br>    print_info &quot;日志目录: $latest_dir&quot;<br><br>    echo &quot;&quot;<br>    print_info &quot;日志文件:&quot;<br>    ls -1 &quot;$latest_dir&quot;/*.log 2&gt;/dev/null | head -10 | while read log; do<br>        local size=$(du -h &quot;$log&quot; | cut -f1)<br>        local lines=$(wc -l &lt; &quot;$log&quot; 2&gt;/dev/null || echo 0)<br>        print_info &quot;  $(basename $log) ($&#123;size&#125;, $&#123;lines&#125;行)&quot;<br>    done<br><br>    local log_count=$(ls -1 &quot;$latest_dir&quot;/*.log 2&gt;/dev/null | wc -l)<br>    print_info &quot;日志文件总数: $log_count&quot;<br><br>    echo &quot;&quot;<br>    print_info &quot;查看日志示例:&quot;<br>    print_info &quot;  tail -f $latest_dir/client_*.log&quot;<br>    print_info &quot;  grep -l &#x27;失败&#x27; $latest_dir/*.log&quot;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">生成报告</span><br>generate_report() &#123;<br>    local log_dir=&quot;$1&quot;<br>    local total=&quot;$2&quot;<br>    local success=&quot;$3&quot;<br>    local fail=&quot;$4&quot;<br>    local start_time=&quot;$5&quot;<br>    local end_time=&quot;$6&quot;<br><br>    local report_file=&quot;$log_dir/report.txt&quot;<br><br>    &#123;<br>        echo &quot;iperf客户端测试报告&quot;<br>        echo &quot;====================&quot;<br>        echo &quot;&quot;<br>        echo &quot;测试摘要&quot;<br>        echo &quot;--------&quot;<br>        echo &quot;开始时间: $(date -d @$start_time)&quot;<br>        echo &quot;结束时间: $(date -d @$end_time)&quot;<br>        echo &quot;总耗时: $((end_time - start_time))秒&quot;<br>        echo &quot;&quot;<br>        echo &quot;测试统计&quot;<br>        echo &quot;--------&quot;<br>        echo &quot;总测试数: $total&quot;<br>        echo &quot;成功数: $success&quot;<br>        echo &quot;失败数: $fail&quot;<br><br>        if [ $total -gt 0 ]; then<br>            local success_rate=$(echo &quot;scale=2; $success * 100 / $total&quot; | bc)<br>            echo &quot;成功率: $&#123;success_rate&#125;%&quot;<br>        fi<br>        echo &quot;&quot;<br>        echo &quot;配置信息&quot;<br>        echo &quot;--------&quot;<br>        grep -v &quot;^$&quot; &quot;$log_dir/config.txt&quot; | head -20<br>        echo &quot;&quot;<br>        echo &quot;文件信息&quot;<br>        echo &quot;--------&quot;<br>        echo &quot;日志目录: $log_dir&quot;<br>        echo &quot;日志文件: $(ls -1 $log_dir/*.log 2&gt;/dev/null | wc -l)&quot;<br>        echo &quot;配置文件: $log_dir/config.txt&quot;<br>        echo &quot;摘要文件: $log_dir/summary.txt&quot;<br>        echo &quot;报告文件: $report_file&quot;<br>    &#125; &gt; &quot;$report_file&quot;<br><br>    print_info &quot;详细报告: $report_file&quot;<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">显示使用帮助</span><br>show_help() &#123;<br>    cat &lt;&lt; EOF<br>并发iperf客户端测试工具（客户端IP与服务器端口一对一映射）<br>版本: 4.0<br><br>用法:<br><span class="hljs-meta prompt_">  $</span><span class="language-bash">0 start 服务器IP 服务器端口开始 服务器端口结束 客户端IP开始 客户端IP结束 测试时间 [并发数]</span><br><span class="hljs-meta prompt_">  $</span><span class="language-bash">0 stop</span><br><span class="hljs-meta prompt_">  $</span><span class="language-bash">0 status</span><br><span class="hljs-meta prompt_">  $</span><span class="language-bash">0 logs</span><br><span class="hljs-meta prompt_">  $</span><span class="language-bash">0 <span class="hljs-built_in">help</span></span><br><br>示例:<br><span class="hljs-meta prompt_">  # </span><span class="language-bash">启动测试 (并发5个)</span><br><span class="hljs-meta prompt_">  $</span><span class="language-bash">0 start 192.168.1.5 5101 5109 192.168.1.101 192.168.1.109 60 5</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">  # </span><span class="language-bash">启动测试 (串行)</span><br><span class="hljs-meta prompt_">  $</span><span class="language-bash">0 start 192.168.1.5 5101 5109 192.168.1.101 192.168.1.109 60</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">  # </span><span class="language-bash">停止测试</span><br><span class="hljs-meta prompt_">  $</span><span class="language-bash">0 stop</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">  # </span><span class="language-bash">查看状态</span><br><span class="hljs-meta prompt_">  $</span><span class="language-bash">0 status</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">  # </span><span class="language-bash">查看日志</span><br><span class="hljs-meta prompt_">  $</span><span class="language-bash">0 logs</span><br><br>说明:<br>  - 客户端IP与服务器端口一对一映射<br>  - 例如: 客户端192.168.1.101 -&gt; 服务器192.168.1.5:5101<br>  - 例如: 客户端192.168.1.102 -&gt; 服务器192.168.1.5:5102<br>  - 必须保持客户端IP数量与服务器端口数量相同<br>  - 并发数可选，默认为1（串行）<br>EOF<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">主函数</span><br>main() &#123;<br>    case &quot;$1&quot; in<br>        start)<br>            check_iperf<br>            check_start_args &quot;$@&quot;<br>            shift<br>            start_test &quot;$@&quot;<br>            ;;<br>        stop)<br>            stop_test<br>            ;;<br>        status)<br>            show_status<br>            ;;<br>        logs)<br>            show_logs<br>            ;;<br>        help|--help|-h)<br>            show_help<br>            ;;<br>        *)<br>            if [ $# -eq 0 ]; then<br>                show_help<br>            else<br>                print_error &quot;未知命令: $1&quot;<br>                show_help<br>                exit 1<br>            fi<br>            ;;<br>    esac<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">运行主函数</span><br>main &quot;$@&quot;<br></code></pre></td></tr></table></figure>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><p>使用方法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./iperf-client.sh start  192.168.1.5 5101 5200 192.168.1.101 192.168.1.200 60<br></code></pre></td></tr></table></figure>
+
+<p>这个固定使用方法，指定服务器的ip 192.168.1.5  端口范围是5101到5200 客户端绑定的ip是192.168.1.101到192.168.1.200，指定测试时间为60秒</p>
+<p>执行后，就可以模拟出一个100个客户端并发的去访问服务器的情况，后面就结合限速脚本观察是否符合自己的预期情况</p>
+<h2 id="日志查看"><a href="#日志查看" class="headerlink" title="日志查看"></a>日志查看</h2><p>可以在服务端查看运行的日志情况，里面可以看是否有丢包，速度是否准</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell">erver listening on 5200<br>-----------------------------------------------------------<br>Accepted connection from 192.168.1.200, port 32777<br>[  5] local 192.168.1.5 port 5200 connected to 192.168.1.200 port 40202<br>[ ID] Interval           Transfer     Bandwidth       Retr  Cwnd<br>[  5]   0.00-1.00   sec  10.1 MBytes  84.3 Mbits/sec    0    594 KBytes<br>[  5]   1.00-2.00   sec  9.07 MBytes  76.1 Mbits/sec    0    594 KBytes<br>[  5]   2.00-3.00   sec  9.20 MBytes  77.1 Mbits/sec    0    594 KBytes<br>[  5]   3.00-4.00   sec  9.07 MBytes  76.1 Mbits/sec    0    594 KBytes<br>[  5]   4.00-5.00   sec  9.20 MBytes  77.1 Mbits/sec    0    594 KBytes<br>[  5]   5.00-6.00   sec  9.07 MBytes  76.1 Mbits/sec    0    594 KBytes<br>[  5]   6.00-7.00   sec  9.07 MBytes  76.1 Mbits/sec    0    594 KBytes<br>[  5]   7.00-8.00   sec  9.20 MBytes  77.1 Mbits/sec    0    594 KBytes<br>[  5]   8.00-9.00   sec  9.07 MBytes  76.1 Mbits/sec    0    594 KBytes<br>[  5]   9.00-10.00  sec  9.20 MBytes  77.2 Mbits/sec    0    594 KBytes<br>[  5]  10.00-11.00  sec  9.07 MBytes  76.1 Mbits/sec    0    594 KBytes<br>[root@lab211 iperf]# cat iperf_logs/iperf_5101_5200_20260117_135719/port_5*<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%B5%8B%E9%80%9F/" class="print-no-link">#测速</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>多对多的线程的iperf测试-双服务器模拟</div>
+      <div>https://zphj1987.com/2026/01/17/多对多的线程的iperf测试-双服务器模拟/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>zphj1987</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年1月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/12/24/%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AAlibrespeed%E6%B5%8B%E9%80%9F%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="搭建一个librespeed测速服务器">
+                        <span class="hidden-mobile">搭建一个librespeed测速服务器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

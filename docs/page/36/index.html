@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2015/03/24/%E9%85%8D%E7%BD%AExenserver%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="配置xenserver本地存储">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2015/03/24/%E9%85%8D%E7%BD%AExenserver%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8/" target="_self">
+          配置xenserver本地存储
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2015/03/24/%E9%85%8D%E7%BD%AExenserver%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8/" target="_self">
+        <div>
+          查询磁盘对应关系: 12345678910111213141516[root@xenserver-eqtwbths ~]# ll /dev/disk/by-id/total 0lrwxrwxrwx 1 root root  9 Jun  5 13:24 edd-int13_dev81 -&gt; ../../sdblrwxrwxrwx 1 root root 10 Jun  5 14:14 edd
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2015-03-24 12:02" pubdate>
+              2015-03-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2015/03/24/%E9%85%8D%E7%BD%AEcobbler%E6%AD%A5%E9%AA%A4/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="配置cobbler步骤">
         </a>
@@ -825,78 +892,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2015/03/23/ssh%E9%85%8D%E5%A5%BD%E6%97%A0%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%EF%BC%88RSA%E5%85%AC%E9%92%A5%EF%BC%89%E5%90%8E%EF%BC%8C%E8%BF%98%E8%A6%81%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ssh配好无密码登录（RSA公钥）后，还要密码登录的问题的解决办法">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2015/03/23/ssh%E9%85%8D%E5%A5%BD%E6%97%A0%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%EF%BC%88RSA%E5%85%AC%E9%92%A5%EF%BC%89%E5%90%8E%EF%BC%8C%E8%BF%98%E8%A6%81%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
-          ssh配好无密码登录（RSA公钥）后，还要密码登录的问题的解决办法
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2015/03/23/ssh%E9%85%8D%E5%A5%BD%E6%97%A0%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%EF%BC%88RSA%E5%85%AC%E9%92%A5%EF%BC%89%E5%90%8E%EF%BC%8C%E8%BF%98%E8%A6%81%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%E7%9A%84%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" target="_self">
-        <div>
-          首先删除 &#x2F;root&#x2F;.ssh目录然后ssh-keygen 生成新的认证目录然后检查能否免密码登陆 如果还不能可能是&#x2F;root&#x2F;目录的权限不对了 可能被异常改到777了做操作  1chmod 650 /root/  然后再尝试看能不能免登陆访问 写于: 2013年11月28日更新于: 2015年03日23日
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2015-03-23 13:01" pubdate>
-              2015-03-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/35/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/#board">34</a><a class="page-number" href="/page/35/#board">35</a><span class="page-number current">36</span><a class="page-number" href="/page/37/#board">37</a><a class="page-number" href="/page/38/#board">38</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/#board">40</a><a class="extend next" rel="next" href="/page/37/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/35/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/#board">34</a><a class="page-number" href="/page/35/#board">35</a><span class="page-number current">36</span><a class="page-number" href="/page/37/#board">37</a><a class="page-number" href="/page/38/#board">38</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/#board">41</a><a class="extend next" rel="next" href="/page/37/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

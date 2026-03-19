@@ -226,6 +226,45 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/02/28/SCST%E9%85%8D%E7%BD%AEALUA%E7%9A%84%E6%94%AF%E6%8C%81/" target="_self">
+          <img src="/images/blog/alua.png" srcset="/img/loading.gif" lazyload alt="SCST配置ALUA的支持">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/02/28/SCST%E9%85%8D%E7%BD%AEALUA%E7%9A%84%E6%94%AF%E6%8C%81/" target="_self">
+          SCST配置ALUA的支持
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/02/28/SCST%E9%85%8D%E7%BD%AEALUA%E7%9A%84%E6%94%AF%E6%8C%81/" target="_self">
+        <div>
+          背景在多路径配置下面，如果是主备的情况下，那么哪个盘是主盘，这个默认来说是没有办法进行配置的，这个时候需要服务端进行一个控制，来实现这个，这个是通过SCSI的协议把相关的信息保存在磁盘属性里面的，然后客户端程序再根据这个通用的标准进行主备的选择，这里不详细讲ALUA 像那种双控的盘阵，比如有两个控制器，一个主，一个备的，然后主上面有4个链路，备的上面有4个链路 多路径连上去以后，多路径软件能够把主
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-02-28 18:31" pubdate>
+              2024-02-28
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/02/28/multipath%E5%A4%9A%E8%B7%AF%E5%BE%84%E4%B8%BB%E4%B8%BB%E5%92%8C%E4%B8%BB%E5%A4%87%E9%85%8D%E7%BD%AE/" target="_self">
           <img src="/images/blog/multipathd.png" srcset="/img/loading.gif" lazyload alt="multipath多路径主主和主备配置">
         </a>
@@ -818,73 +857,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2023/04/12/chatgpt%E7%9A%84%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="openai的反向代理设置">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/04/12/chatgpt%E7%9A%84%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE/" target="_self">
-          openai的反向代理设置
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2023/04/12/chatgpt%E7%9A%84%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE/" target="_self">
-        <div>
-          背景chatgpt屏蔽了很多地方的访问，使用起来很麻烦，现在的需求就是想使用本地网络就可以使用这个，那么可以通过nginx作代理进行访问 网络架构本身的请求是直接发给openai的，这里我们使用一台服务器运行nginx，作为反向代理发送请求到api.openai.com
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-04-12 15:48" pubdate>
-              2023-04-12
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/chatgpt/">#chatgpt</a>
             
           </div>
         

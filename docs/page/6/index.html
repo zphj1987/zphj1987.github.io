@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/04/30/ceph-mon%E5%8D%A1%E6%AD%BB%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
+          <img src="/images/blog/monhung.png" srcset="/img/loading.gif" lazyload alt="ceph-mon卡死故障分析处理">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/04/30/ceph-mon%E5%8D%A1%E6%AD%BB%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
+          ceph-mon卡死故障分析处理
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/04/30/ceph-mon%E5%8D%A1%E6%AD%BB%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
+        <div>
+          问题现象ceph -s命令无返回了，查看mon的日志输出内容如下  看到的现象是 failed to assign global_id 然后尝试预分配更多的 global_id   mon_globalid_prealloc&#x3D;1111110000  这个地方调整后，只是延缓了id的无法分配，没有解决问题，这个地方并不是消息id的问题，而是mon此时出现了问题，无法去正常的回收和响应消息，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-04-30 15:33" pubdate>
+              2024-04-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/04/30/%E7%A3%81%E7%9B%98%E5%87%BA%E7%8E%B0sector-error%E7%9A%84%E4%BF%AE%E5%A4%8D/" target="_self">
           <img src="/images/blog/wdharddisk.png" srcset="/img/loading.gif" lazyload alt="磁盘出现sector_error的修复">
         </a>
@@ -805,45 +872,6 @@
 </span>
 
           </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/02/28/SCST%E9%85%8D%E7%BD%AEALUA%E7%9A%84%E6%94%AF%E6%8C%81/" target="_self">
-          <img src="/images/blog/alua.png" srcset="/img/loading.gif" lazyload alt="SCST配置ALUA的支持">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/02/28/SCST%E9%85%8D%E7%BD%AEALUA%E7%9A%84%E6%94%AF%E6%8C%81/" target="_self">
-          SCST配置ALUA的支持
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/02/28/SCST%E9%85%8D%E7%BD%AEALUA%E7%9A%84%E6%94%AF%E6%8C%81/" target="_self">
-        <div>
-          背景在多路径配置下面，如果是主备的情况下，那么哪个盘是主盘，这个默认来说是没有办法进行配置的，这个时候需要服务端进行一个控制，来实现这个，这个是通过SCSI的协议把相关的信息保存在磁盘属性里面的，然后客户端程序再根据这个通用的标准进行主备的选择，这里不详细讲ALUA 像那种双控的盘阵，比如有两个控制器，一个主，一个备的，然后主上面有4个链路，备的上面有4个链路 多路径连上去以后，多路径软件能够把主
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-02-28 18:31" pubdate>
-              2024-02-28
-            </time>
-          </div>
-        
         
         
       </div>

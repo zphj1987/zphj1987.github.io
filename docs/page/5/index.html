@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/" target="_self">
+          <img src="/images/blog/policyimage.png" srcset="/img/loading.gif" lazyload alt="ceph-radosgw配置bucket的policy">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/" target="_self">
+          ceph-radosgw配置bucket的policy
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/" target="_self">
+        <div>
+          背景ceph通过radosgw对外提供了s3功能，这个能够提供一个s3接口供外部使用，s3的功能选项很多，本篇记录的是policy的功能配置 配置方法配置policy可以通过s3cmd，或者windows的s3客户端都可以，这里我们使用s3cmd进行配置 安装配置s3cmd下载客户端 1[root@lab101 ceph]# yum install s3cmd  配置s3cmd 123456789
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-09-05 10:59" pubdate>
+              2024-09-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/08/28/questdb%E5%9C%A8opencloudos%E4%B8%8B%E7%9A%84%E6%89%93%E5%8C%85%E6%80%BB%E7%BB%93/" target="_self">
           <img src="/images/blog/questdb.png" srcset="/img/loading.gif" lazyload alt="questdb在opencloudos下的打包总结">
         </a>
@@ -790,73 +857,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/lvm/">#lvm</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/04/30/ceph-mon%E5%8D%A1%E6%AD%BB%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
-          <img src="/images/blog/monhung.png" srcset="/img/loading.gif" lazyload alt="ceph-mon卡死故障分析处理">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/04/30/ceph-mon%E5%8D%A1%E6%AD%BB%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
-          ceph-mon卡死故障分析处理
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/04/30/ceph-mon%E5%8D%A1%E6%AD%BB%E6%95%85%E9%9A%9C%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
-        <div>
-          问题现象ceph -s命令无返回了，查看mon的日志输出内容如下  看到的现象是 failed to assign global_id 然后尝试预分配更多的 global_id   mon_globalid_prealloc&#x3D;1111110000  这个地方调整后，只是延缓了id的无法分配，没有解决问题，这个地方并不是消息id的问题，而是mon此时出现了问题，无法去正常的回收和响应消息，
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-04-30 15:33" pubdate>
-              2024-04-30
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ceph/">#ceph</a>
             
           </div>
         

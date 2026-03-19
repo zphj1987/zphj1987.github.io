@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zphj1987.com/images/blog/kvm.png">
 <meta property="article:published_time" content="2024-02-23T02:00:58.000Z">
-<meta property="article:modified_time" content="2025-02-19T08:24:48.315Z">
+<meta property="article:modified_time" content="2026-02-08T02:47:34.417Z">
 <meta property="article:author" content="zphj1987">
 <meta property="article:tag" content="虚拟化">
 <meta name="twitter:card" content="summary_large_image">
@@ -226,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1k 字
+          1.1k 字
         
       </span>
     
@@ -334,6 +334,9 @@
 
 
 <h3 id="添加盘"><a href="#添加盘" class="headerlink" title="添加盘"></a>添加盘</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab233 bigdisk]<span class="hljs-comment"># qemu-img create -f qcow2 ./zp1-disk1.qcow2 100G</span><br>或者<br>[root@lab233 bigdisk]<span class="hljs-comment">#dd if=/dev/zero of=zp1-disk1.qcow2 bs=1M seek=102400 count=0</span><br>[root@lab233 bigdisk]<span class="hljs-comment"># virsh attach-disk  --config zp1 /bigdisk/zp1-disk1.qcow2 vdb</span><br>Disk attached successfully<br></code></pre></td></tr></table></figure>
+<p>如果qcow2没生效容量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">virsh attach-disk clickhouse  /bigdisk1/vm-extra-400g.qcow2 vdb   --persistent   --subdriver qcow2<br></code></pre></td></tr></table></figure>
+<p>如果还不行就直接去编辑下驱动模式，默认是raw的，改成qcow2即可</p>
 <p>完成了磁盘的添加</p>
 <h3 id="ISO相关操作"><a href="#ISO相关操作" class="headerlink" title="ISO相关操作"></a>ISO相关操作</h3><p>添加</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@lab101 kvm]<span class="hljs-comment"># virsh attach-disk centos7.6-1 /home/CentOS-7-x86_64-DVD-1810.iso vdm</span><br>Disk attached successfully<br></code></pre></td></tr></table></figure>

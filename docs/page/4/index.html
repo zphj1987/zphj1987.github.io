@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/" target="_self">
+          <img src="/images/blog/diskcrash.png" srcset="/img/loading.gif" lazyload alt="为什么只坏了一个盘集群无法读写">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/" target="_self">
+          为什么只坏了一个盘集群无法读写
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/" target="_self">
+        <div>
+          背景我们拿到故障环境，看到环境就坏一个osd，但是环境还是处于卡着的状态，这个时候客户肯定会问，怎么就坏一个盘，还无法用了，不是都配置了冗余么 这个地方我们来分析下这个问题的原因，坏一个osd只是结果，不是过程，我们看下过程发生了哪些状况 中间过程这个中间过程我们用图来说过程比较清晰一些  上面是时间线上的三个阶段的情况  阶段一：数据完整，没有任何问题，数据写三份，分布到三台机器  阶段二：主机
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-04 14:53" pubdate>
+              2024-12-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/11/21/device-health-metrics%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%88%A0%E9%99%A4%E6%96%B9%E6%B3%95/" target="_self">
           <img src="/images/blog/deletepool.png" srcset="/img/loading.gif" lazyload alt="device_health_metrics正确的删除方法">
         </a>
@@ -818,73 +885,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/" target="_self">
-          <img src="/images/blog/policyimage.png" srcset="/img/loading.gif" lazyload alt="ceph-radosgw配置bucket的policy">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/" target="_self">
-          ceph-radosgw配置bucket的policy
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/09/05/ceph-radosgw%E9%85%8D%E7%BD%AEbucket%E7%9A%84policy/" target="_self">
-        <div>
-          背景ceph通过radosgw对外提供了s3功能，这个能够提供一个s3接口供外部使用，s3的功能选项很多，本篇记录的是policy的功能配置 配置方法配置policy可以通过s3cmd，或者windows的s3客户端都可以，这里我们使用s3cmd进行配置 安装配置s3cmd下载客户端 1[root@lab101 ceph]# yum install s3cmd  配置s3cmd 123456789
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-09-05 10:59" pubdate>
-              2024-09-05
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%98%E5%82%A8%E7%9B%B8%E5%85%B3/" class="category-chain-item">存储相关</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ceph/">#ceph</a>
             
           </div>
         

@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/11/14/%E5%A4%84%E7%90%86stale%E7%9A%84pg/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="处理stale的pg">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/11/14/%E5%A4%84%E7%90%86stale%E7%9A%84pg/" target="_self">
+          处理stale的pg
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/11/14/%E5%A4%84%E7%90%86stale%E7%9A%84pg/" target="_self">
+        <div>
+          前言在某些场景下Ceph集群会出现stale的情况，也就是ceph集群PG的僵死状态，这个状态实际上是无法处理新的请求了，新的请求过来只会block，那么我们如何去恢复环境 实践过程首先模拟stale环境，这个比较好模拟  设置副本2，然后同时关闭两个OSD（不同故障域上），然后删除这两个OSD  集群这个时候就会出现stale的情况了，因为两份数据都丢了，在一些环境下，数据本身就是临时的或者不是
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-11-14 17:55" pubdate>
+              2016-11-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2016/11/10/%E9%A2%84%E4%BC%B0Ceph%E9%9B%86%E7%BE%A4%E6%81%A2%E5%A4%8D%E6%97%B6%E9%97%B4/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="预估Ceph集群恢复时间">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2016-10-19 17:46" pubdate>
               2016-10-19
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/10/17/%E9%85%8D%E7%BD%AECeph%E7%9A%84IPV6%E9%9B%86%E7%BE%A4/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="配置Ceph的IPV6集群">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/10/17/%E9%85%8D%E7%BD%AECeph%E7%9A%84IPV6%E9%9B%86%E7%BE%A4/" target="_self">
-          配置Ceph的IPV6集群
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/10/17/%E9%85%8D%E7%BD%AECeph%E7%9A%84IPV6%E9%9B%86%E7%BE%A4/" target="_self">
-        <div>
-          前言对于IPV6实在是非常的陌生，所以本篇开始会讲一下最基本的网络配置，首先让网络能通起来，最开始就是因为不熟悉IPV6,而直接使用了link local地址，造成了mon部署的时候进程无法绑定到IP，从而端口没有启动，这个是在ceph社区群友 ceph-长沙-柠檬 同学的帮助下才发现问题的  IPV6是会有个link local地址的，在一个接口可以配置很多IPv6地址，所以学习路由就有可能出现
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-10-17 17:46" pubdate>
-              2016-10-17
             </time>
           </div>
         

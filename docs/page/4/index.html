@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/12/11/%E5%BF%AB%E7%85%A7%E5%8E%9F%E5%A7%8B%E5%AF%B9%E8%B1%A1%E7%BC%BA%E5%A4%B1%E5%BC%95%E8%B5%B7%E7%9A%84osd%E5%B4%A9%E6%BA%83/" target="_self">
+          <img src="/images/blog/crashstorage.png" srcset="/img/loading.gif" lazyload alt="快照原始对象缺失引起的osd崩溃">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/12/11/%E5%BF%AB%E7%85%A7%E5%8E%9F%E5%A7%8B%E5%AF%B9%E8%B1%A1%E7%BC%BA%E5%A4%B1%E5%BC%95%E8%B5%B7%E7%9A%84osd%E5%B4%A9%E6%BA%83/" target="_self">
+          快照原始对象缺失引起的osd崩溃
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/12/11/%E5%BF%AB%E7%85%A7%E5%8E%9F%E5%A7%8B%E5%AF%B9%E8%B1%A1%E7%BC%BA%E5%A4%B1%E5%BC%95%E8%B5%B7%E7%9A%84osd%E5%B4%A9%E6%BA%83/" target="_self">
+        <div>
+          问题 修复pg的时候出现了 unexpected clone  可以看到这个对象后面有编号，这个编号有两种情况  快照的对象(snapid) 纠删对象的中间版本（对应是generation）  1&#123;&quot;oid&quot;:&quot;rbd_data.1.101a6b8b4567.00000000000000b3&quot;,&quot;key&quot;:&quot;&quot
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-11 11:09" pubdate>
+              2024-12-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/" class="category-chain-item">存储系统</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/12/04/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AA%E5%9D%8F%E4%BA%86%E4%B8%80%E4%B8%AA%E7%9B%98%E9%9B%86%E7%BE%A4%E6%97%A0%E6%B3%95%E8%AF%BB%E5%86%99/" target="_self">
           <img src="/images/blog/diskcrash.png" srcset="/img/loading.gif" lazyload alt="为什么只坏了一个盘集群无法读写">
         </a>
@@ -818,73 +885,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/docker/">#docker</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/09/11/%E4%BD%BF%E7%94%A8qemu%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAloongarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/" target="_self">
-          <img src="/images/blog/qemuimage.png" srcset="/img/loading.gif" lazyload alt="使用qemu构建一个loongarch64虚拟机">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/09/11/%E4%BD%BF%E7%94%A8qemu%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAloongarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/" target="_self">
-          使用qemu构建一个loongarch64虚拟机
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/09/11/%E4%BD%BF%E7%94%A8qemu%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AAloongarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/" target="_self">
-        <div>
-          背景国产化的平台目前主要用到的有飞腾和龙芯，飞腾的是arm64架构，这个使用的比较多，龙芯的架构之前是mips架构，最新的硬件的架构已经发生了改变，现在是loongarch64架构，这个算比较新的架构，所以硬件就比较难获得，如果又有适配的需求，这个时候通过虚拟机启动环境是一个比较好的方式 虚拟机有两种方式：  一种是在相同架构下开虚拟机，这个比较简单，一般的操作系统内都带了kvm的相关的软件，直接
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-09-11 16:55" pubdate>
-              2024-09-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
             
           </div>
         

@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2016/10/19/Ceph%E4%B8%ADPG%E5%92%8CPGP%E7%9A%84%E5%8C%BA%E5%88%AB/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="Ceph中PG和PGP的区别">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2016/10/19/Ceph%E4%B8%ADPG%E5%92%8CPGP%E7%9A%84%E5%8C%BA%E5%88%AB/" target="_self">
+          Ceph中PG和PGP的区别
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2016/10/19/Ceph%E4%B8%ADPG%E5%92%8CPGP%E7%9A%84%E5%8C%BA%E5%88%AB/" target="_self">
+        <div>
+          前言首先来一段英文关于PG和PGP区别的解释：  PG &#x3D; Placement GroupPGP &#x3D; Placement Group for Placement purpose    pg_num &#x3D; number of placement groups mapped to an OSDWhen pg_num is increased for any pool, ev
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2016-10-19 17:46" pubdate>
+              2016-10-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2016/10/17/%E9%85%8D%E7%BD%AECeph%E7%9A%84IPV6%E9%9B%86%E7%BE%A4/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="配置Ceph的IPV6集群">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2016-09-12 17:40" pubdate>
               2016-09-12
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/09/08/%E5%A6%82%E4%BD%95%E7%BB%9F%E8%AE%A1Ceph%E7%9A%84RBD%E7%9C%9F%E5%AE%9E%E4%BD%BF%E7%94%A8%E5%AE%B9%E9%87%8F/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="如何统计Ceph的RBD真实使用容量">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/09/08/%E5%A6%82%E4%BD%95%E7%BB%9F%E8%AE%A1Ceph%E7%9A%84RBD%E7%9C%9F%E5%AE%9E%E4%BD%BF%E7%94%A8%E5%AE%B9%E9%87%8F/" target="_self">
-          如何统计Ceph的RBD真实使用容量
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/09/08/%E5%A6%82%E4%BD%95%E7%BB%9F%E8%AE%A1Ceph%E7%9A%84RBD%E7%9C%9F%E5%AE%9E%E4%BD%BF%E7%94%A8%E5%AE%B9%E9%87%8F/" target="_self">
-        <div>
-          前言ceph的rbd一直有个问题就是无法清楚的知道这个分配的空间里面到底使用了多少，这个在Jewel里面提供了一个新的接口去查询，对于老版本来说可能同样有这个需求，本篇将详细介绍如何解决这个问题 查询的各种方法目前已知的有三种方法  1、使用rbd du查询（Jewel才支持） 2、使用rbd diff 3、根据对象统计的方法进行统计  详细介绍 方法一：使用rbd du查询这个参考我之前的文章：
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-09-08 17:39" pubdate>
-              2016-09-08
             </time>
           </div>
         

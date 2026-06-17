@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2018/06/12/ceph%20erasure%E9%BB%98%E8%AE%A4%E7%9A%84min_size%E5%88%86%E6%9E%90/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph erasure默认的min_size分析">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2018/06/12/ceph%20erasure%E9%BB%98%E8%AE%A4%E7%9A%84min_size%E5%88%86%E6%9E%90/" target="_self">
+          ceph erasure默认的min_size分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2018/06/12/ceph%20erasure%E9%BB%98%E8%AE%A4%E7%9A%84min_size%E5%88%86%E6%9E%90/" target="_self">
+        <div>
+          引言最近接触了两个集群都使用到了erasure code,一个集群是hammer版本的，一个环境是luminous版本的，两个环境都出现了incomplete，触发的原因有类似的地方，都是有osd的离线的问题 准备在本地环境进行复验的时候，发现了一个跟之前接触的erasure不同的地方，这里做个记录，以防后面出现同样的问题 分析过程准备了一个luminous的集群，使用默认的erasure的pro
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-06-12 10:43" pubdate>
+              2018-06-12
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2018/05/29/cephfs%E5%85%83%E6%95%B0%E6%8D%AE%E6%B1%A0%E6%95%85%E9%9A%9C%E7%9A%84%E6%81%A2%E5%A4%8D/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="cephfs元数据池故障的恢复">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2017-12-04 22:48" pubdate>
               2017-12-04
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="CentOS GRUB损坏修复方法">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
-          CentOS GRUB损坏修复方法
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2017/11/30/CentOS%20GRUB%E6%8D%9F%E5%9D%8F%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" target="_self">
-        <div>
-          前言博客很久没有更新了，一个原因就是原来存放部署博客的环境坏了，硬盘使用的是SSD，只要读取到某个文件，整个磁盘就直接识别不到了，还好博客环境之前有做备份，最近一直没有把部署环境做下恢复，今天抽空把环境做下恢复并且记录一篇基础的GRUB的处理文档 这两天正好碰到GRUB损坏的事，很久前处理过，但是没留下文档，正好现在把流程梳理一下，来解决grub.cfg损坏的情况,或者无法启动的情况 实践步骤安装
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2017-11-30 22:52" pubdate>
-              2017-11-30
             </time>
           </div>
         

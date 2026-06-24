@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2015/09/18/ceph%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%B1%9E%E6%80%A7%E5%8C%B9%E9%85%8D%E5%85%B3%E7%B3%BB/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="ceph客户端服务端属性匹配关系">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2015/09/18/ceph%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%B1%9E%E6%80%A7%E5%8C%B9%E9%85%8D%E5%85%B3%E7%B3%BB/" target="_self">
+          ceph客户端服务端属性匹配关系
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2015/09/18/ceph%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%B1%9E%E6%80%A7%E5%8C%B9%E9%85%8D%E5%85%B3%E7%B3%BB/" target="_self">
+        <div>
+          ceph的server是定期会发布版本，而它的客户端是放到linux 内核当中的，一些属性的支持是依赖于内核版本的，这样就存在一些问题，一些功能后端支持，而客户端旧了；还有可能是客户端用的很新的内核，而后端比较旧不支持，所以查看了下内核中的 features 文件，可以看到这个对应关系，总结了下就是下面的列表 注意表中：  S&#x3D;SUPPORTED_DEFAULT     代表客户端支持这
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2015-09-18 12:24" pubdate>
+              2015-09-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8/" class="category-chain-item">存储</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2015/07/14/nginx%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E7%BC%93%E5%AD%98/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="nginx配置代理缓存">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2015-03-25 12:15" pubdate>
               2015-03-25
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2015/03/24/cgroup%E5%AE%9E%E8%B7%B5-%E8%B5%84%E6%BA%90%E6%8E%A7%E5%88%B6/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="cgroup实践-资源控制">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2015/03/24/cgroup%E5%AE%9E%E8%B7%B5-%E8%B5%84%E6%BA%90%E6%8E%A7%E5%88%B6/" target="_self">
-          cgroup实践-资源控制
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2015/03/24/cgroup%E5%AE%9E%E8%B7%B5-%E8%B5%84%E6%BA%90%E6%8E%A7%E5%88%B6/" target="_self">
-        <div>
-          1、Cgroup安装安装Cgroups需要libcap-devel和libcgroup两个相关的包 1yum install gcc libcap-devel   2、Cgroup挂载配置 12345678Cgroup对应服务名称为cgconfig，cgconfig默认采用“多挂载点”挂载。经过实际测试，发现在CentOS环境中应采用“单挂载点”进行挂载，因此应当卸载原有cgroup文件系统，并禁
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2015-03-24 13:32" pubdate>
-              2015-03-24
             </time>
           </div>
         

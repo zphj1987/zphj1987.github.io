@@ -27,7 +27,7 @@
 <meta property="og:description" content="脚本禁止登录尝试">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-31T09:55:46.000Z">
-<meta property="article:modified_time" content="2026-11-09T06:51:32.911Z">
+<meta property="article:modified_time" content="2026-11-09T07:12:27.794Z">
 <meta property="article:author" content="zphj1987">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          816 字
+          952 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          7 分钟
+          8 分钟
         
       </span>
     
@@ -287,6 +287,9 @@
 
 <p>或者禁用sshd</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@VM-4-7-centos ~]<span class="hljs-comment"># cat blackdeny.sh</span><br><span class="hljs-comment">#! /bin/sh</span><br><span class="hljs-built_in">cat</span> /var/log/secure |grep failure|awk <span class="hljs-string">&#x27;&#123;for (i=1;i&lt;=NF;i++)&#123;if ($i ~/rhost/) &#123;print $i&#125;&#125;&#125;&#x27;</span>| <span class="hljs-built_in">sort</span> | <span class="hljs-built_in">uniq</span>|awk -F<span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span> &gt;&gt; /root/black.list<br><br><span class="hljs-built_in">cat</span> /root/black.list|<span class="hljs-built_in">sort</span>|<span class="hljs-built_in">uniq</span> &gt; /root/black.list.tmp<br><span class="hljs-built_in">rm</span> -rf /root/black.list<br><span class="hljs-built_in">mv</span> /root/black.list.tmp /root/black.list<br><br>&gt; /etc/hosts.deny<br><span class="hljs-keyword">for</span> ip <span class="hljs-keyword">in</span> `<span class="hljs-built_in">cat</span> black.list|<span class="hljs-built_in">sort</span>|<span class="hljs-built_in">uniq</span>`<br><span class="hljs-keyword">do</span><br><span class="hljs-built_in">echo</span> sshd:<span class="hljs-variable">$ip</span> &gt;&gt; /etc/hosts.deny<br><span class="hljs-keyword">done</span><br><br><span class="hljs-built_in">cat</span> black.list|<span class="hljs-built_in">wc</span> -l<br></code></pre></td></tr></table></figure>
+
+<p>ubuntu机器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash">root@server:~<span class="hljs-comment"># cat blackdeny.sh</span><br><span class="hljs-comment">#! /bin/sh</span><br><span class="hljs-comment"># SSH 爆破 IP 自动拉黑（Ubuntu 版）</span><br><span class="hljs-comment"># 改动自 CentOS 原版：/var/log/secure -&gt; /var/log/auth.log；全部使用绝对路径；过滤空 rhost</span><br>LOG=/var/log/auth.log<br><span class="hljs-built_in">touch</span> /root/black.list<br><br><span class="hljs-built_in">cat</span> <span class="hljs-string">&quot;<span class="hljs-variable">$LOG</span>&quot;</span> | grep failure | awk <span class="hljs-string">&#x27;&#123;for (i=1;i&lt;=NF;i++)&#123;if ($i ~ /rhost/) &#123;print $i&#125;&#125;&#125;&#x27;</span> | <span class="hljs-built_in">sort</span> | <span class="hljs-built_in">uniq</span> | awk -F<span class="hljs-string">&quot;=&quot;</span> <span class="hljs-string">&#x27;$2 != &quot;&quot; &#123;print $2&#125;&#x27;</span> &gt;&gt; /root/black.list<br><br><span class="hljs-built_in">sort</span> -u /root/black.list &gt; /root/black.list.tmp<br><span class="hljs-built_in">rm</span> -rf /root/black.list<br><span class="hljs-built_in">mv</span> /root/black.list.tmp /root/black.list<br><br>&gt; /etc/hosts.deny<br><span class="hljs-keyword">for</span> ip <span class="hljs-keyword">in</span> $(<span class="hljs-built_in">cat</span> /root/black.list | <span class="hljs-built_in">sort</span> | <span class="hljs-built_in">uniq</span>)<br><span class="hljs-keyword">do</span><br><span class="hljs-built_in">echo</span> sshd:<span class="hljs-variable">$ip</span> &gt;&gt; /etc/hosts.deny<br><span class="hljs-keyword">done</span><br><br><span class="hljs-built_in">cat</span> /root/black.list | <span class="hljs-built_in">wc</span> -l<br></code></pre></td></tr></table></figure>
 
 
 <p>写一个定时任务</p>
@@ -372,8 +375,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/01/31/%E8%8E%B7%E5%8F%96%E4%B8%80%E6%AE%B5%E6%97%B6%E9%97%B4%E5%86%85ceph%E7%9A%84osd%E7%A3%81%E7%9B%98%E8%AF%BB%E5%86%99%E6%83%85%E5%86%B5/" title="获取一段时间内ceph的osd磁盘读写情况">
-                        <span class="hidden-mobile">获取一段时间内ceph的osd磁盘读写情况</span>
+                      <a href="/2023/01/31/%E8%87%AA%E5%AE%9A%E4%B9%89rock5b%E5%86%85%E6%A0%B8/" title="自定义rock5b内核">
+                        <span class="hidden-mobile">自定义rock5b内核</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

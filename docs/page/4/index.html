@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/" target="_self">
+          <img src="/images/blog/s3forheader.png" srcset="/img/loading.gif" lazyload alt="rgw追加写功能测试验证">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/" target="_self">
+          rgw追加写功能测试验证
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/" target="_self">
+        <div>
+          背景aws的s3以前是不支持追加写这个功能的  这个存储类型大概是2023年发布的，这个文章是2024年11月21日发布的 找到功能的发布大概时间我们看下boto3的工具是什么时候集成进去的就知道这个功能发布的大概的时间 1WriteOffsetBytes aws里面使用这个参数去控制追加写的偏移量的，我们根据这个关键字去找 找到botcore的代码，使用git下载下来 1cd  botocore
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-13 17:24" pubdate>
+              2024-12-13
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/" class="category-chain-item">存储系统</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ceph/">#ceph</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2024/12/11/%E7%BA%A0%E5%88%A0%E7%A0%81%E4%B8%AD%E9%97%B4%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7%E4%B8%A2%E5%A4%B1%E5%BC%95%E8%B5%B7osd%E7%9A%84%E5%B4%A9%E6%BA%83/" target="_self">
           <img src="/images/blog/crashstorage.png" srcset="/img/loading.gif" lazyload alt="纠删码中间对象属性丢失引起osd的崩溃">
         </a>
@@ -818,73 +885,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/ceph/">#ceph</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/09/24/systemd%E7%97%85%E6%AF%92%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%A4%84%E7%90%86/" target="_self">
-          <img src="/images/blog/virus.png" srcset="/img/loading.gif" lazyload alt="systemd病毒定位和处理">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/09/24/systemd%E7%97%85%E6%AF%92%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%A4%84%E7%90%86/" target="_self">
-          systemd病毒定位和处理
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/09/24/systemd%E7%97%85%E6%AF%92%E5%AE%9A%E4%BD%8D%E5%92%8C%E5%A4%84%E7%90%86/" target="_self">
-        <div>
-          背景内网测试环境出现一台机器上面的systemd返回值异常，其它都正常，具体的现象如下 1systemctl restart smb;echo $? 这个返回的是1，正常执行完毕应该是0 问题定位开始的时候以为是网络的问题，通过执行本地的命令发现，任何systemd的执行命令返回的都是1，但是实际成功了开始并没有往病毒方面想，系统没有定时任务，没有异常的cpu负载 1[root@lab103 ~]
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-09-24 16:45" pubdate>
-              2024-09-24
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/" class="category-chain-item">系统管理</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">#异常处理</a>
             
           </div>
         

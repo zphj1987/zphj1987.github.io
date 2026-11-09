@@ -226,6 +226,45 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2025/02/19/kvm%E4%B8%8B%E7%9A%84ceph%E4%B8%BB%E6%9C%BA%E5%90%AF%E5%8A%A8io%E8%AF%B7%E6%B1%82%E7%BB%9F%E8%AE%A1/" target="_self">
+          <img src="/images/blog/kvm.png" srcset="/img/loading.gif" lazyload alt="kvm下的ceph主机启动io请求统计">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/19/kvm%E4%B8%8B%E7%9A%84ceph%E4%B8%BB%E6%9C%BA%E5%90%AF%E5%8A%A8io%E8%AF%B7%E6%B1%82%E7%BB%9F%E8%AE%A1/" target="_self">
+          kvm下的ceph主机启动io请求统计
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2025/02/19/kvm%E4%B8%8B%E7%9A%84ceph%E4%B8%BB%E6%9C%BA%E5%90%AF%E5%8A%A8io%E8%AF%B7%E6%B1%82%E7%BB%9F%E8%AE%A1/" target="_self">
+        <div>
+          背景假如一个主机存储在ceph里面，我们想统计下一次启动过程中的io读取的情况，那么可以通过下面的方法来统计启动时间也可以通过在宿主机里面去查看，通过日志这边要方便一点，无需登录到虚拟机内部 日志开启123456789101112131415[global]fsid = 4064c56e-c9ad-4b19-bf74-c4e291be5920mon_initial_members = lab104
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-19 15:29" pubdate>
+              2025-02-19
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2025/02/18/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%BC%95%E8%B5%B7%E7%9A%84nvme%E7%A3%81%E7%9B%98%E4%B8%8D%E8%AF%86%E5%88%AB/" target="_self">
           <img src="/images/blog/nvmedis.png" srcset="/img/loading.gif" lazyload alt="电源管理引起的nvme磁盘不识别">
         </a>
@@ -818,73 +857,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/exsi/">#exsi</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/" target="_self">
-          <img src="/images/blog/s3forheader.png" srcset="/img/loading.gif" lazyload alt="rgw追加写功能测试验证">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/" target="_self">
-          rgw追加写功能测试验证
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/12/13/rgw%E8%BF%BD%E5%8A%A0%E5%86%99%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81/" target="_self">
-        <div>
-          背景aws的s3以前是不支持追加写这个功能的  这个存储类型大概是2023年发布的，这个文章是2024年11月21日发布的 找到功能的发布大概时间我们看下boto3的工具是什么时候集成进去的就知道这个功能发布的大概的时间 1WriteOffsetBytes aws里面使用这个参数去控制追加写的偏移量的，我们根据这个关键字去找 找到botcore的代码，使用git下载下来 1cd  botocore
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-12-13 17:24" pubdate>
-              2024-12-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/" class="category-chain-item">存储系统</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/ceph/">#ceph</a>
             
           </div>
         

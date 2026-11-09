@@ -226,6 +226,73 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2017/01/03/rbd%E7%9A%84image%E5%AF%B9%E8%B1%A1%E6%95%B0%E4%B8%8E%E8%83%BD%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" target="_self">
+          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="rbd的image对象数与能写入文件数的关系">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2017/01/03/rbd%E7%9A%84image%E5%AF%B9%E8%B1%A1%E6%95%B0%E4%B8%8E%E8%83%BD%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" target="_self">
+          rbd的image对象数与能写入文件数的关系
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2017/01/03/rbd%E7%9A%84image%E5%AF%B9%E8%B1%A1%E6%95%B0%E4%B8%8E%E8%83%BD%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" target="_self">
+        <div>
+          前言收到一个问题如下：  一个300TB 的RBD，只有7800万的objects，如果存储小文件的话，感觉不够用   对于这个问题，我原来的理解是：对象默认设置的大小是4M一个，存储下去的数据，如果小于4M，就会占用一个小于4M的对象，如果超过4M，那么存储的数据就会进行拆分成多个4M，这个地方其实是不严谨的 对于rados接口来说，数据是多大对象put进去就是多大的对象，并没有进行拆分，进行拆
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2017-01-03 18:37" pubdate>
+              2017-01-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2016/12/26/%E5%A4%84%E7%90%86Ceph%20osd%E7%9A%84journal%E7%9A%84uuid%E9%97%AE%E9%A2%98/" target="_self">
           <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="处理Ceph osd的journal的uuid问题">
         </a>
@@ -788,73 +855,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2016-11-29 18:09" pubdate>
               2016-11-29
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/" class="category-chain-item">暂未分类</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%9A%82%E6%9C%AA%E5%88%86%E7%B1%BB/">#暂未分类</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2016/11/23/fio%E6%B5%8B%E8%AF%95ceph%E7%9A%84filestore/" target="_self">
-          <img src="/images/blog/z.png" srcset="/img/loading.gif" lazyload alt="fio测试ceph的filestore">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2016/11/23/fio%E6%B5%8B%E8%AF%95ceph%E7%9A%84filestore/" target="_self">
-          fio测试ceph的filestore
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2016/11/23/fio%E6%B5%8B%E8%AF%95ceph%E7%9A%84filestore/" target="_self">
-        <div>
-          前言fio是一个适应性非常强的软件，基本上能够模拟所有的IO请求，是目前最全面的一款测试软件，之前在看德国电信的一篇分享的时候，里面就提到了，如果需要测试存储性能，尽量只用一款软件，这样从上层测试到底层去，才能更好的去比较差别 fio对于ceph来说，可以测试文件系统，基于文件系统之上测试，可以测试内核rbd，将rbdmap到本地格式化以后进行测试，或者基于librbd直接对rbd进行测试，这个是
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2016-11-23 17:59" pubdate>
-              2016-11-23
             </time>
           </div>
         
